@@ -1,8 +1,12 @@
 appdirs==1.4.3
+BeautifulSoup==3.2.1
+funcsigs==1.0.2
 Jinja2==2.9.6
 MarkupSafe==1.0
+mock==2.0.0
 olefile==0.44
 packaging==16.8
+pbr==2.0.0
 PIL==1.1.7
 -e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/platex.git@32a345198b19200d04a8a773b8864cd5cec069af#egg=plasTeX
 py==1.4.33
