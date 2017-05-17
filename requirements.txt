@@ -9,9 +9,11 @@ mock==2.0.0
 olefile==0.44
 packaging==16.8
 pbr==2.0.0
--e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/platex.git@8cbcba8b341e5d7d391a57cb84d2f86d4cb0536d#egg=plasTeX
+PIL==1.1.7
+-e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/platex.git@afe26df526dbbc1898fd3a02534bcfd4cebb3dce#egg=plasTeX
 py==1.4.33
 pyparsing==2.2.0
 pytest==3.0.7
 python-dateutil==2.6.0
+PyYAML==3.12
 six==1.10.0
