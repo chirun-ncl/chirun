@@ -1,0 +1,8 @@
+makeCourse/__init__.py
+makeCourse/latex.py
+makeCourse/makecourse
+makeCourse.egg-info/PKG-INFO
+makeCourse.egg-info/SOURCES.txt
+makeCourse.egg-info/dependency_links.txt
+makeCourse.egg-info/top_level.txt
+makeCourse/misc/websetup.sty

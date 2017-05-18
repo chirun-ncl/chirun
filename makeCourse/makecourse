@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+import yaml
+import os
+import sys
+import argparse
+import makeCourse.latex
+from subprocess import Popen, PIPE 
+
+def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-v', dest='verbose', action='store_true')
+	parser.add_argument('-vv', dest='veryverbose', action='store_true')
+	parser.add_argument('dir', help='a course definition directory')
+	args = parser.parse_args()
+
+	if args.verbose:
+		print "Running makecourse in directory %s"%args.dir
+		print "Reading %s..."%os.path.join(args.dir,'config.yml')
+
+	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
+		course_config = yaml.load(f)
+
+	if args.verbose:
+		print "Done!"
+	
+	if course_config['source_type'] == 'latex':
+		if args.verbose:
+			print "Starting Latex processing..."
+		makeCourse.latex.doLatexProcess(args,course_config)
+	elif course_config['source_type'] == 'markdown':
+		if args.verbose:
+			print "Starting markdown processing..."
+		doMarkdownProcess(args,course_config)
+	else:
+		sys.stderr.write("Error: Unrecognised source_type! Quitting...\n")
+		sys.exit(2)
+
+	print "All done! Output written to %s"%os.path.join(args.dir,'build')
+if __name__ == "__main__":
+	main()

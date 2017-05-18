@@ -1,0 +1,25 @@
+\usepackage{amsmath,amsfonts}
+\usepackage{latexsym,amssymb}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{answer}{Answer}
+
+% Vimeo (embed in html)
+%\newcommand{\contentVimeo}[3]{\vspace{1cm} \noindent \href{https://vimeo.com/#1}{\textbf{#2}}\newline #3 \newline}
+\newcommand{\contentVimeo}[3]{\subsection{\videoicon Video: #2}\beginvimeo #1 \endvimeo \newline\newline#3}{}
+
+% CBA Local to site
+\newcommand{\CBALocal}[1]{\subsection{\numbasicon Test Yourself}\beginnumbas#1\endnumbas}
+
+% Cross reference link
+\newcommand{\crossref}[2]{#2}
+
+%Dont show section numbers on web
+\renewcommand\thesection{\setcounter{example}{0}\setcounter{exercise}{0}\setcounter{answer}{0}}
+\renewcommand\thesubsection{}
