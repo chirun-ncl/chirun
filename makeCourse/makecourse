@@ -14,15 +14,12 @@ def main():
 	args = parser.parse_args()
 
 	if args.verbose:
-		print "Running makecourse in directory %s"%args.dir
+		print "Running makecourse for directory %s"%args.dir
 		print "Reading %s..."%os.path.join(args.dir,'config.yml')
 
 	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
 		course_config = yaml.load(f)
 
-	if args.verbose:
-		print "Done!"
-	
 	if course_config['source_type'] == 'latex':
 		if args.verbose:
 			print "Starting Latex processing..."

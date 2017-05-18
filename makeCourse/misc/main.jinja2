@@ -1,0 +1,16 @@
+\documentclass{article} 
+\usepackage{amsmath}
+\usepackage{websetup}
+\title{ {{ course.title }} }
+\author{ {{ course.author }} }
+\date{\today}
+\begin{document}
+{% for obj in course.structure %}
+{% if obj.type == "include" %}
+\include{ {{ obj.source }} }
+{% endif %}
+{% if obj.type == "chapter" %}
+\chapter{ {{ obj.name }} }
+{% endif %}
+{% endfor %}
+\end{document}
