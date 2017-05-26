@@ -26,6 +26,26 @@ def runPlastex(args,course_config,themePath,themeName,texFile):
 	elif args.verbose:
 		print 'Done!'
 	
+def runPdflatex(args,obj,sourcePath,pdfPath):
+	sourcePathDir = os.path.dirname(sourcePath)
+	pdfPathDir = os.path.abspath(os.path.dirname(pdfPath))
+	cmd = 'cd %s && pdflatex %s && mkdir -p %s && cp main.pdf %s'\
+			%(sourcePathDir,'main.tex',pdfPathDir,pdfPathDir)
+	if args.veryverbose:
+		print 'Running pdflatex: %s'%cmd
+	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+	if args.veryverbose:
+		for line in iter(proc.stdout.readline, ''):
+			print line
+		proc.stdout.close()
+	rc = proc.wait()
+	if rc != 0:
+		sys.stderr.write("Error: Something went wrong with the latex compilation! Quitting...\n")
+		sys.stderr.write("(Use -vv for more information)\n")
+		sys.exit(2)
+	elif args.veryverbose:
+		print 'Done!'
+
 def copyWebsetupSty(args):
 	resource_package = "makeCourse"
 	resource_path = '/'.join(('misc', 'websetup.sty'))
@@ -75,7 +95,7 @@ def doLatexProcess(args,course_config):
 	runPlastex(args,course_config,themePath,themeName,mainTexPath)
 
 	if args.verbose:
-		print 'Cleaning Up...'
+		print 'Cleaning up after plastex...'
 	for paux_file in glob.glob("*.paux"):
 		if args.verbose:
 			print '    Deleted: %s'%paux_file
@@ -90,5 +110,38 @@ def doLatexProcess(args,course_config):
 	if args.verbose:
 		print 'Done!'
 
+def doLatexPDFProcess(args,course_config):
+	if 'static_dir' in course_config.keys():
+		staticPath = course_config['static_dir']
+	else:
+		staticPath = 'static'
+
+	if args.verbose:
+		print 'Building .pdf files...'
+
+	for obj in course_config['structure']:
+		if obj['type'] == 'include' and 'content.tex' in obj['source']:
+			sourcePath = os.path.join(args.dir,obj['source'])
+			pdfPath = os.path.join(args.dir,staticPath,obj['source'].replace("content.tex", "main.pdf"))
+			if args.verbose:
+				print '    %s => %s'%(sourcePath, pdfPath)
+			runPdflatex(args,obj,sourcePath,pdfPath)	
+	
+	if args.verbose:
+		print 'Cleaning up after pdflatex...'
+	for obj in course_config['structure']:
+		if obj['type'] == 'include' and 'content.tex' in obj['source']:
+			compilePath = os.path.join(args.dir,obj['source'].replace("content.tex", "main"))
+			if args.verbose:
+				print '    Deleted: %s.log'%compilePath
+				print '    Deleted: %s.aux'%compilePath
+				print '    Deleted: %s.out'%compilePath
+				print '    Deleted: %s.pdf'%compilePath
+			os.remove('%s.log'%compilePath)
+			os.remove('%s.aux'%compilePath)
+			os.remove('%s.out'%compilePath)
+			os.remove('%s.pdf'%compilePath)
+	if args.verbose:
+		 print 'Done!'
 if __name__ == "__main__":
     pass

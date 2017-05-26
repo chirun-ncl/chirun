@@ -1,2 +1,4 @@
 .makecourse_venv/
 *.paux
+*.pyc
+*.swp

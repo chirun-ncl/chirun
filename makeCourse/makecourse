@@ -2,8 +2,10 @@
 import yaml
 import os
 import sys
+import shutil
 import argparse
 import makeCourse.latex
+import makeCourse.markdown
 from subprocess import Popen, PIPE 
 
 def main():
@@ -12,6 +14,8 @@ def main():
 	parser.add_argument('-vv', dest='veryverbose', action='store_true')
 	parser.add_argument('dir', help='a course definition directory')
 	args = parser.parse_args()
+	if args.veryverbose:
+		args.verbose = True
 
 	if args.verbose:
 		print "Running makecourse for directory %s"%args.dir
@@ -19,18 +23,37 @@ def main():
 
 	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
 		course_config = yaml.load(f)
+	
+	if 'static_dir' in course_config.keys():
+		staticPath = course_config['static_dir']
+	else:
+		staticPath = 'static'
+		course_config['static_dir'] = staticPath
 
 	if course_config['source_type'] == 'latex':
 		if args.verbose:
 			print "Starting Latex processing..."
 		makeCourse.latex.doLatexProcess(args,course_config)
+		if course_config['build_pdf']:
+			makeCourse.latex.doLatexPDFProcess(args,course_config)	
 	elif course_config['source_type'] == 'markdown':
 		if args.verbose:
 			print "Starting markdown processing..."
-		doMarkdownProcess(args,course_config)
+		makeCourse.markdown.doMarkdownProcess(args,course_config)
 	else:
 		sys.stderr.write("Error: Unrecognised source_type! Quitting...\n")
 		sys.exit(2)
+	
+	if args.verbose:
+		print "Copying static directory..."
+	srcPath = os.path.join(args.dir,staticPath)
+	dstpath = os.path.join(args.dir,'build',staticPath)
+	if args.verbose:
+		print "    %s => %s"%(srcPath,dstpath)
+	if os.path.isdir(dstpath):
+		shutil.rmtree(dstpath)
+	shutil.copytree(srcPath,dstpath)
+ 
 
 	print "All done! Output written to %s"%os.path.join(args.dir,'build')
 if __name__ == "__main__":
