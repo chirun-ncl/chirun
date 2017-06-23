@@ -6,6 +6,7 @@ import sys
 import pkg_resources
 import shutil
 from subprocess import Popen, PIPE 
+from distutils.dir_util import copy_tree
 
 def runPandoc(args,course_config,themePath,themeName):
 	buildDir = os.path.join(args.dir,'build')
@@ -134,12 +135,12 @@ def doMarkdownProcess(args,course_config):
 
 	runPandoc(args,course_config,themePath,themeName)
 
-	srcPath = os.path.join(themePath,themeName,'styles.css')
+	srcPath = os.path.join(themePath,themeName,'static')
 	dstpath = os.path.join(args.dir,course_config['static_dir'])
 	if args.verbose:
-		print 'Copying Theme\'s styles.css to static directory'
+		print 'Copying Theme\'s static files to the course static directory'
 		print "    %s => %s"%(srcPath,dstpath)
-	shutil.copy2(srcPath, dstpath)
+	copy_tree(srcPath, dstpath)
 
 	if args.verbose:
 		print 'Cleaning up after pandoc...'
