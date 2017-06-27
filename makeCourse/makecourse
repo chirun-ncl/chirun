@@ -2,11 +2,31 @@
 import yaml
 import os
 import sys
-import shutil
 import argparse
-import makeCourse.latex
-import makeCourse.markdown
+import makeCourse.process
+from distutils.dir_util import copy_tree
 from subprocess import Popen, PIPE 
+
+def setDefaults(course_config):
+	if 'themes_dir' not in course_config.keys():
+		course_config['themes_dir'] = os.path.join(course_config['args'].dir,'themes')
+
+	if 'static_dir' not in course_config.keys():
+		course_config['static_dir'] = os.path.join(course_config['args'].dir,'static')
+
+	if 'build_dir' not in course_config.keys():
+		course_config['build_dir'] = os.path.join(course_config['args'].dir,'build')
+
+	if 'theme' not in course_config.keys():
+		course_config['theme'] = 'default'
+
+	course_config['partsEnabled'] = False
+	course_config['tempFiles'] = []
+
+	if course_config['args'].verbose:
+		print "The themes directory is: %s"%course_config['themes_dir']
+		print "The static directory is: %s"%course_config['static_dir']
+		print "The build directory is: %s"%course_config['build_dir']
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -14,6 +34,7 @@ def main():
 	parser.add_argument('-vv', dest='veryverbose', action='store_true')
 	parser.add_argument('dir', help='a course definition directory')
 	args = parser.parse_args()
+	
 	if args.veryverbose:
 		args.verbose = True
 
@@ -23,38 +44,40 @@ def main():
 
 	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
 		course_config = yaml.load(f)
-	
-	if 'static_dir' in course_config.keys():
-		staticPath = course_config['static_dir']
-	else:
-		staticPath = 'static'
-		course_config['static_dir'] = staticPath
+	course_config['args'] = args
+	setDefaults(course_config)
 
-	if course_config['source_type'] == 'latex':
-		if args.verbose:
-			print "Starting Latex processing..."
-		makeCourse.latex.doLatexProcess(args,course_config)
-		if course_config['build_pdf']:
-			makeCourse.latex.doLatexPDFProcess(args,course_config)	
-	elif course_config['source_type'] == 'markdown':
-		if args.verbose:
-			print "Starting markdown processing..."
-		makeCourse.markdown.doMarkdownProcess(args,course_config)
-	else:
-		sys.stderr.write("Error: Unrecognised source_type! Quitting...\n")
-		sys.exit(2)
+
+	if course_config['args'].verbose:
+		print "Starting processing..."
+
+	makeCourse.process.doProcess(course_config)
 	
+	if course_config['args'].verbose:
+		print "Running epilogue..."
+
+	srcPath = os.path.join(course_config['themes_dir'],course_config['theme'],'static')
+	dstpath = os.path.join(course_config['build_dir'],'static')
 	if args.verbose:
-		print "Copying static directory..."
-	srcPath = os.path.join(args.dir,staticPath)
-	dstpath = os.path.join(args.dir,'build',staticPath)
-	if args.verbose:
+		print "Copying Theme's static directory to the build directory..."
 		print "    %s => %s"%(srcPath,dstpath)
-	if os.path.isdir(dstpath):
-		shutil.rmtree(dstpath)
-	shutil.copytree(srcPath,dstpath)
- 
+	copy_tree(srcPath, dstpath)
 
-	print "All done! Output written to %s"%os.path.join(args.dir,'build')
+	if course_config['args'].verbose:
+		print "Copying Course's static directory to the build directory..."
+	srcPath = os.path.join(course_config['static_dir'])
+	dstpath = os.path.join(course_config['build_dir'],'static')
+	if course_config['args'].verbose:
+		print "    %s => %s"%(srcPath,dstpath)
+	copy_tree(srcPath, dstpath)
+
+	if course_config['args'].verbose:
+		print "Cleaning up temporary files"
+	for temp_file in course_config['tempFiles']:
+		os.remove(os.path.join(course_config['args'].dir,temp_file))
+		if course_config['args'].verbose:
+			print '    Deleted: %s'%temp_file
+		
+	print "All done! Output written to %s"%course_config['build_dir']
 if __name__ == "__main__":
 	main()
