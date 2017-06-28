@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import makeCourse.pandoc
+import makeCourse.latex
 
 def slugify(value):
 	return "".join([c for c in re.sub(r'\s+','_',value) if c.isalpha() or c.isdigit() or c=='_']).rstrip().lower()
@@ -140,11 +141,17 @@ def buildChapterMDFile(course_config,ch,part=False):
 					sys.exit(2)
 			elif sec['type'] == "numbas":
 				if course_config['args'].verbose:
-					print '    Adding numbas iframe: %s'%sec['source']
+					print '    Adding section for numbas: %s'%sec['source']
 				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe style="border:none;" height="1000px" width="100%" src="'+sec['source']+'"></iframe>'
 			elif sec['type'] == "beamer":
-				#TODO: include beamer
-				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\nUnimplemented feature...'
+				if sec['source'][-4:] == '.tex':
+					if course_config['args'].verbose:
+							print '    Adding section for beamer presentation: %s'%sec['title']
+					thePDF = makeCourse.latex.runPdflatex(course_config,sec['source'])
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<object class="loading" data="/static/'+thePDF+'" width="100%" height="500px" type="application/pdf"><embed src="/static/'+thePDF+'"></embed></object>\n<br><p class="pull-right"><a target="_blank" href="/static/'+thePDF+'">Click here to open slides in a new tab<a></p>'
+				else:
+					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
+					sys.exit(2)
 			elif sec['type'] == "revealjs":
 				#TODO: include reveal.js
 				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\nUnimplemented feature...'
