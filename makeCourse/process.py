@@ -3,6 +3,7 @@ import os
 import re
 import makeCourse.pandoc
 import makeCourse.latex
+import makeCourse.hackmd
 
 def slugify(value):
 	return "".join([c for c in re.sub(r'\s+','_',value) if c.isalpha() or c.isdigit() or c=='_']).rstrip().lower()
@@ -125,17 +126,21 @@ def buildChapterMDFile(course_config,ch,part=False):
 			if isHidden(sec): continue
 			if sec['type'] == "section":
 				if sec['source'][-3:] == '.md':
+					if course_config['args'].verbose:
+						print '    Adding: %s'%sec['title']
 					mdContents = open(os.path.join(course_config['args'].dir,sec['source']), 'r').read()
-					if mdContents[:3] != '---':
+					if mdContents[:3] == '---':
 						if course_config['args'].verbose:
-							print '    Adding: %s'%sec['title']
-						newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
-					else:
-						sys.stderr.write("Error: Markdown file %s contains unsupported YAML header. Please remove the header, I'll make one automatically. Quitting...\n"%sec['source'])
-						sys.exit(2)
+							print '    Note: Markdown file %s contains a YAML header.'%sec['source']
+						mdContents = re.sub(r'^---.*?---\n','',mdContents)
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
 				elif sec['source'][-4:] == '.tex':
 					#TODO: Do latex -> html snippet
 					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\nUnimplemented feature...'
+				elif re.search(r'[^/\?:\s]+=', sec['source']):
+					code = re.search(r'([^/\?:\s]+=)', sec['source']).group(1)
+					mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 					sys.exit(2)
@@ -178,19 +183,24 @@ def buildChapterMDFile(course_config,ch,part=False):
 			print 'Building chapter file: %s'%newFile
 
 		if ch['source'][-3:] == '.md':
+			if course_config['args'].verbose:
+				print '    Adding: %s'%ch['title']
 			mdContents = open(os.path.join(course_config['args'].dir,ch['source']), 'r').read()
-			if mdContents[:3] != '---':
+			if mdContents[:3] == '---':
 				if course_config['args'].verbose:
-					print '    Adding: %s'%ch['title']
-				newFileContent += '\n\n' + mdContents
-			else:
-				sys.stderr.write("Error: Markdown file %s contains unsupported YAML header. Please remove the header, I'll make one automatically. Quitting...\n"%sec['source'])
-				sys.exit(2)
-		elif sec['source'][-4:] == '.tex':
+					print '    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source']
+				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
+			newFileContent += '\n\n' + mdContents
+		elif ch['source'][-4:] == '.tex':
 			#TODO: Do latex -> html snippet
 			newFileContent += '\n\nUnimplemented feature...'
+		elif re.search(r'[^/\?:\s]+=', ch['source']):
+			code = re.search(r'([^/\?:\s]+=)', ch['source']).group(1)
+			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
+			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
+			newFileContent += '\n\n' + mdContents
 		else:
-			sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
+			sys.stderr.write("Error: Unrecognised source type for %s:%s. Quitting...\n"%(ch['title'],ch['source']))
 			sys.exit(2)
 
 		f = open(os.path.join(course_config['args'].dir,newFile), 'w')

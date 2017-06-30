@@ -2,10 +2,28 @@
 import yaml
 import os
 import sys
+import re
 import argparse
+import errno
 import makeCourse.process
 from distutils.dir_util import copy_tree
 from subprocess import Popen, PIPE 
+
+def purge(course_config, pattern):
+	for f in os.listdir(course_config['args'].dir):
+		if re.search(pattern, f):
+			if course_config['args'].verbose:
+				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
+			os.remove(os.path.join(course_config['args'].dir, f))
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 def setDefaults(course_config):
 	if 'themes_dir' not in course_config.keys():
@@ -47,6 +65,13 @@ def main():
 	course_config['args'] = args
 	setDefaults(course_config)
 
+	if course_config['args'].verbose:
+		print "Creating build directory..."
+	mkdir_p(os.path.join(course_config['build_dir'],'static'))
+
+	if course_config['args'].verbose:
+		print "Creating static directory..."
+	mkdir_p(course_config['static_dir'])
 
 	if course_config['args'].verbose:
 		print "Starting processing..."
@@ -61,7 +86,11 @@ def main():
 	if args.verbose:
 		print "Copying Theme's static directory to the build directory..."
 		print "    %s => %s"%(srcPath,dstpath)
-	copy_tree(srcPath, dstpath)
+	try:
+		copy_tree(srcPath, dstpath)
+	except:
+		sys.stderr.write("Warning: Problem copying Theme's static directory")
+		pass
 
 	if course_config['args'].verbose:
 		print "Copying Course's static directory to the build directory..."
@@ -69,7 +98,11 @@ def main():
 	dstpath = os.path.join(course_config['build_dir'],'static')
 	if course_config['args'].verbose:
 		print "    %s => %s"%(srcPath,dstpath)
-	copy_tree(srcPath, dstpath)
+	try:
+		copy_tree(srcPath, dstpath)
+	except:
+		sys.stderr.write("Warning: Problem copying Course's static directory!\n")
+		pass
 
 	if course_config['args'].verbose:
 		print "Cleaning up temporary files"
@@ -77,6 +110,10 @@ def main():
 		os.remove(os.path.join(course_config['args'].dir,temp_file))
 		if course_config['args'].verbose:
 			print '    Deleted: %s'%temp_file
+
+	if course_config['args'].verbose:
+		print "Cleaning up any missed .md files"
+	purge(course_config, r'[0-9a-f]{4}-.*?\.md')
 		
 	print "All done! Output written to %s"%course_config['build_dir']
 if __name__ == "__main__":

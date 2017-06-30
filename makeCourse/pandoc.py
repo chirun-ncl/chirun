@@ -13,7 +13,7 @@ def runPandocForPart(course_config,part,inFile):
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
-		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML \
+		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
 		%(course_config['title'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
@@ -37,7 +37,7 @@ def runPandocForChapter(course_config,ch,inFile):
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
-		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML \
+		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
 		%(course_config['title'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
@@ -60,7 +60,7 @@ def runPandocForIntro(course_config,ch,inFile):
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
-		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML \
+		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
 		%(course_config['title'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
