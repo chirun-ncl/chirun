@@ -6,6 +6,7 @@ import re
 import argparse
 import errno
 import makeCourse.process
+import makeCourse.hackmd
 from distutils.dir_util import copy_tree
 from subprocess import Popen, PIPE 
 
@@ -63,6 +64,13 @@ def main():
 	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
 		course_config = yaml.load(f)
 	course_config['args'] = args
+
+	if 'configFile' in course_config.keys():
+		realConfig = makeCourse.hackmd.getHackmdDocument(course_config,course_config['configFile'])
+		realConfig = re.sub(r'^---.*?---\n','',realConfig,flags=re.S)
+		course_config = yaml.load(realConfig)
+		course_config['args'] = args
+	
 	setDefaults(course_config)
 
 	if course_config['args'].verbose:

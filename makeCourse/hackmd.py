@@ -32,7 +32,6 @@ def getHackmdDocument(course_config,code):
 	if course_config['args'].verbose:
 		print '    Getting document from hackMD: %s'%url
 	mdContents = downloadMD(url)
-	mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
 	return mdContents
 
 def getEmbeddedImages(course_config,mdContents):

@@ -2,7 +2,8 @@ import os
 import re
 import sys
 import pkg_resources
-from subprocess import Popen, PIPE 
+from subprocess import Popen, PIPE
+
 
 def runPandocForPart(course_config,part,inFile):
 	outFile = re.sub(r'.md$','.html',inFile)

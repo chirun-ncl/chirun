@@ -4,15 +4,8 @@ import re
 import makeCourse.pandoc
 import makeCourse.latex
 import makeCourse.hackmd
-
-def slugify(value):
-	return "".join([c for c in re.sub(r'\s+','_',value) if c.isalpha() or c.isdigit() or c=='_']).rstrip().lower()
-
-def isHidden(obj):
-	if 'hidden' in obj.keys():
-		if obj['hidden']:
-			return True
-	return False
+import makeCourse.slides
+from makeCourse import *
 
 def createIndexYAMLheader(course_config):
 	header = "---\n"
@@ -140,7 +133,8 @@ def buildChapterMDFile(course_config,ch,part=False):
 				elif re.search(r'[^/\?:\s]+=', sec['source']):
 					code = re.search(r'([^/\?:\s]+=)', sec['source']).group(1)
 					mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
-					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
+					mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
+					newFileContent += '\n\n' + mdContents
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 					sys.exit(2)
@@ -157,9 +151,27 @@ def buildChapterMDFile(course_config,ch,part=False):
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 					sys.exit(2)
-			elif sec['type'] == "revealjs":
-				#TODO: include reveal.js
-				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\nUnimplemented feature...'
+			elif sec['type'] == "slideshow":
+				if sec['source'][-3:] == '.md':
+					if course_config['args'].verbose:
+						print '    Adding: %s'%sec['title']
+					slideContents = open(os.path.join(course_config['args'].dir,sec['source']), 'r').read()
+					if slideContents[:3] == '---':
+						if course_config['args'].verbose:
+							print '    Note: Markdown file %s contains a YAML header.'%sec['source']
+						slideContents = re.sub(r'^---.*?---\n','',slideContents)
+					slidesHTMLFile = makeCourse.slides.runPandocForSlides(course_config,sec,slidesEmbedFile)
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="'+slidesHTMLFile+'" width="100%" height="480px" style="overflow:hidden;" scrolling=no frameborder="0"></iframe>'
+				elif sec['source'][-4:] == '.tex':
+					#TODO: Do latex -> html snippet
+					sys.stderr.write("Error: Unimplemented feature... Quitting...\n")
+					sys.exit(2)
+				elif re.search(r'[^/\?:\s]+=', sec['source']):
+					code = re.search(r'([^/\?:\s]+=)', sec['source']).group(1)
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="'+HACKMD_URL+'/'+code+'/slide" width="100%" height="480px" scrolling=no frameborder="0"></iframe>\n\n<a href="'+HACKMD_URL+'/'+code+'/slide" target="_blank">Open Fullscreen</a>&nbsp;<a href="'+HACKMD_URL+'/'+code+'/pdf" target="_blank">Download PDF</a>'
+				else:
+					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
+					sys.exit(2)
 			elif sec['type'] == "vimeo":
 				#TODO: include a section for a vimeo video
 				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="https://player.vimeo.com/video/'+str(sec['source'])+'" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
