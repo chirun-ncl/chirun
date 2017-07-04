@@ -47,7 +47,7 @@ def getEmbeddedImages(course_config,mdContents):
 			outPath = os.path.join(course_config['build_dir'],'static',outFile)
 			print '        %s=>%s'%(outFile,outPath)
 			downloadImage(url,outPath)
-			mdContents = mdContents.replace(m.group(1),"/static/"+outFile)
+			mdContents = mdContents.replace(m.group(1),"./static/"+outFile)
 	return mdContents
 
 
