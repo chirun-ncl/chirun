@@ -1,4 +1,5 @@
 before_script:
+  - echo "Building for $MODULECODE"
   - apt-get update -qy
   - apt-get install -y python python-pip python-dev build-essential libfontconfig git openssh-client pandoc
   - eval $(ssh-agent -s)
