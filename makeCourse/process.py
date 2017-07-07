@@ -84,8 +84,8 @@ def buildIntroMDFile(course_config,obj):
 	elif obj['source'][-4:] == '.tex':
 		#TODO: Do latex -> html snippet
 		newFileContent += '\n\n' + '# Unimplemented feature...'
-	elif re.search(r'[^/\?:\s]+=', obj['source']):
-		code = re.search(r'([^/\?:\s]+=)', obj['source']).group(1)
+	elif re.search(r'[^/\?:\s]+', obj['source']):
+		code = re.search(r'([^/\?:\s]+)', obj['source']).group(1)
 		mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 		mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 		newFileContent += '\n\n' + mdContents
@@ -134,8 +134,8 @@ def buildChapterMDFile(course_config,ch,part=False):
 				elif sec['source'][-4:] == '.tex':
 					#TODO: Do latex -> html snippet
 					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\nUnimplemented feature...'
-				elif re.search(r'[^/\?:\s]+=', sec['source']):
-					code = re.search(r'([^/\?:\s]+=)', sec['source']).group(1)
+				elif re.search(r'[^/\?:\s]+', sec['source']):
+					code = re.search(r'([^/\?:\s]+)', sec['source']).group(1)
 					mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 					mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 					newFileContent += '\n\n' + mdContents
@@ -170,8 +170,8 @@ def buildChapterMDFile(course_config,ch,part=False):
 					#TODO: Do latex -> html snippet
 					sys.stderr.write("Error: Unimplemented feature... Quitting...\n")
 					sys.exit(2)
-				elif re.search(r'[^/\?:\s]+=', sec['source']):
-					code = re.search(r'([^/\?:\s]+=)', sec['source']).group(1)
+				elif re.search(r'[^/\?:\s]+', sec['source']):
+					code = re.search(r'([^/\?:\s]+)', sec['source']).group(1)
 					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="'+HACKMD_URL+'/'+code+'/slide" width="100%" height="480px" scrolling=no frameborder="0"></iframe>\n\n<a href="'+HACKMD_URL+'/'+code+'/slide" target="_blank">Open Fullscreen</a>&nbsp;<a href="'+HACKMD_URL+'/'+code+'/pdf" target="_blank">Download PDF</a>'
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
@@ -210,8 +210,8 @@ def buildChapterMDFile(course_config,ch,part=False):
 		elif ch['source'][-4:] == '.tex':
 			#TODO: Do latex -> html snippet
 			newFileContent += '\n\nUnimplemented feature...'
-		elif re.search(r'[^/\?:\s]+=', ch['source']):
-			code = re.search(r'([^/\?:\s]+=)', ch['source']).group(1)
+		elif re.search(r'[^/\?:\s]+', ch['source']):
+			code = re.search(r'([^/\?:\s]+)', ch['source']).group(1)
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
