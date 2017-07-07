@@ -81,9 +81,14 @@ def buildIntroMDFile(course_config,obj):
 		else:
 			sys.stderr.write("Error: Markdown file %s contains unsupported YAML header. Please remove the header, I'll make one automatically. Quitting...\n"%obj['source'])
 			sys.exit(2)
-	elif sec['source'][-4:] == '.tex':
+	elif obj['source'][-4:] == '.tex':
 		#TODO: Do latex -> html snippet
 		newFileContent += '\n\n' + '# Unimplemented feature...'
+	elif re.search(r'[^/\?:\s]+=', obj['source']):
+		code = re.search(r'([^/\?:\s]+=)', obj['source']).group(1)
+		mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
+		mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
+		newFileContent += '\n\n' + mdContents
 	else:
 		sys.stderr.write("Error: Unrecognised source type for index. Quitting...\n")
 		sys.exit(2)
@@ -93,7 +98,6 @@ def buildIntroMDFile(course_config,obj):
 	f.close()
 
 	if 'source' not in obj.keys():
-		#TODO: latex and MD full source code for a chapter provided
 		sys.stderr.write("Error: No source defined for introduction... Quitting...\n")
 		sys.exit(2)
 
