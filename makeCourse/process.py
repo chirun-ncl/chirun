@@ -13,10 +13,10 @@ def doFindReplace(mdContents):
 	reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 	reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
 
-	mdContents = reVimeo.sub('<iframe src="https://player.vimeo.com/video/\1" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>', mdContents)
-	mdContents = reYoutube.sub('<iframe width="100%" height="360" src="https://www.youtube.com/embed/\1?ecver=1" frameborder="0" allowfullscreen></iframe>', mdContents)
-	mdContents = reNumbas.sub('<iframe width="100%" height="1000px" src="\1" frameborder="0"></iframe>', mdContents)
-	mdContents = reSlides.sub('<iframe src="'+HACKMD_URL+'/p/\1/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0"></iframe>', mdContents)
+	mdContents = reVimeo.sub(r'<iframe src="https://player.vimeo.com/video/\1" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>', mdContents)
+	mdContents = reYoutube.sub(r'<iframe width="100%" height="360" src="https://www.youtube.com/embed/\1?ecver=1" frameborder="0" allowfullscreen></iframe>', mdContents)
+	mdContents = reNumbas.sub(r'<iframe width="100%" height="1000px" src="\1" frameborder="0"></iframe>', mdContents)
+	mdContents = reSlides.sub('<iframe src="'+HACKMD_URL+r'/p/\1/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0"></iframe>', mdContents)
 
 	return mdContents
 
