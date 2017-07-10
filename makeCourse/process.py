@@ -23,7 +23,7 @@ def getNumbasHTML(URL):
 def getSlidesHTML(course_config,code):
 	makeCourse.hackmd.getSlidesPDF(course_config,code)
 	return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
-			</iframe><div class="pad-top-10 pull-right"><a href="./static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
+			</iframe><div class="pad-top-10 pull-right"><a href="'+course_config['web_dir']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
 			|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
 
 def burnInExtras(course_config,mdContents):
@@ -189,7 +189,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 					if course_config['args'].verbose:
 							print '    Adding section for beamer presentation: %s'%sec['title']
 					thePDF = makeCourse.latex.runPdflatex(course_config,sec['source'])
-					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<object class="loading" data="./static/'+thePDF+'" width="100%" height="500px" type="application/pdf"><embed src="./static/'+thePDF+'"></embed></object>\n<br><p class="pull-right"><a target="_blank" href="./static/'+thePDF+'">Click here to open slides in a new tab<a></p>'
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<object class="loading" data="'+course_config['web_dir']+'static/'+thePDF+'" width="100%" height="500px" type="application/pdf"><embed src="'+course_config['web_dir']+'static/'+thePDF+'"></embed></object>\n<br><p class="pull-right"><a target="_blank" href="'+course_config['web_dir']+'static/'+thePDF+'">Click here to open slides in a new tab<a></p>'
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 					sys.exit(2)
