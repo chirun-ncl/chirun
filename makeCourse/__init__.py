@@ -10,3 +10,15 @@ def isHidden(obj):
 		if obj['hidden']:
 			return True
 	return False
+
+def containsMockTest(obj):
+	mocktest = filter(lambda item: item['type'] == 'mocktest', obj['structure'])
+	if mocktest:
+		return True
+	return False
+
+def getMockTest(obj):
+	mocktest = filter(lambda item: item['type'] == 'mocktest', obj['structure'])
+	if mocktest:
+		return mocktest[0]['source']
+	return False

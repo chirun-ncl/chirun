@@ -276,9 +276,8 @@ def doProcess(course_config):
 			chFileName = buildChapterMDFile(course_config,ch)
 			makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
 		elif obj['type'] == 'mocktest':
-			#TODO: build a mock test numbas page!
-			sys.stderr.write("Error: Unimplemented feature... Quitting...\n")
-			sys.exit(2)
+			#TODO: download a mock test from numbas
+			pass
 
 	if course_config['args'].verbose:
 		print 'Done!'

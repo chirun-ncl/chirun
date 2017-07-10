@@ -3,7 +3,7 @@ import re
 import sys
 import pkg_resources
 from subprocess import Popen, PIPE
-
+from makeCourse import *
 
 def runPandocForPart(course_config,part,inFile):
 	outFile = re.sub(r'.md$','.html',inFile)
@@ -15,8 +15,8 @@ def runPandocForPart(course_config,part,inFile):
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
-		%(course_config['title'],templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
@@ -39,8 +39,8 @@ def runPandocForChapter(course_config,ch,inFile):
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
-		%(course_config['title'],templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
@@ -62,8 +62,8 @@ def runPandocForIntro(course_config,ch,inFile):
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" --template %s %s -o %s'\
-		%(course_config['title'],templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
