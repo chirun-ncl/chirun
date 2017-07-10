@@ -16,7 +16,7 @@ def doFindReplace(mdContents):
 	mdContents = reVimeo.sub('<iframe src="https://player.vimeo.com/video/\1" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>', mdContents)
 	mdContents = reYoutube.sub('<iframe width="100%" height="360" src="https://www.youtube.com/embed/\1?ecver=1" frameborder="0" allowfullscreen></iframe>', mdContents)
 	mdContents = reNumbas.sub('<iframe width="100%" height="1000px" src="\1" frameborder="0"></iframe>', mdContents)
-	mdContents = reSlides.sub('<iframe src="\1" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0"></iframe>', mdContents)
+	mdContents = reSlides.sub('<iframe src="'+HACKMD_URL+'/p/\1/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0"></iframe>', mdContents)
 
 	return mdContents
 
