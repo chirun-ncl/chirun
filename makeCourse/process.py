@@ -7,17 +7,29 @@ import makeCourse.hackmd
 import makeCourse.slides
 from makeCourse import *
 
-def doFindReplace(mdContents):
+
+def getVimeoHTML(code):
+	return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
+			mozallowfullscreen allowfullscreen></iframe>'
+def getYoutubeHTML(code):
+	return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
+def getNumbasHTML(URL):
+	return '<iframe width="100%" height="1000px" src="'+URL+'" frameborder="0"></iframe>'
+def getSlidesHTML(course_config,code):
+	makeCourse.hackmd.getSlidesPDF(course_config,code)
+	return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
+			</iframe><div class="pad-top-10 pull-right"><a href="./static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
+			|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
+
+def burnInExtras(course_config,mdContents):
 	reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
 	reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
 	reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 	reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-
-	mdContents = reVimeo.sub(r'<iframe src="https://player.vimeo.com/video/\1" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>', mdContents)
-	mdContents = reYoutube.sub(r'<iframe width="100%" height="360" src="https://www.youtube.com/embed/\1?ecver=1" frameborder="0" allowfullscreen></iframe>', mdContents)
-	mdContents = reNumbas.sub(r'<iframe width="100%" height="1000px" src="\1" frameborder="0"></iframe>', mdContents)
-	mdContents = reSlides.sub('<iframe src="'+HACKMD_URL+r'/p/\1/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0"></iframe>', mdContents)
-
+	mdContents = reVimeo.sub(lambda m: getVimeoHTML(m.group(1)), mdContents)
+	mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
+	mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
+	mdContents = reSlides.sub(lambda m: getSlidesHTML(course_config,m.group(1)), mdContents)
 	return mdContents
 
 def createIndexYAMLheader(course_config):
@@ -91,7 +103,7 @@ def buildIntroMDFile(course_config,obj):
 		mdContents = open(os.path.join(course_config['args'].dir,obj['source']), 'r').read()
 		if mdContents[:3] != '---':
 			print '    Burning in iframes & extras.'
-			mdContents = doFindReplace(mdContents)
+			mdContents = burnInExtras(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
 		else:
 			sys.stderr.write("Error: Markdown file %s contains unsupported YAML header. Please remove the header, I'll make one automatically. Quitting...\n"%obj['source'])
@@ -146,7 +158,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 							print '    Note: Markdown file %s contains a YAML header.'%sec['source']
 						mdContents = re.sub(r'^---.*?---\n','',mdContents)
 					print '    Burning in iframes & extras.'
-					mdContents = doFindReplace(mdContents)
+					mdContents = burnInExtras(course_config,mdContents)
 					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
 				elif sec['source'][-4:] == '.tex':
 					#TODO: Do latex -> html snippet
@@ -156,7 +168,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 					mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 					mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 					print '    Burning in iframes & extras.'
-					mdContents = doFindReplace(mdContents)
+					mdContents = burnInExtras(course_config,mdContents)
 					newFileContent += '\n\n' + mdContents
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
@@ -164,7 +176,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 			elif sec['type'] == "numbas":
 				if course_config['args'].verbose:
 					print '    Adding section for numbas: %s'%sec['source']
-				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe style="border:none;" height="1000px" width="100%" src="'+sec['source']+'"></iframe>'
+				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n'+getNumbasHTML(sec['source'])+'"></iframe>'
 			elif sec['type'] == "beamer":
 				if sec['source'][-4:] == '.tex':
 					if course_config['args'].verbose:
@@ -191,13 +203,13 @@ def buildChapterMDFile(course_config,ch,part=False):
 					sys.exit(2)
 				elif re.search(r'[^/\?:\s]+', sec['source']):
 					code = re.search(r'([^/\?:\s]+)', sec['source']).group(1)
-					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="'+HACKMD_URL+'/'+code+'/slide" width="100%" height="480px" scrolling=no frameborder="0"></iframe>\n\n<a href="'+HACKMD_URL+'/'+code+'/slide" target="_blank">Open Fullscreen</a>&nbsp;<a href="'+HACKMD_URL+'/'+code+'/pdf" target="_blank">Download PDF</a>'
+					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n'+getSlidesHTML(course_config,code)
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 					sys.exit(2)
 			elif sec['type'] == "vimeo":
 				#TODO: include a section for a vimeo video
-				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n<iframe src="https://player.vimeo.com/video/'+str(sec['source'])+'" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+				newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n'+getVimeoHTML(str(sec['source']))
 			else:
 				sys.stderr.write("Error: Unrecognised section type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
 				sys.exit(2)
@@ -226,7 +238,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 					print '    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source']
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
 			print '    Burning in iframes & extras.'
-			mdContents = doFindReplace(mdContents)
+			mdContents = burnInExtras(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
 			#TODO: Do latex -> html snippet
@@ -236,7 +248,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 			print '    Burning in iframes & extras.'
-			mdContents = doFindReplace(mdContents)
+			mdContents = burnInExtras(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
 		else:
 			sys.stderr.write("Error: Unrecognised source type for %s:%s. Quitting...\n"%(ch['title'],ch['source']))
