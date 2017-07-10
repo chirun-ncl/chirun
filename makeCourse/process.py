@@ -7,6 +7,11 @@ import makeCourse.hackmd
 import makeCourse.slides
 from makeCourse import *
 
+def replaceLabels(course_config,mdContents):
+	for l in gen_dict_extract('label',course_config):
+		mdLink = re.compile(r'\[([^\]]*)\]\(([^\)]*)\)')
+		mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+course_config['web_dir']+l['outFile']+".html)", mdContents)
+	return mdContents
 
 def getVimeoHTML(code):
 	return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
@@ -30,6 +35,8 @@ def burnInExtras(course_config,mdContents):
 	mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
 	mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
 	mdContents = reSlides.sub(lambda m: getSlidesHTML(course_config,m.group(1)), mdContents)
+
+	mdContents = replaceLabels(course_config,mdContents)
 	return mdContents
 
 def createIndexYAMLheader(course_config):
@@ -63,7 +70,7 @@ def createYAMLheader(course_config,obj,part=False):
 		for ch in part['content']:
 			if isHidden(ch): continue
 			header += "    - title: %s\n"%ch['title']
-			header += "      file: %s_%s.html\n"%(slugify(part['title']),slugify(ch['title']))
+			header += "      file: %s.html\n"%ch['outFile']
 			if obj == ch:
 				header += "      active: 1\n"
 	header +="\n---\n\n"
@@ -262,7 +269,11 @@ def buildChapterMDFile(course_config,ch,part=False):
 
 def doProcess(course_config):
 	if course_config['args'].verbose:
-		print 'Exploring Structure...'
+		print 'Preprocessing Structure...'
+	preProcessFilenames(course_config)
+
+	if course_config['args'].verbose:
+		print 'Deep exploring Structure...'
 
 	for obj in course_config['structure']:
 		if isHidden(obj): continue
@@ -293,3 +304,17 @@ def doProcess(course_config):
 
 	if course_config['args'].verbose:
 		print 'Done!'
+
+def preProcessFilenames(course_config):
+	for obj in course_config['structure']:
+		if obj['type'] == 'introduction':
+			obj['title'] = 'index'
+			obj['outFile']  = 'index.html'
+		if obj['type'] == 'part':
+			obj['outFile'] = slugify(obj['title'])
+			if isHidden(obj): continue
+			mkdir_p(os.path.join(course_config['build_dir'],obj['outFile']))
+			for ch in obj['content']:
+				ch['outFile'] = os.path.join(obj['outFile'],slugify(ch['title']))
+		if obj['type'] == 'chapter':
+			obj['outFile'] = slugify(obj['title'])

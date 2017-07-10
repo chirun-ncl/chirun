@@ -6,17 +6,15 @@ from subprocess import Popen, PIPE
 from makeCourse import *
 
 def runPandocForPart(course_config,part,inFile):
-	outFile = re.sub(r'.md$','.html',inFile)
-	outFile = re.sub(r'^[0-9A-z][0-9A-z][0-9A-z][0-9A-z]-','',outFile)
-	outPath = os.path.join(course_config['build_dir'],outFile)
+	outPath = os.path.join(course_config['build_dir'],part['outFile']+".html")
 	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'part.html')
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
-		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
@@ -30,17 +28,15 @@ def runPandocForPart(course_config,part,inFile):
 		sys.exit(2)
 
 def runPandocForChapter(course_config,ch,inFile):
-	outFile = re.sub(r'.md$','.html',inFile)
-	outFile = re.sub(r'^[0-9A-z][0-9A-z][0-9A-z][0-9A-z]-','',outFile)
-	outPath = os.path.join(course_config['build_dir'],outFile)
+	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".html")
 	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'template.html')
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
-		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
@@ -54,16 +50,15 @@ def runPandocForChapter(course_config,ch,inFile):
 		sys.exit(2)
 
 def runPandocForIntro(course_config,ch,inFile):
-	outFile = "index.html"
-	outPath = os.path.join(course_config['build_dir'],outFile)
+	outPath = os.path.join(course_config['build_dir'],"index.html")
 	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'index.html')
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
 	cmd = 'pandoc -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
-		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s --template %s %s -o %s'\
-		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',templateFile,inPath,outPath)
+		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
+		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 

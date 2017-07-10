@@ -7,6 +7,7 @@ import argparse
 import errno
 import makeCourse.process
 import makeCourse.hackmd
+from makeCourse import *
 from distutils.dir_util import copy_tree
 from subprocess import Popen, PIPE 
 
@@ -17,14 +18,6 @@ def purge(course_config, pattern):
 				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
 			os.remove(os.path.join(course_config['args'].dir, f))
 
-def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
 
 def setDefaults(course_config):
 	if 'themes_dir' not in course_config.keys():
@@ -39,6 +32,9 @@ def setDefaults(course_config):
 	if 'theme' not in course_config.keys():
 		course_config['theme'] = 'default'
 
+	if 'web_dir' not in course_config.keys():
+		course_config['web_dir'] = '/module/'+course_config['code']
+		
 	course_config['partsEnabled'] = False
 	course_config['tempFiles'] = []
 
@@ -46,6 +42,7 @@ def setDefaults(course_config):
 		print "The themes directory is: %s"%course_config['themes_dir']
 		print "The static directory is: %s"%course_config['static_dir']
 		print "The build directory is: %s"%course_config['build_dir']
+		print "The web directory is: %s"%course_config['web_dir']
 
 def main():
 	parser = argparse.ArgumentParser()
