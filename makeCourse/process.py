@@ -9,7 +9,7 @@ from makeCourse import *
 
 def replaceLabels(course_config,mdContents):
 	for l in gen_dict_extract('label',course_config):
-		mdLink = re.compile(r'\[([^\]]*)\]\(([^\)]*)\)')
+		mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
 		mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+course_config['web_dir']+l['outFile']+".html)", mdContents)
 	return mdContents
 
