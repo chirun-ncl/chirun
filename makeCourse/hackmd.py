@@ -2,10 +2,14 @@ import sys
 import os
 import re
 import urllib2
+import ssl
 from makeCourse import HACKMD_URL
 
 def downloadFile(url,loc):
-	u = urllib2.urlopen(url)
+	ctx = ssl.create_default_context()
+	ctx.check_hostname = False
+	ctx.verify_mode = ssl.CERT_NONE
+	u = urllib2.urlopen(url, context=ctx)
 	f = open(loc, 'wb')
 	meta = u.info()
 	file_size_dl = 0
@@ -19,8 +23,11 @@ def downloadFile(url,loc):
 	f.close()
 
 def download(url):
-	req = urllib2.Request(url)
-	response = urllib2.urlopen(req)
+	ctx = ssl.create_default_context()
+	ctx.check_hostname = False
+	ctx.verify_mode = ssl.CERT_NONE
+	req = urllib2.Request(url, context=ctx)
+	response = urllib2.urlopen(req, context=ctx)
 	return response.read()
 
 def getHackmdDocument(course_config,code):
