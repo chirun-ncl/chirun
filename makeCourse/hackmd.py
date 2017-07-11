@@ -26,7 +26,7 @@ def download(url):
 	ctx = ssl.create_default_context()
 	ctx.check_hostname = False
 	ctx.verify_mode = ssl.CERT_NONE
-	req = urllib2.Request(url, context=ctx)
+	req = urllib2.Request(url)
 	response = urllib2.urlopen(req, context=ctx)
 	return response.read()
 
