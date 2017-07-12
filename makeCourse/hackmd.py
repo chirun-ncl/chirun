@@ -50,7 +50,7 @@ def getEmbeddedImages(course_config,mdContents):
 			outPath = os.path.join(course_config['build_dir'],'static',outFile)
 			print '        %s=>%s'%(outFile,outPath)
 			downloadFile(url,outPath)
-			mdContents = mdContents.replace(m.group(1),course_config['web_dir']+"static/"+outFile)
+			mdContents = mdContents.replace(m.group(1),os.path.join(course_config['build_dir'],'static',outFile))
 	return mdContents
 
 def getSlidesPDF(course_config,slidesCode):

@@ -13,6 +13,12 @@ def replaceLabels(course_config,mdContents):
 		mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+course_config['web_dir']+l['outFile']+".html)", mdContents)
 	return mdContents
 
+def relativiseImages(course_config,mdContents):
+	mdImageDir = os.path.join(course_config['build_dir'],'static')
+	relativeImageDir = course_config['web_dir']+"static"
+	mdContents = mdContents.replace(mdImageDir, relativeImageDir)
+	return mdContents
+
 def getVimeoHTML(code):
 	return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
 			mozallowfullscreen allowfullscreen></iframe>'
@@ -25,16 +31,27 @@ def getSlidesHTML(course_config,code):
 	return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
 			</iframe><div class="pad-top-10 pull-right"><a href="'+course_config['web_dir']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
 			|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
+def getSlidesURL(course_config,code):
+	makeCourse.hackmd.getSlidesPDF(course_config,code)
+	return HACKMD_URL+'/p/'+code+'/'
 
-def burnInExtras(course_config,mdContents):
+def burnInExtras(course_config,mdContents,pdf=False):
+
 	reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
 	reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
 	reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 	reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-	mdContents = reVimeo.sub(lambda m: getVimeoHTML(m.group(1)), mdContents)
-	mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
-	mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
-	mdContents = reSlides.sub(lambda m: getSlidesHTML(course_config,m.group(1)), mdContents)
+	if pdf:
+		mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
+		mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
+		mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
+		mdContents = reSlides.sub(lambda m: "\n\n\url{"+getSlidesURL(course_config,m.group(1))+"}", mdContents)
+	else:
+		mdContents = reVimeo.sub(lambda m: getVimeoHTML(m.group(1)), mdContents)
+		mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
+		mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
+		mdContents = reSlides.sub(lambda m: getSlidesHTML(course_config,m.group(1)), mdContents)
+		mdContents = relativiseImages(course_config,mdContents)
 
 	mdContents = replaceLabels(course_config,mdContents)
 	return mdContents
@@ -71,6 +88,7 @@ def createYAMLheader(course_config,obj,part=False):
 			if isHidden(ch): continue
 			header += "    - title: %s\n"%ch['title']
 			header += "      file: %s.html\n"%ch['outFile']
+			header += "      pdf: %s.pdf\n"%ch['outFile']
 			if obj == ch:
 				header += "      active: 1\n"
 	header +="\n---\n\n"
@@ -137,7 +155,7 @@ def buildIntroMDFile(course_config,obj):
 
 	return newFile
 
-def buildChapterMDFile(course_config,ch,part=False):
+def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 	if 'content' in ch.keys() and 'source' in ch.keys():
 			sys.stderr.write("Error: Chapter %s contains both content and source elements; including both is invalid. Quitting...\n"%ch['title'])
 			sys.exit(2)
@@ -165,7 +183,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 							print '    Note: Markdown file %s contains a YAML header.'%sec['source']
 						mdContents = re.sub(r'^---.*?---\n','',mdContents)
 					print '    Burning in iframes & extras.'
-					mdContents = burnInExtras(course_config,mdContents)
+					mdContents = burnInExtras(course_config,mdContents,pdf)
 					newFileContent += '\n\n' + '# '+sec['title']+' {.tab-pane .fade}\n' + mdContents
 				elif sec['source'][-4:] == '.tex':
 					#TODO: Do latex -> html snippet
@@ -175,7 +193,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 					mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 					mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 					print '    Burning in iframes & extras.'
-					mdContents = burnInExtras(course_config,mdContents)
+					mdContents = burnInExtras(course_config,mdContents,pdf)
 					newFileContent += '\n\n' + mdContents
 				else:
 					sys.stderr.write("Error: Unrecognised source type for %s, %s. Quitting...\n"%(ch['title'],sec['title']))
@@ -245,7 +263,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 					print '    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source']
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
 			print '    Burning in iframes & extras.'
-			mdContents = burnInExtras(course_config,mdContents)
+			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
 			#TODO: Do latex -> html snippet
@@ -255,7 +273,7 @@ def buildChapterMDFile(course_config,ch,part=False):
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
 			print '    Burning in iframes & extras.'
-			mdContents = burnInExtras(course_config,mdContents)
+			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		else:
 			sys.stderr.write("Error: Unrecognised source type for %s:%s. Quitting...\n"%(ch['title'],ch['source']))
@@ -292,12 +310,16 @@ def doProcess(course_config):
 				if isHidden(obj): continue
 				chFileName = buildChapterMDFile(course_config,ch,part=obj)
 				makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
+				chFileName = buildChapterMDFile(course_config,ch,part=obj,pdf=True)
+				makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
 		elif obj['type'] == 'chapter':
 			if course_config['partsEnabled']:
 				sys.stderr.write("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
 				sys.exit(2)
 			chFileName = buildChapterMDFile(course_config,ch)
 			makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
+			chFileName = buildChapterMDFile(course_config,ch,part=obj,pdf=True)
+			makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
 		elif obj['type'] == 'mocktest':
 			#TODO: download a mock test from numbas
 			pass

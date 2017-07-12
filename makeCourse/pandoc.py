@@ -49,6 +49,26 @@ def runPandocForChapter(course_config,ch,inFile):
 		sys.stderr.write("(Use -vv for more information)\n")
 		sys.exit(2)
 
+
+def runPandocForChapterPDF(course_config,ch,inFile):
+	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".pdf")
+	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'notes.latex')
+	inPath = os.path.join(course_config['args'].dir,inFile)
+	if course_config['args'].verbose:
+		print '    %s => %s'%(inFile,outPath)
+	cmd = 'pandoc --title-prefix="%s" -V chapter-name="%s" --metadata date="`date`" --listings --template %s %s -o %s'%(course_config['title'],ch['title'],templateFile,inPath,outPath)
+	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+	if course_config['args'].veryverbose:
+		print '    %s'%cmd 
+		for line in iter(proc.stderr.readline, ''):
+			print line
+		proc.stdout.close()
+	rc = proc.wait()
+	if rc != 0:
+		sys.stderr.write("Error: Something went wrong running pandoc! Quitting...\n")
+		sys.stderr.write("(Use -vv for more information)\n")
+		sys.exit(2)
+
 def runPandocForIntro(course_config,ch,inFile):
 	outPath = os.path.join(course_config['build_dir'],"index.html")
 	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'index.html')
