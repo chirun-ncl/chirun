@@ -82,6 +82,7 @@ def createYAMLheader(course_config,obj,part=False):
 	header = "---\n"
 	header += "title: %s\n"%obj['title']
 	header += "author: %s\n"%course_config['author']
+	header += "slug: %s\n"%slugify(obj['title'])
 	if part:
 		header += "part: %s\npart-slug: %s\n"%(part['title'],slugify(part['title']))
 		header += "chapters:\n"
