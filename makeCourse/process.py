@@ -137,8 +137,11 @@ def buildIntroMDFile(course_config,obj):
 	elif obj['source'][-4:] == '.tex':
 		#Do latex -> html snippet
 		tmpDir = '%s-plastex-index'%os.urandom(2).encode('hex')
+		course_config['tempFiles'].append(tmpDir)
 		makeCourse.plastex.runPlastex(course_config,obj['source'],tmpDir)
 		texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
+		texContents = makeCourse.plastex.fixPlastexQuirks(texContents)
+		texContents = makeCourse.plastex.getEmbeddedImages(course_config,texContents,tmpDir,"index")
 		texContents = burnInExtras(course_config,texContents)
 		newFileContent += '\n\n' + texContents
 	elif re.search(r'[^/\?:\s]+', obj['source']):
@@ -188,8 +191,15 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
-			#TODO: Do latex -> html snippet
-			newFileContent += '\n\nUnimplemented feature...'
+			#Do latex -> html snippet
+			tmpDir = '%s-plastex-%s'%(os.urandom(2).encode('hex'),slugify(ch['title']))
+			course_config['tempFiles'].append(tmpDir)
+			makeCourse.plastex.runPlastex(course_config,ch['source'],tmpDir)
+			texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
+			texContents = makeCourse.plastex.fixPlastexQuirks(texContents)
+			texContents = makeCourse.plastex.getEmbeddedImages(course_config,texContents,tmpDir,ch['outFile'])
+			texContents = burnInExtras(course_config,texContents)
+			newFileContent += '\n\n' + texContents
 		elif re.search(r'[^/\?:\s]+', ch['source']):
 			code = re.search(r'([^/\?:\s]+)', ch['source']).group(1)
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
@@ -206,6 +216,15 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 		f.close()
 
 	return newFile
+
+def makePDF(course_config,ch,part=False):
+	if ch['source'][-4:] == '.tex':
+		inDir = os.path.join(course_config['args'].dir,os.path.dirname(ch['source']))
+		inFile = os.path.basename(ch['source'])
+		makeCourse.latex.runPdflatex(course_config,ch,inFile,inDir)
+	else:
+		chFileName = buildChapterMDFile(course_config,ch,part=part,pdf=True)
+		makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
 
 def doProcess(course_config):
 	if course_config['args'].verbose:
@@ -232,16 +251,16 @@ def doProcess(course_config):
 				if isHidden(obj): continue
 				chFileName = buildChapterMDFile(course_config,ch,part=obj)
 				makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
-				chFileName = buildChapterMDFile(course_config,ch,part=obj,pdf=True)
-				makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
+				if course_config["build_pdf"]:
+					makePDF(course_config,ch,part=obj)
 		elif obj['type'] == 'chapter':
 			if course_config['partsEnabled']:
 				sys.stderr.write("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
 				sys.exit(2)
-			chFileName = buildChapterMDFile(course_config,ch)
-			makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
-			chFileName = buildChapterMDFile(course_config,ch,part=obj,pdf=True)
-			makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
+			chFileName = buildChapterMDFile(course_config,obj)
+			makeCourse.pandoc.runPandocForChapter(course_config,obj,chFileName)
+			if course_config["build_pdf"]:
+					makePDF(course_config,ch,part=obj)
 		elif obj['type'] == 'mocktest':
 			#TODO: download a mock test from numbas
 			pass

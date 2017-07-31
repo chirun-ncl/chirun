@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import yaml
 import os
+import shutil
 import sys
 import re
 import argparse
@@ -17,6 +18,12 @@ def purge(course_config, pattern):
 			if course_config['args'].verbose:
 				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
 			os.remove(os.path.join(course_config['args'].dir, f))
+def purgeDir(course_config, pattern):
+	for f in os.listdir(course_config['args'].dir):
+		if re.search(pattern, f):
+			if course_config['args'].verbose:
+				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
+			shutil.rmtree(os.path.join(course_config['args'].dir, f))
 
 
 def setDefaults(course_config):
@@ -48,6 +55,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-v', dest='verbose', action='store_true')
 	parser.add_argument('-vv', dest='veryverbose', action='store_true')
+	parser.add_argument('-l', dest='lazy', action='store_true')
 	parser.add_argument('dir', help='a course definition directory')
 	args = parser.parse_args()
 	
@@ -108,17 +116,22 @@ def main():
 	except:
 		sys.stderr.write("Warning: Problem copying Course's static directory!\n")
 		pass
-
-	if course_config['args'].verbose:
-		print "Cleaning up temporary files"
-	for temp_file in course_config['tempFiles']:
-		os.remove(os.path.join(course_config['args'].dir,temp_file))
+		
+	if not course_config['args'].lazy:
 		if course_config['args'].verbose:
-			print '    Deleted: %s'%temp_file
+			print "Cleaning up temporary files"
+		for temp_file in course_config['tempFiles']:
+			try:
+				os.remove(os.path.join(course_config['args'].dir,temp_file))
+			except OSError:
+				shutil.rmtree(os.path.join(course_config['args'].dir,temp_file))
+			if course_config['args'].verbose:
+				print '    Deleted: %s'%temp_file
 
-	if course_config['args'].verbose:
-		print "Cleaning up any missed .md files"
-	purge(course_config, r'[0-9a-f]{4}-.*?\.md')
+		if course_config['args'].verbose:
+			print "Cleaning up any missed files"
+		purge(course_config, r'[0-9a-f]{4}-.*?\.md')
+		purgeDir(course_config, r'[0-9a-f]{4}-.*?')
 		
 	print "All done! Output written to %s"%course_config['build_dir']
 if __name__ == "__main__":
