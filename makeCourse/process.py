@@ -261,7 +261,7 @@ def doProcess(course_config):
 			chFileName = buildChapterMDFile(course_config,obj)
 			makeCourse.pandoc.runPandocForChapter(course_config,obj,chFileName)
 			if course_config["build_pdf"]:
-					makePDF(course_config,ch,part=obj)
+					makePDF(course_config,obj)
 		elif obj['type'] == 'mocktest':
 			#TODO: download a mock test from numbas
 			pass
