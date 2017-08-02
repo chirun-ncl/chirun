@@ -93,6 +93,15 @@ def createYAMLheader(course_config,obj,part=False):
 			header += "      pdf: %s.pdf\n"%ch['outFile']
 			if obj == ch:
 				header += "      active: 1\n"
+	else:
+		header += "chapters:\n"
+		for ch in course_config['structure']:
+			if isHidden(ch): continue
+			header += "    - title: %s\n"%ch['title']
+			header += "      file: %s.html\n"%ch['outFile']
+			header += "      pdf: %s.pdf\n"%ch['outFile']
+			if obj == ch:
+				header += "      active: 1\n"
 	header +="\n---\n\n"
 	return header
 
