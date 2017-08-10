@@ -15,6 +15,7 @@ The main makeCourse tool lives in this repository.
  * Install the makeCourse tool: `pip2 install -e .`
 
 ## Compile the MAS0001 test course
- * cd somewhere reasonable and get the MAS0001 test course: `git clone --recursive git@mas-gitlab.ncl.ac.uk:makecourse-tools/mas0001/mas0001.git`
- * Run makeCourse: `makecourse -v mas0001`. Here `-v` is used for verbose output.
- * The output html lives in `./mas0001/build`
+ * Install makeCourse using the instructions above
+ * Clone the source/configuration of one of the MAS modules from the `https://mas-gitlab.ncl.ac.uk/makecourse-tools/` group, e.g `MAS0001`
+ * Run makeCourse on the directory you just cloned to: `makecourse -v MAS0001`. Here `-v` is used for verbose output
+ * The output website will then be in `./MAS0001/build`
