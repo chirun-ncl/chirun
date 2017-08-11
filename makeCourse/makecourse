@@ -12,12 +12,15 @@ from makeCourse import *
 from distutils.dir_util import copy_tree
 from subprocess import Popen, PIPE 
 
-def purge(course_config, pattern):
-	for f in os.listdir(course_config['args'].dir):
+
+def purge(course_config, pattern,path=None):
+	if path==None:
+		path=course_config['args'].dir
+	for f in os.listdir(path):
 		if re.search(pattern, f):
 			if course_config['args'].verbose:
-				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
-			os.remove(os.path.join(course_config['args'].dir, f))
+				print '    Deleted: %s'%os.path.join(path, f)
+			os.remove(os.path.join(path, f))
 def purgeDir(course_config, pattern):
 	for f in os.listdir(course_config['args'].dir):
 		if re.search(pattern, f):
@@ -133,6 +136,7 @@ def main():
 
 		if course_config['args'].verbose:
 			print "Cleaning up any missed files"
+		purge(course_config,r'.+?\.paux',path='.')
 		purge(course_config, r'[0-9a-f]{4}-.*?\.md')
 		purgeDir(course_config, r'[0-9a-f]{4}-.*?')
 		
