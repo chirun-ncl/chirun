@@ -21,15 +21,16 @@ def runPlastex(course_config,inFile,tmpDir):
 	outPath = os.path.join(course_config['args'].dir,tmpDir)
 	inPath = os.path.join(course_config['args'].dir,inFile)
 
-	cmd = 'plastex --dir=%s --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl %s'%(outPath,inPath)
+	cmd = 'plastex --dir=%s --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl %s 2>&1'%(outPath,inPath)
 
 	if course_config['args'].verbose:
 		print 'Running plastex: %s'%cmd
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-	if course_config['args'].veryverbose:
-		for line in iter(proc.stderr.readline, ''):
+	for line in iter(proc.stdout.readline, ''):
+		if course_config['args'].veryverbose:
 			print line
-		proc.stdout.close()
+	proc.stdout.close()
+
 	rc = proc.wait()
 	if rc != 0:
 		sys.stderr.write("Error: Something went wrong with the latex compilation! Quitting...\n")
