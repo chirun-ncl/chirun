@@ -15,6 +15,10 @@ def fixPlastexQuirks(text):
 	#Mathjax doesn't allow whitespace just after opening $ or just before closing $.
 	reInlineEqn = re.compile(r'(^|[^\$])\$([^\$]+?)\$(?=[^\$]|$)')
 	text = reInlineEqn.sub(lambda m: m.group(1)+' $'+m.group(2).strip()+'$', text)
+
+	#Stop markdown from listifying things.
+	reItemList = re.compile(r'<p>\s*([\(\[]*)([A-z0-9]{1,3})([\)\]\.\:])')
+	text = reItemList.sub(lambda m: '<p>'+m.group(1)+m.group(2)+"\\"+m.group(3), text)
 	return text
 
 def runPlastex(course_config,inFile,tmpDir):
