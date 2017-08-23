@@ -19,6 +19,15 @@ def fixPlastexQuirks(text):
 	#Stop markdown from listifying things.
 	reItemList = re.compile(r'<p>\s*([\(\[]*)([A-z0-9]{1,3})([\)\]\.\:])')
 	text = reItemList.sub(lambda m: '<p>'+m.group(1)+m.group(2)+"\\"+m.group(3), text)
+
+	#Stop pandoc from escaping brackets in math
+	reBracketMath = re.compile(r'<span class=\"dmath\">\\\[(.*?)\\\]</span>')
+	text = reBracketMath.sub(lambda m: '<span class="dmath">$$'+m.group(1)+'$$</span>', text)
+
+	#Stop pandoc from interpreting plastex output as code
+	re4spaces = re.compile(r'<p>\s\s\s\s')
+	text = re4spaces.sub('<p>', text)
+
 	return text
 
 def runPlastex(course_config,inFile,tmpDir):
