@@ -10,6 +10,15 @@ from subprocess import Popen, PIPE
 from jinja2 import Template
 from makeCourse import *
 
+def getTikzTemplateArgs(course_config):
+	if 'tikz_template' in course_config.keys():
+		tikzPath = os.path.join(course_config['args'].dir,course_config["tikz_template"])
+		if course_config['args'].verbose:
+			print 'Using tikz template: %s'%tikzPath
+		return "--tikz-template=%s"%tikzPath
+	else:
+		return ""
+
 def fixPlastexQuirks(text):
 	#This takes something like $ stuff $ and turns it into $stuff$.
 	#Mathjax doesn't allow whitespace just after opening $ or just before closing $.
@@ -25,8 +34,10 @@ def fixPlastexQuirks(text):
 	text = reBracketMath.sub(lambda m: '<span class="dmath">$$'+m.group(1)+'$$</span>', text)
 
 	#Stop pandoc from interpreting plastex output as code
-	re4spaces = re.compile(r'<p>\s\s\s\s')
-	text = re4spaces.sub('<p>', text)
+	reStartSpaces = re.compile(r'^ +',re.M)
+	text = reStartSpaces.sub('', text)
+	reParagraphSpaces = re.compile(r'^<p> +',re.M)
+	text = reParagraphSpaces.sub('', text)
 
 	return text
 
@@ -34,7 +45,7 @@ def runPlastex(course_config,inFile,tmpDir):
 	outPath = os.path.join(course_config['args'].dir,tmpDir)
 	inPath = os.path.join(course_config['args'].dir,inFile)
 
-	cmd = 'plastex --dir=%s --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl %s 2>&1'%(outPath,inPath)
+	cmd = 'plastex --dir=%s %s --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl %s 2>&1'%(outPath,getTikzTemplateArgs(course_config),inPath)
 
 	if course_config['args'].verbose:
 		print 'Running plastex: %s'%cmd

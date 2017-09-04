@@ -81,6 +81,7 @@ def createIndexYAMLheader(course_config):
 def createYAMLheader(course_config,obj,part=False):
 	header = "---\n"
 	header += "title: %s\n"%obj['title']
+	header += "build_pdf: %s\n"%course_config['build_pdf']
 	header += "author: %s\n"%course_config['author']
 	header += "slug: %s\n"%slugify(obj['title'])
 	if part:

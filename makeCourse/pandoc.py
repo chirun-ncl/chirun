@@ -11,7 +11,7 @@ def runPandocForPart(course_config,part,inFile):
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
-	cmd = 'pandoc -markdown-markdown_in_html_blocks-fancy_lists-example_lists -s --title-prefix="%s" \
+	cmd = 'pandoc -markdown -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
 		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)
@@ -33,7 +33,7 @@ def runPandocForChapter(course_config,ch,inFile):
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
-	cmd = 'pandoc -markdown-markdown_in_html_blocks-fancy_lists-example_lists -s --title-prefix="%s" \
+	cmd = 'pandoc -markdown -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
 		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)
@@ -56,7 +56,7 @@ def runPandocForChapterPDF(course_config,ch,inFile):
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
-	cmd = 'pandoc -markdown-markdown_in_html_blocks-fancy_lists-example_lists --title-prefix="%s" -V chapter-name="%s" --metadata date="`date`" --listings --template %s %s -o %s'%(course_config['title'],ch['title'],templateFile,inPath,outPath)
+	cmd = 'pandoc -markdown --title-prefix="%s" -V chapter-name="%s" --metadata date="`date`" --listings --template %s %s -o %s'%(course_config['title'],ch['title'],templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
 		print '    %s'%cmd 
@@ -75,7 +75,7 @@ def runPandocForIntro(course_config,ch,inFile):
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print '    %s => %s'%(inFile,outPath)
-	cmd = 'pandoc -markdown-markdown_in_html_blocks-fancy_lists-example_lists -s --title-prefix="%s" \
+	cmd = 'pandoc -markdown -s --title-prefix="%s" \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--toc --toc-depth=2 --section-divs --metadata date="`date`" %s -V web_dir=%s --template %s %s -o %s'\
 		%(course_config['title'],'-V mocktest='+getMockTest(course_config) if containsMockTest(course_config) else '',course_config['web_dir'],templateFile,inPath,outPath)

@@ -57,11 +57,29 @@ def setDefaults(course_config):
 		print "The build directory is: %s"%course_config['build_dir']
 		print "The web directory is: %s"%course_config['web_dir']
 
+def cleanUp(course_config):
+	if course_config['args'].verbose:
+		print "Cleaning up temporary files"
+	for temp_file in course_config['tempFiles']:
+		try:
+			os.remove(os.path.join(course_config['args'].dir,temp_file))
+		except OSError:
+			shutil.rmtree(os.path.join(course_config['args'].dir,temp_file))
+		if course_config['args'].verbose:
+			print '    Deleted: %s'%temp_file
+
+	if course_config['args'].verbose:
+		print "Cleaning up any missed files"
+	purge(course_config,r'.+?\.paux',path='.')
+	purge(course_config, r'[0-9a-f]{4}-.*?\.md')
+	purgeDir(course_config, r'[0-9a-f]{4}-.*?')
+
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-v', dest='verbose', action='store_true')
-	parser.add_argument('-vv', dest='veryverbose', action='store_true')
-	parser.add_argument('-l', dest='lazy', action='store_true')
+	parser.add_argument('-v', dest='verbose', action='store_true',help='verbose output')
+	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
+	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
+	parser.add_argument('-l', dest='lazy', action='store_true',help='don\'t delete temporary files when finished')
 	parser.add_argument('dir', help='a course definition directory')
 	args = parser.parse_args()
 	
@@ -83,6 +101,9 @@ def main():
 		course_config['args'] = args
 	
 	setDefaults(course_config)
+
+	if course_config['args'].deleteFirst:
+		cleanUp(course_config)
 
 	if course_config['args'].verbose:
 		print "Creating build directory..."
@@ -122,23 +143,9 @@ def main():
 	except:
 		sys.stderr.write("Warning: Problem copying Course's static directory!\n")
 		pass
-		
+	
 	if not course_config['args'].lazy:
-		if course_config['args'].verbose:
-			print "Cleaning up temporary files"
-		for temp_file in course_config['tempFiles']:
-			try:
-				os.remove(os.path.join(course_config['args'].dir,temp_file))
-			except OSError:
-				shutil.rmtree(os.path.join(course_config['args'].dir,temp_file))
-			if course_config['args'].verbose:
-				print '    Deleted: %s'%temp_file
-
-		if course_config['args'].verbose:
-			print "Cleaning up any missed files"
-		purge(course_config,r'.+?\.paux',path='.')
-		purge(course_config, r'[0-9a-f]{4}-.*?\.md')
-		purgeDir(course_config, r'[0-9a-f]{4}-.*?')
+		cleanUp(course_config)
 		
 	print "All done! Output written to %s"%course_config['build_dir']
 if __name__ == "__main__":
