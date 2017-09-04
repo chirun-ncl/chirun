@@ -38,6 +38,12 @@ def fixPlastexQuirks(text):
 	text = reStartSpaces.sub('', text)
 	reParagraphSpaces = re.compile(r'^<p> +',re.M)
 	text = reParagraphSpaces.sub('', text)
+	reSmartQuotes = re.compile(r'`(.*?)\'')
+	text = reSmartQuotes.sub(lambda m:"\'"+m.group(1)+"\'", text)
+
+	#Remove empty paragraphs
+	reEmptyP = re.compile(r'<p></p>')
+	text = reEmptyP.sub('', text)
 
 	return text
 
