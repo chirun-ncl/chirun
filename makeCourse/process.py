@@ -120,7 +120,7 @@ def createPartYAMLheader(course_config,obj):
 	return header
 
 def buildpartMDFile(course_config,part):
-	newFile = '%s-%s.md'%(os.urandom(2).encode('hex'),slugify(part['title']))
+	newFile = temp_path('%s.md' % slugify(part['title']))
 	course_config['tempFiles'].append(newFile)
 	newFileContent = createPartYAMLheader(course_config,part)
 	f = open(os.path.join(course_config['args'].dir,newFile), 'w')
@@ -129,7 +129,7 @@ def buildpartMDFile(course_config,part):
 	return newFile
 
 def buildIntroMDFile(course_config,obj):
-	newFile = '%s-index.md'%os.urandom(2).encode('hex')
+	newFile = temp_path('index.md')
 	course_config['tempFiles'].append(newFile)
 	newFileContent = createIndexYAMLheader(course_config)
 
@@ -147,7 +147,7 @@ def buildIntroMDFile(course_config,obj):
 			sys.exit(2)
 	elif obj['source'][-4:] == '.tex':
 		#Do latex -> html snippet
-		tmpDir = '%s-plastex-index'%os.urandom(2).encode('hex')
+		tmpDir = temp_path('plastex-index')
 		course_config['tempFiles'].append(tmpDir)
 		makeCourse.plastex.runPlastex(course_config,obj['source'],tmpDir)
 		texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
@@ -181,9 +181,9 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 
 	if 'source' in ch.keys():
 		if part:
-			newFile = '%s-%s_%s.md'%(os.urandom(2).encode('hex'),slugify(part['title']),slugify(ch['title']))
+			newFile = temp_path('%s_%s.md'%(slugify(part['title']),slugify(ch['title'])))
 		else:
-			newFile = '%s-%s.md'%(os.urandom(2).encode('hex'),slugify(ch['title']))
+			newFile = temp_path('%s.md' % slugify(ch['title']))
 		course_config['tempFiles'].append(newFile)
 		newFileContent = createYAMLheader(course_config,ch,part)
 
@@ -203,7 +203,7 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
 			#Do latex -> html snippet
-			tmpDir = '%s-plastex-%s'%(os.urandom(2).encode('hex'),slugify(ch['title']))
+			tmpDir = temp_path('plastex-%s'%slugify(ch['title']))
 			course_config['tempFiles'].append(tmpDir)
 			makeCourse.plastex.runPlastex(course_config,ch['source'],tmpDir)
 			texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
