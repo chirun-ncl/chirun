@@ -1,8 +1,11 @@
-import sys
+import logging
 import os
-import re
 import pkg_resources
+import re
+import sys
 from subprocess import Popen, PIPE 
+
+logger = logging.getLogger(__name__)
 
 def runPdflatex(course_config,ch,inFile,inDir=None):
 	if not inDir:
@@ -10,12 +13,10 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 	baseFile = re.sub(r'.tex$','',inFile)
 
 	cmd = ['pdflatex',inFile,'&&','pdflatex',inFile]
-	if course_config['args'].verbose:
-		print('Running pdflatex: {}'.format(os.path.join(inDir,inFile)))
+	logger('Running pdflatex: {}'.format(os.path.join(inDir,inFile)))
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE, cwd=inDir)
 	out, err = proc.communicate()
-	if course_config['args'].veryverbose:
-		print(out)
+	logger.debug(out)
 	if proc.returncode != 0:
 		sys.stderr.write("Error: Something went wrong running pdflatex! Quitting...\n")
 		if not course.config['args'].veryverbose:
@@ -23,14 +24,12 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 		sys.exit(2)
 
 	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".pdf")
-	if course_config['args'].verbose:
-		print('    Copying pdf output: %s => %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath))
+	logger.info('    Copying pdf output: %s => %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath))
 	cmd = 'cp %s %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
-		print('    %s'%cmd )
-		for line in iter(proc.stdout.readline, ''):
-			print(line)
+		logger.debug('    %s'%cmd )
+		logger.debug(proc.stdout.read())
 		proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -39,15 +38,14 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 		sys.exit(2)
 
 
-	if course_config['args'].verbose:
-		print('    Cleaning up after pdflatex...')
-		print('        Deleting: %s.log'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.aux'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.out'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.pdf'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.snm'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.nav'%os.path.join(course_config['args'].dir,baseFile))
-		print('        Deleting: %s.toc'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('    Cleaning up after pdflatex...')
+	logging.info('        Deleting: %s.log'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.aux'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.out'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.pdf'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.snm'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.nav'%os.path.join(course_config['args'].dir,baseFile))
+	logging.info('        Deleting: %s.toc'%os.path.join(course_config['args'].dir,baseFile))
 
 	try:
 		os.remove('%s.aux'%os.path.join(course_config['args'].dir,baseFile))

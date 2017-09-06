@@ -1,20 +1,23 @@
-import os
-import re
-from datetime import datetime
 import glob
-import sys
+import logging
+import os
 import pkg_resources
+import re
 import shutil
+import sys
+from datetime import datetime
 from distutils.dir_util import copy_tree
-from subprocess import Popen, PIPE 
 from jinja2 import Template
 from makeCourse import *
+from subprocess import Popen, PIPE 
+
+logger = logging.getLogger(__name__)
 
 def getTikzTemplateArgs(course_config):
 	if 'tikz_template' in course_config.keys():
 		tikzPath = os.path.join(course_config['args'].dir,course_config["tikz_template"])
 		if course_config['args'].verbose:
-			print('Using tikz template: %s'%tikzPath)
+			logger.debug('Using tikz template: %s'%tikzPath)
 		return "--tikz-template=%s"%tikzPath
 	else:
 		return ""
@@ -36,8 +39,8 @@ def fixPlastexQuirks(text):
 	#Stop pandoc from interpreting plastex output as code
 	reStartSpaces = re.compile(r'^ +',re.M)
 	text = reStartSpaces.sub('', text)
-	reParagraphSpaces = re.compile(r'^<p> +',re.M)
-	text = reParagraphSpaces.sub('', text)
+#	reParagraphSpaces = re.compile(r'^<p> +',re.M)
+#	text = reParagraphSpaces.sub('', text)
 	reSmartQuotes = re.compile(r'`(.*?)\'')
 	text = reSmartQuotes.sub(lambda m:"\'"+m.group(1)+"\'", text)
 
@@ -51,14 +54,11 @@ def runPlastex(course_config,inFile,tmpDir):
 	outPath = os.path.join(course_config['args'].dir,tmpDir)
 	inPath = os.path.join(course_config['args'].dir,inFile)
 
-	cmd = 'plastex --dir=%s %s --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl %s 2>&1'%(outPath,getTikzTemplateArgs(course_config),inPath)
+	cmd = 'plastex --dir={outPath} {tikzArgs} --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl {inPath} 2>&1'.format(outPath=outPath, tikzArgs=getTikzTemplateArgs(course_config), inPath=inPath)
 
-	if course_config['args'].verbose:
-		print('Running plastex: %s'%cmd)
+	logger.info('Running plastex: %s'%cmd)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-	for line in iter(proc.stdout.readline, ''):
-		if course_config['args'].veryverbose:
-			print(line)
+	logger.debug(proc.stdout.read())
 	proc.stdout.close()
 
 	rc = proc.wait()
@@ -66,13 +66,12 @@ def runPlastex(course_config,inFile,tmpDir):
 		sys.stderr.write("Error: Something went wrong with the latex compilation! Quitting...\n")
 		sys.stderr.write("(Use -vv for more information)\n")
 		sys.exit(2)
-	elif course_config['args'].verbose:
-		print('Done!')
+	else:
+		logger.info('Done!')
 
 
 def getEmbeddedImages(course_config,texContents,tmpDir,title):
-	if course_config['args'].verbose:
-		print('    Moving embedded images:')
+	logger.info('    Moving embedded images:')
 	#Markdown Images
 	mdImage = re.compile(r'!\[[^\]]*\]\(([^\)]*)\)')
 	for m in re.finditer(mdImage, texContents):
@@ -80,8 +79,7 @@ def getEmbeddedImages(course_config,texContents,tmpDir,title):
 		inPath = os.path.join(course_config['args'].dir,tmpDir,'images',inFile)
 		outPath = os.path.join(course_config['build_dir'],'static',title,inFile)
 		outDir  = os.path.join(course_config['build_dir'],'static',title)
-		if course_config['args'].verbose:
-			print('        %s=> %s'%(inPath,outPath))
+		logger.info('        %s=> %s'%(inPath,outPath))
 		#ACTUALLY MOVE THE FILE
 		mkdir_p(outDir)
 		shutil.copyfile(inPath.strip(), outPath.strip())
@@ -94,8 +92,7 @@ def getEmbeddedImages(course_config,texContents,tmpDir,title):
 		inPath = os.path.join(course_config['args'].dir,tmpDir,'images',inFile)
 		outPath = os.path.join(course_config['build_dir'],'static',title,inFile)
 		outDir  = os.path.join(course_config['build_dir'],'static',title)
-		if course_config['args'].verbose:
-			print('        %s=> %s'%(inPath,outPath))
+		logger.info('        %s=> %s'%(inPath,outPath))
 		#ACTUALLY MOVE THE FILE
 		mkdir_p(outDir)
 		shutil.copyfile(inPath.strip(), outPath.strip())

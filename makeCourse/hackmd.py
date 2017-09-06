@@ -1,9 +1,12 @@
-import sys
+import logging
 import os
 import re
-import urllib2
 import ssl
+import sys
+import urllib2
 from makeCourse import HACKMD_URL
+
+logger = logging.getLogger(__name__)
 
 def downloadFile(url,loc):
 	ctx = ssl.create_default_context()
@@ -32,14 +35,12 @@ def download(url):
 
 def getHackmdDocument(course_config,code):
 	url = HACKMD_URL+'/'+code+'/download'
-	if course_config['args'].verbose:
-		print('    Getting document from hackMD: %s'%url)
+	logger.info('    Getting document from hackMD: %s'%url)
 	mdContents = download(url)
 	return mdContents
 
 def getEmbeddedImages(course_config,mdContents):
-	if course_config['args'].verbose:
-		print('    Downloading embedded images:')
+	logger.info('    Downloading embedded images:')
 	mdImage = re.compile(r'!\[[^\]]*\]\(([^\)]*)\)')
 	for m in re.finditer(mdImage, mdContents):
 		if course_config['args'].verbose:
@@ -48,19 +49,16 @@ def getEmbeddedImages(course_config,mdContents):
 				url = HACKMD_URL + m.group(1)
 			outFile = os.path.basename(m.group(1))
 			outPath = os.path.join(course_config['build_dir'],'static',outFile)
-			print('        %s=>%s'%(outFile,outPath))
+			logger.debug('        %s=>%s'%(outFile,outPath))
 			downloadFile(url,outPath)
 			mdContents = mdContents.replace(m.group(1),os.path.join(course_config['build_dir'],'static',outFile))
 	return mdContents
 
 def getSlidesPDF(course_config,slidesCode):
 	url = HACKMD_URL+'/'+slidesCode+'/pdf'
-	if course_config['args'].verbose:
-		print('    Getting document from hackMD: %s'%url)
+	logger.info('    Getting document from hackMD: %s'%url)
 
 	outFile = slidesCode+".pdf"
 	outPath = os.path.join(course_config['build_dir'],'static',outFile)
-	print('        %s=>%s'%(outFile,outPath))
+	logger.debug('        %s=>%s'%(outFile,outPath))
 	downloadFile(url,outPath)
-
-

@@ -1,31 +1,31 @@
 #!/usr/bin/env python
-import yaml
-import os
-import shutil
-import sys
-import re
 import argparse
 import errno
-import makeCourse.process
+import logging
 import makeCourse.hackmd
-from makeCourse import *
+import makeCourse.process
+import os
+import re
+import shutil
+import sys
+import yaml
 from distutils.dir_util import copy_tree
+from makeCourse import *
 from subprocess import Popen, PIPE 
 
+logger = logging.getLogger('makeCourse')
 
 def purge(course_config, pattern,path=None):
 	if path==None:
 		path=course_config['args'].dir
 	for f in os.listdir(path):
 		if re.search(pattern, f):
-			if course_config['args'].verbose:
-				print('    Deleted: %s'%os.path.join(path, f))
+			logger.info('    Deleted: %s'%os.path.join(path, f))
 			os.remove(os.path.join(path, f))
 def purgeDir(course_config, pattern):
 	for f in os.listdir(course_config['args'].dir):
 		if re.search(pattern, f):
-			if course_config['args'].verbose:
-				print('    Deleted: %s'%os.path.join(course_config['args'].dir, f))
+			logger.info('    Deleted: %s'%os.path.join(course_config['args'].dir, f))
 			shutil.rmtree(os.path.join(course_config['args'].dir, f))
 
 
@@ -51,30 +51,28 @@ def setDefaults(course_config):
 	course_config['partsEnabled'] = False
 	course_config['tempFiles'] = []
 
-	if course_config['args'].verbose:
-		print("The themes directory is: %s"%course_config['themes_dir'])
-		print("The static directory is: %s"%course_config['static_dir'])
-		print("The build directory is: %s"%course_config['build_dir'])
-		print("The web directory is: %s"%course_config['web_dir'])
+	logger.info("The themes directory is: %s"%course_config['themes_dir'])
+	logger.info("The static directory is: %s"%course_config['static_dir'])
+	logger.info("The build directory is: %s"%course_config['build_dir'])
+	logger.info("The web directory is: %s"%course_config['web_dir'])
 
 def cleanUp(course_config):
-	if course_config['args'].verbose:
-		print("Cleaning up temporary files")
+	logger.info("Cleaning up temporary files")
 	for temp_file in course_config['tempFiles']:
 		try:
 			os.remove(os.path.join(course_config['args'].dir,temp_file))
 		except OSError:
 			shutil.rmtree(os.path.join(course_config['args'].dir,temp_file))
-		if course_config['args'].verbose:
-			print('    Deleted: %s'%temp_file)
+		logger.info('    Deleted: %s'%temp_file)
 
-	if course_config['args'].verbose:
-		print("Cleaning up any missed files")
+	logger.info("Cleaning up any missed files")
 	purge(course_config,r'.+?\.paux',path='.')
 	purge(course_config, r'[0-9a-f]{4}-.*?\.md')
 	purgeDir(course_config, r'[0-9a-f]{4}-.*?')
 
 def main():
+
+
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-v', dest='verbose', action='store_true',help='verbose output')
 	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
@@ -89,14 +87,21 @@ def main():
 	if args.veryverbose:
 		args.verbose = True
 
+	if args.verbose:
+		if args.veryverbose:
+			logging.basicConfig(level=logging.DEBUG, format='%(path): %(levelname)s:\t%(message)s\n')
+		else:
+			logging.basicConfig(level=logging.INFO, format='%(message)s\n')
+	else:
+		logging.basicConfig(level=logging.WARN, format='%(levelname)s: %(message)s\n')
+
 	if args.config_file:
 		config_file = args.config_file
 	else:
 		config_file = os.path.join(args.dir, 'config.yml')
 
-	if args.verbose:
-		print("Running makecourse for directory %s"%args.dir)
-		print("Reading %s..."% config_file)
+	logger.info("Running makecourse for directory %s"%args.dir)
+	logger.info("Reading %s..."% config_file)
 
 	with open(config_file, 'r') as f:
 		course_config = yaml.load(f)
@@ -118,39 +123,32 @@ def main():
 	if args.theme:
 		course_config['theme'] = args.theme
 
-	if course_config['args'].verbose:
-		print("Creating build directory...")
+	logger.info("Creating build directory...")
 	mkdir_p(os.path.join(course_config['build_dir'],'static'))
 
-	if course_config['args'].verbose:
-		print("Creating static directory...")
+	logger.info("Creating static directory...")
 	mkdir_p(course_config['static_dir'])
 
-	if course_config['args'].verbose:
-		print("Starting processing...")
+	logger.info("Starting processing...")
 
 	makeCourse.process.doProcess(course_config)
 	
-	if course_config['args'].verbose:
-		print("Running epilogue...")
+	logger.info("Running epilogue...")
 
 	srcPath = os.path.join(course_config['themes_dir'],course_config['theme'],'static')
 	dstpath = os.path.join(course_config['build_dir'],'static')
-	if args.verbose:
-		print("Copying Theme's static directory to the build directory...")
-		print("    %s => %s"%(srcPath,dstpath))
+	logger.info("Copying Theme's static directory to the build directory...")
+	logger.info("    %s => %s"%(srcPath,dstpath))
 	try:
 		copy_tree(srcPath, dstpath)
 	except:
 		sys.stderr.write("Warning: Problem copying Theme's static directory")
 		pass
 
-	if course_config['args'].verbose:
-		print("Copying Course's static directory to the build directory...")
+	logger.info("Copying Course's static directory to the build directory...")
 	srcPath = os.path.join(course_config['static_dir'])
 	dstpath = os.path.join(course_config['build_dir'],'static')
-	if course_config['args'].verbose:
-		print("    %s => %s"%(srcPath,dstpath))
+	logger.info("    %s => %s"%(srcPath,dstpath))
 	try:
 		copy_tree(srcPath, dstpath)
 	except:

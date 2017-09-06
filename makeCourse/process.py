@@ -1,12 +1,15 @@
-import sys
-import os
-import re
+import logging
+import makeCourse.hackmd
+import makeCourse.latex
 import makeCourse.pandoc
 import makeCourse.plastex
-import makeCourse.latex
-import makeCourse.hackmd
 import makeCourse.slides
+import os
+import re
+import sys
 from makeCourse import *
+
+logger = logging.getLogger(__name__)
 
 def replaceLabels(course_config,mdContents):
 	for l in gen_dict_extract('label',course_config):
@@ -133,13 +136,12 @@ def buildIntroMDFile(course_config,obj):
 	course_config['tempFiles'].append(newFile)
 	newFileContent = createIndexYAMLheader(course_config)
 
-	if course_config['args'].verbose:
-		print('Building index: %s'%newFile)
+	logger.info('Building index: %s'%newFile)
 
 	if obj['source'][-3:] == '.md':
 		mdContents = open(os.path.join(course_config['args'].dir,obj['source']), 'r').read()
 		if mdContents[:3] != '---':
-			print('    Burning in iframes & extras.')
+			logger.debug('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
 		else:
@@ -175,9 +177,9 @@ def buildIntroMDFile(course_config,obj):
 	return newFile
 
 def buildChapterMDFile(course_config,ch,part=False,pdf=False):
-	if 'content' in ch.keys() and 'source' in ch.keys():
-			sys.stderr.write("Error: Chapter %s contains both content and source elements; including both is invalid. Quitting...\n"%ch['title'])
-			sys.exit(2)
+	if 'content' in ch and 'source' in ch:
+		sys.stderr.write("Error: Chapter %s contains both content and source elements; including both is invalid. Quitting...\n"%ch['title'])
+		sys.exit(2)
 
 	if 'source' in ch.keys():
 		if part:
@@ -187,18 +189,15 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 		course_config['tempFiles'].append(newFile)
 		newFileContent = createYAMLheader(course_config,ch,part)
 
-		if course_config['args'].verbose:
-			print('Building chapter file: %s'%newFile)
+		logger.info('Building chapter file: %s'%newFile)
 
 		if ch['source'][-3:] == '.md':
-			if course_config['args'].verbose:
-				print('    Adding: %s'%ch['title'])
+			logger.info('    Adding: %s'%ch['title'])
 			mdContents = open(os.path.join(course_config['args'].dir,ch['source']), 'r').read()
 			if mdContents[:3] == '---':
-				if course_config['args'].verbose:
-					print('    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source'])
+				logger.info('    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source'])
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-			print('    Burning in iframes & extras.')
+			logger.debug('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
@@ -215,7 +214,7 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 			code = re.search(r'([^/\?:\s]+)', ch['source']).group(1)
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
-			print('    Burning in iframes & extras.')
+			logger.debug('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		else:
@@ -238,12 +237,10 @@ def makePDF(course_config,ch,part=False):
 		makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
 
 def doProcess(course_config):
-	if course_config['args'].verbose:
-		print('Preprocessing Structure...')
+	logger.info('Preprocessing Structure...')
 	preProcessFilenames(course_config)
 
-	if course_config['args'].verbose:
-		print('Deep exploring Structure...')
+	logger.info('Deep exploring Structure...')
 
 	for obj in course_config['structure']:
 		if isHidden(obj): continue
@@ -276,8 +273,7 @@ def doProcess(course_config):
 			#TODO: download a mock test from numbas
 			pass
 
-	if course_config['args'].verbose:
-		print('Done!')
+	logger.info('Done!')
 
 def preProcessFilenames(course_config):
 	for obj in course_config['structure']:
