@@ -29,7 +29,7 @@ def runPandocForPart(course_config,part,inFile):
 
 def runPandocForChapter(course_config,ch,inFile):
 	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".html")
-	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'template.html')
+	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'chapter.html')
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
 		print('    %s => %s'%(inFile,outPath))
