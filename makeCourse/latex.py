@@ -8,18 +8,18 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 	if not inDir:
 		inDir = course_config['args'].dir
 	baseFile = re.sub(r'.tex$','',inFile)
-	cmd = 'cd %s && pdflatex %s && pdflatex %s'%(inDir,inFile,inFile)
-	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+
+	cmd = ['pdflatex',inFile,'&&','pdflatex',inFile]
 	if course_config['args'].verbose:
-		print('Running pdflatex: %s'%cmd)
+		print('Running pdflatex: {}'.format(os.path.join(inDir,inFile)))
+	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE, cwd=inDir)
+	out, err = proc.communicate()
 	if course_config['args'].veryverbose:
-		for line in iter(proc.stdout.readline, ''):
-			print(line)
-		proc.stdout.close()
-	rc = proc.wait()
-	if rc != 0:
+		print(out)
+	if proc.returncode != 0:
 		sys.stderr.write("Error: Something went wrong running pdflatex! Quitting...\n")
-		sys.stderr.write("(Use -vv for more information)\n")
+		if not course.config['args'].veryverbose:
+			sys.stderr.write("(Use -vv for more information)\n")
 		sys.exit(2)
 
 	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".pdf")
