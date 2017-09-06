@@ -11,10 +11,10 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 	cmd = 'cd %s && pdflatex %s && pdflatex %s'%(inDir,inFile,inFile)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].verbose:
-		print 'Running pdflatex: %s'%cmd
+		print('Running pdflatex: %s'%cmd)
 	if course_config['args'].veryverbose:
 		for line in iter(proc.stdout.readline, ''):
-			print line
+			print(line)
 		proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -24,13 +24,13 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 
 	outPath = os.path.join(course_config['build_dir'],ch['outFile']+".pdf")
 	if course_config['args'].verbose:
-		print '    Copying pdf output: %s => %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath)
+		print('    Copying pdf output: %s => %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath))
 	cmd = 'cp %s %s'%(os.path.join(inDir,baseFile+'.pdf'),outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
-		print '    %s'%cmd 
+		print('    %s'%cmd )
 		for line in iter(proc.stdout.readline, ''):
-			print line
+			print(line)
 		proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -40,14 +40,14 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 
 
 	if course_config['args'].verbose:
-		print '    Cleaning up after pdflatex...'
-		print '        Deleting: %s.log'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.aux'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.out'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.pdf'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.snm'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.nav'%os.path.join(course_config['args'].dir,baseFile)
-		print '        Deleting: %s.toc'%os.path.join(course_config['args'].dir,baseFile)
+		print('    Cleaning up after pdflatex...')
+		print('        Deleting: %s.log'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.aux'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.out'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.pdf'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.snm'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.nav'%os.path.join(course_config['args'].dir,baseFile))
+		print('        Deleting: %s.toc'%os.path.join(course_config['args'].dir,baseFile))
 
 	try:
 		os.remove('%s.aux'%os.path.join(course_config['args'].dir,baseFile))

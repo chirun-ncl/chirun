@@ -11,16 +11,16 @@ def runPandocForSlides(course_config,ch,inFile):
 	templateFile = os.path.join(course_config['themes_dir'],course_config['theme'],'slideshow.html')
 	inPath = os.path.join(course_config['args'].dir,inFile)
 	if course_config['args'].verbose:
-		print '    %s => %s'%(inFile,outPath)
+		print('    %s => %s'%(inFile,outPath))
 	cmd = 'pandoc -t html5 --template %s --standalone --section-divs \
 		--mathjax=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML \
 		--variable transition="linear" %s -o %s'\
 			%(templateFile,inPath,outPath)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	if course_config['args'].veryverbose:
-		print '    %s'%cmd 
+		print('    %s'%cmd )
 		for line in iter(proc.stderr.readline, ''):
-			print line
+			print(line)
 		proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:

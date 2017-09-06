@@ -19,13 +19,13 @@ def purge(course_config, pattern,path=None):
 	for f in os.listdir(path):
 		if re.search(pattern, f):
 			if course_config['args'].verbose:
-				print '    Deleted: %s'%os.path.join(path, f)
+				print('    Deleted: %s'%os.path.join(path, f))
 			os.remove(os.path.join(path, f))
 def purgeDir(course_config, pattern):
 	for f in os.listdir(course_config['args'].dir):
 		if re.search(pattern, f):
 			if course_config['args'].verbose:
-				print '    Deleted: %s'%os.path.join(course_config['args'].dir, f)
+				print('    Deleted: %s'%os.path.join(course_config['args'].dir, f))
 			shutil.rmtree(os.path.join(course_config['args'].dir, f))
 
 
@@ -52,24 +52,24 @@ def setDefaults(course_config):
 	course_config['tempFiles'] = []
 
 	if course_config['args'].verbose:
-		print "The themes directory is: %s"%course_config['themes_dir']
-		print "The static directory is: %s"%course_config['static_dir']
-		print "The build directory is: %s"%course_config['build_dir']
-		print "The web directory is: %s"%course_config['web_dir']
+		print("The themes directory is: %s"%course_config['themes_dir'])
+		print("The static directory is: %s"%course_config['static_dir'])
+		print("The build directory is: %s"%course_config['build_dir'])
+		print("The web directory is: %s"%course_config['web_dir'])
 
 def cleanUp(course_config):
 	if course_config['args'].verbose:
-		print "Cleaning up temporary files"
+		print("Cleaning up temporary files")
 	for temp_file in course_config['tempFiles']:
 		try:
 			os.remove(os.path.join(course_config['args'].dir,temp_file))
 		except OSError:
 			shutil.rmtree(os.path.join(course_config['args'].dir,temp_file))
 		if course_config['args'].verbose:
-			print '    Deleted: %s'%temp_file
+			print('    Deleted: %s'%temp_file)
 
 	if course_config['args'].verbose:
-		print "Cleaning up any missed files"
+		print("Cleaning up any missed files")
 	purge(course_config,r'.+?\.paux',path='.')
 	purge(course_config, r'[0-9a-f]{4}-.*?\.md')
 	purgeDir(course_config, r'[0-9a-f]{4}-.*?')
@@ -87,8 +87,8 @@ def main():
 		args.verbose = True
 
 	if args.verbose:
-		print "Running makecourse for directory %s"%args.dir
-		print "Reading %s..."%os.path.join(args.dir,'config.yml')
+		print("Running makecourse for directory %s"%args.dir)
+		print("Reading %s..."%os.path.join(args.dir,'config.yml'))
 
 	with open(os.path.join(args.dir,'config.yml'), 'r') as f:
 		course_config = yaml.load(f)
@@ -106,26 +106,26 @@ def main():
 		cleanUp(course_config)
 
 	if course_config['args'].verbose:
-		print "Creating build directory..."
+		print("Creating build directory...")
 	mkdir_p(os.path.join(course_config['build_dir'],'static'))
 
 	if course_config['args'].verbose:
-		print "Creating static directory..."
+		print("Creating static directory...")
 	mkdir_p(course_config['static_dir'])
 
 	if course_config['args'].verbose:
-		print "Starting processing..."
+		print("Starting processing...")
 
 	makeCourse.process.doProcess(course_config)
 	
 	if course_config['args'].verbose:
-		print "Running epilogue..."
+		print("Running epilogue...")
 
 	srcPath = os.path.join(course_config['themes_dir'],course_config['theme'],'static')
 	dstpath = os.path.join(course_config['build_dir'],'static')
 	if args.verbose:
-		print "Copying Theme's static directory to the build directory..."
-		print "    %s => %s"%(srcPath,dstpath)
+		print("Copying Theme's static directory to the build directory...")
+		print("    %s => %s"%(srcPath,dstpath))
 	try:
 		copy_tree(srcPath, dstpath)
 	except:
@@ -133,11 +133,11 @@ def main():
 		pass
 
 	if course_config['args'].verbose:
-		print "Copying Course's static directory to the build directory..."
+		print("Copying Course's static directory to the build directory...")
 	srcPath = os.path.join(course_config['static_dir'])
 	dstpath = os.path.join(course_config['build_dir'],'static')
 	if course_config['args'].verbose:
-		print "    %s => %s"%(srcPath,dstpath)
+		print("    %s => %s"%(srcPath,dstpath))
 	try:
 		copy_tree(srcPath, dstpath)
 	except:
@@ -147,6 +147,6 @@ def main():
 	if not course_config['args'].lazy:
 		cleanUp(course_config)
 		
-	print "All done! Output written to %s"%course_config['build_dir']
+	print("All done! Output written to %s"%course_config['build_dir'])
 if __name__ == "__main__":
 	main()

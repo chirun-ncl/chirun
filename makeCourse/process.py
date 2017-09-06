@@ -134,12 +134,12 @@ def buildIntroMDFile(course_config,obj):
 	newFileContent = createIndexYAMLheader(course_config)
 
 	if course_config['args'].verbose:
-		print 'Building index: %s'%newFile
+		print('Building index: %s'%newFile)
 
 	if obj['source'][-3:] == '.md':
 		mdContents = open(os.path.join(course_config['args'].dir,obj['source']), 'r').read()
 		if mdContents[:3] != '---':
-			print '    Burning in iframes & extras.'
+			print('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents)
 			newFileContent += '\n\n' + mdContents
 		else:
@@ -188,17 +188,17 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 		newFileContent = createYAMLheader(course_config,ch,part)
 
 		if course_config['args'].verbose:
-			print 'Building chapter file: %s'%newFile
+			print('Building chapter file: %s'%newFile)
 
 		if ch['source'][-3:] == '.md':
 			if course_config['args'].verbose:
-				print '    Adding: %s'%ch['title']
+				print('    Adding: %s'%ch['title'])
 			mdContents = open(os.path.join(course_config['args'].dir,ch['source']), 'r').read()
 			if mdContents[:3] == '---':
 				if course_config['args'].verbose:
-					print '    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source']
+					print('    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source'])
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-			print '    Burning in iframes & extras.'
+			print('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		elif ch['source'][-4:] == '.tex':
@@ -215,7 +215,7 @@ def buildChapterMDFile(course_config,ch,part=False,pdf=False):
 			code = re.search(r'([^/\?:\s]+)', ch['source']).group(1)
 			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
 			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
-			print '    Burning in iframes & extras.'
+			print('    Burning in iframes & extras.')
 			mdContents = burnInExtras(course_config,mdContents,pdf)
 			newFileContent += '\n\n' + mdContents
 		else:
@@ -239,11 +239,11 @@ def makePDF(course_config,ch,part=False):
 
 def doProcess(course_config):
 	if course_config['args'].verbose:
-		print 'Preprocessing Structure...'
+		print('Preprocessing Structure...')
 	preProcessFilenames(course_config)
 
 	if course_config['args'].verbose:
-		print 'Deep exploring Structure...'
+		print('Deep exploring Structure...')
 
 	for obj in course_config['structure']:
 		if isHidden(obj): continue
@@ -277,7 +277,7 @@ def doProcess(course_config):
 			pass
 
 	if course_config['args'].verbose:
-		print 'Done!'
+		print('Done!')
 
 def preProcessFilenames(course_config):
 	for obj in course_config['structure']:
