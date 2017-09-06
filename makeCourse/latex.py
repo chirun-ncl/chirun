@@ -13,15 +13,18 @@ def runPdflatex(course_config,ch,inFile,inDir=None):
 		inDir = course_config['args'].dir
 	baseFile = re.sub(r'.tex$','',inFile)
 
-	cmd = ['pdflatex',inFile,'&&','pdflatex',inFile]
+	cmd = ['pdflatex','-halt-on-error', inFile]
 	logger.info('Running pdflatex: {}'.format(os.path.join(inDir,inFile)))
 
-	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE, cwd=inDir)
-	out, err = proc.communicate()
-	logger.debug(out)
+	#latex often requires 2 runs to resolve labels
+	for _ in range(2):
+		proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=inDir)
+		out, err = proc.communicate()
+		logger.debug(out)
+
 	if proc.returncode != 0:
 		sys.stderr.write("Error: Something went wrong running pdflatex! Quitting...\n")
-		if not course.config['args'].veryverbose:
+		if not course_config['args'].veryverbose:
 			sys.stderr.write("(Use -vv for more information)\n")
 		sys.exit(2)
 
