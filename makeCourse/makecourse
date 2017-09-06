@@ -45,8 +45,8 @@ def setDefaults(course_config):
 	if 'web_dir' not in course_config.keys():
 		course_config['web_dir'] = '/module/'+course_config['code']
 		
-	if course_config['web_dir'][-1] != os.sep:
-		course_config['web_dir'] = course_config['web_dir'] + os.sep
+	if course_config['web_dir'][-1] != '/':
+		course_config['web_dir'] = course_config['web_dir'] + '/'
 		
 	course_config['partsEnabled'] = False
 	course_config['tempFiles'] = []
