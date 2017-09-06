@@ -89,7 +89,7 @@ def main():
 
 	if args.verbose:
 		if args.veryverbose:
-			logging.basicConfig(level=logging.DEBUG, format='%(path): %(levelname)s:\t%(message)s\n')
+			logging.basicConfig(level=logging.DEBUG, format='%(filename)s:%(lineno)d: %(levelname)s:\t%(message)s\n')
 		else:
 			logging.basicConfig(level=logging.INFO, format='%(message)s\n')
 	else:
