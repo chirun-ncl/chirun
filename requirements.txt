@@ -18,5 +18,4 @@ pytest==3.0.7
 python-dateutil==2.6.0
 PyYAML==3.12
 six==1.10.0
--e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@16c1942946ab60fab5dd887fe94a30d126b78c25#egg=plasTeX
-
+-e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@6a33df0f714d3121867fdbded4b99c4a0044e490#egg=plasTeX
