@@ -54,7 +54,7 @@ def runPlastex(course_config,inFile,tmpDir):
 	outPath = os.path.join(course_config['args'].dir,tmpDir)
 	inPath = os.path.join(course_config['args'].dir,inFile)
 
-	cmd = 'plastex --dir={outPath} {tikzArgs} --sec-num-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl {inPath} 2>&1'.format(outPath=outPath, tikzArgs=getTikzTemplateArgs(course_config), inPath=inPath)
+	cmd = 'plastex --dir={outPath} {tikzArgs} --sec-num-depth=3 --toc-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl {inPath} 2>&1'.format(outPath=outPath, tikzArgs=getTikzTemplateArgs(course_config), inPath=inPath)
 
 	logger.info('Running plastex: %s'%cmd)
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
