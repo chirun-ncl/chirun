@@ -20,6 +20,7 @@ def runPandocForPart(course_config,part,inFile):
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	logger.debug('    %s'%cmd )
 	logger.debug(proc.stdout.read())
+	logger.debug(proc.stderr.read())
 	proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -39,6 +40,7 @@ def runPandocForChapter(course_config,ch,inFile):
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	logger.debug('    %s'%cmd )
 	logger.debug(proc.stdout.read())
+	logger.debug(proc.stderr.read())
 	proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -56,6 +58,7 @@ def runPandocForChapterPDF(course_config,ch,inFile):
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	logger.debug('    %s'%cmd )
 	logger.debug(proc.stdout.read())
+	logger.debug(proc.stderr.read())
 	proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -75,6 +78,7 @@ def runPandocForIntro(course_config,ch,inFile):
 	proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	logger.debug('    %s'%cmd )
 	logger.debug(proc.stdout.read())
+	logger.debug(proc.stderr.read())
 	proc.stdout.close()
 	rc = proc.wait()
 	if rc != 0:
@@ -84,4 +88,4 @@ def runPandocForIntro(course_config,ch,inFile):
 
 
 if __name__ == "__main__":
-    pass
+	pass
