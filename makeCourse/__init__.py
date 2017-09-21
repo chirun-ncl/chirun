@@ -2,6 +2,7 @@ import re
 import sys
 import os
 import errno
+import yaml
 
 HACKMD_URL = "https://mas-coursebuild.ncl.ac.uk"
 
@@ -51,3 +52,6 @@ def mkdir_p(path):
     except OSError as exc:
         if not os.path.isdir(path):
             raise
+
+def yaml_header(data):
+    return '---\n{}\n---\n\n'.format(yaml.dump(data,default_flow_style=False))

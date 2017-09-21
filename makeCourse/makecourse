@@ -15,7 +15,7 @@ from subprocess import Popen, PIPE
 
 logger = logging.getLogger('makeCourse')
 
-class MakeCourse(object):
+class MakeCourse(object,makeCourse.process.CourseProcessor):
 	def __init__(self, args):
 		self.args = args
 
@@ -115,7 +115,7 @@ The web directory is: {web_dir}""".format(**self.config))
 
 	def process(self):
 		logger.info("Starting processing...")
-		makeCourse.process.doProcess(self.config)
+		self.doProcess()
 
 	def copy_theme_static_files(self):
 		srcPath = os.path.join(self.theme_dir,'static')
