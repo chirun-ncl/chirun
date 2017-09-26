@@ -35,7 +35,7 @@ def download(url):
 
 def getHackmdDocument(course_config,code):
 	url = HACKMD_URL+'/'+code+'/download'
-	logger.info('    Getting document from hackMD: {}'.format(url))
+	logger.info('    Getting document from hackMD: %s'%url)
 	mdContents = download(url)
 	return mdContents
 
@@ -49,16 +49,16 @@ def getEmbeddedImages(course_config,mdContents):
 				url = HACKMD_URL + m.group(1)
 			outFile = os.path.basename(m.group(1))
 			outPath = os.path.join(course_config['build_dir'],'static',outFile)
-			logger.debug('        {file}=>{path}'.format(file=outFile,path=outPath))
+			logger.debug('        %s=>%s'%(outFile,outPath))
 			downloadFile(url,outPath)
 			mdContents = mdContents.replace(m.group(1),os.path.join(course_config['build_dir'],'static',outFile))
 	return mdContents
 
 def getSlidesPDF(course_config,slidesCode):
 	url = HACKMD_URL+'/'+slidesCode+'/pdf'
-	logger.info('    Getting document from hackMD: {}'.format(url))
+	logger.info('    Getting document from hackMD: %s'%url)
 
 	outFile = slidesCode+".pdf"
 	outPath = os.path.join(course_config['build_dir'],'static',outFile)
-	logger.debug('        {file}=>{path}'.format(file=outFile,path=outPath))
+	logger.debug('        %s=>%s'%(outFile,outPath))
 	downloadFile(url,outPath)

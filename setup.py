@@ -43,6 +43,6 @@ setup(name="makeCourse",
          'plasTeX'
       ],
       dependency_links = [
-         'git+ssh://git@mas-gitlab.ncl.ac.uk/makecourse-tools/plastex.git@ncl-changes#egg=plasTeX'
+         'git+ssh://git@mas-gitlab.ncl.ac.uk/makecourse-tools/plastex.git@a7d0b8a4fbebc9fcad0840b29d5911c5cd7ce20e#egg=plasTeX'
       ]
 )

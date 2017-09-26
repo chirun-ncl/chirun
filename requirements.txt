@@ -11,11 +11,11 @@ mock==2.0.0
 olefile==0.44
 packaging==16.8
 pbr==2.0.0
-Pillow==4.2.1
+PIL==1.1.7
 py==1.4.33
 pyparsing==2.2.0
 pytest==3.0.7
 python-dateutil==2.6.0
 PyYAML==3.12
 six==1.10.0
--e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@ncl-changes#egg=plasTeX
+-e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@a7d0b8a4fbebc9fcad0840b29d5911c5cd7ce20e#egg=plasTeX
