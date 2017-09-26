@@ -1,9 +1,10 @@
 import logging
-import makeCourse.hackmd
-import makeCourse.latex
-import makeCourse.pandoc
-import makeCourse.plastex
-import makeCourse.slides
+from . import hackmd
+from . import latex
+from . import pandoc
+from . import plastex
+from . import slides
+from .item import load_item
 import os
 import re
 import sys
@@ -11,280 +12,114 @@ from makeCourse import *
 
 logger = logging.getLogger(__name__)
 
-def replaceLabels(course_config,mdContents):
-	for l in gen_dict_extract('label',course_config):
-		mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
-		mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+course_config['web_dir']+l['outFile']+".html)", mdContents)
-	return mdContents
+class CourseProcessor:
 
-def relativiseImages(course_config,mdContents):
-	mdImageDir = os.path.join(course_config['build_dir'],'static')
-	relativeImageDir = course_config['web_dir']+"static"
-	mdContents = mdContents.replace(mdImageDir, relativeImageDir)
-	return mdContents
+	def temp_path(self, path):
+		tmp_dir = 'tmp'
+		if not os.path.exists(tmp_dir):
+			os.makedirs(tmp_dir)
+		tpath = None
+		while tpath is None or os.path.exists(tpath):
+			tpath = os.path.join(tmp_dir,'{}-{}'.format(os.urandom(2).encode('hex'),path))
+		self.config['tempFiles'].append(tpath)
+		return tpath
 
-def getVimeoHTML(code):
-	return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
-			mozallowfullscreen allowfullscreen></iframe>'
-def getYoutubeHTML(code):
-	return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
-def getNumbasHTML(URL):
-	return '<iframe width="100%" height="1000px" src="'+URL+'" frameborder="0"></iframe>'
-def getSlidesHTML(course_config,code):
-	makeCourse.hackmd.getSlidesPDF(course_config,code)
-	return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
-			</iframe><div class="pad-top-10 pull-right"><a href="'+course_config['web_dir']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
-			|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
-def getSlidesURL(course_config,code):
-	makeCourse.hackmd.getSlidesPDF(course_config,code)
-	return HACKMD_URL+'/p/'+code+'/'
+	def replaceLabels(self,mdContents):
+		for l in gen_dict_extract('label',self.config):
+			mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
+			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_dir']+l['outFile']+".html)", mdContents)
+		return mdContents
 
-def burnInExtras(course_config,mdContents,pdf=False):
+	def relativiseImages(self,mdContents):
+		mdImageDir = os.path.join(self.config['build_dir'],'static')
+		relativeImageDir = self.config['web_dir']+"static"
+		mdContents = mdContents.replace(mdImageDir, relativeImageDir)
+		return mdContents
 
-	reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
-	reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
-	reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
-	reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-	if pdf:
-		mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
-		mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
-		mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
-		mdContents = reSlides.sub(lambda m: "\n\n\url{"+getSlidesURL(course_config,m.group(1))+"}", mdContents)
-	else:
-		mdContents = reVimeo.sub(lambda m: getVimeoHTML(m.group(1)), mdContents)
-		mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
-		mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
-		mdContents = reSlides.sub(lambda m: getSlidesHTML(course_config,m.group(1)), mdContents)
-		mdContents = relativiseImages(course_config,mdContents)
+	def getVimeoHTML(self, code):
+		return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
+				mozallowfullscreen allowfullscreen></iframe>'
+	def getYoutubeHTML(self, code):
+		return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
+	def getNumbasHTML(self, URL):
+		return '<iframe width="100%" height="1000px" src="'+URL+'" frameborder="0"></iframe>'
+	def getSlidesHTML(self, code):
+		hackmd.getSlidesPDF(self.config,code)
+		return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
+				</iframe><div class="pad-top-10 pull-right"><a href="'+self.config['web_dir']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
+				|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
+	def getSlidesURL(self,code):
+		hackmd.getSlidesPDF(self.config,code)
+		return HACKMD_URL+'/p/'+code+'/'
 
-	mdContents = replaceLabels(course_config,mdContents)
-	return mdContents
+	def burnInExtras(self,mdContents,pdf=False):
 
-def createIndexYAMLheader(course_config):
-	header = "---\n"
-	header += "title: index\n"
-	header += "author: %s\n"%course_config['author']
-	header += "links:\n"
-	for s in course_config['structure']:
-		if isHidden(s): continue
-		if s['type'] == 'part':
-			header += "    - title: %s\n"%s['title']
-			header += "      slug: %s\n"%slugify(s['title'])
-			header += "      chapters:\n"
-			for ch in s['content']:
-				if isHidden(ch): continue
-				header += "        -  title: %s\n"%ch['title']
-				header += "           slug: %s\n"%slugify(ch['title'])
-		if s['type'] == 'chapter':
-			header += "    - title: %s\n"%s['title']
-			header += "      slug: %s\n"%slugify(s['title'])
-	header += "\n---\n\n"
-	return header
-
-def createYAMLheader(course_config,obj,part=False):
-	header = "---\n"
-	header += "title: %s\n"%obj['title']
-	header += "build_pdf: %s\n"%course_config['build_pdf']
-	header += "author: %s\n"%course_config['author']
-	header += "slug: %s\n"%slugify(obj['title'])
-	if part:
-		header += "part: %s\npart-slug: %s\n"%(part['title'],slugify(part['title']))
-		header += "chapters:\n"
-		for ch in part['content']:
-			if isHidden(ch): continue
-			header += "    - title: %s\n"%ch['title']
-			header += "      file: %s.html\n"%ch['outFile']
-			header += "      pdf: %s.pdf\n"%ch['outFile']
-			if obj == ch:
-				header += "      active: 1\n"
-	else:
-		header += "chapters:\n"
-		for ch in course_config['structure']:
-			if isHidden(ch): continue
-			header += "    - title: %s\n"%ch['title']
-			header += "      file: %s.html\n"%ch['outFile']
-			header += "      pdf: %s.pdf\n"%ch['outFile']
-			if obj == ch:
-				header += "      active: 1\n"
-	header +="\n---\n\n"
-	return header
-
-def createPartYAMLheader(course_config,obj):	
-	header = "---\n"
-	header += "title: %s\n"%obj['title']
-	header += "author: %s\n"%course_config['author']
-	header += "part-slug: %s\n"%(slugify(obj['title']))
-	header += "chapters:\n"
-	for ch in obj['content']:
-		if isHidden(ch): continue
-		header += "    - title: %s\n"%ch['title']
-		header += "      slug: %s\n"%slugify(ch['title'])
-	header += "\n---\n\n"
-	return header
-
-def buildpartMDFile(course_config,part):
-	newFile = temp_path('%s.md' % slugify(part['title']))
-	course_config['tempFiles'].append(newFile)
-	newFileContent = createPartYAMLheader(course_config,part)
-	f = open(os.path.join(course_config['args'].dir,newFile), 'w')
-	f.write(newFileContent)
-	f.close()
-	return newFile
-
-def buildIntroMDFile(course_config,obj):
-	newFile = temp_path('index.md')
-	course_config['tempFiles'].append(newFile)
-	newFileContent = createIndexYAMLheader(course_config)
-
-	logger.info('Building index: %s'%newFile)
-
-	if obj['source'][-3:] == '.md':
-		mdContents = open(os.path.join(course_config['args'].dir,obj['source']), 'r').read()
-		if mdContents[:3] != '---':
-			logger.debug('    Burning in iframes & extras.')
-			mdContents = burnInExtras(course_config,mdContents)
-			newFileContent += '\n\n' + mdContents
+		reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
+		reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
+		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
+		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
+		if pdf:
+			mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
+			mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
+			mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
+			mdContents = reSlides.sub(lambda m: "\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
 		else:
-			sys.stderr.write("Error: Markdown file %s contains unsupported YAML header. Please remove the header, I'll make one automatically. Quitting...\n"%obj['source'])
-			sys.exit(2)
-	elif obj['source'][-4:] == '.tex':
-		#Do latex -> html snippet
-		tmpDir = temp_path('plastex-index')
-		course_config['tempFiles'].append(tmpDir)
-		makeCourse.plastex.runPlastex(course_config,obj['source'],tmpDir)
-		texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
-		texContents = makeCourse.plastex.fixPlastexQuirks(texContents)
-		texContents = makeCourse.plastex.getEmbeddedImages(course_config,texContents,tmpDir,"index")
-		texContents = burnInExtras(course_config,texContents)
-		newFileContent += '\n\n' + texContents
-	elif re.search(r'[^/\?:\s]+', obj['source']):
-		code = re.search(r'([^/\?:\s]+)', obj['source']).group(1)
-		mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
-		mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
-		newFileContent += '\n\n' + mdContents
-	else:
-		sys.stderr.write("Error: Unrecognised source type for index. Quitting...\n")
-		sys.exit(2)
+			mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
+			mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
+			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
+			mdContents = reSlides.sub(lambda m: self.getSlidesHTML(m.group(1)), mdContents)
+			mdContents = self.relativiseImages(mdContents)
 
-	f = open(os.path.join(course_config['args'].dir,newFile), 'w')
-	f.write(newFileContent)
-	f.close()
+		mdContents = self.replaceLabels(mdContents)
+		return mdContents
 
-	if 'source' not in obj.keys():
-		sys.stderr.write("Error: No source defined for introduction... Quitting...\n")
-		sys.exit(2)
-
-	return newFile
-
-def buildChapterMDFile(course_config,ch,part=False,pdf=False):
-	if 'content' in ch and 'source' in ch:
-		sys.stderr.write("Error: Chapter %s contains both content and source elements; including both is invalid. Quitting...\n"%ch['title'])
-		sys.exit(2)
-
-	if 'source' in ch.keys():
-		if part:
-			newFile = temp_path('%s_%s.md'%(slugify(part['title']),slugify(ch['title'])))
+	def makePDF(self,item):
+		_, ext = os.path.splitext(item.source)
+		if ext == '.tex':
+			latex.runPdflatex(self,item)
 		else:
-			newFile = temp_path('%s.md' % slugify(ch['title']))
-		course_config['tempFiles'].append(newFile)
-		newFileContent = createYAMLheader(course_config,ch,part)
+			self.run_pandoc(item,template_file='notes.latex', format='pdf')
 
-		logger.info('Building chapter file: %s'%newFile)
+	def doProcess(self):
+		logger.info('Preprocessing Structure...')
+		self.structure = [load_item(self,obj) for obj in self.config['structure']]
 
-		if ch['source'][-3:] == '.md':
-			logger.info('    Adding: %s'%ch['title'])
-			mdContents = open(os.path.join(course_config['args'].dir,ch['source']), 'r').read()
-			if mdContents[:3] == '---':
-				logger.info('    Note: Markdown file %s contains a YAML header. Stripping it...'%ch['source'])
-				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-			logger.debug('    Burning in iframes & extras.')
-			mdContents = burnInExtras(course_config,mdContents,pdf)
-			newFileContent += '\n\n' + mdContents
-		elif ch['source'][-4:] == '.tex':
-			#Do latex -> html snippet
-			tmpDir = temp_path('plastex-%s'%slugify(ch['title']))
-			course_config['tempFiles'].append(tmpDir)
-			makeCourse.plastex.runPlastex(course_config,ch['source'],tmpDir)
-			texContents = open(os.path.join(course_config['args'].dir,tmpDir,"index.html"), 'r').read()
-			texContents = makeCourse.plastex.fixPlastexQuirks(texContents)
-			texContents = makeCourse.plastex.getEmbeddedImages(course_config,texContents,tmpDir,ch['outFile'])
-			texContents = burnInExtras(course_config,texContents)
-			newFileContent += '\n\n' + texContents
-		elif re.search(r'[^/\?:\s]+', ch['source']):
-			code = re.search(r'([^/\?:\s]+)', ch['source']).group(1)
-			mdContents = makeCourse.hackmd.getHackmdDocument(course_config,code)
-			mdContents = makeCourse.hackmd.getEmbeddedImages(course_config,mdContents)
-			logger.debug('    Burning in iframes & extras.')
-			mdContents = burnInExtras(course_config,mdContents,pdf)
-			newFileContent += '\n\n' + mdContents
-		else:
-			sys.stderr.write("Error: Unrecognised source type for %s:%s. Quitting...\n"%(ch['title'],ch['source']))
-			sys.exit(2)
+		logger.info('Deep exploring Structure...')
 
-		f = open(os.path.join(course_config['args'].dir,newFile), 'w')
-		f.write(newFileContent)
-		f.close()
+		for obj in self.structure:
+			if obj.is_hidden:
+				continue
+			if obj.type == 'introduction':
+				logger.info('Building index')
+				self.run_pandoc(obj)
 
-	return newFile
+			elif obj.type == 'part':
+				mkdir_p(os.path.join(self.config['build_dir'],obj.out_file))
+				self.run_pandoc(obj)
+				for chapter in obj.content:
+					if(chapter.type != 'chapter'):
+						raise Exception("Error: Parts must contain only chapters. {} is a {}".format(chapter.title, chapter.type))
+					self.config['partsEnabled'] = True
+					if chapter.is_hidden:
+						continue
+					self.run_pandoc(chapter)
+					if self.config["build_pdf"]:
+						self.makePDF(chapter)
 
-def makePDF(course_config,ch,part=False):
-	if ch['source'][-4:] == '.tex':
-		inDir = os.path.join(course_config['args'].dir,os.path.dirname(ch['source']))
-		inFile = os.path.basename(ch['source'])
-		makeCourse.latex.runPdflatex(course_config,ch,inFile,inDir)
-	else:
-		chFileName = buildChapterMDFile(course_config,ch,part=part,pdf=True)
-		makeCourse.pandoc.runPandocForChapterPDF(course_config,ch,chFileName)
+			elif obj.type == 'chapter':
+				if self.config['partsEnabled']:
+					raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
+				self.run_pandoc(obj)
+				if self.config["build_pdf"]:
+						self.makePDF(obj)
 
-def doProcess(course_config):
-	logger.info('Preprocessing Structure...')
-	preProcessFilenames(course_config)
+		logger.info('Done!')
 
-	logger.info('Deep exploring Structure...')
-
-	for obj in course_config['structure']:
-		if isHidden(obj): continue
-		if obj['type'] == 'introduction':
-			obj['title'] = 'index'
-			inFileName = buildIntroMDFile(course_config,obj)
-			makeCourse.pandoc.runPandocForIntro(course_config,obj,inFileName)
-		elif obj['type'] == 'part':
-			partFileName = buildpartMDFile(course_config,obj)
-			makeCourse.pandoc.runPandocForPart(course_config,obj,partFileName)
-			for ch in obj['content']:
-				if(ch['type'] != 'chapter'):
-					sys.stderr.write("Error: Parts must contain chapters. (%s) Quitting...\n"%obj['title'])
-					sys.exit(2)
-				course_config['partsEnabled'] = True
-				if isHidden(obj): continue
-				chFileName = buildChapterMDFile(course_config,ch,part=obj)
-				makeCourse.pandoc.runPandocForChapter(course_config,ch,chFileName)
-				if course_config["build_pdf"]:
-					makePDF(course_config,ch,part=obj)
-		elif obj['type'] == 'chapter':
-			if course_config['partsEnabled']:
-				sys.stderr.write("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
-				sys.exit(2)
-			chFileName = buildChapterMDFile(course_config,obj)
-			makeCourse.pandoc.runPandocForChapter(course_config,obj,chFileName)
-			if course_config["build_pdf"]:
-					makePDF(course_config,obj)
-		elif obj['type'] == 'mocktest':
-			#TODO: download a mock test from numbas
-			pass
-
-	logger.info('Done!')
-
-def preProcessFilenames(course_config):
-	for obj in course_config['structure']:
-		if obj['type'] == 'introduction':
-			obj['title'] = 'index'
-			obj['outFile']  = 'index.html'
-		if obj['type'] == 'part':
-			obj['outFile'] = slugify(obj['title'])
-			if isHidden(obj): continue
-			mkdir_p(os.path.join(course_config['build_dir'],obj['outFile']))
-			for ch in obj['content']:
-				ch['outFile'] = os.path.join(obj['outFile'],slugify(ch['title']))
-		if obj['type'] == 'chapter':
-			obj['outFile'] = slugify(obj['title'])
+	def load_tex(self, source, out_path):
+		tmpDir = self.temp_path('plastex')
+		plastex.runPlastex(self.config, source, tmpDir)
+		texContents = open(os.path.join(self.root_dir, tmpDir, "index.html"), 'r').read()
+		texContents = plastex.fixPlastexQuirks(texContents)
+		texContents = plastex.getEmbeddedImages(self.config, texContents, tmpDir, out_path)
+		texContents = self.burnInExtras(texContents)
+		return texContents
