@@ -4,6 +4,7 @@ import errno
 import logging
 import makeCourse.hackmd
 import makeCourse.process
+import makeCourse.pandoc
 import os
 import re
 import shutil
@@ -15,7 +16,10 @@ from subprocess import Popen, PIPE
 
 logger = logging.getLogger('makeCourse')
 
-class MakeCourse(object,makeCourse.process.CourseProcessor):
+class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.PandocRunner):
+
+	mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+
 	def __init__(self, args):
 		self.args = args
 
@@ -26,13 +30,13 @@ class MakeCourse(object,makeCourse.process.CourseProcessor):
 
 		if args.verbose:
 			if args.veryverbose:
-				logging.basicConfig(level=logging.DEBUG, format='%(filename)s:%(lineno)d: %(levelname)s:\t%(message)s\n')
+				logging.basicConfig(level=logging.DEBUG, format='%(filename)s:%(lineno)d: %(levelname)s:\t%(message)s')
 			else:
-				logging.basicConfig(level=logging.INFO, format='%(message)s\n')
+				logging.basicConfig(level=logging.INFO, format='%(message)s')
 		else:
 			logging.basicConfig(level=logging.WARN, format='%(levelname)s: %(message)s\n')
 
-		print("Running makecourse for directory {}".format(self.args.dir))
+		print("Running makecourse for directory {}".format(os.path.abspath(self.args.dir)))
 
 	def load_config(self):
 		if self.args.config_file:
@@ -94,7 +98,7 @@ The web directory is: {web_dir}""".format(**self.config))
 			except OSError:
 				try:
 					shutil.rmtree(os.path.join(self.root_dir,temp_file))
-					logger.info('    Deleted: %s' % temp_file)
+					logger.info('    Deleted: {}'.format(temp_file))
 				except OSError:
 					pass
 
@@ -121,7 +125,7 @@ The web directory is: {web_dir}""".format(**self.config))
 		srcPath = os.path.join(self.theme_dir,'static')
 		dstPath = os.path.join(self.config['build_dir'],'static')
 		logger.info("Copying Theme's static directory to the build directory...")
-		logger.info("    %s => %s"%(srcPath,dstPath))
+		logger.info("    {src} => {dest}".format(src=srcPath,dest=dstPath))
 		try:
 			copy_tree(srcPath, dstPath)
 		except:
@@ -129,13 +133,17 @@ The web directory is: {web_dir}""".format(**self.config))
 
 		logger.info("Copying course's static directory to the build directory...")
 		srcPath = self.config['static_dir']
-		dstPath = os.path.join(course_config['build_dir'],'static')
-		logger.info("    %s => %s"%(srcPath,dstPath))
+		dstPath = os.path.join(self.config['build_dir'],'static')
+		logger.info("    {src} => {dest}".format(src=srcPath,dest=dstPath))
 		try:
 			copy_tree(srcPath, dstPath)
 		except:
 			logger.warning("Warning: Problem copying Course's static directory!")
 	
+	def get_mock_test(self):
+		for item in self.config['structure']:
+			if item.get('type','')=='mocktest':
+				return item['source']
 		
 
 def main():
@@ -162,6 +170,7 @@ def main():
 	
 	logger.info("Running epilogue...")
 
+	mc.copy_theme_static_files()
 
 	if not mc.args.lazy:
 		mc.cleanup()
