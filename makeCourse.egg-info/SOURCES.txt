@@ -1,5 +1,7 @@
+README.md
 makeCourse/__init__.py
 makeCourse/hackmd.py
+makeCourse/item.py
 makeCourse/latex.py
 makeCourse/makecourse
 makeCourse/pandoc.py

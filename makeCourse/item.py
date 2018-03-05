@@ -47,17 +47,14 @@ class Item(object):
 		if ext == '.md':
 			mdContents = open(os.path.join(self.course.root_dir,self.source), 'r').read()
 			if mdContents[:3] == '---':
-				if self.allow_yaml_header:
-					logger.info('    Note: Markdown file {} contains a YAML header. Stripping it...'.format(ch['source']))
-					mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-				else:
-					raise Exception("Error: Markdown file {} contains unsupported YAML header. Please remove the header, I'll make one automatically.".format(self.source))
+				logger.info('    Note: Markdown file {} contains a YAML header. Stripping it...'.format(self.source))
+				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
 			logger.debug('    Burning in iframes & extras.')
 			mdContents = self.course.burnInExtras(mdContents,pdf)
 			return mdContents
 		elif ext == '.tex':
 			return self.course.load_tex(self.source,self.out_file)
-		elif re.search(r'[^/\?:\s]+', ch['source']):
+		elif re.search(r'[^/\?:\s]+', self.source):
 			code = re.search(r'([^/\?:\s]+)', self.source).group(1)
 			mdContents = hackmd.getHackmdDocument(self.course.config,code)
 			mdContents = hackmd.getEmbeddedImages(self.course.config,mdContents)

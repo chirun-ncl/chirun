@@ -59,8 +59,8 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 
 		config = {
 			'themes_dir': os.path.join(self.root_dir,'themes'),
-			'static_dir': os.path.join(self.root_dir,'static'),
 			'build_dir': os.path.join(self.root_dir,'build'),
+			'static_dir': os.path.join(self.root_dir,'build','static'),
 			'theme': 'default',
 			'web_dir': '/module/'+loaded_config.get('code','') if 'code' in loaded_config else '/',
 			'partsEnabled': False,
@@ -123,22 +123,13 @@ The web directory is: {web_dir}""".format(**self.config))
 
 	def copy_theme_static_files(self):
 		srcPath = os.path.join(self.theme_dir,'static')
-		dstPath = os.path.join(self.config['build_dir'],'static')
+		dstPath = os.path.join(self.config['static_dir'])
 		logger.info("Copying Theme's static directory to the build directory...")
 		logger.info("    {src} => {dest}".format(src=srcPath,dest=dstPath))
 		try:
 			copy_tree(srcPath, dstPath)
 		except:
 			logger.warning("Warning: Problem copying the theme's static files")
-
-		logger.info("Copying course's static directory to the build directory...")
-		srcPath = self.config['static_dir']
-		dstPath = os.path.join(self.config['build_dir'],'static')
-		logger.info("    {src} => {dest}".format(src=srcPath,dest=dstPath))
-		try:
-			copy_tree(srcPath, dstPath)
-		except:
-			logger.warning("Warning: Problem copying Course's static directory!")
 	
 	def get_mock_test(self):
 		for item in self.config['structure']:
@@ -165,6 +156,8 @@ def main():
 
 	if mc.args.deleteFirst:
 		mc.cleanup()
+
+	mc.make_directories()
 
 	mc.process()
 	
