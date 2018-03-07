@@ -25,16 +25,16 @@ def getTikzTemplateArgs(course_config):
 def fixPlastexQuirks(text):
 	#This takes something like $ stuff $ and turns it into $stuff$.
 	#Mathjax doesn't allow whitespace just after opening $ or just before closing $.
-	reInlineEqn = re.compile(r'(^|[^\$])\$([^\$]+?)\$(?=[^\$]|$)')
-	text = reInlineEqn.sub(lambda m: m.group(1)+' $'+m.group(2).strip()+'$', text)
+	#reInlineEqn = re.compile(r'(^|[^\$])\$([^\$]+?)\$(?=[^\$]|$)')
+	#text = reInlineEqn.sub(lambda m: m.group(1)+' $'+m.group(2).strip()+'$', text)
 
 	#Stop markdown from listifying things.
 	reItemList = re.compile(r'<p>\s*([\(\[]*)([A-z0-9]{1,3})([\)\]\.\:])')
 	text = reItemList.sub(lambda m: '<p>'+m.group(1)+m.group(2)+"\\"+m.group(3), text)
 
 	#Stop pandoc from escaping brackets in math
-	reBracketMath = re.compile(r'<span class=\"dmath\">\\\[(.*?)\\\]</span>')
-	text = reBracketMath.sub(lambda m: '<span class="dmath">$$'+m.group(1)+'$$</span>', text)
+	#reBracketMath = re.compile(r'<span class=\"dmath\">\\\[(.*?)\\\]</span>')
+	#text = reBracketMath.sub(lambda m: '<span class="dmath">$$'+m.group(1)+'$$</span>', text)
 
 	#Stop pandoc from interpreting plastex output as code
 	reStartSpaces = re.compile(r'^ +',re.M)

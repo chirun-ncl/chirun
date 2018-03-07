@@ -24,6 +24,7 @@ class PandocRunner:
 			'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
 			'--metadata=date:{}'.format(date), 
 			'-V', 'web_dir={}'.format(self.config['web_dir']), 
+			'-V', 'mock_test_dir={}'.format(self.config['mock_test_dir']), 
 			'--template', template_file, 
 			'-o', outPath,
 		]
