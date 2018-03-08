@@ -97,14 +97,21 @@ class CourseProcessor:
 				mkdir_p(os.path.join(self.config['build_dir'],obj.out_file))
 				self.run_pandoc(obj)
 				for chapter in obj.content:
-					if(chapter.type != 'chapter'):
-						raise Exception("Error: Parts must contain only chapters. {} is a {}".format(chapter.title, chapter.type))
-					self.config['partsEnabled'] = True
-					if chapter.is_hidden:
-						continue
-					self.run_pandoc(chapter)
-					if self.config["build_pdf"]:
-						self.makePDF(chapter)
+					if(chapter.type == 'chapter'):
+						self.config['partsEnabled'] = True
+						if chapter.is_hidden:
+							continue
+						self.run_pandoc(chapter)
+						if self.config["build_pdf"]:
+							self.makePDF(chapter)
+					elif(chapter.type == 'url'):
+						self.config['partsEnabled'] = True
+						if chapter.is_hidden:
+							continue
+						#if self.config["build_pdf"]:
+						#	self.makePDF(chapter)
+					else:
+						raise Exception("Error: Unsupported chapter type! {} is a {}".format(chapter.title, chapter.type))
 
 			elif obj.type == 'chapter':
 				if self.config['partsEnabled']:
@@ -112,6 +119,13 @@ class CourseProcessor:
 				self.run_pandoc(obj)
 				if self.config["build_pdf"]:
 						self.makePDF(obj)
+
+			elif obj.type == 'url':
+				if self.config['partsEnabled']:
+					raise Exception("Error: Both parts and url found at top level. To fix: put all url inside parts or don't include parts at all. Quitting...\n")
+				#self.run_pandoc(obj)
+				#if self.config["build_pdf"]:
+				#		self.makePDF(obj)
 
 		logger.info('Done!')
 

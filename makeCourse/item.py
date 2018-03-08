@@ -69,21 +69,50 @@ class Part(Item):
 	title = 'Untitled part'
 	template_file = 'part.html'
 
-	def markdown(self,**kwargs):
-		header = {
+	def yaml(self,active=False):
+		return {
 			'title': self.title,
 			'author': self.course.config['author'],
 			'part-slug': self.slug,
-			'chapters': [{'title':ch.title, 'slug': ch.slug} for ch in self.content if not ch.is_hidden],
+			'slug': self.slug,
+			'chapters': [item.yaml() for item in self.content if not item.is_hidden]
 		}
 
-		content = yaml_header(header)
-		return content
+	def markdown(self,**kwargs):
+		return yaml_header(self.yaml())
+
+class Url(Item):
+	type = 'url'
+	title = 'Untitled URL'
+	template_file = 'part.html'
+
+	def yaml(self,active=False):
+		return {
+			'title': self.title,
+			'external_url': self.source,
+		}
+
+	def markdown(self,**kwargs):
+		return None
 
 class Chapter(Item):
 	type = 'chapter'
 	title = 'Untitled chapter'
 	template_file = 'chapter.html'
+
+	def yaml(self,active=False):
+		d = {
+			'title': self.title,
+			'slug': self.slug,
+			'build_pdf': self.course.config['build_pdf'],
+			'author': self.course.config['author'],
+			'file': '{}.html'.format(self.url),
+			'pdf': '{}.pdf'.format(self.url),
+		}
+		if active:
+			d['active'] = 1
+
+		return d
 
 	@property
 	def out_path(self):
@@ -93,28 +122,14 @@ class Chapter(Item):
 			return [self.slug]
 
 	def markdown(self,pdf=False):
-		def chapter_yaml(ch,active=False):
-			d = {
-				'title': ch.title,
-				'file': '{}.html'.format(ch.url),
-				'pdf': '{}.pdf'.format(ch.url),
-			}
-			if active:
-				d['active'] = 1
-			return d
+		header = self.yaml()
 
-		header = {
-			'title': self.title,
-			'slug': self.slug,
-			'build_pdf': self.course.config['build_pdf'],
-			'author': self.course.config['author'],
-		}
 		if self.parent:
 			header['part'] = self.parent.title
 			header['part-slug'] = self.parent.slug
-			header['chapters'] = [chapter_yaml(ch,ch==self) for ch in self.parent.content if not ch.is_hidden]
+			header['chapters'] = [item.yaml(item==self) for item in self.parent.content if not item.is_hidden]
 		else:
-			header['chapters'] = [chapter_yaml(ch,ch==self) for ch in self.course.structure if not ch.is_hidden]
+			header['chapters'] = [item.yaml(item==self) for item in self.course.structure if not item.type =='introduction' and not item.is_hidden]
 
 		return yaml_header(header) + '\n\n' + self.get_content(pdf=pdf)
 
@@ -124,33 +139,23 @@ class Introduction(Item):
 	title = 'index'
 	out_path = ['index']
 
-	def markdown(self,**kwargs):
-		def chapter_yaml(ch):
-			return {
-				'title': ch.title,
-				'slug': ch.slug,
-			}
+	def yaml(self,active=False):
+		return {
+			'title': 'index',
+			'author': self.course.config['author'],
+		}
 
+	def markdown(self,**kwargs):
 		def link_yaml(s):
 			if s.is_hidden:
 				return
-			if s.type == 'part':
-				return {
-					'title': s.title,
-					'slug': s.slug,
-					'chapters': [chapter_yaml(ch) for ch in s.content if not ch.is_hidden]
-				}
-			elif s.type == 'chapter':
-				return {
-					'title': s.title,
-					'slug': s.slug,
-				}
+			return s.yaml()
 
-		header = {
-			'title': 'index',
-			'author': self.course.config['author'],
-			'links': [x for x in [link_yaml(s) for s in self.course.structure] if x is not None],
-		}
+		header = self.yaml()
+		header['links'] = [link_yaml(s) for s in self.course.structure if not s.type =='introduction' and not s.is_hidden]
+		
+		if [s for s in self.course.structure if not s.type =='introduction' and not s.is_hidden][1].type == 'part':
+			header['isPart'] = 1
 
 		return yaml_header(header)+'\n\n'+self.get_content()
 
@@ -158,6 +163,7 @@ item_types = {
 	'introduction': Introduction,
 	'part': Part,
 	'chapter': Chapter,
+	'url': Url,
 }
 def load_item(course, data, parent=None):
 	return item_types[data['type']](course, data, parent)
