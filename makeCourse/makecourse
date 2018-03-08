@@ -75,6 +75,9 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 		if self.args.theme:
 			self.config['theme'] = self.args.theme
 
+		if self.args.web_dir:
+			self.config['web_dir'] = self.args.web_dir
+
 		if self.args.build_pdf is not None:
 			self.config['build_pdf'] = self.args.build_pdf
 
@@ -154,7 +157,7 @@ def main():
 	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
 	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
 	parser.add_argument('-l', dest='lazy', action='store_true',help='don\'t delete temporary files when finished')
-	parser.add_argument('-w', dest='webdir',help='Override the base web directory')
+	parser.add_argument('-w', dest='web_dir',help='Override the base web directory')
 	parser.add_argument('--no-pdf', dest='build_pdf', action='store_false',help='don\'t build PDF')
 	parser.add_argument('--theme', dest='theme', help='Name of the theme to use')
 	parser.add_argument('--config', dest='config_file', help='Path to config file')
