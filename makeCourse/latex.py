@@ -30,15 +30,16 @@ def runPdflatex(course,item):
 	logger.info('    Copying pdf output: {file} => {path}'.format(file=os.path.join(inDir,baseFile+'.pdf'),path=outPath))
 	shutil.copyfile(os.path.join(inDir,baseFile+'.pdf'), outPath)
 
-	logger.info('    Cleaning up after pdflatex...')
-	extensions = ['.log','.aux','.out','.pdf','.snm','.nav','.toc']
-	for extension in extensions:
-		filename = '{base}{extension}'.format(base=os.path.join(inDir,baseFile), extension=extension)
-		logger.info('        Deleting: {}'.format(filename))
-		try:
-			os.remove(filename)
-		except OSError:
-			pass
+	if not course.args.lazy:
+		logger.info('    Cleaning up after pdflatex...')
+		extensions = ['.log','.aux','.out','.pdf','.snm','.nav','.toc']
+		for extension in extensions:
+			filename = '{base}{extension}'.format(base=os.path.join(inDir,baseFile), extension=extension)
+			logger.info('        Deleting: {}'.format(filename))
+			try:
+				os.remove(filename)
+			except OSError:
+				pass
 
 if __name__ == "__main__":
 	pass
