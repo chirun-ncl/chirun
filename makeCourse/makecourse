@@ -63,7 +63,7 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 			'build_dir': os.path.join(self.root_dir,'build'),
 			'theme': 'default',
 			'web_dir': '/module/'+loaded_config.get('code','') if 'code' in loaded_config else '/',
-			'mock_test_dir': False,
+			'top_links' : [],
 			'partsEnabled': False,
 			'tempFiles': [],
 			'build_pdf': True

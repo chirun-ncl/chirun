@@ -75,7 +75,8 @@ class Part(Item):
 			'author': self.course.config['author'],
 			'part-slug': self.slug,
 			'slug': self.slug,
-			'chapters': [item.yaml() for item in self.content if not item.is_hidden]
+			'chapters': [item.yaml() for item in self.content if not item.is_hidden],
+			'top_links': self.course.config['top_links'],
 		}
 
 	def markdown(self,**kwargs):
@@ -108,6 +109,7 @@ class Chapter(Item):
 			'author': self.course.config['author'],
 			'file': '{}.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
+			'top_links': self.course.config['top_links'],
 		}
 		if active:
 			d['active'] = 1
@@ -143,6 +145,7 @@ class Introduction(Item):
 		return {
 			'title': 'index',
 			'author': self.course.config['author'],
+			'top_links': self.course.config['top_links'],
 		}
 
 	def markdown(self,**kwargs):
