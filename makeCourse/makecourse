@@ -38,6 +38,31 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 
 		print("Running makecourse for directory {}".format(os.path.abspath(self.args.dir)))
 
+	def setup_build_for_theme(self,this_theme,default=False):
+		theme_config = {
+			'build_dir': os.path.join(self.root_dir,'build'),
+			'theme': this_theme,
+			'web_dir': '/module/'+self.loaded_config.get('code','') if 'code' in self.loaded_config else '/',
+		}
+		self.config.update(theme_config)
+
+		if self.args.web_dir:
+			self.config['web_dir'] =  self.args.web_dir
+
+		if not default:
+			theme_config = {
+				'build_dir': os.path.join(self.config['build_dir'],this_theme),
+				'web_dir': self.config['web_dir']+this_theme+'/',
+			}
+			self.config.update(theme_config)
+
+		self.theme_dir = os.path.join(self.config['themes_dir'], this_theme)
+
+		logger.debug("""The themes directory is: {themes_dir}
+The static directory is: {static_dir}
+The build directory is: {build_dir}
+The web directory is: {web_dir}""".format(**self.config))
+
 	def load_config(self):
 		if self.args.config_file:
 			config_file = self.args.config_file
@@ -47,46 +72,31 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 		logger.info("Reading config file {}".format(config_file))
 
 		with open(config_file, 'r') as f:
-			loaded_config = yaml.load(f)
+			self.loaded_config = yaml.load(f)
 
-		if 'configFile' in loaded_config:
+		#TODO: No longer use this when MAS2604 is replaced with new coursebuild config
+		if 'configFile' in self.loaded_config:
 			# the config file can specify a different config file to load, stored in HackMD
 			realConfig = makeCourse.hackmd.getHackmdDocument(loaded_config,loaded_config['configFile'])
 			realConfig = re.sub(r'^---.*?---\n','',realConfig,flags=re.S)
-			loaded_config = yaml.load(realConfig)
+			self.loaded_config = yaml.load(realConfig)
 
-		loaded_config['args'] = self.args
+		self.loaded_config['args'] = self.args
 
 		config = {
 			'themes_dir': os.path.join(self.root_dir,'themes'),
 			'static_dir': os.path.join(self.root_dir,'static'),
-			'build_dir': os.path.join(self.root_dir,'build'),
-			'theme': 'default',
-			'web_dir': '/module/'+loaded_config.get('code','') if 'code' in loaded_config else '/',
 			'top_links' : [],
 			'partsEnabled': False,
 			'tempFiles': [],
 			'build_pdf': True
 		}
 
-		config.update(loaded_config)
+		config.update(self.loaded_config)
 		self.config = config
-
-		if self.args.theme:
-			self.config['theme'] = self.args.theme
-
-		if self.args.web_dir:
-			self.config['web_dir'] = self.args.web_dir
 
 		if self.args.build_pdf is not None:
 			self.config['build_pdf'] = self.args.build_pdf
-
-		self.theme_dir = os.path.join(self.config['themes_dir'], self.config['theme'])
-
-		logger.debug("""The themes directory is: {themes_dir}
-The static directory is: {static_dir}
-The build directory is: {build_dir}
-The web directory is: {web_dir}""".format(**self.config))
 
 	def cleanup(self):
 
@@ -144,11 +154,6 @@ The web directory is: {web_dir}""".format(**self.config))
 			copy_tree(srcPath, dstPath)
 		except:
 			logger.warning("Warning: Problem copying Course's static directory!")
-	
-	def get_mock_test(self):
-		for item in self.config['structure']:
-			if item.get('type','')=='mocktest':
-				return item['source']
 		
 
 def main():
@@ -158,8 +163,6 @@ def main():
 	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
 	parser.add_argument('-l', dest='lazy', action='store_true',help='don\'t delete temporary files when finished')
 	parser.add_argument('-w', dest='web_dir',help='Override the base web directory')
-	parser.add_argument('--no-pdf', dest='build_pdf', action='store_false',help='don\'t build PDF')
-	parser.add_argument('--theme', dest='theme', help='Name of the theme to use')
 	parser.add_argument('--config', dest='config_file', help='Path to config file')
 	parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
 	parser.set_defaults(build_pdf=None)
@@ -172,13 +175,16 @@ def main():
 	if mc.args.deleteFirst:
 		mc.cleanup()
 
+	mc.setup_build_for_theme(mc.config['default_theme'],default=True)
 	mc.make_directories()
-
 	mc.process()
-	
-	logger.info("Running epilogue...")
-
 	mc.copy_theme_static_files()
+
+	for other_theme in mc.config['other_themes']:
+		mc.setup_build_for_theme(other_theme,default=False)
+		mc.make_directories()
+		mc.process()
+		mc.copy_theme_static_files()
 
 	if not mc.args.lazy:
 		mc.cleanup()

@@ -96,6 +96,20 @@ class Url(Item):
 	def markdown(self,**kwargs):
 		return None
 
+class Slides(Item):
+	type = 'slides'
+	title = 'Untitled Slides'
+
+	def yaml(self,active=False):
+		return {
+			'title': self.title,
+			'author': self.course.config['author'],
+			'slug': self.slug,
+		}
+
+	def markdown(self,**kwargs):
+		return None
+
 class Chapter(Item):
 	type = 'chapter'
 	title = 'Untitled chapter'
@@ -167,6 +181,7 @@ item_types = {
 	'part': Part,
 	'chapter': Chapter,
 	'url': Url,
+	'slides': Slides,
 }
 def load_item(course, data, parent=None):
 	return item_types[data['type']](course, data, parent)
