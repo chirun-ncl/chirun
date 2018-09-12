@@ -5,6 +5,7 @@ import logging
 import makeCourse.hackmd
 import makeCourse.process
 import makeCourse.pandoc
+import makeCourse.latex
 import os
 import re
 import shutil
@@ -16,7 +17,7 @@ from subprocess import Popen, PIPE
 
 logger = logging.getLogger('makeCourse')
 
-class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.PandocRunner):
+class MakeCourse(object,makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProcessor, makeCourse.pandoc.PandocRunner):
 
 	mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 
@@ -42,7 +43,7 @@ class MakeCourse(object,makeCourse.process.CourseProcessor, makeCourse.pandoc.Pa
 		theme_config = {
 			'build_dir': os.path.join(self.root_dir,'build'),
 			'theme': this_theme,
-			'web_dir': '/module/'+self.loaded_config.get('code','') if 'code' in self.loaded_config else '/',
+			'web_dir': '/module/'+(self.loaded_config.get('code','')+'/') if 'code' in self.loaded_config else '/',
 		}
 		self.config.update(theme_config)
 

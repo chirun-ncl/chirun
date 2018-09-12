@@ -5,7 +5,7 @@ The main makeCourse tool lives in this repository.
  * (Optional) Create a Python2 virtualenv: `virtualenv -p /usr/bin/python2.7 makecourse_env` and activate it: `source ./makecourse_env/bin/activate`
  * Install PIL: `pip2 install --no-index -f http://effbot.org/downloads/ -U PIL --trusted-host effbot.org`
  * Install makeCourse: `pip2 install git+https://mas-gitlab.ncl.ac.uk/makecourse-tools/makecourse.git` 
- * Install pdf2svg using your standard package manager
+ * Install pdf2svg and pandoc using your standard package manager
 
 ## Install from source 
  * (Optional) Create a Python2 virtualenv: `virtualenv -p /usr/bin/python2.7 makecourse_env` and activate it: `source ./makecourse_env/bin/activate`
@@ -14,7 +14,7 @@ The main makeCourse tool lives in this repository.
  * Install PIL: `pip2 install --no-index -f http://effbot.org/downloads/ -U PIL --trusted-host effbot.org`
  * Install all the other requirements: `pip2 install -r requirements.txt`
  * Install the makeCourse tool: `pip2 install -e .`
- * Install pdf2svg using your standard package manager
+ * Install pdf2svg and pandoc using your standard package manager
 
 ## Compile the MAS0001 test course
  * Install makeCourse using the instructions above

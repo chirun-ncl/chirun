@@ -78,7 +78,7 @@ class CourseProcessor:
 		if ext == '.tex':
 			latex.runPdflatex(self,item)
 		else:
-			self.run_pandoc(item,template_file='notes.latex', format='pdf')
+			self.run_pandoc(item,template_file='notes.latex', out_format='pdf')
 
 	def doProcess(self):
 		logger.info('Preprocessing Structure...')
@@ -108,32 +108,29 @@ class CourseProcessor:
 						self.config['partsEnabled'] = True
 						if chapter.is_hidden:
 							continue
-						#if self.config["build_pdf"]:
-						#	self.makePDF(chapter)
+					elif(chapter.type == 'slides'):
+						self.config['partsEnabled'] = True
+						if chapter.is_hidden:
+							continue
+						self.run_pandoc(chapter)
+						self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html')
+						if self.config["build_pdf"]:
+							self.makePDF(chapter)
 					else:
 						raise Exception("Error: Unsupported chapter type! {} is a {}".format(chapter.title, chapter.type))
-
-			elif obj.type == 'chapter':
+			else:
+				if obj.is_hidden:
+						continue
 				if self.config['partsEnabled']:
 					raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
-				self.run_pandoc(obj)
-				if self.config["build_pdf"]:
+				if obj.type == 'chapter':
+					self.run_pandoc(obj)
+					if self.config["build_pdf"]:
+							self.makePDF(obj)
+				elif obj.type == 'slides':
+					self.run_pandoc(obj)
+					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html')
+					if self.config["build_pdf"]:
 						self.makePDF(obj)
 
-			elif obj.type == 'url':
-				if self.config['partsEnabled']:
-					raise Exception("Error: Both parts and url found at top level. To fix: put all url inside parts or don't include parts at all. Quitting...\n")
-				#self.run_pandoc(obj)
-				#if self.config["build_pdf"]:
-				#		self.makePDF(obj)
-
 		logger.info('Done!')
-
-	def load_tex(self, source, out_path):
-		tmpDir = self.temp_path('plastex')
-		plastex.runPlastex(self.config, source, tmpDir)
-		texContents = open(os.path.join(self.root_dir, tmpDir, "index.html"), 'r').read()
-		texContents = plastex.fixPlastexQuirks(texContents)
-		texContents = plastex.getEmbeddedImages(self.config, texContents, tmpDir, out_path)
-		texContents = self.burnInExtras(texContents)
-		return texContents

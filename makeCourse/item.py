@@ -29,7 +29,10 @@ class Item(object):
 
 	@property
 	def out_path(self):
-		return [self.slug]
+		if self.parent:
+			return [self.parent.slug,self.slug]
+		else:
+			return [self.slug]
 
 	@property
 	def out_file(self):
@@ -53,7 +56,7 @@ class Item(object):
 			mdContents = self.course.burnInExtras(mdContents,pdf)
 			return mdContents
 		elif ext == '.tex':
-			return self.course.load_tex(self.source,self.out_file)
+			return self.course.load_latex_content(self)
 		elif re.search(r'[^/\?:\s]+', self.source):
 			code = re.search(r'([^/\?:\s]+)', self.source).group(1)
 			mdContents = hackmd.getHackmdDocument(self.course.config,code)
@@ -68,6 +71,10 @@ class Part(Item):
 	type = 'part'
 	title = 'Untitled part'
 	template_file = 'part.html'
+
+	@property
+	def out_path(self):
+		return [self.slug]
 
 	def yaml(self,active=False):
 		return {
@@ -96,20 +103,6 @@ class Url(Item):
 	def markdown(self,**kwargs):
 		return None
 
-class Slides(Item):
-	type = 'slides'
-	title = 'Untitled Slides'
-
-	def yaml(self,active=False):
-		return {
-			'title': self.title,
-			'author': self.course.config['author'],
-			'slug': self.slug,
-		}
-
-	def markdown(self,**kwargs):
-		return None
-
 class Chapter(Item):
 	type = 'chapter'
 	title = 'Untitled chapter'
@@ -122,6 +115,7 @@ class Chapter(Item):
 			'build_pdf': self.course.config['build_pdf'],
 			'author': self.course.config['author'],
 			'file': '{}.html'.format(self.url),
+			'slides': '{}.slides.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
 			'top_links': self.course.config['top_links'],
 		}
@@ -129,13 +123,6 @@ class Chapter(Item):
 			d['active'] = 1
 
 		return d
-
-	@property
-	def out_path(self):
-		if self.parent:
-			return [self.parent.slug,self.slug]
-		else:
-			return [self.slug]
 
 	def markdown(self,pdf=False):
 		header = self.yaml()
@@ -148,6 +135,12 @@ class Chapter(Item):
 			header['chapters'] = [item.yaml(item==self) for item in self.course.structure if not item.type =='introduction' and not item.is_hidden]
 
 		return yaml_header(header) + '\n\n' + self.get_content(pdf=pdf)
+
+class Slides(Chapter):
+	type = 'slides'
+	title = 'Untitled Slides'
+	template_file = 'slides.html'
+
 
 class Introduction(Item):
 	type = 'introduction'
@@ -171,7 +164,7 @@ class Introduction(Item):
 		header = self.yaml()
 		header['links'] = [link_yaml(s) for s in self.course.structure if not s.type =='introduction' and not s.is_hidden]
 		
-		if [s for s in self.course.structure if not s.type =='introduction' and not s.is_hidden][1].type == 'part':
+		if [s for s in self.course.structure if not s.type =='introduction' and not s.is_hidden][0].type == 'part':
 			header['isPart'] = 1
 
 		return yaml_header(header)+'\n\n'+self.get_content()
@@ -183,5 +176,6 @@ item_types = {
 	'url': Url,
 	'slides': Slides,
 }
+
 def load_item(course, data, parent=None):
 	return item_types[data['type']](course, data, parent)
