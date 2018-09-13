@@ -50,7 +50,7 @@ class Item(object):
 		if ext == '.md':
 			mdContents = open(os.path.join(self.course.root_dir,self.source), 'r').read()
 			if mdContents[:3] == '---':
-				logger.info('    Note: Markdown file {} contains a YAML header. Stripping it...'.format(self.source))
+				logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
 			logger.debug('    Burning in iframes & extras.')
 			mdContents = self.course.burnInExtras(mdContents,pdf)
@@ -80,6 +80,7 @@ class Part(Item):
 		return {
 			'title': self.title,
 			'author': self.course.config['author'],
+			'year': self.course.config['year'],
 			'part-slug': self.slug,
 			'slug': self.slug,
 			'chapters': [item.yaml() for item in self.content if not item.is_hidden],
@@ -114,6 +115,7 @@ class Chapter(Item):
 			'slug': self.slug,
 			'build_pdf': self.course.config['build_pdf'],
 			'author': self.course.config['author'],
+			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
 			'slides': '{}.slides.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
@@ -152,6 +154,7 @@ class Introduction(Item):
 		return {
 			'title': 'index',
 			'author': self.course.config['author'],
+			'year': self.course.config['year'],
 			'top_links': self.course.config['top_links'],
 		}
 

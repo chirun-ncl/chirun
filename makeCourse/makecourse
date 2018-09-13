@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import datetime
 import errno
 import logging
 import makeCourse.hackmd
@@ -99,6 +100,9 @@ The web directory is: {web_dir}""".format(**self.config))
 		if self.args.build_pdf is not None:
 			self.config['build_pdf'] = self.args.build_pdf
 
+		if not 'year' in self.config.keys():
+			self.config['year'] = datetime.datetime.now().year
+
 	def cleanup(self):
 
 		try:
@@ -181,11 +185,12 @@ def main():
 	mc.process()
 	mc.copy_theme_static_files()
 
-	for other_theme in mc.config['other_themes']:
-		mc.setup_build_for_theme(other_theme,default=False)
-		mc.make_directories()
-		mc.process()
-		mc.copy_theme_static_files()
+	if mc.config['other_themes']:
+		for other_theme in mc.config['other_themes']:
+			mc.setup_build_for_theme(other_theme,default=False)
+			mc.make_directories()
+			mc.process()
+			mc.copy_theme_static_files()
 
 	if not mc.args.lazy:
 		mc.cleanup()

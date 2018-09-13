@@ -3,7 +3,6 @@ from . import hackmd
 from . import latex
 from . import pandoc
 from . import plastex
-from . import slides
 from .item import load_item
 import os
 import re
