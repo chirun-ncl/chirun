@@ -24,12 +24,13 @@ class PandocRunner:
 				'pandoc', '--mathjax={}'.format(self.mathjax_url),
 				'-i', '-t', 'revealjs', '-s',
 				'-V','revealjs-url={}/static/reveal.js'.format(self.config['web_dir']),
+				'-V', 'web_dir={}'.format(self.config['web_dir']), 
 				'--template', template_path, 
 				'-o', outPath,
 			]
 		else:
 			cmd = [
-				'pandoc', '-markdown', '-s', '--toc','--toc-depth=2', '--section-divs', '--listings',
+				'pandoc', '-s', '--toc','--toc-depth=2', '--section-divs', '--listings',
 				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
 				'--metadata=date:{}'.format(date), 
 				'-V', 'web_dir={}'.format(self.config['web_dir']), 
