@@ -17,7 +17,7 @@ class PandocRunner:
 		template_path = os.path.join(self.config['themes_dir'], self.config['theme'], template_file)
 		date = datetime.date.today()
 
-		logger.info('   {src} => {dest}'.format(src=item.title, dest=outPath))
+		logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
 
 		if template_file=='slides.revealjs':
 			cmd = [

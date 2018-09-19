@@ -43,8 +43,6 @@ class Item(object):
 		return '/'.join(self.out_path)
 
 	def get_content(self,pdf=False):
-		logger.info('Building {} file: {}'.format(self.type, self.title))
-
 		_, ext = os.path.splitext(self.source)
 
 		if ext == '.md':
@@ -52,7 +50,6 @@ class Item(object):
 			if mdContents[:3] == '---':
 				logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-			logger.debug('    Burning in iframes & extras.')
 			mdContents = self.course.burnInExtras(mdContents,pdf)
 			return mdContents
 		elif ext == '.tex':
@@ -61,7 +58,6 @@ class Item(object):
 			code = re.search(r'([^/\?:\s]+)', self.source).group(1)
 			mdContents = hackmd.getHackmdDocument(self.course.config,code)
 			mdContents = hackmd.getEmbeddedImages(self.course.config,mdContents)
-			logger.debug('    Burning in iframes & extras.')
 			mdContents = self.course.burnInExtras(mdContents,pdf)
 			return mdContents
 		else:

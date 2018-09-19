@@ -36,8 +36,11 @@ class CourseProcessor:
 		return mdContents
 
 	def getVimeoHTML(self, code):
-		return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" webkitallowfullscreen \
-				mozallowfullscreen allowfullscreen></iframe>'
+		return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" \
+				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+	def getRecapHTML(self, code):
+		return '<iframe src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id='+code+'&v=1" width="100%" \
+				height="360" frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
 	def getYoutubeHTML(self, code):
 		return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
 	def getNumbasHTML(self, URL):
@@ -52,23 +55,27 @@ class CourseProcessor:
 		return HACKMD_URL+'/p/'+code+'/'
 
 	def burnInExtras(self,mdContents,pdf=False):
-
+		mdContentsOrig = mdContents
 		reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
+		reRecap = re.compile(r'{%recap\s*([\d\DA-z-]*?)\s*%}')
 		reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
 		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
 		if pdf:
 			mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
+			mdContents = reRecap.sub(lambda m: "\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
 			mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
 			mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
 			mdContents = reSlides.sub(lambda m: "\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
 		else:
 			mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
+			mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)
 			mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
 			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
 			mdContents = reSlides.sub(lambda m: self.getSlidesHTML(m.group(1)), mdContents)
 			mdContents = self.relativiseImages(mdContents)
-
+		if mdContents != mdContentsOrig:
+			logger.debug('    Embedded iframes & extras.')
 		mdContents = self.replaceLabels(mdContents)
 		return mdContents
 
@@ -89,7 +96,7 @@ class CourseProcessor:
 			if obj.is_hidden:
 				continue
 			if obj.type == 'introduction':
-				logger.info('Building index')
+				logger.info('Building Index file index.html')
 				self.run_pandoc(obj)
 
 			elif obj.type == 'part':
@@ -97,6 +104,7 @@ class CourseProcessor:
 				self.run_pandoc(obj)
 				for chapter in obj.content:
 					if(chapter.type == 'chapter'):
+						logger.info('Building chapter: {}'.format(chapter.title))
 						self.config['partsEnabled'] = True
 						if chapter.is_hidden:
 							continue
@@ -108,6 +116,7 @@ class CourseProcessor:
 						if chapter.is_hidden:
 							continue
 					elif(chapter.type == 'slides'):
+						logger.info('Building slides: {}'.format(chapter.title))
 						self.config['partsEnabled'] = True
 						if chapter.is_hidden:
 							continue
@@ -123,10 +132,12 @@ class CourseProcessor:
 				if self.config['partsEnabled']:
 					raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
 				if obj.type == 'chapter':
+					logger.info('Building chapter: {}'.format(obj.title))
 					self.run_pandoc(obj)
 					if self.config["build_pdf"]:
 							self.makePDF(obj)
 				elif obj.type == 'slides':
+					logger.info('Building slides: {}'.format(obj.title))
 					self.run_pandoc(obj)
 					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html')
 					if self.config["build_pdf"]:
