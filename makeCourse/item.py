@@ -113,7 +113,6 @@ class Chapter(Item):
 			'author': self.course.config['author'],
 			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
-			'slides': '{}.slides.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
 			'top_links': self.course.config['top_links'],
 		}
@@ -139,6 +138,22 @@ class Slides(Chapter):
 	title = 'Untitled Slides'
 	template_file = 'slides.html'
 
+	def yaml(self,active=False):
+		d = {
+			'title': self.title,
+			'slug': self.slug,
+			'build_pdf': self.course.config['build_pdf'],
+			'author': self.course.config['author'],
+			'year': self.course.config['year'],
+			'file': '{}.html'.format(self.url),
+			'slides': '{}.slides.html'.format(self.url),
+			'pdf': '{}.pdf'.format(self.url),
+			'top_links': self.course.config['top_links'],
+		}
+		if active:
+			d['active'] = 1
+
+		return d
 
 class Introduction(Item):
 	type = 'introduction'

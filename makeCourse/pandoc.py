@@ -37,7 +37,6 @@ class PandocRunner:
 				'--template', template_path, 
 				'-o', outPath,
 			]
-
 		content = item.markdown(pdf=out_format=='pdf')
 		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 

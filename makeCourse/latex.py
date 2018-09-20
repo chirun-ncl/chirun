@@ -19,9 +19,12 @@ def runPdflatex(course,item):
 
 	#latex often requires 2 runs to resolve labels
 	for _ in range(2):
-		proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=inDir)
+		proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=inDir, universal_newlines=True)
+		for stdout_line in iter(proc.stdout.readline, ""):
+			logger.debug(stdout_line)
+
 		out, err = proc.communicate()
-		logger.debug(out)
+		
 		if proc.returncode != 0:
 			logger.error(err)
 			raise Exception("Error: Something went wrong running pdflatex!")

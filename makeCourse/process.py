@@ -32,6 +32,7 @@ class CourseProcessor:
 	def relativiseImages(self,mdContents):
 		mdImageDir = os.path.join(self.config['build_dir'],'static')
 		relativeImageDir = self.config['web_dir']+"static"
+		logger.info("    Relativising images: replacing \""+mdImageDir+"\" with \""+relativeImageDir+"\" in image paths.") 
 		mdContents = mdContents.replace(mdImageDir, relativeImageDir)
 		return mdContents
 
@@ -83,6 +84,8 @@ class CourseProcessor:
 		_, ext = os.path.splitext(item.source)
 		if ext == '.tex':
 			latex.runPdflatex(self,item)
+		elif item.type == 'slides':
+			self.run_decktape(item)
 		else:
 			self.run_pandoc(item,template_file='notes.latex', out_format='pdf')
 
