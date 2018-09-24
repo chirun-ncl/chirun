@@ -42,7 +42,7 @@ class Item(object):
 	def url(self):
 		return '/'.join(self.out_path)
 
-	def get_content(self,pdf=False):
+	def get_content(self,force_local=False,out_format='html'):
 		_, ext = os.path.splitext(self.source)
 
 		if ext == '.md':
@@ -50,7 +50,7 @@ class Item(object):
 			if mdContents[:3] == '---':
 				logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
-			mdContents = self.course.burnInExtras(mdContents,pdf)
+			mdContents = self.course.burnInExtras(mdContents,force_local,out_format)
 			return mdContents
 		elif ext == '.tex':
 			return self.course.load_latex_content(self)
@@ -58,7 +58,7 @@ class Item(object):
 			code = re.search(r'([^/\?:\s]+)', self.source).group(1)
 			mdContents = hackmd.getHackmdDocument(self.course.config,code)
 			mdContents = hackmd.getEmbeddedImages(self.course.config,mdContents)
-			mdContents = self.course.burnInExtras(mdContents,pdf)
+			mdContents = self.course.burnInExtras(mdContents,force_local,out_format)
 			return mdContents
 		else:
 			raise Exception("Error: Unrecognised source type for {}: {}.".format(ch.title,ch.source))
@@ -121,7 +121,7 @@ class Chapter(Item):
 
 		return d
 
-	def markdown(self,pdf=False):
+	def markdown(self,force_local=False,out_format='html'):
 		header = self.yaml()
 
 		if self.parent:
@@ -131,7 +131,7 @@ class Chapter(Item):
 		else:
 			header['chapters'] = [item.yaml(item==self) for item in self.course.structure if not item.type =='introduction' and not item.is_hidden]
 
-		return yaml_header(header) + '\n\n' + self.get_content(pdf=pdf)
+		return yaml_header(header) + '\n\n' + self.get_content(force_local,out_format)
 
 class Slides(Chapter):
 	type = 'slides'

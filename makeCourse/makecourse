@@ -43,20 +43,20 @@ class MakeCourse(object,makeCourse.plastex.PlastexRunner,makeCourse.process.Cour
 		print("Running makecourse for directory {}".format(os.path.abspath(self.args.dir)))
 
 	def setup_build_for_theme(self,this_theme,default=False):
-		theme_config = {
-			'build_dir': os.path.join(self.root_dir,'build'),
-			'theme': this_theme,
-			'web_dir': '/module/'+(self.loaded_config.get('code','')+'/') if 'code' in self.loaded_config else '/',
-		}
-		self.config.update(theme_config)
+		self.config['local_root'] = os.getcwd()+'/'+'build/'
+		if self.args.local:
+			self.config['web_root'] = self.config['local_root']
+		else:
+			self.config['web_root'] ='/module/'+self.loaded_config.get('code','')+'/'+self.loaded_config.get('year','')+'/'
 
-		if self.args.web_dir:
-			self.config['web_dir'] =  self.args.web_dir
+		self.config['build_dir'] = os.path.join(self.root_dir,'build')
+		self.config['theme'] = this_theme
 
 		if not default:
 			theme_config = {
 				'build_dir': os.path.join(self.config['build_dir'],this_theme),
-				'web_dir': self.config['web_dir']+this_theme+'/',
+				'web_root': self.config['web_root']+this_theme+'/',
+				'local_root': self.config['local_root']+this_theme+'/',
 			}
 			self.config.update(theme_config)
 
@@ -65,7 +65,8 @@ class MakeCourse(object,makeCourse.plastex.PlastexRunner,makeCourse.process.Cour
 		logger.debug("""The themes directory is: {themes_dir}
 The static directory is: {static_dir}
 The build directory is: {build_dir}
-The web directory is: {web_dir}""".format(**self.config))
+The web root directory is: {web_root}
+The local root directory is: {local_root}""".format(**self.config))
 
 	def load_config(self):
 		if self.args.config_file:
@@ -93,17 +94,12 @@ The web directory is: {web_dir}""".format(**self.config))
 			'top_links' : [],
 			'partsEnabled': False,
 			'tempFiles': [],
-			'build_pdf': True
+			'build_pdf': True,
+			'year': datetime.datetime.now().year,
 		}
 
 		config.update(self.loaded_config)
 		self.config = config
-
-		if self.args.build_pdf is not None:
-			self.config['build_pdf'] = self.args.build_pdf
-
-		if not 'year' in self.config.keys():
-			self.config['year'] = datetime.datetime.now().year
 
 	def cleanup(self):
 
@@ -168,8 +164,8 @@ def main():
 	parser.add_argument('-v', dest='verbose', action='store_true',help='verbose output')
 	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
 	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
-	parser.add_argument('-l', dest='lazy', action='store_true',help='don\'t delete temporary files when finished')
-	parser.add_argument('-w', dest='web_dir',help='Override the base web directory')
+	parser.add_argument('-z', dest='lazy', action='store_true',help='don\'t delete temporary files when finished')
+	parser.add_argument('-l', dest='local', action='store_true',help='create with local file paths')
 	parser.add_argument('--config', dest='config_file', help='Path to config file')
 	parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
 	parser.set_defaults(build_pdf=None)
@@ -193,7 +189,7 @@ def main():
 			mc.make_directories()
 			mc.copy_theme_static_files()
 			mc.process()
-			
+
 	if not mc.args.lazy:
 		mc.cleanup()
 		

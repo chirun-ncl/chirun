@@ -29,13 +29,6 @@ class CourseProcessor:
 			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_dir']+l['outFile']+".html)", mdContents)
 		return mdContents
 
-	def relativiseImages(self,mdContents):
-		mdImageDir = os.path.join(self.config['build_dir'],'static')
-		relativeImageDir = self.config['web_dir']+"static"
-		logger.info("    Relativising images: replacing \""+mdImageDir+"\" with \""+relativeImageDir+"\" in image paths.") 
-		mdContents = mdContents.replace(mdImageDir, relativeImageDir)
-		return mdContents
-
 	def getVimeoHTML(self, code):
 		return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" \
 				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
@@ -55,14 +48,14 @@ class CourseProcessor:
 		hackmd.getSlidesPDF(self.config,code)
 		return HACKMD_URL+'/p/'+code+'/'
 
-	def burnInExtras(self,mdContents,pdf=False):
+	def burnInExtras(self,mdContents,force_local,out_format):
 		mdContentsOrig = mdContents
 		reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
 		reRecap = re.compile(r'{%recap\s*([\d\DA-z-]*?)\s*%}')
 		reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
 		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-		if pdf:
+		if out_format=='pdf':
 			mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
 			mdContents = reRecap.sub(lambda m: "\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
 			mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
@@ -74,7 +67,15 @@ class CourseProcessor:
 			mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
 			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
 			mdContents = reSlides.sub(lambda m: self.getSlidesHTML(m.group(1)), mdContents)
-			mdContents = self.relativiseImages(mdContents)
+
+		if force_local:
+			relativeImageDir = self.config['local_root']+"static/"
+		else:
+			relativeImageDir = self.config['web_root']+"static/"
+
+		logger.info("    Webize images: replacing '/static/' with \""+relativeImageDir+"\" in paths.")
+		mdContents = mdContents.replace('/static/', relativeImageDir)
+
 		if mdContents != mdContentsOrig:
 			logger.debug('    Embedded iframes & extras.')
 		mdContents = self.replaceLabels(mdContents)
@@ -87,7 +88,7 @@ class CourseProcessor:
 		elif item.type == 'slides':
 			self.run_decktape(item)
 		else:
-			self.run_pandoc(item,template_file='notes.latex', out_format='pdf')
+			self.run_pandoc(item,template_file='notes.latex', out_format='pdf',force_local=True)
 
 	def doProcess(self):
 		logger.info('Preprocessing Structure...')
@@ -124,9 +125,11 @@ class CourseProcessor:
 						if chapter.is_hidden:
 							continue
 						self.run_pandoc(chapter)
-						self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html')
+						self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html',force_local=True)
 						if self.config["build_pdf"]:
 							self.makePDF(chapter)
+						if not self.args.local:
+							self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html')
 					else:
 						raise Exception("Error: Unsupported chapter type! {} is a {}".format(chapter.title, chapter.type))
 			else:
@@ -142,8 +145,9 @@ class CourseProcessor:
 				elif obj.type == 'slides':
 					logger.info('Building slides: {}'.format(obj.title))
 					self.run_pandoc(obj)
-					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html')
+					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html',force_local=True)
 					if self.config["build_pdf"]:
 						self.makePDF(obj)
+					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html')
 
 		logger.info('Done!')

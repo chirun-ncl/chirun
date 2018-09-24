@@ -10,7 +10,12 @@ from subprocess import Popen, PIPE
 logger = logging.getLogger(__name__)
 
 class PandocRunner:
-	def run_pandoc(self, item, template_file=None,out_format='html'):
+	def run_pandoc(self, item, template_file=None,out_format='html',force_local=False):
+		if force_local:
+			root = self.config['local_root']
+		else:
+			root = self.config['web_root']
+
 		outPath = os.path.join(self.config['build_dir'], item.out_file+'.'+out_format)
 		if template_file is None:
 			template_file = item.template_file
@@ -23,8 +28,8 @@ class PandocRunner:
 			cmd = [
 				'pandoc', '--mathjax={}'.format(self.mathjax_url),
 				'-i', '-t', 'revealjs', '-s',
-				'-V','revealjs-url={}/static/reveal.js'.format(self.config['web_dir']),
-				'-V', 'web_dir={}'.format(self.config['web_dir']), 
+				'-V','revealjs-url={}/static/reveal.js'.format(root),
+				'-V', 'web_root={}'.format(root), 
 				'--template', template_path, 
 				'-o', outPath,
 			]
@@ -32,12 +37,13 @@ class PandocRunner:
 			cmd = [
 				'pandoc', '-s', '--toc','--toc-depth=2', '--section-divs', '--listings',
 				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
-				'--metadata=date:{}'.format(date), 
-				'-V', 'web_dir={}'.format(self.config['web_dir']), 
+				'--metadata=date:{}'.format(date),
+				'-V', 'web_root={}'.format(root), 
 				'--template', template_path, 
 				'-o', outPath,
 			]
-		content = item.markdown(pdf=out_format=='pdf')
+
+		content = item.markdown(force_local=force_local,out_format=out_format)
 		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
 		try:
