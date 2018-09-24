@@ -23,7 +23,7 @@ class PlastexRunner:
 		texContents = open(os.path.join(self.root_dir,self.tmpDir, "index.html"), 'r').read()
 		texContents = self.fixPlastexQuirks(texContents)
 		texContents = self.getEmbeddedImages(texContents, sourceItem.title)
-		texContents = self.burnInExtras(texContents)
+		texContents = self.burnInExtras(texContents,False,'html')
 		return texContents
 
 	def fixPlastexQuirks(self,text):
