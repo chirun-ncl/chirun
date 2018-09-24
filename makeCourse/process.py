@@ -26,7 +26,7 @@ class CourseProcessor:
 	def replaceLabels(self,mdContents):
 		for l in gen_dict_extract('label',self.config):
 			mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
-			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_dir']+l['outFile']+".html)", mdContents)
+			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_root']+l['outFile']+".html)", mdContents)
 		return mdContents
 
 	def getVimeoHTML(self, code):
@@ -42,7 +42,7 @@ class CourseProcessor:
 	def getSlidesHTML(self, code):
 		hackmd.getSlidesPDF(self.config,code)
 		return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
-				</iframe><div class="pad-top-10 pull-right"><a href="'+self.config['web_dir']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
+				</iframe><div class="pad-top-10 pull-right"><a href="'+self.config['web_root']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
 				|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
 	def getSlidesURL(self,code):
 		hackmd.getSlidesPDF(self.config,code)
@@ -73,8 +73,8 @@ class CourseProcessor:
 		else:
 			relativeImageDir = self.config['web_root']+"static/"
 
-		logger.info("    Webize images: replacing '/static/' with \""+relativeImageDir+"\" in paths.")
-		mdContents = mdContents.replace('/static/', relativeImageDir)
+		logger.info("    Webize images: replacing './build/static/' with \""+relativeImageDir+"\" in paths.")
+		mdContents = mdContents.replace('./build/static/', relativeImageDir)
 
 		if mdContents != mdContentsOrig:
 			logger.debug('    Embedded iframes & extras.')
