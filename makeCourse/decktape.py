@@ -19,6 +19,7 @@ class DecktapeRunner:
 			'decktape', '-s', '1366x768',
 			htmlPath,
 			outPath,
+			'--no-sandbox',
 		]
 
 		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
