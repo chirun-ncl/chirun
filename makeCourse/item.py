@@ -76,6 +76,7 @@ class Part(Item):
 		return {
 			'title': self.title,
 			'author': self.course.config['author'],
+			'code': self.course.config['code'],
 			'year': self.course.config['year'],
 			'part-slug': self.slug,
 			'slug': self.slug,
@@ -110,6 +111,7 @@ class Chapter(Item):
 			'title': self.title,
 			'slug': self.slug,
 			'build_pdf': self.course.config['build_pdf'],
+			'code': self.course.config['code'],
 			'author': self.course.config['author'],
 			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
@@ -143,6 +145,7 @@ class Slides(Chapter):
 			'title': self.title,
 			'slug': self.slug,
 			'build_pdf': self.course.config['build_pdf'],
+			'code': self.course.config['code'],
 			'author': self.course.config['author'],
 			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
@@ -165,6 +168,7 @@ class Introduction(Item):
 		return {
 			'title': 'index',
 			'author': self.course.config['author'],
+			'code': self.course.config['code'],
 			'year': self.course.config['year'],
 			'top_links': self.course.config['top_links'],
 		}
