@@ -117,6 +117,7 @@ class Chapter(Item):
 			'file': '{}.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
 			'top_links': self.course.config['top_links'],
+			'sidebar': True,
 		}
 		if active:
 			d['active'] = 1
@@ -152,6 +153,29 @@ class Slides(Chapter):
 			'slides': '{}.slides.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
 			'top_links': self.course.config['top_links'],
+			'sidebar': True,
+		}
+		if active:
+			d['active'] = 1
+
+		return d
+
+class Recap(Chapter):
+	type = 'recap'
+	title = 'Untitled Recap'
+	template_file = 'chapter.html'
+
+	def yaml(self,active=False):
+		d = {
+			'title': self.title,
+			'slug': self.slug,
+			'build_pdf': False,
+			'code': self.course.config['code'],
+			'author': self.course.config['author'],
+			'year': self.course.config['year'],
+			'file': '{}.html'.format(self.url),
+			'top_links': self.course.config['top_links'],
+			'sidebar': False,
 		}
 		if active:
 			d['active'] = 1
@@ -193,6 +217,7 @@ item_types = {
 	'chapter': Chapter,
 	'url': Url,
 	'slides': Slides,
+	'recap': Recap,
 }
 
 def load_item(course, data, parent=None):

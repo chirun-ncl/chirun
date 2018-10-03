@@ -34,7 +34,7 @@ class CourseProcessor:
 				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
 	def getRecapHTML(self, code):
 		return '<iframe src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id='+code+'&v=1" width="100%" \
-				height="360" frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+				height="640" frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
 	def getYoutubeHTML(self, code):
 		return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
 	def getNumbasHTML(self, URL):
@@ -115,6 +115,12 @@ class CourseProcessor:
 						self.run_pandoc(chapter)
 						if self.config["build_pdf"]:
 							self.makePDF(chapter)
+					elif(chapter.type == 'recap'):
+						logger.info('Building recap: {}'.format(chapter.title))
+						self.config['partsEnabled'] = True
+						if chapter.is_hidden:
+							continue
+						self.run_pandoc(chapter)
 					elif(chapter.type == 'url'):
 						self.config['partsEnabled'] = True
 						if chapter.is_hidden:
@@ -142,6 +148,9 @@ class CourseProcessor:
 					self.run_pandoc(obj)
 					if self.config["build_pdf"]:
 							self.makePDF(obj)
+				elif obj.type == 'recap':
+					logger.info('Building recap: {}'.format(obj.title))
+					self.run_pandoc(obj)
 				elif obj.type == 'slides':
 					logger.info('Building slides: {}'.format(obj.title))
 					self.run_pandoc(obj)
