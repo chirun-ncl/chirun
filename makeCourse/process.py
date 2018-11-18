@@ -30,15 +30,16 @@ class CourseProcessor:
 		return mdContents
 
 	def getVimeoHTML(self, code):
-		return '<iframe src="https://player.vimeo.com/video/'+code+'" width="100%" height="360" frameborder="0" \
-				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+		return '<div class="vimeo-aspect-ratio"><iframe class="vimeo" src="https://player.vimeo.com/video/'+code+'" frameborder="0" \
+				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
 	def getRecapHTML(self, code):
-		return '<iframe src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id='+code+'&v=1" width="100%" \
-				height="640" frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+		return '<div class="recap-aspect-ratio"><iframe class="recap" src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id='+code+'&v=1" \
+				frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
 	def getYoutubeHTML(self, code):
-		return '<iframe width="100%" height="360" src="https://www.youtube.com/embed/'+code+'?ecver=1" frameborder="0" allowfullscreen></iframe>'
+		return '<div class="youtube-aspect-ratio"><iframe class="youtube" src="https://www.youtube.com/embed/'+code+'?ecver=1" \
+				frameborder="0" allowfullscreen></iframe></div>'
 	def getNumbasHTML(self, URL):
-		return '<iframe width="100%" height="1000px" src="'+URL+'" frameborder="0"></iframe>'
+		return '<iframe class="numbas" src="'+URL+'" frameborder="0"></iframe>'
 	def getSlidesHTML(self, code):
 		hackmd.getSlidesPDF(self.config,code)
 		return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
