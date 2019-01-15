@@ -30,8 +30,8 @@ def runPdflatex(course,item):
 			raise Exception("Error: Something went wrong running pdflatex!")
 
 	outPath = os.path.join(course.config['build_dir'],item.out_file+".pdf")
-	logger.info('    Copying pdf output: {file} => {path}'.format(file=os.path.join(inDir,baseFile+'.pdf'),path=outPath))
-	shutil.copyfile(os.path.join(inDir,baseFile+'.pdf'), outPath)
+	logger.info('    Moving pdf output: {file} => {path}'.format(file=os.path.join(inDir,baseFile+'.pdf'),path=outPath))
+	shutil.move(os.path.join(inDir,baseFile+'.pdf'), outPath)
 
 	if not course.args.lazy:
 		logger.info('    Cleaning up after pdflatex...')
