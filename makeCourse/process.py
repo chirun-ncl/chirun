@@ -74,8 +74,8 @@ class CourseProcessor:
 		else:
 			relativeImageDir = self.config['web_root']+"static/"
 
-		logger.info("    Webize images: replacing './build/static/' with \""+relativeImageDir+"\" in paths.")
-		mdContents = mdContents.replace('./build/static/', relativeImageDir)
+		logger.info("    Webize images: replacing '%s/static' with '%s' in paths."%(self.config['build_dir'],relativeImageDir))
+		mdContents = mdContents.replace('%s/static/'%self.config['build_dir'], relativeImageDir)
 
 		if mdContents != mdContentsOrig:
 			logger.debug('    Embedded iframes & extras.')
