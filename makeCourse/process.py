@@ -13,13 +13,20 @@ logger = logging.getLogger(__name__)
 
 class CourseProcessor:
 
-	def temp_path(self, path):
+	def temp_path(self, sourceItem=False):
 		tmp_dir = 'tmp'
 		if not os.path.exists(tmp_dir):
 			os.makedirs(tmp_dir)
-		tpath = None
-		while tpath is None or os.path.exists(tpath):
-			tpath = os.path.join(tmp_dir,'{}-{}'.format(os.urandom(2).encode('hex'),path))
+			
+		tmp_theme_dir = os.path.join(tmp_dir,self.config['theme'])
+		if not os.path.exists(tmp_theme_dir):
+			os.makedirs(tmp_theme_dir)
+
+		if sourceItem:
+			tpath = os.path.join(tmp_theme_dir,re.sub('/','-',sourceItem.url))
+		else:
+			tpath = tmp_theme_dir
+
 		self.config['tempFiles'].append(tpath)
 		return tpath
 

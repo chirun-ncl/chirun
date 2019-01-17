@@ -18,9 +18,15 @@ class PlastexRunner:
 	tmpDir = ''
 
 	def load_latex_content(self,sourceItem):
-		self.tmpDir = self.temp_path('plastex')
-		self.runPlastex(sourceItem.source)
-		texContents = open(os.path.join(self.root_dir,self.tmpDir, "index.html"), 'r').read()
+		self.tmpDir = self.temp_path(sourceItem)
+		self.runPlastex(sourceItem)
+
+		logger.info('    Moving paux output: {base_file}.paux => {out_path}'.format(base_file=sourceItem.base_file,out_path=os.path.join(self.temp_path(),'%s.paux'%sourceItem.url_clean)))
+		shutil.move('{base_file}.paux'.format(base_file=sourceItem.base_file),
+		            os.path.join(self.temp_path(),'%s.paux'%sourceItem.url_clean))
+
+		texContents = open(os.path.join(self.root_dir,self.tmpDir,
+		                                "{outFile}.html".format(outFile=sourceItem.url)), 'r').read()
 		texContents = self.fixPlastexQuirks(texContents)
 		texContents = self.getEmbeddedImages(texContents, sourceItem.title)
 		texContents = self.burnInExtras(texContents,False,'html')
@@ -51,12 +57,20 @@ class PlastexRunner:
 		else:
 			return ""
 
-	def runPlastex(self, source):
-		logger.debug(source)
+	def runPlastex(self, sourceItem):
+		logger.debug(sourceItem.source)
 		outPath = os.path.join(self.root_dir, self.tmpDir)
-		inPath = os.path.join(self.root_dir, source)
+		outPaux = os.path.join(self.root_dir, self.temp_path())
+		inPath = os.path.join(self.root_dir, sourceItem.source)
 
-		cmd = 'plastex --dir={outPath} {tikzArgs} --sec-num-depth=3 --toc-depth=3 --split-level=-1 --toc-non-files --renderer=HTML5ncl {inPath} 2>&1'.format(outPath=outPath, tikzArgs=self.getTikzTemplateArgs(), inPath=inPath)
+		cmd = 'plastex --dir={outPath} \
+		{tikzArgs} \
+		--sec-num-depth=3 --toc-depth=3 --split-level=-1 --toc-non-files\
+		--renderer=HTML5ncl --base-url={baseURL}\
+		--paux-dirs={outPaux} \
+		--filename={outFile} {inPath} 2>&1'.format(outPath=outPath, tikzArgs=self.getTikzTemplateArgs(),
+		                                           baseURL=self.config['web_root'], outPaux=outPaux,
+		                                           outFile=sourceItem.url, inPath=inPath)
 
 		logger.info('Running plastex: %s'%cmd)
 		proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
