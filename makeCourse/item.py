@@ -42,6 +42,21 @@ class Item(object):
 	def url(self):
 		return '/'.join(self.out_path)
 
+	@property
+	def url_clean(self):
+		return '-'.join(self.out_path)
+
+	@property	
+	def in_file(self):
+		base = os.path.basename(self.source)
+		file,_ = os.path.splitext(self.source)
+		return base
+
+	@property	
+	def base_file(self):
+		basefile,_ = os.path.splitext(self.in_file)
+		return basefile
+
 	def get_content(self,force_local=False,out_format='html'):
 		_, ext = os.path.splitext(self.source)
 
