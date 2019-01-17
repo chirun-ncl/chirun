@@ -93,7 +93,6 @@ The local root directory is: {local_root}""".format(**self.config))
 			'static_dir': os.path.join(self.root_dir,'static'),
 			'top_links' : [],
 			'partsEnabled': False,
-			'tempFiles': [],
 			'build_pdf': True,
 			'year': datetime.datetime.now().year,
 		}
@@ -103,18 +102,6 @@ The local root directory is: {local_root}""".format(**self.config))
 
 	def cleanup(self):
 		logger.info("Cleaning up temporary files")
-
-		for temp_file in self.config['tempFiles']:
-			try:	# this should really check if the path is a dir first
-				os.remove(os.path.join(self.root_dir,temp_file))
-			except OSError:
-				try:
-					shutil.rmtree(os.path.join(self.root_dir,temp_file))
-					logger.info('    Deleted: {}'.format(temp_file))
-				except OSError:
-					pass
-
-		logger.info("Cleaning up ./tmp dir")
 
 		try:
 			shutil.rmtree(os.path.join(self.root_dir,'tmp'))

@@ -27,7 +27,6 @@ class CourseProcessor:
 		else:
 			tpath = tmp_theme_dir
 
-		self.config['tempFiles'].append(tpath)
 		return tpath
 
 	def replaceLabels(self,mdContents):
