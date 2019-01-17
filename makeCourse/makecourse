@@ -84,6 +84,7 @@ The local root directory is: {local_root}""".format(**self.config))
 			'themes_dir': os.path.join(self.root_dir,'themes'),
 			'static_dir': os.path.join(self.root_dir,'static'),
 			'top_links' : [],
+			'other_themes' : [],
 			'partsEnabled': False,
 			'build_pdf': True,
 			'year': datetime.datetime.now().year,
