@@ -22,7 +22,6 @@ setup(name="makeCourse",
       install_requires = [
          'appdirs>=1.4.3',
          'arrow>=0.10.0',
-         'BeautifulSoup>=3.2.1',
          'beautifulsoup4>=4.6.0',
          'bs4>=0.0.1',
          'funcsigs>=1.0.2',

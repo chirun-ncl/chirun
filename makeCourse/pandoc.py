@@ -43,7 +43,7 @@ class PandocRunner:
 				'-o', outPath,
 			]
 
-		content = item.markdown(force_local=force_local,out_format=out_format)
+		content = item.markdown(force_local=force_local,out_format=out_format).encode('utf-8')
 		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
 		try:
@@ -53,9 +53,9 @@ class PandocRunner:
 			outs, errs = proc.communicate()
 
 		if outs:
-			logger.debug(outs)
+			logger.debug(outs.decode('utf-8'))
 		if errs:
-			logger.error(errs)
+			logger.error(errs.decode('utf-8'))
 			logger.error("Something went wrong running pandoc! Quitting...")
 			logger.error("(Use -vv for more information)")
 			sys.exit(2)

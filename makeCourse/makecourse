@@ -19,7 +19,7 @@ from subprocess import Popen, PIPE
 
 logger = logging.getLogger('makeCourse')
 
-class MakeCourse(object,makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProcessor\
+class MakeCourse(makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProcessor\
                  ,makeCourse.pandoc.PandocRunner,makeCourse.decktape.DecktapeRunner):
 
 	mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'

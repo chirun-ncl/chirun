@@ -4,6 +4,7 @@ from . import latex
 from . import pandoc
 from . import plastex
 from .item import load_item
+from binascii import hexlify
 import os
 import re
 import sys
@@ -19,7 +20,7 @@ class CourseProcessor:
 			os.makedirs(tmp_dir)
 		tpath = None
 		while tpath is None or os.path.exists(tpath):
-			tpath = os.path.join(tmp_dir,'{}-{}'.format(os.urandom(2).encode('hex'),path))
+			tpath = os.path.join(tmp_dir,'{}-{}'.format(hexlify(os.urandom(2)).decode('utf-8'),path))
 		self.config['tempFiles'].append(tpath)
 		return tpath
 
@@ -57,11 +58,11 @@ class CourseProcessor:
 		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
 		if out_format=='pdf':
-			mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
-			mdContents = reRecap.sub(lambda m: "\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
-			mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
-			mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
-			mdContents = reSlides.sub(lambda m: "\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
+			mdContents = reVimeo.sub(lambda m: r"\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
+			mdContents = reRecap.sub(lambda m: r"\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
+			mdContents = reYoutube.sub(lambda m: r"\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
+			mdContents = reNumbas.sub(lambda m: r"\n\n\url{"+m.group(1)+"}", mdContents)
+			mdContents = reSlides.sub(lambda m: r"\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
 		else:
 			mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
 			mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)

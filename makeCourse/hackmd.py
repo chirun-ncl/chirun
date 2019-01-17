@@ -3,7 +3,7 @@ import os
 import re
 import ssl
 import sys
-import urllib2
+from urllib.request import urlopen, Request
 from makeCourse import HACKMD_URL
 
 logger = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ def downloadFile(url,loc):
 	ctx = ssl.create_default_context()
 	ctx.check_hostname = False
 	ctx.verify_mode = ssl.CERT_NONE
-	u = urllib2.urlopen(url, context=ctx)
+	u = urlopen(url, context=ctx)
 	f = open(loc, 'wb')
 	meta = u.info()
 	file_size_dl = 0
@@ -29,8 +29,8 @@ def download(url):
 	ctx = ssl.create_default_context()
 	ctx.check_hostname = False
 	ctx.verify_mode = ssl.CERT_NONE
-	req = urllib2.Request(url)
-	response = urllib2.urlopen(req, context=ctx)
+	req = Request(url)
+	response = urlopen(req, context=ctx)
 	return response.read()
 
 def getHackmdDocument(course_config,code):
