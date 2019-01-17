@@ -31,8 +31,6 @@ class MakeCourse(object,makeCourse.plastex.PlastexRunner,makeCourse.process.Cour
 
 		if args.veryverbose:
 			args.verbose = True
-		if args.verylazy:
-			args.lazy = True
 
 		if args.verbose:
 			if args.veryverbose:
@@ -103,7 +101,7 @@ The local root directory is: {local_root}""".format(**self.config))
 		config.update(self.loaded_config)
 		self.config = config
 
-	def cleanup_tmp_files(self):
+	def cleanup(self):
 		logger.info("Cleaning up temporary files")
 
 		for temp_file in self.config['tempFiles']:
@@ -116,15 +114,6 @@ The local root directory is: {local_root}""".format(**self.config))
 				except OSError:
 					pass
 
-		logger.info("Cleaning up any missed files")
-		for f in os.listdir(self.root_dir):
-			_,ext = os.path.splitext(f)
-			if ext=='.paux':
-				fpath = os.path.join(self.root_dir,f)
-				os.remove(fpath)
-				logger.info('    Deleted: {}'.format(fpath))
-
-	def cleanup_tmp_dir(self):
 		logger.info("Cleaning up ./tmp dir")
 
 		try:
@@ -170,7 +159,6 @@ def main():
 	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
 	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
 	parser.add_argument('-z', dest='lazy', action='store_true',help='don\'t delete latex aux files when finished')
-	parser.add_argument('-zz', dest='verylazy', action='store_true',help='don\'t delete files in ./tmp when finished')
 	parser.add_argument('-l', dest='local', action='store_true',help='create with local file paths')
 	parser.add_argument('--config', dest='config_file', help='Path to config file')
 	parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
@@ -182,8 +170,7 @@ def main():
 	mc.load_config()
 
 	if mc.args.deleteFirst:
-		mc.cleanup_tmp_dir()
-		mc.cleanup_tmp_files()
+		mc.cleanup()
 
 	mc.setup_build_for_theme(mc.config['default_theme'],default=True)
 	mc.make_directories()
@@ -197,12 +184,9 @@ def main():
 			mc.copy_theme_static_files()
 			mc.process()
 
-	if not mc.args.verylazy:
-		mc.cleanup_tmp_dir()
-
 	if not mc.args.lazy:
-		mc.cleanup_tmp_files()
-		
+		mc.cleanup()
+
 	print("All done! Output written to {}".format(mc.config['build_dir']))
 if __name__ == "__main__":
 	main()
