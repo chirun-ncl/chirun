@@ -1,5 +1,4 @@
 import logging
-from . import hackmd
 from . import latex
 from . import pandoc
 from . import plastex
@@ -46,14 +45,6 @@ class CourseProcessor:
 				frameborder="0" allowfullscreen></iframe></div>'
 	def getNumbasHTML(self, URL):
 		return '<iframe class="numbas" src="'+URL+'" frameborder="0"></iframe>'
-	def getSlidesHTML(self, code):
-		hackmd.getSlidesPDF(self.config,code)
-		return '<iframe src="'+HACKMD_URL+'/p/'+code+'/" style="overflow:hidden;" width="100%" height="480px" scrolling=no frameborder="0">\
-				</iframe><div class="pad-top-10 pull-right"><a href="'+self.config['web_root']+'static/'+code+'.pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download</a> \
-				|&nbsp;<a target="_blank" href="'+HACKMD_URL+'/p/'+code+'/"><i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen</a></div>'
-	def getSlidesURL(self,code):
-		hackmd.getSlidesPDF(self.config,code)
-		return HACKMD_URL+'/p/'+code+'/'
 
 	def burnInExtras(self,mdContents,force_local,out_format):
 		mdContentsOrig = mdContents

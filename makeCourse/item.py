@@ -3,7 +3,6 @@ import os
 import re
 from makeCourse import slugify, isHidden, yaml_header
 from . import plastex
-from . import hackmd
 
 logger = logging.getLogger(__name__)
 
@@ -69,12 +68,6 @@ class Item(object):
 			return mdContents
 		elif ext == '.tex':
 			return self.course.load_latex_content(self)
-		elif re.search(r'[^/\?:\s]+', self.source):
-			code = re.search(r'([^/\?:\s]+)', self.source).group(1)
-			mdContents = hackmd.getHackmdDocument(self.course.config,code)
-			mdContents = hackmd.getEmbeddedImages(self.course.config,mdContents)
-			mdContents = self.course.burnInExtras(mdContents,force_local,out_format)
-			return mdContents
 		else:
 			raise Exception("Error: Unrecognised source type for {}: {}.".format(ch.title,ch.source))
 

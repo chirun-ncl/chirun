@@ -3,7 +3,6 @@ import argparse
 import datetime
 import errno
 import logging
-import makeCourse.hackmd
 import makeCourse.process
 import makeCourse.pandoc
 import makeCourse.latex
@@ -78,13 +77,6 @@ The local root directory is: {local_root}""".format(**self.config))
 
 		with open(config_file, 'r') as f:
 			self.loaded_config = yaml.load(f)
-
-		#TODO: No longer use this when MAS2604 is replaced with new coursebuild config
-		if 'configFile' in self.loaded_config:
-			# the config file can specify a different config file to load, stored in HackMD
-			realConfig = makeCourse.hackmd.getHackmdDocument(loaded_config,loaded_config['configFile'])
-			realConfig = re.sub(r'^---.*?---\n','',realConfig,flags=re.S)
-			self.loaded_config = yaml.load(realConfig)
 
 		self.loaded_config['args'] = self.args
 

@@ -4,8 +4,6 @@ import os
 import errno
 import yaml
 
-HACKMD_URL = "https://mas-coursebuild.ncl.ac.uk"
-
 def slugify(value):
 	return "".join([c for c in re.sub(r'\s+','_',value) if c.isalpha() or c.isdigit() or c=='_']).rstrip().lower()
 
