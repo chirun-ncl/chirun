@@ -16,7 +16,6 @@ class CourseProcessor:
 		tmp_dir = 'tmp'
 		if not os.path.exists(tmp_dir):
 			os.makedirs(tmp_dir)
-			
 		tmp_theme_dir = os.path.join(tmp_dir,self.config['theme'])
 		if not os.path.exists(tmp_theme_dir):
 			os.makedirs(tmp_theme_dir)
@@ -25,7 +24,6 @@ class CourseProcessor:
 			tpath = os.path.join(tmp_theme_dir,re.sub('/','-',sourceItem.url))
 		else:
 			tpath = tmp_theme_dir
-
 		return tpath
 
 	def replaceLabels(self,mdContents):
@@ -54,11 +52,11 @@ class CourseProcessor:
 		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
 		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
 		if out_format=='pdf':
-			mdContents = reVimeo.sub(lambda m: "\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
-			mdContents = reRecap.sub(lambda m: "\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
-			mdContents = reYoutube.sub(lambda m: "\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
-			mdContents = reNumbas.sub(lambda m: "\n\n\url{"+m.group(1)+"}", mdContents)
-			mdContents = reSlides.sub(lambda m: "\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
+			mdContents = reVimeo.sub(lambda m: r"\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
+			mdContents = reRecap.sub(lambda m: r"\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
+			mdContents = reYoutube.sub(lambda m: r"\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
+			mdContents = reNumbas.sub(lambda m: r"\n\n\url{"+m.group(1)+"}", mdContents)
+			mdContents = reSlides.sub(lambda m: r"\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
 		else:
 			mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
 			mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)

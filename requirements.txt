@@ -1,6 +1,5 @@
 appdirs==1.4.3
 arrow==0.10.0
-BeautifulSoup==3.2.1
 beautifulsoup4==4.6.0
 bs4==0.0.1
 funcsigs==1.0.2
@@ -18,5 +17,5 @@ pytest==3.0.7
 python-dateutil==2.6.0
 PyYAML==3.12
 six==1.10.0
--e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@ncl-changes#egg=plasTeX
+-e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@python3-ncl#egg=plasTeX
 Unidecode==1.0.22

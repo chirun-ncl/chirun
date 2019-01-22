@@ -74,7 +74,7 @@ class PlastexRunner:
 
 		logger.info('Running plastex: %s'%cmd)
 		proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-		logger.debug(proc.stdout.read())
+		logger.debug(proc.stdout.read().decode('utf-8'))
 		proc.stdout.close()
 
 		rc = proc.wait()
