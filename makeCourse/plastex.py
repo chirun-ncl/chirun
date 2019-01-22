@@ -26,7 +26,7 @@ class PlastexRunner:
 		            os.path.join(self.temp_path(),'%s.paux'%sourceItem.url_clean))
 
 		texContents = open(os.path.join(self.root_dir,self.tmpDir,
-		                                "{outFile}.html".format(outFile=sourceItem.url)), 'r').read()
+		                                "{outFile}.html".format(outFile=sourceItem.url)), 'r', encoding='utf-8').read()
 		texContents = self.fixPlastexQuirks(texContents)
 		texContents = self.getEmbeddedImages(texContents, sourceItem.title)
 		texContents = self.burnInExtras(texContents,False,'html')
