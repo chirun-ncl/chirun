@@ -20,7 +20,7 @@ class DecktapeRunner:
 			'-p','10',
 			htmlPath,
 			outPath,
-			'--no-sandbox',
+			'--chrome-arg=--no-sandbox',
 		]
 
 		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
