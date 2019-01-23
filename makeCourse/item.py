@@ -60,7 +60,7 @@ class Item(object):
 		_, ext = os.path.splitext(self.source)
 
 		if ext == '.md':
-			mdContents = open(os.path.join(self.course.root_dir,self.source), 'r').read()
+			mdContents = open(os.path.join(self.course.root_dir,self.source), 'r',encoding='utf-8').read()
 			if mdContents[:3] == '---':
 				logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)
