@@ -62,7 +62,6 @@ class CourseProcessor:
 			mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)
 			mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
 			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
-			mdContents = reSlides.sub(lambda m: self.getSlidesHTML(m.group(1)), mdContents)
 
 		if force_local:
 			relativeImageDir = self.config['local_root']+"static/"
