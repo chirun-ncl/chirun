@@ -18,8 +18,8 @@ The command `makecourse` is now available.
 
 The command `makecourse` is now available.
 
-## Compile the MAS0001 test course
+## Compile the MAS0000 test course
  * Install makeCourse using the instructions above
- * Clone the source/configuration of the MAS0001 test course: `git clone git@mas-gitlab.ncl.ac.uk:makeCourse-tools/MAS0001.git`
- * Run makeCourse on the directory you just cloned to: `makecourse -v MAS0001`. Here `-v` is used for verbose output
- * The output website will then be in `./MAS0001/build`
+ * Clone the source/configuration of the MAS0000 test course: `git clone git@mas-gitlab.ncl.ac.uk:makeCourse-tools/MAS0000.git`
+ * Change into the directory you just cloned to and run "make local" to build a local version of the course
+ * The output website will then be in `./MAS0000/build`
