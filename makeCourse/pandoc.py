@@ -13,8 +13,10 @@ class PandocRunner:
 	def run_pandoc(self, item, template_file=None,out_format='html',force_local=False):
 		if force_local:
 			root = self.config['local_root']
+			root_index = self.config['local_root_index']
 		else:
 			root = self.config['web_root']
+			root_index = self.config['web_root_index']
 
 		outPath = os.path.join(self.config['build_dir'], item.out_file+'.'+out_format)
 		if template_file is None:
@@ -30,6 +32,7 @@ class PandocRunner:
 				'-i', '-t', 'revealjs', '-s',
 				'-V','revealjs-url={}/static/reveal.js'.format(root),
 				'-V', 'web_root={}'.format(root), 
+				'-V', 'web_root_index={}'.format(root_index),
 				'--template', template_path, 
 				'-o', outPath,
 			]
@@ -39,6 +42,7 @@ class PandocRunner:
 				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
 				'--metadata=date:{}'.format(date),
 				'-V', 'web_root={}'.format(root), 
+				'-V', 'web_root_index={}'.format(root_index),
 				'--template', template_path, 
 				'-o', outPath,
 			]

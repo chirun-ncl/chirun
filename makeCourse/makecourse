@@ -41,7 +41,7 @@ class MakeCourse(makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProce
 
 		print("Running makecourse for directory {}".format(os.path.abspath(self.args.dir)))
 
-	def setup_build_for_theme(self,this_theme,default=False):
+	def setup_build_for_theme(self,this_theme,this_theme_path):
 		self.config['local_root'] = os.getcwd()+'/'+'build/'
 		if self.args.local:
 			self.config['web_root'] = self.config['local_root']
@@ -51,13 +51,16 @@ class MakeCourse(makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProce
 		self.config['build_dir'] = os.path.join(self.root_dir,'build')
 		self.config['theme'] = this_theme
 
-		if not default:
-			theme_config = {
-				'build_dir': os.path.join(self.config['build_dir'],this_theme),
-				'web_root': self.config['web_root']+this_theme+'/',
-				'local_root': self.config['local_root']+this_theme+'/',
-			}
-			self.config.update(theme_config)
+		theme_config = {
+			'build_dir': os.path.join(self.config['build_dir'],this_theme_path),
+			'web_root': self.config['web_root']+this_theme_path+'/',
+			'local_root': self.config['local_root']+this_theme_path+'/',
+			'web_root_index': self.config['web_root'],
+			'local_root_index': self.config['local_root'],
+		}
+		self.config.update(theme_config)
+
+
 
 		self.theme_dir = os.path.join(self.config['themes_dir'], this_theme)
 
@@ -152,17 +155,12 @@ def main():
 	if mc.args.deleteFirst:
 		mc.cleanup()
 
-	mc.setup_build_for_theme(mc.config['default_theme'],default=True)
-	mc.make_directories()
-	mc.copy_theme_static_files()
-	mc.process()
+	for theme in mc.config['themes']:
+		mc.setup_build_for_theme(theme['source'],theme['path'])
+		mc.make_directories()
+		mc.copy_theme_static_files()
+		mc.process()
 
-	if mc.config['other_themes']:
-		for other_theme in mc.config['other_themes']:
-			mc.setup_build_for_theme(other_theme,default=False)
-			mc.make_directories()
-			mc.copy_theme_static_files()
-			mc.process()
 
 	if not mc.args.lazy:
 		mc.cleanup()
