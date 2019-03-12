@@ -81,7 +81,7 @@ class Part(Item):
 		return [self.slug]
 
 	def yaml(self,active=False):
-		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False)]
+		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
 		for th in themes:
 			if th['source'] == self.course.config['theme']:
 				th['active'] = True
@@ -126,7 +126,7 @@ class Chapter(Item):
 	template_file = 'chapter.html'
 
 	def yaml(self,active=False):
-		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False)]
+		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
 		for th in themes:
 			if th['source'] == self.course.config['theme']:
 				th['active'] = True
