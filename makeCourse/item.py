@@ -23,6 +23,17 @@ class Item(object):
 	def __str__(self):
 		return '{} {}'.format(self.type, self.title)
 
+	def yaml(self, active=False):
+		return {
+			'title': self.title,
+			'author': self.course.config['author'],
+			'code': self.course.config['code'],
+			'year': self.course.config['year'],
+			'slug': self.slug,
+			'theme': self.course.theme.yaml,
+			'alt_themes': self.course.theme.alt_themes_yaml,
+		}
+
 	def markdown(self,**kwargs):
 		raise NotImplementedError("Item does not implement the markdown method")
 
@@ -81,27 +92,12 @@ class Part(Item):
 		return [self.slug]
 
 	def yaml(self,active=False):
-		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
-		for th in themes:
-			if th['source'] == self.course.config['theme']:
-				th['active'] = True
-			else:
-				th['active'] = False
-
-		themes_available = (len(themes)>1)
-
-		return {
-			'title': self.title,
-			'author': self.course.config['author'],
-			'code': self.course.config['code'],
-			'year': self.course.config['year'],
+		item_yaml = super(Part, self).yaml(active)
+		item_yaml.update({
 			'part-slug': self.slug,
-			'slug': self.slug,
 			'chapters': [item.yaml() for item in self.content if not item.is_hidden],
-			'top_links': self.course.config['top_links'],
-			'themes': themes,
-			'themes_available': themes_available,
-		}
+		})
+		return item_yaml
 
 	def markdown(self,**kwargs):
 		return yaml_header(self.yaml())
@@ -126,34 +122,14 @@ class Chapter(Item):
 	template_file = 'chapter.html'
 
 	def yaml(self,active=False):
-		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
-		for th in themes:
-			if th['source'] == self.course.config['theme']:
-				th['active'] = True
-			else:
-				th['active'] = False
-
-		themes_available = (len(themes)>1)
-
-
-		d = {
-			'title': self.title,
-			'slug': self.slug,
+		item_yaml = super(Chapter, self).yaml(active)
+		item_yaml.update({
 			'build_pdf': self.course.config['build_pdf'],
-			'code': self.course.config['code'],
-			'author': self.course.config['author'],
-			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
-			'top_links': self.course.config['top_links'],
 			'sidebar': True,
-			'themes': themes,
-			'themes_available': themes_available,
-		}
-		if active:
-			d['active'] = 1
-
-		return d
+		})
+		return item_yaml
 
 	def markdown(self,force_local=False,out_format='html'):
 		header = self.yaml()
@@ -173,23 +149,14 @@ class Slides(Chapter):
 	template_file = 'slides.html'
 
 	def yaml(self,active=False):
-		d = {
-			'title': self.title,
-			'slug': self.slug,
-			'build_pdf': self.course.config['build_pdf'],
-			'code': self.course.config['code'],
-			'author': self.course.config['author'],
-			'year': self.course.config['year'],
+		item_yaml = super(Slides, self).yaml(active)
+		item_yaml.update({
 			'file': '{}.html'.format(self.url),
 			'slides': '{}.slides.html'.format(self.url),
 			'pdf': '{}.pdf'.format(self.url),
-			'top_links': self.course.config['top_links'],
 			'sidebar': True,
-		}
-		if active:
-			d['active'] = 1
-
-		return d
+		})
+		return item_yaml
 
 class Recap(Chapter):
 	type = 'recap'
@@ -197,49 +164,19 @@ class Recap(Chapter):
 	template_file = 'chapter.html'
 
 	def yaml(self,active=False):
-		d = {
-			'title': self.title,
-			'slug': self.slug,
+		item_yaml = super(Recap, self).yaml(active)
+		item_yaml.update({
 			'build_pdf': False,
-			'code': self.course.config['code'],
-			'author': self.course.config['author'],
-			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
-			'top_links': self.course.config['top_links'],
 			'sidebar': False,
-		}
-		if active:
-			d['active'] = 1
-
-		return d
+		})
+		return item_yaml
 
 class Introduction(Item):
 	type = 'introduction'
 	template_file = 'index.html'
 	title = 'index'
 	out_path = ['index']
-
-
-
-	def yaml(self,active=False):
-		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
-		for th in themes:
-			if th['source'] == self.course.config['theme']:
-				th['active'] = True
-			else:
-				th['active'] = False
-
-		themes_available = (len(themes)>1)
-
-		return {
-			'title': 'index',
-			'author': self.course.config['author'],
-			'code': self.course.config['code'],
-			'year': self.course.config['year'],
-			'top_links': self.course.config['top_links'],
-			'themes': themes,
-			'themes_available': themes_available,
-		}
 
 	def markdown(self,**kwargs):
 		def link_yaml(s):
@@ -250,7 +187,8 @@ class Introduction(Item):
 		header = self.yaml()
 		header['links'] = [link_yaml(s) for s in self.course.structure if not s.type =='introduction' and not s.is_hidden]
 		
-		if [s for s in self.course.structure if not s.type =='introduction' and not s.is_hidden][0].type == 'part':
+		struct = [s for s in self.course.structure if not s.type =='introduction' and not s.is_hidden]
+		if len(struct) > 0 and struct[0].type == 'part':
 			header['isPart'] = 1
 
 		return yaml_header(header)+'\n\n'+self.get_content()

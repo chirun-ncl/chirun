@@ -14,6 +14,7 @@ import sys
 import yaml
 from distutils.dir_util import copy_tree
 from makeCourse import *
+from makeCourse.theme import *
 from subprocess import Popen, PIPE 
 
 logger = logging.getLogger('makeCourse')
@@ -41,29 +42,9 @@ class MakeCourse(makeCourse.plastex.PlastexRunner,makeCourse.process.CourseProce
 
 		print("Running makecourse for directory {}".format(os.path.abspath(self.args.dir)))
 
-	def setup_build_for_theme(self,this_theme,this_theme_path):
-		self.config['local_root'] = os.getcwd()+'/'+'build/'
-		if self.args.local:
-			self.config['web_root'] = self.config['local_root']
-		else:
-			self.config['web_root'] ='/module/'+self.loaded_config.get('code','')+'/'+self.loaded_config.get('year','')+'/'
-
-		self.config['build_dir'] = os.path.join(self.root_dir,'build')
-		self.config['theme'] = this_theme
-
-		theme_config = {
-			'build_dir': os.path.join(self.config['build_dir'],this_theme_path),
-			'web_root': self.config['web_root']+this_theme_path+'/',
-			'local_root': self.config['local_root']+this_theme_path+'/',
-			'web_root_index': self.config['web_root'],
-			'local_root_index': self.config['local_root'],
-		}
-		self.config.update(theme_config)
-
-
-
-		self.theme_dir = os.path.join(self.config['themes_dir'], this_theme)
-
+	def setup_build_for_theme(self,theme):
+		self.config['build_dir'] = os.path.join(self.root_dir,'build', theme.path)
+		self.theme = theme
 		logger.debug("""The themes directory is: {themes_dir}
 The static directory is: {static_dir}
 The build directory is: {build_dir}
@@ -80,21 +61,23 @@ The local root directory is: {local_root}""".format(**self.config))
 
 		with open(config_file, 'r') as f:
 			self.loaded_config = yaml.load(f)
-
 		self.loaded_config['args'] = self.args
-
-		config = {
+		self.config = {
 			'themes_dir': os.path.join(self.root_dir,'themes'),
 			'static_dir': os.path.join(self.root_dir,'static'),
-			'top_links' : [],
-			'other_themes' : [],
 			'partsEnabled': False,
 			'build_pdf': True,
 			'year': datetime.datetime.now().year,
+			'local_root': os.getcwd()+'/'+'build'+'/'
 		}
+		self.config.update(self.loaded_config)
 
-		config.update(self.loaded_config)
-		self.config = config
+		if self.args.local:
+			self.config['web_root'] = self.config['local_root']
+		else:
+			self.config['web_root'] ='/module/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
+
+		self.themes = [Theme(self, theme) for theme in self.config['themes']]
 
 	def cleanup(self):
 		logger.info("Cleaning up temporary files")
@@ -117,7 +100,7 @@ The local root directory is: {local_root}""".format(**self.config))
 		self.doProcess()
 
 	def copy_theme_static_files(self):
-		srcPath = os.path.join(self.theme_dir,'static')
+		srcPath = os.path.join(self.theme.source_path,'static')
 		dstPath = os.path.join(self.config['build_dir'],'static')
 		logger.info("Copying Theme's static directory to the build's static directory...")
 		logger.info("    {src} => {dest}".format(src=srcPath,dest=dstPath))
@@ -155,8 +138,8 @@ def main():
 	if mc.args.deleteFirst:
 		mc.cleanup()
 
-	for theme in mc.config['themes']:
-		mc.setup_build_for_theme(theme['source'],theme['path'])
+	for theme in mc.themes:
+		mc.setup_build_for_theme(theme)
 		mc.make_directories()
 		mc.copy_theme_static_files()
 		mc.process()
