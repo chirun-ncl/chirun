@@ -173,6 +173,15 @@ class Slides(Chapter):
 	template_file = 'slides.html'
 
 	def yaml(self,active=False):
+		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
+		for th in themes:
+			if th['source'] == self.course.config['theme']:
+				th['active'] = True
+			else:
+				th['active'] = False
+
+		themes_available = (len(themes)>1)
+
 		d = {
 			'title': self.title,
 			'slug': self.slug,
@@ -185,6 +194,8 @@ class Slides(Chapter):
 			'pdf': '{}.pdf'.format(self.url),
 			'top_links': self.course.config['top_links'],
 			'sidebar': True,
+			'themes': themes,
+			'themes_available': themes_available,			
 		}
 		if active:
 			d['active'] = 1
@@ -195,8 +206,17 @@ class Recap(Chapter):
 	type = 'recap'
 	title = 'Untitled Recap'
 	template_file = 'chapter.html'
-
+	
 	def yaml(self,active=False):
+		themes = [t for t in self.course.config['themes'] if not t.get('hidden',False) or t['source']==self.course.config['theme']]
+		for th in themes:
+			if th['source'] == self.course.config['theme']:
+				th['active'] = True
+			else:
+				th['active'] = False
+
+		themes_available = (len(themes)>1)
+
 		d = {
 			'title': self.title,
 			'slug': self.slug,
@@ -206,7 +226,9 @@ class Recap(Chapter):
 			'year': self.course.config['year'],
 			'file': '{}.html'.format(self.url),
 			'top_links': self.course.config['top_links'],
-			'sidebar': False,
+			'sidebar': True,
+			'themes': themes,
+			'themes_available': themes_available,				
 		}
 		if active:
 			d['active'] = 1
