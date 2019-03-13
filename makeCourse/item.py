@@ -162,7 +162,7 @@ class Recap(Chapter):
 	type = 'recap'
 	title = 'Untitled Recap'
 	template_file = 'chapter.html'
-
+	
 	def yaml(self,active=False):
 		item_yaml = super(Recap, self).yaml(active)
 		item_yaml.update({
