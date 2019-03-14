@@ -65,16 +65,12 @@ class CourseProcessor:
 			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
 
 		if force_local:
-			relativeImageDir = self.config['local_root']+self.theme.path+"/"
+			relativeImageDir = self.config['local_root']+self.theme.path+"/static/"
 		else:
-			relativeImageDir = self.config['web_root']+self.theme.path+"/"
+			relativeImageDir = self.config['web_root']+self.theme.path+"/static/"
 
-		logger.info("    Webize images: prepending '%s' to image paths."%relativeImageDir)
-		mdImage = re.compile(r'!\[[^\]]*\]\(([^\)]*)\)')
-		for m in re.finditer(mdImage, mdContents):
-			inPath = m.group(1)
-			#Prepend relative path to images
-			mdContents = mdContents.replace(m.group(1),os.path.join(relativeImageDir,m.group(1)))
+		logger.info("    Webize images: replacing './build/static/' with '%s' in paths."%relativeImageDir)
+		mdContents = mdContents.replace('./build/static/', relativeImageDir)
 
 		if mdContents != mdContentsOrig:
 			logger.debug('    Embedded iframes & extras.')

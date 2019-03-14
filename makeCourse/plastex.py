@@ -100,7 +100,7 @@ class PlastexRunner:
 			mkdir_p(outDir)
 			shutil.copyfile(inPath.strip(), outPath.strip())
 			#Update the output of plastex to reflect the change
-			texContents = texContents.replace(m.group(1),os.path.join('static',title, inFile))
+			texContents = texContents.replace(m.group(1),os.path.join('./build/static',title, inFile))
 
 		#Tikz Images
 		tikzImage = re.compile(r'<object class=\"tikzpicture\" data=\"([^\)]*)\" type=\"image/svg\+xml\">')
@@ -114,7 +114,7 @@ class PlastexRunner:
 			mkdir_p(outDir)
 			shutil.copyfile(inPath.strip(), outPath.strip())
 			#Update the output of plastex to reflect the change
-			texContents = texContents.replace(m.group(1),os.path.join('static',title, inFile))
+			texContents = texContents.replace(m.group(1),os.path.join('./build/static',title, inFile))
 
 		return texContents
 	
