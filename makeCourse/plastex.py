@@ -96,10 +96,11 @@ class PlastexRunner:
 			outPath = os.path.join(self.config['build_dir'],'static',title,inFile)
 			outDir  = os.path.join(self.config['build_dir'],'static',title)
 			logger.info('        %s=> %s'%(inPath,outPath))
-			#ACTUALLY MOVE THE FILE
+			#Move the file into build tree's static dir
 			mkdir_p(outDir)
 			shutil.copyfile(inPath.strip(), outPath.strip())
-			texContents = texContents.replace(m.group(1),os.path.join(self.config['build_dir'],'static',title, inFile))
+			#Update the output of plastex to reflect the change
+			texContents = texContents.replace(m.group(1),os.path.join('static',title, inFile))
 
 		#Tikz Images
 		tikzImage = re.compile(r'<object class=\"tikzpicture\" data=\"([^\)]*)\" type=\"image/svg\+xml\">')
@@ -109,10 +110,11 @@ class PlastexRunner:
 			outPath = os.path.join(self.config['build_dir'],'static',title,inFile)
 			outDir  = os.path.join(self.config['build_dir'],'static',title)
 			logger.info('        %s=> %s'%(inPath,outPath))
-			#ACTUALLY MOVE THE FILE
+			#Move the file into build tree's static dir
 			mkdir_p(outDir)
 			shutil.copyfile(inPath.strip(), outPath.strip())
-			texContents = texContents.replace(m.group(1),os.path.join(self.config['build_dir'],'static',title, inFile))
+			#Update the output of plastex to reflect the change
+			texContents = texContents.replace(m.group(1),os.path.join('static',title, inFile))
 
 		return texContents
 	

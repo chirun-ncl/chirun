@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from makeCourse import slugify, isHidden, yaml_header
+from makeCourse import slugify, yaml_header
 from . import plastex
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class Item(object):
 		return '{} {}'.format(self.type, self.title)
 
 	def yaml(self, active=False):
-		return {
+		item_yaml = {
 			'title': self.title,
 			'author': self.course.config['author'],
 			'code': self.course.config['code'],
@@ -33,6 +33,10 @@ class Item(object):
 			'theme': self.course.theme.yaml,
 			'alt_themes': self.course.theme.alt_themes_yaml,
 		}
+		if active:
+			item_yaml['active'] = 1
+		return item_yaml
+
 
 	def markdown(self,**kwargs):
 		raise NotImplementedError("Item does not implement the markdown method")
