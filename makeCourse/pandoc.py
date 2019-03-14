@@ -10,16 +10,15 @@ from subprocess import Popen, PIPE
 logger = logging.getLogger(__name__)
 
 class PandocRunner:
-	def run_pandoc(self, item, template_file=None,out_format='html',force_local=False):
+	def run_pandoc(self, item, template_file=None, out_format='html',force_local=False):
 		if force_local:
 			root = self.config['local_root']
 		else:
 			root = self.config['web_root']
-
 		outPath = os.path.join(self.config['build_dir'], item.out_file+'.'+out_format)
 		if template_file is None:
 			template_file = item.template_file
-		template_path = os.path.join(self.config['themes_dir'], self.config['theme'], template_file)
+		template_path = os.path.join(self.theme.source_path, template_file)
 		date = datetime.date.today()
 
 		logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
@@ -29,7 +28,7 @@ class PandocRunner:
 				'pandoc', '--mathjax={}'.format(self.mathjax_url),
 				'-i', '-t', 'revealjs', '-s',
 				'-V','revealjs-url={}/static/reveal.js'.format(root),
-				'-V', 'web_root={}'.format(root), 
+				'-V', 'web_root={}'.format(root),
 				'--template', template_path, 
 				'-o', outPath,
 			]
@@ -38,7 +37,7 @@ class PandocRunner:
 				'pandoc', '-s', '--toc','--toc-depth=2', '--section-divs', '--listings',
 				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
 				'--metadata=date:{}'.format(date),
-				'-V', 'web_root={}'.format(root), 
+				'-V', 'web_root={}'.format(root),
 				'--template', template_path, 
 				'-o', outPath,
 			]

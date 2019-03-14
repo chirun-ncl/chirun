@@ -16,7 +16,8 @@ class CourseProcessor:
 		tmp_dir = 'tmp'
 		if not os.path.exists(tmp_dir):
 			os.makedirs(tmp_dir)
-		tmp_theme_dir = os.path.join(tmp_dir,self.config['theme'])
+
+		tmp_theme_dir = os.path.join(tmp_dir,self.theme.path)
 		if not os.path.exists(tmp_theme_dir):
 			os.makedirs(tmp_theme_dir)
 
@@ -64,12 +65,16 @@ class CourseProcessor:
 			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
 
 		if force_local:
-			relativeImageDir = self.config['local_root']+"static/"
+			relativeImageDir = self.config['local_root']+self.theme.path+"/"
 		else:
-			relativeImageDir = self.config['web_root']+"static/"
+			relativeImageDir = self.config['web_root']+self.theme.path+"/"
 
-		logger.info("    Webize images: replacing '%s/static' with '%s' in paths."%(self.config['build_dir'],relativeImageDir))
-		mdContents = mdContents.replace('%s/static/'%self.config['build_dir'], relativeImageDir)
+		logger.info("    Webize images: prepending '%s' to image paths."%relativeImageDir)
+		mdImage = re.compile(r'!\[[^\]]*\]\(([^\)]*)\)')
+		for m in re.finditer(mdImage, mdContents):
+			inPath = m.group(1)
+			#Prepend relative path to images
+			mdContents = mdContents.replace(m.group(1),os.path.join(relativeImageDir,m.group(1)))
 
 		if mdContents != mdContentsOrig:
 			logger.debug('    Embedded iframes & extras.')
