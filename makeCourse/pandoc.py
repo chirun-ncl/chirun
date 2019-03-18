@@ -27,7 +27,7 @@ class PandocRunner:
 			cmd = [
 				'pandoc', '--mathjax={}'.format(self.mathjax_url),
 				'-i', '-t', 'revealjs', '-s',
-				'-V','revealjs-url={}/static/reveal.js'.format(root),
+				'-V','revealjs-url={}/static/reveal.js'.format(root+self.theme.path),
 				'-V', 'web_root={}'.format(root),
 				'--template', template_path, 
 				'-o', outPath,
