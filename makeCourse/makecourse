@@ -76,7 +76,7 @@ The local root directory is: {local_root}""".format(**self.config))
 			self.config['web_root'] = self.config['local_root']
 		else:
 			if self.config['base_dir'] and os.path.normpath(self.config['base_dir']) != '.' and os.path.normpath(self.config['base_dir']) != '/':
-				self.config['web_root'] = os.path.normpath(self.config['base_dir'])+'/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
+				self.config['web_root'] = '/'+os.path.normpath(self.config['base_dir'])+'/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
 			else:
 				self.config['web_root'] = '/module/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
 
