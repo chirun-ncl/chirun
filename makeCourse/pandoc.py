@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 class PandocRunner:
 	def run_pandoc(self, item, template_file=None, out_format='html',force_local=False):
 		if force_local:
-			root = self.config['local_root']
+			root = self.get_local_root()
 		else:
-			root = self.config['web_root']
-		outPath = os.path.join(self.config['build_dir'], item.out_file+'.'+out_format)
+			root = self.get_web_root()
+		outPath = self.get_build_dir() / (item.out_file.with_suffix('.'+out_format))
 		if template_file is None:
 			template_file = item.template_file
-		template_path = os.path.join(self.theme.source_path, template_file)
+		template_path = self.theme.source_path / template_file
 		date = datetime.date.today()
 
 		logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
@@ -29,8 +29,8 @@ class PandocRunner:
 				'-i', '-t', 'revealjs', '-s',
 				'-V','revealjs-url={}/static/reveal.js'.format(root+self.theme.path),
 				'-V', 'web_root={}'.format(root),
-				'--template', template_path, 
-				'-o', outPath,
+				'--template', str(template_path),
+				'-o', str(outPath),
 			]
 		else:
 			cmd = [
@@ -38,8 +38,8 @@ class PandocRunner:
 				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
 				'--metadata=date:{}'.format(date),
 				'-V', 'web_root={}'.format(root),
-				'--template', template_path, 
-				'-o', outPath,
+				'--template', str(template_path),
+				'-o', str(outPath),
 			]
 
 		content = item.markdown(force_local=force_local,out_format=out_format).encode('utf-8')

@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 class DecktapeRunner:
 	def run_decktape(self, item):
-		htmlPath = os.path.join(self.config['build_dir'], item.out_file+'.slides.html')
-		outPath = os.path.join(self.config['build_dir'], item.out_file+'.pdf')
+		htmlPath = self.get_build_dir() / (item.out_file+'.slides.html')
+		outPath = self.get_build_dir() / (item.out_file+'.pdf')
 		logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
 
 		cmd = [

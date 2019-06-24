@@ -20,7 +20,7 @@ class Theme(object):
 
 	@property
 	def source_path(self):
-		return os.path.join(self.course.config['themes_dir'], self.source)
+		return self.course.get_themes_dir() / self.source
 
 	@property
 	def alt_themes_yaml(self):
@@ -34,3 +34,46 @@ class Theme(object):
 			'path': self.path,
 			'hidden': self.hidden,
 		}
+
+	def copy_static_files(self):
+		srcPath = self.source_path / 'static'
+		dstPath = self.course.get_build_dir() / 'static'
+
+		logger.info("Copying Theme's static directory to the build's static directory...")
+		logger.info("	{src} => {dest}".format(src=srcPath,dest=dstPath))
+
+		try:
+			copy_tree(srcPath, dstPath)
+		except:
+			logger.warning("Warning: Problem copying the theme's static files")
+
+		logger.info("Copying course's static directory to the build's static directory...")
+
+		srcPath = self.course.get_static_dir()
+		dstPath = self.course.get_build_dir() / 'static'
+		logger.info("	{src} => {dest}".format(src=srcPath,dest=dstPath))
+		try:
+			copy_tree(srcPath, dstPath)
+		except:
+			logger.warning("Warning: Problem copying Course's static directory!")
+
+	def build(self):
+		course = self.course
+
+		course.setup_build_for_theme(self)
+
+		logger.debug("""The themes directory is: {themes_dir}
+The static directory is: {static_dir}
+The build directory is: {build_dir}
+The web root directory is: {web_root}
+The local root directory is: {local_root}""".format(
+			themes_dir = course.get_themes_dir(),
+			static_dir = course.get_static_dir(),
+			build_dir = course.get_build_dir(),
+			web_root = course.get_web_root(),
+			local_root = course.get_local_root()
+		))
+
+		course.make_directories()
+		self.copy_static_files()
+		course.process()

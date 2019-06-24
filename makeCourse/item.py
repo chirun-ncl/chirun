@@ -3,6 +3,7 @@ import os
 import re
 from makeCourse import slugify, yaml_header
 from . import plastex
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ class Item(object):
 		self.data = data
 		self.title = self.data.get('title',self.title)
 		self.slug = slugify(self.title)
-		self.source = self.data.get('source','')
+		self.source = Path(self.data.get('source',''))
 		self.is_hidden = self.data.get('hidden',False)
 		self.content = [load_item(course, obj, self) for obj in self.data.get('content',[])]
 
@@ -50,7 +51,7 @@ class Item(object):
 
 	@property
 	def out_file(self):
-		return os.path.join(*self.out_path)
+		return Path(*self.out_path)
 
 	@property
 	def url(self):
@@ -62,20 +63,19 @@ class Item(object):
 
 	@property	
 	def in_file(self):
-		base = os.path.basename(self.source)
-		file,_ = os.path.splitext(self.source)
+		base = Path(self.source.name)
 		return base
 
 	@property	
 	def base_file(self):
-		basefile,_ = os.path.splitext(self.in_file)
-		return basefile
+		return Path(self.in_file.stem)
 
 	def get_content(self,force_local=False,out_format='html'):
-		_, ext = os.path.splitext(self.source)
+		ext = self.source.suffix
 
 		if ext == '.md':
-			mdContents = open(os.path.join(self.course.root_dir,self.source), 'r',encoding='utf-8').read()
+			with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
+				mdContents = f.read()
 			if mdContents[:3] == '---':
 				logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
 				mdContents = re.sub(r'^---.*?---\n','',mdContents,re.S)

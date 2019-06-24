@@ -22,9 +22,9 @@ def gen_dict_extract(key, var):
 
 def mkdir_p(path):
     try:
-        os.makedirs(path)
+        os.makedirs(str(path))
     except OSError as exc:
-        if not os.path.isdir(path):
+        if not path.is_dir():
             raise
 
 def yaml_header(data):
