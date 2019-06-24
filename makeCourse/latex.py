@@ -1,47 +1,46 @@
 import logging
 import os
-import pkg_resources
-import re
 import shutil
-import sys
-from subprocess import Popen, PIPE 
+from subprocess import Popen, PIPE
 
 logger = logging.getLogger(__name__)
 
-def runPdflatex(course,item):
-	inDir = course.get_root_dir() / item.source.parent
 
-	cmd = ['pdflatex','-halt-on-error', str(item.in_file)]
-	logger.info('Running pdflatex: {}'.format(inDir / item.in_file))
+def runPdflatex(course, item):
+    inDir = course.get_root_dir() / item.source.parent
 
-	#latex often requires 2 runs to resolve labels
-	#TODO: make number of runs a parameter
-	for _ in range(2):
-		proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(inDir), universal_newlines=True)
-		for stdout_line in iter(proc.stdout.readline, ""):
-			logger.debug(stdout_line)
+    cmd = ['pdflatex', '-halt-on-error', str(item.in_file)]
+    logger.info('Running pdflatex: {}'.format(inDir / item.in_file))
 
-		out, err = proc.communicate()
-		
-		if proc.returncode != 0:
-			logger.error(err)
-			raise Exception("Error: Something went wrong running pdflatex!")
+    # latex often requires 2 runs to resolve labels
+    # TODO: make number of runs a parameter
+    for _ in range(2):
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(inDir), universal_newlines=True)
+        for stdout_line in iter(proc.stdout.readline, ""):
+            logger.debug(stdout_line)
 
-	inPath = inDir / item.base_file.with_suffix('.pdf')
-	outPath = course.get_build_dir() / item.out_file.with_suffix('.pdf')
-	logger.info('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
-	shutil.move(str(inPath), str(outPath))
+        out, err = proc.communicate()
 
-	if not course.args.lazy:
-		logger.info('    Cleaning up after pdflatex...')
-		extensions = ['.log','.aux','.out','.pdf','.snm','.nav','.toc']
-		for extension in extensions:
-			filename = '{base}{extension}'.format(base=inDir / item.base_file, extension=extension)
-			logger.info('        Deleting: {}'.format(filename))
-			try:
-				os.remove(filename)
-			except OSError:
-				pass
+        if proc.returncode != 0:
+            logger.error(err)
+            raise Exception("Error: Something went wrong running pdflatex!")
+
+    inPath = inDir / item.base_file.with_suffix('.pdf')
+    outPath = course.get_build_dir() / item.out_file.with_suffix('.pdf')
+    logger.info('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
+    shutil.move(str(inPath), str(outPath))
+
+    if not course.args.lazy:
+        logger.info('    Cleaning up after pdflatex...')
+        extensions = ['.log', '.aux', '.out', '.pdf', '.snm', '.nav', '.toc']
+        for extension in extensions:
+            filename = '{base}{extension}'.format(base=inDir / item.base_file, extension=extension)
+            logger.info('        Deleting: {}'.format(filename))
+            try:
+                os.remove(filename)
+            except OSError:
+                pass
+
 
 if __name__ == "__main__":
-	pass
+    pass

@@ -1,14 +1,14 @@
 import re
-import sys
 import os
-import errno
 import yaml
 
+
 def slugify(value):
-	return "".join([c for c in re.sub(r'\s+','_',value) if c.isalpha() or c.isdigit() or c=='_']).rstrip().lower()
+    return "".join([c for c in re.sub(r'\s+', '_', value) if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()
+
 
 def gen_dict_extract(key, var):
-    if hasattr(var,'iteritems'):
+    if hasattr(var, 'iteritems'):
         for k, v in var.iteritems():
             if k == key:
                 yield var
@@ -20,12 +20,14 @@ def gen_dict_extract(key, var):
                     for result in gen_dict_extract(key, d):
                         yield result
 
+
 def mkdir_p(path):
     try:
         os.makedirs(str(path))
-    except OSError as exc:
+    except OSError:
         if not path.is_dir():
             raise
 
+
 def yaml_header(data):
-    return '---\n{}\n---\n\n'.format(yaml.dump(data,default_flow_style=False))
+    return '---\n{}\n---\n\n'.format(yaml.dump(data, default_flow_style=False))

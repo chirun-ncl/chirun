@@ -1,63 +1,61 @@
 import logging
-import os
-import pkg_resources
-import re
 import sys
 import datetime
-from makeCourse import *
 from subprocess import Popen, PIPE
 
 logger = logging.getLogger(__name__)
 
+
 class PandocRunner:
-	def run_pandoc(self, item, template_file=None, out_format='html',force_local=False):
-		if force_local:
-			root = self.get_local_root()
-		else:
-			root = self.get_web_root()
-		outPath = self.get_build_dir() / (item.out_file.with_suffix('.'+out_format))
-		if template_file is None:
-			template_file = item.template_file
-		template_path = self.theme.source_path / template_file
-		date = datetime.date.today()
+    def run_pandoc(self, item, template_file=None, out_format='html', force_local=False):
+        if force_local:
+            root = self.get_local_root()
+        else:
+            root = self.get_web_root()
+        outPath = self.get_build_dir() / (item.out_file.with_suffix('.' + out_format))
+        if template_file is None:
+            template_file = item.template_file
+        template_path = self.theme.source_path / template_file
+        date = datetime.date.today()
 
-		logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
+        logger.info('    {src} => {dest}'.format(src=item.title, dest=outPath))
 
-		if template_file=='slides.revealjs':
-			cmd = [
-				'pandoc', '--mathjax={}'.format(self.mathjax_url),
-				'-i', '-t', 'revealjs', '-s',
-				'-V','revealjs-url={}/static/reveal.js'.format(root+self.theme.path),
-				'-V', 'web_root={}'.format(root),
-				'--template', str(template_path),
-				'-o', str(outPath),
-			]
-		else:
-			cmd = [
-				'pandoc', '-s', '--toc','--toc-depth=2', '--section-divs', '--listings',
-				'--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),  
-				'--metadata=date:{}'.format(date),
-				'-V', 'web_root={}'.format(root),
-				'--template', str(template_path),
-				'-o', str(outPath),
-			]
+        if template_file == 'slides.revealjs':
+            cmd = [
+                'pandoc', '--mathjax={}'.format(self.mathjax_url),
+                '-i', '-t', 'revealjs', '-s',
+                '-V', 'revealjs-url={}/static/reveal.js'.format(root + self.theme.path),
+                '-V', 'web_root={}'.format(root),
+                '--template', str(template_path),
+                '-o', str(outPath),
+            ]
+        else:
+            cmd = [
+                'pandoc', '-s', '--toc', '--toc-depth=2', '--section-divs', '--listings',
+                '--title-prefix={}'.format(self.config['title']), '--mathjax={}'.format(self.mathjax_url),
+                '--metadata=date:{}'.format(date),
+                '-V', 'web_root={}'.format(root),
+                '--template', str(template_path),
+                '-o', str(outPath),
+            ]
 
-		content = item.markdown(force_local=force_local,out_format=out_format).encode('utf-8')
-		proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        content = item.markdown(force_local=force_local, out_format=out_format).encode('utf-8')
+        proc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
-		try:
-			outs, errs = proc.communicate(content)
-		except:
-			proc.kill()
-			outs, errs = proc.communicate()
+        try:
+            outs, errs = proc.communicate(content)
+        except Exception:
+            proc.kill()
+            outs, errs = proc.communicate()
 
-		if outs:
-			logger.debug(outs.decode('utf-8'))
-		if errs:
-			logger.error(errs.decode('utf-8'))
-			logger.error("Something went wrong running pandoc! Quitting...")
-			logger.error("(Use -vv for more information)")
-			sys.exit(2)
+        if outs:
+            logger.debug(outs.decode('utf-8'))
+        if errs:
+            logger.error(errs.decode('utf-8'))
+            logger.error("Something went wrong running pandoc! Quitting...")
+            logger.error("(Use -vv for more information)")
+            sys.exit(2)
+
 
 if __name__ == "__main__":
-	pass
+    pass

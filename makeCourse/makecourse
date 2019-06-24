@@ -16,155 +16,160 @@ from distutils.dir_util import copy_tree
 from makeCourse import *
 from makeCourse.theme import *
 from pathlib import Path
-from subprocess import Popen, PIPE 
+from subprocess import Popen, PIPE
 
 logger = logging.getLogger('makeCourse')
 
+
 class MakeCourse:
 
-	mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 
-	def __init__(self, args):
-		self.args = args
+    def __init__(self, args):
+        self.args = args
 
-		self.root_dir = self.get_root_dir()
+        self.root_dir = self.get_root_dir()
 
-		if args.veryverbose:
-			args.verbose = True
+        if args.veryverbose:
+            args.verbose = True
 
-		if args.verbose:
-			if args.veryverbose:
-				logging.basicConfig(level=logging.DEBUG, format='%(filename)s:%(lineno)d: %(levelname)s:\t%(message)s')
-			else:
-				logging.basicConfig(level=logging.INFO, format='%(message)s')
-		else:
-			logging.basicConfig(level=logging.WARN, format='%(levelname)s: %(message)s\n')
+        if args.verbose:
+            if args.veryverbose:
+                logging.basicConfig(level=logging.DEBUG, format='%(filename)s:%(lineno)d: %(levelname)s:\t%(message)s')
+            else:
+                logging.basicConfig(level=logging.INFO, format='%(message)s')
+        else:
+            logging.basicConfig(level=logging.WARN, format='%(levelname)s: %(message)s\n')
 
-		print("Running makecourse for directory {}".format(self.get_root_dir().resolve()))
+        print("Running makecourse for directory {}".format(self.get_root_dir().resolve()))
 
-	def get_root_dir(self):
-		return Path(self.args.dir)
+    def get_root_dir(self):
+        return Path(self.args.dir)
 
-	def get_themes_dir(self):
-		return Path(self.config['themes_dir'])
+    def get_themes_dir(self):
+        return Path(self.config['themes_dir'])
 
-	def get_build_dir(self):
-		return self.get_root_dir() / 'build' / self.theme.path
+    def get_build_dir(self):
+        return self.get_root_dir() / 'build' / self.theme.path
 
-	def get_static_dir(self):
-		return Path(self.config['static_dir'])
+    def get_static_dir(self):
+        return Path(self.config['static_dir'])
 
-	def get_local_root(self):
-		return self.config['local_root']
+    def get_local_root(self):
+        return self.config['local_root']
 
-	def get_web_root(self):
-		if self.args.local:
-			return self.get_local_root()
-		else:
-			norm_base = os.path.normpath(self.config.get('base_dir'))
-			if 'base_dir' in self.config and norm_base != '.' and norm_base != '/':
-				return '/'+norm_base+'/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
-			else:
-				return '/module/'+self.config.get('code','')+'/'+self.config.get('year','')+'/'
+    def get_web_root(self):
+        if self.args.local:
+            return self.get_local_root()
+        else:
+            norm_base = os.path.normpath(self.config.get('base_dir'))
+            if 'base_dir' in self.config and norm_base != '.' and norm_base != '/':
+                return '/' + norm_base + '/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
+            else:
+                return '/module/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
 
-	def setup_build_for_theme(self,theme):
-		self.theme = theme
+    def setup_build_for_theme(self, theme):
+        self.theme = theme
 
-	def default_config(self):
-		root_dir = self.get_root_dir()
-		config = {
-			'themes_dir': root_dir / 'themes',
-			'static_dir': root_dir / 'static',
-			'partsEnabled': False,
-			'build_pdf': True,
-			'year': datetime.datetime.now().year,
-			'local_root': os.getcwd()+'/'+'build'+'/'
-		}
-		return config
+    def default_config(self):
+        root_dir = self.get_root_dir()
+        config = {
+            'themes_dir': root_dir / 'themes',
+            'static_dir': root_dir / 'static',
+            'partsEnabled': False,
+            'build_pdf': True,
+            'year': datetime.datetime.now().year,
+            'local_root': os.getcwd() + '/' + 'build' + '/'
+        }
+        return config
 
-	def find_theme(self, name):
-		return self.get_themes_dir() / name
+    def find_theme(self, name):
+        return self.get_themes_dir() / name
 
-	def get_config_file(self):
-		if self.args.config_file:
-			return self.args.config_file
-		else:
-			return str(self.get_root_dir() / 'config.yml')
+    def get_config_file(self):
+        if self.args.config_file:
+            return self.args.config_file
+        else:
+            return str(self.get_root_dir() / 'config.yml')
 
-	def load_config(self):
-		config_file = self.get_config_file()
+    def load_config(self):
+        config_file = self.get_config_file()
 
-		logger.info("Reading config file {}".format(config_file))
+        logger.info("Reading config file {}".format(config_file))
 
-		with open(config_file, 'r') as f:
-			config = self.loaded_config = yaml.load(f)
+        with open(config_file, 'r') as f:
+            config = self.loaded_config = yaml.load(f)
 
-		config['args'] = self.args
+        config['args'] = self.args
 
-		self.config = self.default_config()
-		self.config.update(self.loaded_config)
+        self.config = self.default_config()
+        self.config.update(self.loaded_config)
 
-		self.load_themes()
+        self.load_themes()
 
-	def load_themes(self):
-		self.themes = [Theme(self, theme) for theme in self.config['themes']]
+    def load_themes(self):
+        self.themes = [Theme(self, theme) for theme in self.config['themes']]
 
-	def cleanup(self):
-		logger.info("Cleaning up temporary files")
+    def cleanup(self):
+        logger.info("Cleaning up temporary files")
 
-		try:
-			shutil.rmtree(self.get_root_dir() / 'tmp')
-		except OSError:
-			pass
+        try:
+            shutil.rmtree(self.get_root_dir() / 'tmp')
+        except OSError:
+            pass
 
-	def make_directories(self):
-		logger.info("Creating build directory...")
-		mkdir_p(self.get_build_dir())
-		mkdir_p(self.get_build_dir() / 'static')
+    def make_directories(self):
+        logger.info("Creating build directory...")
+        mkdir_p(self.get_build_dir())
+        mkdir_p(self.get_build_dir() / 'static')
 
-		logger.info("Creating static directory...")
-		mkdir_p(self.get_static_dir())
+        logger.info("Creating static directory...")
+        mkdir_p(self.get_static_dir())
+
 
 def parse_args():
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-v', dest='verbose', action='store_true',help='verbose output')
-	parser.add_argument('-vv', dest='veryverbose', action='store_true',help='very verbose output')
-	parser.add_argument('-d', dest='deleteFirst', action='store_true',help='delete temporary files first')
-	parser.add_argument('-z', dest='lazy', action='store_true',help='don\'t delete latex aux files when finished')
-	parser.add_argument('-l', dest='local', action='store_true',help='create with local file paths')
-	parser.add_argument('--config', dest='config_file', help='Path to config file')
-	parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
-	parser.set_defaults(build_pdf=None)
-	args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', dest='verbose', action='store_true', help='verbose output')
+    parser.add_argument('-vv', dest='veryverbose', action='store_true', help='very verbose output')
+    parser.add_argument('-d', dest='deleteFirst', action='store_true', help='delete temporary files first')
+    parser.add_argument('-z', dest='lazy', action='store_true', help='don\'t delete latex aux files when finished')
+    parser.add_argument('-l', dest='local', action='store_true', help='create with local file paths')
+    parser.add_argument('--config', dest='config_file', help='Path to config file')
+    parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
+    parser.set_defaults(build_pdf=None)
+    args = parser.parse_args()
 
-	return args
+    return args
+
 
 def main():
-	args = parse_args()
+    args = parse_args()
 
-	extensions = [
-		makeCourse.plastex.PlastexRunner,
-		makeCourse.process.CourseProcessor,
-		makeCourse.pandoc.PandocRunner,
-		makeCourse.decktape.DecktapeRunner,
-	]
+    extensions = [
+        makeCourse.plastex.PlastexRunner,
+        makeCourse.process.CourseProcessor,
+        makeCourse.pandoc.PandocRunner,
+        makeCourse.decktape.DecktapeRunner,
+    ]
 
-	class Builder(MakeCourse,*extensions):
-		pass
+    class Builder(MakeCourse, *extensions):
+        pass
 
-	mc = Builder(args)
-	
-	mc.load_config()
+    mc = Builder(args)
 
-	if args.deleteFirst:
-		mc.cleanup()
+    mc.load_config()
 
-	for theme in mc.themes:
-		theme.build()
+    if args.deleteFirst:
+        mc.cleanup()
 
-	if not mc.args.lazy:
-		mc.cleanup()
+    for theme in mc.themes:
+        theme.build()
 
-	print("All done! Output written to {}".format(mc.get_build_dir()))
+    if not mc.args.lazy:
+        mc.cleanup()
+
+    print("All done! Output written to {}".format(mc.get_build_dir()))
+
+
 if __name__ == "__main__":
-	main()
+    main()
