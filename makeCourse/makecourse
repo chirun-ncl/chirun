@@ -3,6 +3,7 @@ import argparse
 import datetime
 import errno
 import logging
+import makeCourse.plastex
 import makeCourse.process
 import makeCourse.pandoc
 import makeCourse.latex
@@ -14,6 +15,7 @@ import sys
 import yaml
 from distutils.dir_util import copy_tree
 from makeCourse import *
+import makeCourse
 from makeCourse.theme import *
 from pathlib import Path
 from subprocess import Popen, PIPE
@@ -62,8 +64,8 @@ class MakeCourse:
         if self.args.local:
             return self.get_local_root()
         else:
-            norm_base = os.path.normpath(self.config.get('base_dir'))
             if 'base_dir' in self.config and norm_base != '.' and norm_base != '/':
+                norm_base = os.path.normpath(self.config.get('base_dir'))
                 return '/' + norm_base + '/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
             else:
                 return '/module/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
@@ -114,7 +116,7 @@ class MakeCourse:
         logger.info("Cleaning up temporary files")
 
         try:
-            shutil.rmtree(self.get_root_dir() / 'tmp')
+            shutil.rmtree(str(self.get_root_dir() / 'tmp'))
         except OSError:
             pass
 

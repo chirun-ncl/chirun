@@ -44,9 +44,10 @@ class Theme(object):
         logger.info("	{src} => {dest}".format(src=srcPath, dest=dstPath))
 
         try:
-            copy_tree(srcPath, dstPath)
+            copy_tree(str(srcPath), str(dstPath))
         except Exception:
             logger.warning("Warning: Problem copying the theme's static files")
+            logger.warning(str(e))
 
         logger.info("Copying course's static directory to the build's static directory...")
 
@@ -54,7 +55,7 @@ class Theme(object):
         dstPath = self.course.get_build_dir() / 'static'
         logger.info("	{src} => {dest}".format(src=srcPath, dest=dstPath))
         try:
-            copy_tree(srcPath, dstPath)
+            copy_tree(str(srcPath), str(dstPath))
         except Exception:
             logger.warning("Warning: Problem copying Course's static directory!")
 
