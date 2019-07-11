@@ -47,7 +47,6 @@ class Theme(object):
             copy_tree(str(srcPath), str(dstPath))
         except Exception:
             logger.warning("Warning: Problem copying the theme's static files")
-            logger.warning(str(e))
 
         logger.info("Copying course's static directory to the build's static directory...")
 
