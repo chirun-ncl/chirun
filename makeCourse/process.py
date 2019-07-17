@@ -30,7 +30,7 @@ class CourseProcessor:
 	def replaceLabels(self,mdContents):
 		for l in gen_dict_extract('label',self.config):
 			mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
-			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_root']+l['outFile']+".html)", mdContents)
+			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_root']+self.theme.path+l['outFile']+".html)", mdContents)
 		return mdContents
 
 	def getVimeoHTML(self, code):

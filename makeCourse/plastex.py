@@ -69,7 +69,7 @@ class PlastexRunner:
 		--renderer=HTML5ncl --base-url={baseURL}\
 		--paux-dirs={outPaux} \
 		--filename={outFile} {inPath} 2>&1'.format(outPath=outPath, tikzArgs=self.getTikzTemplateArgs(),
-		                                           baseURL=self.config['web_root'], outPaux=outPaux,
+		                                           baseURL=self.config['web_root']+self.theme.path, outPaux=outPaux,
 		                                           outFile=sourceItem.url, inPath=inPath)
 
 		logger.info('Running plastex: %s'%cmd)
