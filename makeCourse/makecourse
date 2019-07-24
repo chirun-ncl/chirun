@@ -80,7 +80,7 @@ class MakeCourse:
             'static_dir': root_dir / 'static',
             'partsEnabled': False,
             'build_pdf': True,
-            'year': datetime.datetime.now().year,
+            'year': str(datetime.datetime.now().year),
             'local_root': os.getcwd() + '/' + 'build' + '/'
         }
         return config
