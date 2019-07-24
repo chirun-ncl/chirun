@@ -21,7 +21,7 @@ class Item(object):
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
 
     def __str__(self):
-        return '{} {}'.format(self.type, self.title)
+        return '{} "{}"'.format(self.type, self.title)
 
     def yaml(self, active=False):
         item_yaml = {
@@ -185,6 +185,9 @@ class Introduction(Item):
     template_file = 'index.html'
     title = 'index'
     out_path = ['index']
+
+    def __str__(self):
+        return 'introduction'
 
     def markdown(self, **kwargs):
         def link_yaml(s):

@@ -27,7 +27,7 @@ def runPdflatex(course, item):
 
     inPath = inDir / item.base_file.with_suffix('.pdf')
     outPath = course.get_build_dir() / item.out_file.with_suffix('.pdf')
-    logger.info('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
+    logger.debug('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
     shutil.move(str(inPath), str(outPath))
 
     if not course.args.lazy:
@@ -35,7 +35,7 @@ def runPdflatex(course, item):
         extensions = ['.log', '.aux', '.out', '.pdf', '.snm', '.nav', '.toc']
         for extension in extensions:
             filename = '{base}{extension}'.format(base=inDir / item.base_file, extension=extension)
-            logger.info('        Deleting: {}'.format(filename))
+            logger.debug('        Deleting: {}'.format(filename))
             try:
                 os.remove(filename)
             except OSError:

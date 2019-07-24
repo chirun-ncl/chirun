@@ -8,6 +8,67 @@ from makeCourse import mkdir_p, gen_dict_extract
 
 logger = logging.getLogger(__name__)
 
+class ItemProcess(object):
+    """ 
+        Performs a process on each item in the course structure. 
+        Visits each item in a depth-first search.
+    """
+
+    name = ''
+
+    def __init__(self,course):
+        self.course = course
+
+    def visit(self, item):
+        if item.is_hidden:
+            return
+        logging.info("Processing {}".format(item))
+        fn = getattr(self,'visit_'+item.type)
+        return fn(item)
+
+    def __getattr__(self, name):
+        if name[:6]=='visit_':
+            return self.visit_default
+        else:
+            raise AttributeError
+
+    def visit_default(self, item):
+        """ Default visit method, used when a type-specific visit method isn't defined """
+        pass
+
+class PandocProcess(ItemProcess):
+
+    name = 'Run pandoc'
+
+    def visit_default(self, item):
+        self.course.run_pandoc(item)
+
+    def visit_part(self, item):
+        self.visit_default(item)
+        for subitem in item.content:
+            self.visit(subitem)
+
+    def visit_url(self, item):
+        pass
+
+    def visit_slides(self, item):
+        self.course.run_pandoc(item)
+        self.course.run_pandoc(item, template_file='slides.revealjs', out_format='slides.html', force_local=self.course.args.local)
+
+class PDFProcess(ItemProcess):
+
+    name = 'Make PDFs'
+    
+    def visit(self,item):
+        if not self.course.config['build_pdf']:
+            return
+        super().visit(item)
+
+    def visit_chapter(self, item):
+        self.course.makePDF(item)
+
+    def visit_slides(self, item):
+        self.course.makePDF(item)
 
 class CourseProcessor:
 
@@ -71,7 +132,7 @@ class CourseProcessor:
         else:
             relativeImageDir = self.get_web_root() + self.theme.path + "/static/"
 
-        logger.info("    Webize images: replacing './build/static/' with '%s' in paths." % relativeImageDir)
+        logger.debug("    Webize images: replacing './build/static/' with '%s' in paths." % relativeImageDir)
         mdContents = mdContents.replace('./build/static/', relativeImageDir)
 
         if mdContents != mdContentsOrig:
@@ -88,75 +149,30 @@ class CourseProcessor:
         else:
             self.run_pandoc(item, template_file='notes.latex', out_format='pdf', force_local=True)
 
-    def process(self):
-        logger.info("Starting processing...")
+    processor_classes = [PandocProcess, PDFProcess]
 
-        logger.info('Preprocessing Structure...')
+    def process(self):
+        logger.debug("Starting processing...")
+
+        logger.debug('Preprocessing Structure...')
         self.structure = [load_item(self, obj) for obj in self.config['structure']]
 
-        logger.info('Deep exploring Structure...')
+        logger.debug('Deep exploring Structure...')
 
-        for obj in self.structure:
-            if obj.is_hidden:
-                continue
-            if obj.type == 'introduction':
-                logger.info('Building Index file index.html')
-                self.run_pandoc(obj)
-
-            elif obj.type == 'part':
-                mkdir_p(self.get_build_dir() / obj.out_file)
-                self.run_pandoc(obj)
-                for chapter in obj.content:
-                    if(chapter.type == 'chapter'):
-                        logger.info('Building chapter: {}'.format(chapter.title))
-                        self.config['partsEnabled'] = True
-                        if chapter.is_hidden:
-                            continue
-                        self.run_pandoc(chapter)
-                        if self.config["build_pdf"]:
-                            self.makePDF(chapter)
-                    elif(chapter.type == 'recap'):
-                        logger.info('Building recap: {}'.format(chapter.title))
-                        self.config['partsEnabled'] = True
-                        if chapter.is_hidden:
-                            continue
-                        self.run_pandoc(chapter)
-                    elif(chapter.type == 'url'):
-                        self.config['partsEnabled'] = True
-                        if chapter.is_hidden:
-                            continue
-                    elif(chapter.type == 'slides'):
-                        logger.info('Building slides: {}'.format(chapter.title))
-                        self.config['partsEnabled'] = True
-                        if chapter.is_hidden:
-                            continue
-                        self.run_pandoc(chapter)
-                        self.run_pandoc(chapter, template_file='slides.revealjs', out_format='slides.html', force_local=True)
-                        if self.config["build_pdf"]:
-                            self.makePDF(chapter)
-                        if not self.args.local:
-                            self.run_pandoc(chapter, template_file='slides.revealjs', out_format='slides.html')
-                    else:
-                        raise Exception("Error: Unsupported chapter type! {} is a {}".format(chapter.title, chapter.type))
-            else:
-                if obj.is_hidden:
-                    continue
-                if self.config['partsEnabled']:
+        partsEnabled = False
+        for item in self.structure:
+            if item.type=='part':
+                partsEnabled = True
+                break
+        if partsEnabled:
+            for item in self.structure:
+                if item.type not in ['introduction','part']:
                     raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
-                if obj.type == 'chapter':
-                    logger.info('Building chapter: {}'.format(obj.title))
-                    self.run_pandoc(obj)
-                    if self.config["build_pdf"]:
-                        self.makePDF(obj)
-                elif obj.type == 'recap':
-                    logger.info('Building recap: {}'.format(obj.title))
-                    self.run_pandoc(obj)
-                elif obj.type == 'slides':
-                    logger.info('Building slides: {}'.format(obj.title))
-                    self.run_pandoc(obj)
-                    self.run_pandoc(obj, template_file='slides.revealjs', out_format='slides.html', force_local=True)
-                    if self.config["build_pdf"]:
-                        self.makePDF(obj)
-                    self.run_pandoc(obj, template_file='slides.revealjs', out_format='slides.html')
 
-        logger.info('Done!')
+        processors = [p(self) for p in self.processor_classes]
+        for processor in processors:
+            logger.info(processor.name+'\n'+'-'*len(processor.name))
+            for item in self.structure:
+                processor.visit(item)
+
+        logger.debug('Done processing!')

@@ -19,7 +19,7 @@ class PlastexRunner:
 
         base_file = sourceItem.base_file.with_suffix('.paux')
         out_path = self.temp_path() / (sourceItem.url_clean + '.paux')
-        logger.info('    Moving paux output: {base_file} => {out_path}'.format(
+        logger.debug('    Moving paux output: {base_file} => {out_path}'.format(
             base_file=base_file,
             out_path=out_path
         ))
@@ -82,21 +82,21 @@ class PlastexRunner:
             inPath=inPath
         )
 
-        logger.info('Running plastex: %s' % cmd)
+        logger.info('Running plastex on {}'.format(sourceItem))
+        logger.debug(cmd)
         proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-        logger.debug(proc.stdout.read().decode('utf-8'))
+        stdout = proc.stdout.read().decode('utf-8')
         proc.stdout.close()
 
         rc = proc.wait()
         if rc != 0:
             sys.stderr.write("Error: Something went wrong with the latex compilation! Quitting...\n")
+            logger.debug(stdout)
             sys.stderr.write("(Use -vv for more information)\n")
             sys.exit(2)
-        else:
-            logger.info('Done!')
 
     def getEmbeddedImages(self, texContents, title):
-        logger.info('    Moving embedded images:')
+        logger.debug('    Moving embedded images:')
         # Markdown Images
 
         # TODO: make this extensible
@@ -110,7 +110,7 @@ class PlastexRunner:
             inFile = raw_path.name
             inPath = self.get_root_dir() / self.tmpDir / 'images' / inFile
             outPath = self.get_build_dir() / 'static' / title / inFile
-            logger.info('        %s => %s' % (inPath, outPath))
+            logger.debug('        %s => %s' % (inPath, outPath))
 
             # Move the file into build tree's static dir
             mkdir_p(outPath.parent)
@@ -119,6 +119,8 @@ class PlastexRunner:
             # Update the output of plastex to reflect the change
             finalPath = str(Path('./build/static') / title / inFile)
             start, end = m.span('url')
+            start -= m.start()
+            end -= m.start()
             img = m.group(0)
             return img[:start] + finalPath + img[end:]
 

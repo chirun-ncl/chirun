@@ -40,8 +40,8 @@ class Theme(object):
         srcPath = self.source_path / 'static'
         dstPath = self.course.get_build_dir() / 'static'
 
-        logger.info("Copying Theme's static directory to the build's static directory...")
-        logger.info("	{src} => {dest}".format(src=srcPath, dest=dstPath))
+        logger.info("Copying theme's static directory to the build's static directory...")
+        logger.debug("	{src} => {dest}".format(src=srcPath, dest=dstPath))
 
         try:
             copy_tree(str(srcPath), str(dstPath))
@@ -52,7 +52,7 @@ class Theme(object):
 
         srcPath = self.course.get_static_dir()
         dstPath = self.course.get_build_dir() / 'static'
-        logger.info("	{src} => {dest}".format(src=srcPath, dest=dstPath))
+        logger.debug("	{src} => {dest}".format(src=srcPath, dest=dstPath))
         try:
             copy_tree(str(srcPath), str(dstPath))
         except Exception:

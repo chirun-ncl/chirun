@@ -66,9 +66,17 @@ class MakeCourse:
         else:
             if 'base_dir' in self.config and norm_base != '.' and norm_base != '/':
                 norm_base = os.path.normpath(self.config.get('base_dir'))
-                return '/' + norm_base + '/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
+                root = '/' + norm_base
             else:
-                return '/module/' + self.config.get('code', '') + '/' + self.config.get('year', '') + '/'
+                root = '/module'
+            code = self.config.get('code')
+            year = self.config.get('year')
+            if code:
+                root += '/' + self.config.get('code', '')
+            if year:
+                root += '/' + self.config.get('year', '')
+            root += '/'
+            return root
 
     def setup_build_for_theme(self, theme):
         self.theme = theme
@@ -124,9 +132,6 @@ class MakeCourse:
         logger.info("Creating build directory...")
         mkdir_p(self.get_build_dir())
         mkdir_p(self.get_build_dir() / 'static')
-
-        logger.info("Creating static directory...")
-        mkdir_p(self.get_static_dir())
 
 
 def parse_args():
