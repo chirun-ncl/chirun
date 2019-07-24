@@ -14,11 +14,11 @@ class CourseProcessor:
     def temp_path(self, sourceItem=False):
         tmp_dir = Path('tmp')
         if not tmp_dir.exists():
-            os.makedirs(tmp_dir)
+            os.makedirs(str(tmp_dir))
 
         tmp_theme_dir = tmp_dir / self.theme.path
         if not tmp_theme_dir.exists():
-            os.makedirs(tmp_theme_dir)
+            os.makedirs(str(tmp_theme_dir))
 
         if sourceItem:
             tpath = tmp_theme_dir / re.sub('/', '-', sourceItem.url)
