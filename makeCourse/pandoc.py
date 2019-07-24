@@ -9,10 +9,7 @@ logger = logging.getLogger(__name__)
 
 class PandocRunner:
     def run_pandoc(self, item, template_file=None, out_format='html', force_local=False):
-        if force_local:
-            root = self.get_local_root()
-        else:
-            root = self.get_web_root()
+        root = self.get_web_root(force_local=force_local)
         outPath = self.get_build_dir() / (item.out_file.with_suffix('.' + out_format))
         outDir = outPath.parent
         mkdir_p(outDir)

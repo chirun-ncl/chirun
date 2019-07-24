@@ -127,10 +127,7 @@ class CourseProcessor:
             mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
             mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
 
-        if force_local:
-            relativeImageDir = self.get_local_root() + self.theme.path + "/static/"
-        else:
-            relativeImageDir = self.get_web_root() + self.theme.path + "/static/"
+        relativeImageDir = self.get_web_root(force_local=force_local) + "/static/"
 
         logger.debug("    Webize images: replacing './build/static/' with '%s' in paths." % relativeImageDir)
         mdContents = mdContents.replace('./build/static/', relativeImageDir)

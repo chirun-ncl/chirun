@@ -46,68 +46,82 @@ class MakeCourse:
         print("Running makecourse for directory {}".format(self.get_root_dir().resolve()))
 
     def get_root_dir(self):
+        """ 
+            The path to the course's source directory 
+        """
         return Path(self.args.dir)
 
     def get_themes_dir(self):
+        """
+            The path to the directory holding all the themes
+        """
         return Path(self.config['themes_dir'])
 
     def get_build_dir(self):
+        """
+            The path the output will be put in
+        """
         return self.get_root_dir() / 'build' / self.theme.path
 
     def get_static_dir(self):
+        """
+            The path to the course's static files source
+        """
         return Path(self.config['static_dir'])
 
-    def get_local_root(self):
-        return self.config['local_root']
-
-    def get_web_root(self):
-        if self.args.local:
-            return self.get_local_root()
+    def get_web_root(self, force_local=False):
+        """
+            The root URL of the course. All URLs are under this.
+        """
+        if self.args.local or force_local:
+            return str(self.get_build_dir().resolve())
         else:
-            if 'base_dir' in self.config and norm_base != '.' and norm_base != '/':
-                norm_base = os.path.normpath(self.config.get('base_dir'))
-                root = '/' + norm_base
+            if 'root_url' in self.config:
+                root = self.config.get('root_url')
             else:
                 root = '/module'
+
+            # TODO: add an option to turn off the code and year parts of the URL
             code = self.config.get('code')
             year = self.config.get('year')
             if code:
                 root += '/' + self.config.get('code', '')
             if year:
-                root += '/' + self.config.get('year', '')
-            root += '/'
-            return root
+                root += '/' + str(self.config.get('year', ''))
 
-    def setup_build_for_theme(self, theme):
-        self.theme = theme
+            root += '/' + self.theme.path + '/'
+            return root
 
     def default_config(self):
         root_dir = self.get_root_dir()
         config = {
             'themes_dir': root_dir / 'themes',
             'static_dir': root_dir / 'static',
-            'partsEnabled': False,
             'build_pdf': True,
-            'year': str(datetime.datetime.now().year),
-            'local_root': os.getcwd() + '/' + 'build' + '/'
+            'year': datetime.datetime.now().year,
         }
         return config
 
-    def find_theme(self, name):
-        return self.get_themes_dir() / name
-
     def get_config_file(self):
+        """
+            The path to the config file
+        """
         if self.args.config_file:
-            return self.args.config_file
+            return Path(self.args.config_file)
         else:
-            return str(self.get_root_dir() / 'config.yml')
+            return self.get_root_dir() / 'config.yml'
 
     def load_config(self):
+        """
+            Load the config.
+
+            Extend the default config with the config loaded from the filesystem
+        """
         config_file = self.get_config_file()
 
         logger.info("Reading config file {}".format(config_file))
 
-        with open(config_file, 'r') as f:
+        with open(str(config_file), 'r') as f:
             config = self.loaded_config = yaml.load(f)
 
         config['args'] = self.args
@@ -115,12 +129,16 @@ class MakeCourse:
         self.config = self.default_config()
         self.config.update(self.loaded_config)
 
-        self.load_themes()
-
     def load_themes(self):
+        """
+            Load every theme defined in the config
+        """
         self.themes = [Theme(self, theme) for theme in self.config['themes']]
 
     def cleanup(self):
+        """
+            Remove temporary files created during the build process
+        """
         logger.info("Cleaning up temporary files")
 
         try:
@@ -129,10 +147,33 @@ class MakeCourse:
             pass
 
     def make_directories(self):
+        """
+            Make the output directory
+        """
         logger.info("Creating build directory...")
         mkdir_p(self.get_build_dir())
         mkdir_p(self.get_build_dir() / 'static')
 
+    def build_with_theme(self, theme):
+        """
+            Build the course using the given theme
+        """
+        self.theme = theme
+
+        logger.debug("""The themes directory is: {themes_dir}
+The static directory is: {static_dir}
+The build directory is: {build_dir}
+The web root directory is: {web_root}
+""".format(
+            themes_dir=self.get_themes_dir(),
+            static_dir=self.get_static_dir(),
+            build_dir=self.get_build_dir(),
+            web_root=self.get_web_root(),
+        ))
+
+        self.make_directories()
+        theme.copy_static_files()
+        self.process()
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -166,11 +207,13 @@ def main():
 
     mc.load_config()
 
+    mc.load_themes()
+
     if args.deleteFirst:
         mc.cleanup()
 
     for theme in mc.themes:
-        theme.build()
+        mc.build_with_theme(theme)
 
     if not mc.args.lazy:
         mc.cleanup()

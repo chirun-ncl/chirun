@@ -57,24 +57,3 @@ class Theme(object):
             copy_tree(str(srcPath), str(dstPath))
         except Exception:
             logger.warning("Warning: Problem copying Course's static directory!")
-
-    def build(self):
-        course = self.course
-
-        course.setup_build_for_theme(self)
-
-        logger.debug("""The themes directory is: {themes_dir}
-The static directory is: {static_dir}
-The build directory is: {build_dir}
-The web root directory is: {web_root}
-The local root directory is: {local_root}""".format(
-            themes_dir=course.get_themes_dir(),
-            static_dir=course.get_static_dir(),
-            build_dir=course.get_build_dir(),
-            web_root=course.get_web_root(),
-            local_root=course.get_local_root()
-        ))
-
-        course.make_directories()
-        self.copy_static_files()
-        course.process()
