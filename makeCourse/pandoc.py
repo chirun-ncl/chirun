@@ -14,7 +14,7 @@ class PandocRunner:
         outDir = outPath.parent
         mkdir_p(outDir)
         if template_file is None:
-            template_file = item.template_file
+            template_file = item.pandoc_template
         template_path = self.theme.source_path / template_file
         date = datetime.date.today()
 

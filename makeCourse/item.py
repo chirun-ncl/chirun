@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class Item(object):
-    template_file = ''
+    pandoc_template = ''
     type = None
 
     def __init__(self, course, data, parent=None):
@@ -88,7 +88,7 @@ class Item(object):
 class Part(Item):
     type = 'part'
     title = 'Untitled part'
-    template_file = 'part.html'
+    pandoc_template = 'part.html'
 
     @property
     def out_path(self):
@@ -109,7 +109,7 @@ class Part(Item):
 class Url(Item):
     type = 'url'
     title = 'Untitled URL'
-    template_file = 'part.html'
+    pandoc_template = 'part.html'
 
     def yaml(self, active=False):
         return {
@@ -124,7 +124,7 @@ class Url(Item):
 class Chapter(Item):
     type = 'chapter'
     title = 'Untitled chapter'
-    template_file = 'chapter.html'
+    pandoc_template = 'chapter.html'
 
     def yaml(self, active=False):
         item_yaml = super(Chapter, self).yaml(active)
@@ -152,7 +152,7 @@ class Chapter(Item):
 class Slides(Chapter):
     type = 'slides'
     title = 'Untitled Slides'
-    template_file = 'slides.html'
+    pandoc_template = 'slides.html'
 
     def yaml(self, active=False):
         item_yaml = super(Slides, self).yaml(active)
@@ -168,7 +168,7 @@ class Slides(Chapter):
 class Recap(Chapter):
     type = 'recap'
     title = 'Untitled Recap'
-    template_file = 'chapter.html'
+    pandoc_template = 'chapter.html'
 
     def yaml(self, active=False):
         item_yaml = super(Recap, self).yaml(active)
@@ -182,7 +182,7 @@ class Recap(Chapter):
 
 class Introduction(Item):
     type = 'introduction'
-    template_file = 'index.html'
+    pandoc_template = 'index.html'
     title = 'index'
     out_path = ['index']
 
