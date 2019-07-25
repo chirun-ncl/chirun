@@ -8,8 +8,11 @@ def slugify(value):
 
 
 def gen_dict_extract(key, var):
-    if hasattr(var, 'iteritems'):
-        for k, v in var.iteritems():
+    """
+        Yield every value corresponding to the given key at any level in the nested dictionary `var`
+    """
+    if hasattr(var, 'items'):
+        for k, v in var.items():
             if k == key:
                 yield var
             if isinstance(v, dict):

@@ -4,7 +4,9 @@ from .item import load_item
 from pathlib import Path
 import os
 import re
-from makeCourse import mkdir_p, gen_dict_extract
+from makeCourse import mkdir_p
+from .pandoc import pandoc_item
+from .render import Renderer
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +38,16 @@ class ItemProcess(object):
         """ Default visit method, used when a type-specific visit method isn't defined """
         pass
 
-class PandocProcess(ItemProcess):
+class RenderProcess(ItemProcess):
 
     name = 'Run pandoc'
 
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.renderer = Renderer(self.course)
+
     def visit_default(self, item):
-        self.course.run_pandoc(item)
+        self.renderer.render_item(item)
 
     def visit_part(self, item):
         self.visit_default(item)
@@ -51,9 +57,9 @@ class PandocProcess(ItemProcess):
     def visit_url(self, item):
         pass
 
-    def visit_slides(self, item):
-        self.course.run_pandoc(item)
-        self.course.run_pandoc(item, template_file='slides.revealjs', out_format='slides.html', force_local=self.course.args.local)
+#    def visit_slides(self, item):
+#        pandoc_item(self.course, item)
+#        pandoc_item(self.course, item, template_file='slides.revealjs', out_format='slides.html', force_local=self.course.args.local)
 
 class PDFProcess(ItemProcess):
 
@@ -70,72 +76,18 @@ class PDFProcess(ItemProcess):
     def visit_slides(self, item):
         self.course.makePDF(item)
 
+
 class CourseProcessor:
 
-    def temp_path(self, sourceItem=False):
-        tmp_dir = Path('tmp')
-        if not tmp_dir.exists():
-            os.makedirs(str(tmp_dir))
+    def temp_path(self, subpath=None):
+        path = Path('tmp') / self.theme.path
 
-        tmp_theme_dir = tmp_dir / self.theme.path
-        if not tmp_theme_dir.exists():
-            os.makedirs(str(tmp_theme_dir))
+        if subpath:
+            path = path / subpath
 
-        if sourceItem:
-            tpath = tmp_theme_dir / re.sub('/', '-', sourceItem.url)
-        else:
-            tpath = tmp_theme_dir
-        return tpath
+        mkdir_p(path)
+        return path
 
-    def replaceLabels(self, mdContents):
-        for l in gen_dict_extract('label', self.config):
-            mdLink = re.compile(r'\[([^\]]*)\]\(' + l['label'] + r'\)')
-            mdContents = mdLink.sub(lambda m: "[" + m.group(1) + "](" + self.get_web_root() + l['outFile'] + ".html)", mdContents)
-        return mdContents
-
-    def getVimeoHTML(self, code):
-        return '<div class="vimeo-aspect-ratio"><iframe class="vimeo" src="https://player.vimeo.com/video/' + code + '" frameborder="0" \
-				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
-
-    def getRecapHTML(self, code):
-        return '<div class="recap-aspect-ratio"><iframe class="recap" src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id=' + code + '&v=1" \
-				frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
-
-    def getYoutubeHTML(self, code):
-        return '<div class="youtube-aspect-ratio"><iframe class="youtube" src="https://www.youtube.com/embed/' + code + '?ecver=1" \
-				frameborder="0" allowfullscreen></iframe></div>'
-
-    def getNumbasHTML(self, URL):
-        return '<iframe class="numbas" src="' + URL + '" frameborder="0"></iframe>'
-
-    def burnInExtras(self, mdContents, force_local, out_format):
-        mdContentsOrig = mdContents
-        reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
-        reRecap = re.compile(r'{%recap\s*([\d\DA-z-]*?)\s*%}')
-        reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
-        reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
-        reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-        if out_format == 'pdf':
-            mdContents = reVimeo.sub(lambda m: r"\n\n\url{https://vimeo.com/" + m.group(1) + "}", mdContents)
-            mdContents = reRecap.sub(lambda m: r"\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id=" + m.group(1) + "}", mdContents)
-            mdContents = reYoutube.sub(lambda m: r"\n\n\url{https://www.youtube.com/watch?v=" + m.group(1) + "}", mdContents)
-            mdContents = reNumbas.sub(lambda m: r"\n\n\url{" + m.group(1) + "}", mdContents)
-            mdContents = reSlides.sub(lambda m: r"\n\n\url{" + self.getSlidesURL(m.group(1)) + "}", mdContents)
-        else:
-            mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
-            mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)
-            mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
-            mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
-
-        relativeImageDir = self.get_web_root(force_local=force_local) + "/static/"
-
-        logger.debug("    Webize images: replacing './build/static/' with '%s' in paths." % relativeImageDir)
-        mdContents = mdContents.replace('./build/static/', relativeImageDir)
-
-        if mdContents != mdContentsOrig:
-            logger.debug('    Embedded iframes & extras.')
-        mdContents = self.replaceLabels(mdContents)
-        return mdContents
 
     def makePDF(self, item):
         ext = item.source.suffix
@@ -144,9 +96,9 @@ class CourseProcessor:
         elif item.type == 'slides':
             self.run_decktape(item)
         else:
-            self.run_pandoc(item, template_file='notes.latex', out_format='pdf', force_local=True)
+            pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
 
-    processor_classes = [PandocProcess, PDFProcess]
+    processor_classes = [RenderProcess, PDFProcess]
 
     def process(self):
         logger.debug("Starting processing...")
@@ -156,12 +108,12 @@ class CourseProcessor:
 
         logger.debug('Deep exploring Structure...')
 
-        partsEnabled = False
+        self.partsEnabled = False
         for item in self.structure:
             if item.type=='part':
-                partsEnabled = True
+                self.partsEnabled = True
                 break
-        if partsEnabled:
+        if self.partsEnabled:
             for item in self.structure:
                 if item.type not in ['introduction','part']:
                     raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")

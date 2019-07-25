@@ -51,12 +51,6 @@ class MakeCourse:
         """
         return Path(self.args.dir)
 
-    def get_themes_dir(self):
-        """
-            The path to the directory holding all the themes
-        """
-        return Path(self.config['themes_dir'])
-
     def get_build_dir(self):
         """
             The path the output will be put in
@@ -74,7 +68,7 @@ class MakeCourse:
             The root URL of the course. All URLs are under this.
         """
         if self.args.local or force_local:
-            return str(self.get_build_dir().resolve())
+            return str(self.get_build_dir().resolve()) + '/'
         else:
             if 'root_url' in self.config:
                 root = self.config.get('root_url')
@@ -95,7 +89,6 @@ class MakeCourse:
     def default_config(self):
         root_dir = self.get_root_dir()
         config = {
-            'themes_dir': root_dir / 'themes',
             'static_dir': root_dir / 'static',
             'build_pdf': True,
             'year': datetime.datetime.now().year,
@@ -129,11 +122,45 @@ class MakeCourse:
         self.config = self.default_config()
         self.config.update(self.loaded_config)
 
+    def theme_directories(self):
+        """
+            An iterator for paths containing themes
+
+            Tries:
+                * The themes_dir path specified in the config
+                * The directory 'themes' under the root directory of the course
+                * The directory 'themes' in the makeCourse package
+                * The directory 'themes' in the current working directory
+        """
+        if 'themes_dir' in self.config:
+            yield Path(self.config.get('themes_dir'))
+        yield self.get_root_dir() / 'themes'
+        yield Path(__file__).parent / 'themes'
+        yield Path('themes')
+
+    def find_theme(self, name):
+        """
+            Find the source directory for the theme with the given name
+        """
+        logger.debug("Finding theme {}".format(name))
+        for path in self.theme_directories():
+            p = path / name
+            logger.debug("Trying {}".format(p))
+            if p.exists():
+                return p
+
+        raise Exception("Couldn't find theme {}".format(name))
+
     def load_themes(self):
         """
             Load every theme defined in the config
         """
-        self.themes = [Theme(self, theme) for theme in self.config['themes']]
+        self.themes = []
+        for theme_data in self.config['themes']:
+            name = theme_data['source']
+            source = self.find_theme(name)
+            theme = Theme(self, name, source, theme_data)
+            self.themes.append(theme)
 
     def cleanup(self):
         """
@@ -145,6 +172,19 @@ class MakeCourse:
             shutil.rmtree(str(self.get_root_dir() / 'tmp'))
         except OSError:
             pass
+
+    def get_context(self):
+        """
+            A dictionary of context information about the course, for templates to use
+        """
+        return {
+            'author': self.config['author'],
+            'code': self.config['code'],
+            'year': self.config['year'],
+            'theme': self.theme.get_context(),
+            'alt_themes': self.theme.alt_themes_contexts(),
+        }
+            
 
     def make_directories(self):
         """
@@ -160,12 +200,11 @@ class MakeCourse:
         """
         self.theme = theme
 
-        logger.debug("""The themes directory is: {themes_dir}
+        logger.debug("""
 The static directory is: {static_dir}
 The build directory is: {build_dir}
 The web root directory is: {web_root}
 """.format(
-            themes_dir=self.get_themes_dir(),
             static_dir=self.get_static_dir(),
             build_dir=self.get_build_dir(),
             web_root=self.get_web_root(),
@@ -196,7 +235,6 @@ def main():
     extensions = [
         makeCourse.plastex.PlastexRunner,
         makeCourse.process.CourseProcessor,
-        makeCourse.pandoc.PandocRunner,
         makeCourse.decktape.DecktapeRunner,
     ]
 

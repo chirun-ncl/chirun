@@ -1,13 +1,28 @@
 import logging
 import re
-from makeCourse import slugify, yaml_header
-from pathlib import Path
+from markdown import markdown as render_markdown
+from pathlib import Path, PurePath
+from . import slugify
+from .filter import burnInExtras
+from .pandoc import run_pandoc
 
 logger = logging.getLogger(__name__)
 
+def load_item(course, data, parent=None):
+    try:
+        item_type = data['type']
+    except KeyError:
+        raise Exception("Item has undefined type")
+
+    try:
+        constructor = item_types[item_type]
+    except KeyError:
+        raise Exception("Unknown item type {}".format(data['type']))
+
+    return constructor(course, data, parent)
 
 class Item(object):
-    pandoc_template = ''
+    template_name = 'item.html'
     type = None
 
     def __init__(self, course, data, parent=None):
@@ -23,41 +38,23 @@ class Item(object):
     def __str__(self):
         return '{} "{}"'.format(self.type, self.title)
 
-    def yaml(self, active=False):
-        item_yaml = {
+    def get_context(self):
+        context = {
             'title': self.title,
-            'author': self.course.config['author'],
-            'code': self.course.config['code'],
-            'year': self.course.config['year'],
             'slug': self.slug,
-            'theme': self.course.theme.yaml,
-            'alt_themes': self.course.theme.alt_themes_yaml,
         }
-        if active:
-            item_yaml['active'] = 1
-        return item_yaml
-
-    def markdown(self, **kwargs):
-        raise NotImplementedError("Item does not implement the markdown method")
-
-    @property
-    def out_path(self):
-        if self.parent:
-            return [self.parent.slug, self.slug]
-        else:
-            return [self.slug]
+        return context
 
     @property
     def out_file(self):
-        return Path(*self.out_path)
+        path = PurePath(self.slug)
+        if self.parent:
+            path = self.parent.out_file / path
+        return path
 
     @property
     def url(self):
-        return '/'.join(self.out_path)
-
-    @property
-    def url_clean(self):
-        return '-'.join(self.out_path)
+        return str(self.out_file.with_suffix('.html'))
 
     @property
     def in_file(self):
@@ -68,7 +65,7 @@ class Item(object):
     def base_file(self):
         return Path(self.in_file.stem)
 
-    def get_content(self, force_local=False, out_format='html'):
+    def markdown_content(self, force_local=False, out_format='html'):
         ext = self.source.suffix
 
         if ext == '.md':
@@ -77,132 +74,138 @@ class Item(object):
             if mdContents[:3] == '---':
                 logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
                 mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
-            mdContents = self.course.burnInExtras(mdContents, force_local, out_format)
-            return mdContents
+            body = mdContents
         elif ext == '.tex':
-            return self.course.load_latex_content(self)
+            body = self.course.load_latex_content(self)
         else:
             raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
 
+        return body
 
-class Part(Item):
+    def as_html(self):
+        ext = self.source.suffix
+        
+        if ext == '.md':
+            html = render_markdown(self.markdown_content())
+        elif ext == '.tex':
+            html = self.course.load_latex_content(self)
+        else:
+            raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
+
+        html = burnInExtras(self.course, html, force_local=False, out_format='html')
+        return html
+
+    def temp_path(self):
+        """
+            Path to a temporary directory which can store files produced while processing this item
+        """
+        return self.course.temp_path(self.url.replace('/','-'))
+
+class NoContentMixin:
+    def markdown_content(self,*args,**kwargs):
+        return ''
+
+    def as_html(self):
+        return ''
+
+class Part(NoContentMixin, Item):
     type = 'part'
     title = 'Untitled part'
-    pandoc_template = 'part.html'
+    template_name = 'part.html'
 
-    @property
-    def out_path(self):
-        return [self.slug]
-
-    def yaml(self, active=False):
-        item_yaml = super(Part, self).yaml(active)
-        item_yaml.update({
+    def get_context(self):
+        context = super().get_context()
+        context.update({
             'part-slug': self.slug,
-            'chapters': [item.yaml() for item in self.content if not item.is_hidden],
+            'chapters': [item.get_context() for item in self.content if not item.is_hidden],
         })
-        return item_yaml
+        return context
 
-    def markdown(self, **kwargs):
-        return yaml_header(self.yaml())
-
-
-class Url(Item):
+class Url(NoContentMixin, Item):
     type = 'url'
     title = 'Untitled URL'
-    pandoc_template = 'part.html'
+    template_name = 'part.html'
 
-    def yaml(self, active=False):
+    def get_context(self):
         return {
             'title': self.title,
             'external_url': self.source,
         }
 
-    def markdown(self, **kwargs):
-        return None
-
 
 class Chapter(Item):
     type = 'chapter'
     title = 'Untitled chapter'
-    pandoc_template = 'chapter.html'
+    template_name = 'chapter.html'
 
-    def yaml(self, active=False):
-        item_yaml = super(Chapter, self).yaml(active)
-        item_yaml.update({
+    has_sidebar = True
+
+    def get_context(self):
+        context = super().get_context()
+        context.update({
             'build_pdf': self.course.config['build_pdf'],
             'file': '{}.html'.format(self.url),
             'pdf': '{}.pdf'.format(self.url),
-            'sidebar': True,
+            'sidebar': self.has_sidebar,
         })
-        return item_yaml
-
-    def markdown(self, force_local=False, out_format='html'):
-        header = self.yaml()
 
         if self.parent:
-            header['part'] = self.parent.title
-            header['part-slug'] = self.parent.slug
-            header['chapters'] = [item.yaml(item == self) for item in self.parent.content if not item.is_hidden]
+            context['part'] = self.parent.title
+            context['part-slug'] = self.parent.slug
+
+        return context
+
+    def siblings(self):
+        if self.parent:
+            return self.parent.content
         else:
-            header['chapters'] = [item.yaml(item == self) for item in self.course.structure if not item.type == 'introduction' and not item.is_hidden]
-
-        return yaml_header(header) + '\n\n' + self.get_content(force_local, out_format)
-
+            return [item for item in self.course.structure if item.type != 'introduction']
 
 class Slides(Chapter):
     type = 'slides'
     title = 'Untitled Slides'
-    pandoc_template = 'slides.html'
+    template_name = 'slides.html'
 
-    def yaml(self, active=False):
-        item_yaml = super(Slides, self).yaml(active)
-        item_yaml.update({
-            'file': '{}.html'.format(self.url),
+    def get_context(self):
+        context = super().get_context()
+        context.update({
             'slides': '{}.slides.html'.format(self.url),
             'pdf': '{}.pdf'.format(self.url),
-            'sidebar': True,
         })
-        return item_yaml
+        return context
 
 
 class Recap(Chapter):
     type = 'recap'
     title = 'Untitled Recap'
-    pandoc_template = 'chapter.html'
+    template_name = 'chapter.html'
+    has_sidebar = False
 
-    def yaml(self, active=False):
-        item_yaml = super(Recap, self).yaml(active)
-        item_yaml.update({
+    def get_context(self):
+        context = super().get_context()
+        context.update({
             'build_pdf': False,
-            'file': '{}.html'.format(self.url),
-            'sidebar': False,
         })
-        return item_yaml
+        return context
 
 
 class Introduction(Item):
     type = 'introduction'
-    pandoc_template = 'index.html'
+    template_name = 'index.html'
     title = 'index'
-    out_path = ['index']
 
     def __str__(self):
         return 'introduction'
 
-    def markdown(self, **kwargs):
-        def link_yaml(s):
-            if s.is_hidden:
-                return
-            return s.yaml()
+    def get_context(self):
+        context = super().get_context()
+        context['links'] = [s.get_context() for s in self.course.structure if s.type != 'introduction' and not s.is_hidden]
 
-        header = self.yaml()
-        header['links'] = [link_yaml(s) for s in self.course.structure if not s.type == 'introduction' and not s.is_hidden]
-
-        struct = [s for s in self.course.structure if not s.type == 'introduction' and not s.is_hidden]
+        struct = [s for s in self.course.structure if s.type != 'introduction' and not s.is_hidden]
         if len(struct) > 0 and struct[0].type == 'part':
-            header['isPart'] = 1
+            context['isPart'] = 1
 
-        return yaml_header(header) + '\n\n' + self.get_content()
+        return context
 
 
 item_types = {
@@ -215,5 +218,3 @@ item_types = {
 }
 
 
-def load_item(course, data, parent=None):
-    return item_types[data['type']](course, data, parent)
