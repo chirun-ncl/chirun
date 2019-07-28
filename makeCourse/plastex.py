@@ -1,10 +1,18 @@
 import logging
 import re
+import os
 import shutil
 import sys
 from makeCourse import mkdir_p
 from pathlib import Path
 from subprocess import Popen, PIPE
+from plasTeX import TeXDocument
+from plasTeX.Renderers.HTML5ncl import Renderer
+from plasTeX.TeX import TeX
+from plasTeX.Config import config as plastex_config
+import plasTeX.Renderers.HTML5.Config as html_config
+
+plastex_config += html_config.config
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +80,7 @@ class PlastexRunner:
         self.runPlastex(sourceItem)
 
         # All the paux files for the course are collected in the temp_path
-        original_paux_path = sourceItem.base_file.with_suffix('.paux')
+        original_paux_path = sourceItem.temp_path() / sourceItem.base_file.with_suffix('.paux')
         collated_paux_path = self.temp_path() / (str(sourceItem.out_file).replace('/','-') + '.paux')
         logger.debug('    Moving paux output: {original_paux_path} => {collated_paux_path}'.format(
             original_paux_path=original_paux_path,
@@ -100,36 +108,27 @@ class PlastexRunner:
             return ""
 
     def runPlastex(self, sourceItem):
-        logger.debug(sourceItem.source)
+        logger.debug("PlasTeX: "+str(sourceItem.source))
         root_dir = self.get_root_dir()
         outPath = root_dir / sourceItem.temp_path()
         outPaux = root_dir / self.temp_path()
         inPath = root_dir / sourceItem.source
 
-        cmd = 'plastex --dir={outPath} \
-		{tikzArgs} \
-		--sec-num-depth=3 --toc-depth=3 --split-level=-1 --toc-non-files\
-		--renderer=HTML5ncl --base-url={baseURL}\
-		--paux-dirs={outPaux} \
-		--filename={outFile} {inPath} 2>&1'.format(
-            outPath=outPath,
-            tikzArgs=self.getTikzTemplateArgs(),
-            baseURL=self.get_web_root(),
-            outPaux=outPaux,
-            outFile=sourceItem.url,
-            inPath=inPath
-        )
+        wd = os.getcwd()
+        os.chdir(outPath)
 
-        logger.info('Running plastex on {}'.format(sourceItem))
-        logger.debug(cmd)
-        proc = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-        stdout = proc.stdout.read().decode('utf-8')
-        proc.stdout.close()
+        plastex_config['files']['filename'] = sourceItem.url
+        plastex_config['general']['paux-dirs'] = [outPaux]
+        doc = TeXDocument(config=plastex_config)
+        doc.userdata['working-dir'] = '.'
 
-        rc = proc.wait()
-        if rc != 0:
-            sys.stderr.write("Error: Something went wrong with the latex compilation! Quitting...\n")
-            logger.debug(stdout)
-            sys.stderr.write("(Use -vv for more information)\n")
-            sys.exit(2)
+        with open(Path(wd) / inPath) as f:
+            tex = TeX(doc, myfile=f)
+            doc.userdata['jobname'] = tex.jobname
+            pauxname = os.path.join(doc.userdata.get('working-dir','.'),
+                                '%s.paux' % doc.userdata.get('jobname',''))
+            tex.parse()
 
+        Renderer().render(doc)
+ 
+        os.chdir(wd)
