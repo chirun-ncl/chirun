@@ -57,6 +57,10 @@ class Item(object):
         return str(self.out_file.with_suffix('.html'))
 
     @property
+    def pdf_url(self):
+        return str(self.out_file.with_suffix('.pdf'))
+
+    @property
     def in_file(self):
         base = Path(self.source.name)
         return base
