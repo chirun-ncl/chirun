@@ -1,0 +1,20 @@
+name: linewidth
+%
+name: textwidth
+%
+name: videoicon
+<i class="fa fa-play-circle"></i>&nbsp; 
+
+name: numbasicon
+<i class="fa fa-pencil-square-o"></i>&nbsp; 
+
+name: beginvimeo
+<iframe width="500" height="281" src="http://player.vimeo.com/video/
+
+name: endvimeo
+" frameborder="0"></iframe>
+
+name: includegraphics rotatebox scalebox reflectbox resizebox
+<img src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
+
+name: DeclareGraphicsExtensions graphicspath

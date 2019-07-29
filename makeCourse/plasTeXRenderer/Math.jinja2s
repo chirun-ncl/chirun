@@ -1,0 +1,29 @@
+name: math
+{{ obj.source }}
+
+name: ensuremath gather gather* flalign flalign* \
+      multline multline* alignat alignat* split DeclareMathOperator
+<span class="dmath">{{ obj.source }}</span>
+
+name: displaymath equation*
+<span class="dmath">{{ obj.source }}</span>
+
+name: align eqnarray
+<div id="{{ obj.id }}">
+{% for row in obj %}
+{% if row.ref != None %}<div class="eqnarrayid" id="{{ row.id }}"></div>{% endif %}
+{% endfor %}
+\begin{align}
+{% for row in obj %}
+{{ row.source }}
+{% endfor %}
+\end{align}
+</div>
+
+name: align* eqnarray*
+<span>{{ obj.source }}</span>
+
+name: equation
+<div class="eqn" id="{{ obj.id }}">
+{{ obj.source }}
+</div>

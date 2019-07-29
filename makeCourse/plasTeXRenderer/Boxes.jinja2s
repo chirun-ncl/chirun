@@ -1,0 +1,23 @@
+name: mbox makebox
+<span class="mbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+
+name: fbox framebox
+<span class="fbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+
+name: parbox
+<span class="parbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+
+name: minipage
+<div class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
+
+name: raisebox rule
+
+name: example
+<div id="{{ obj.id }}" class="thm thm-example">
+{% if obj.ref %}
+<h4>Example {% if obj.ref %}{{obj.ref}}{% endif %}</h4>
+{% else %}
+<h4>Example</h4>
+{% endif %}
+{{ obj }}
+</div>

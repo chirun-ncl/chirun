@@ -1,0 +1,15 @@
+name: thmenv
+<div id="{{ obj.id }}" class="thm thm-{{ obj.thmName |replace("*", "") }}">
+<h4>{{ obj.caption }} {% if obj.ref %}{{obj.ref}}{% endif %}</h4>
+{{ obj }}
+</div>
+
+name: proof
+<div id="{{ obj.id }}" class="thm thm-proof">
+{% if obj.ref %}
+<h4>Proof {% if obj.ref %}{{obj.ref}}{% endif %}</h4>
+{% else %}
+<h4>Proof</h4>
+{% endif %}
+{{ obj }}
+</div>

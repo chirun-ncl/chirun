@@ -1,0 +1,15 @@
+name: HTML XHTML html xhtml
+{{ obj }}
+
+name: numbas
+<numbas-embed data-url="{{ obj.attributes.content }}"></numbas-embed>
+
+name: vimeo
+<vimeo-embed data-id="{{ obj.attributes.content }}"></vimeo-embed>
+
+name: youtube
+
+<youtube-embed data-id="{{ obj.attributes.content }}"></youtube-embed>
+
+name: embed
+<oembed data-url="{{ obj.attributes.content }}"></oembed>
