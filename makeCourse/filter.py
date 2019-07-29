@@ -1,49 +1,61 @@
 import logging
 import re
 from . import gen_dict_extract
+from bs4 import BeautifulSoup
+from .oembed import get_oembed_html
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
-def getVimeoHTML(code):
-    return '<div class="vimeo-aspect-ratio"><iframe class="vimeo" src="https://player.vimeo.com/video/' + code + '" frameborder="0" \
-                            webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
+def html_fragment(source):
+    """
+        Parse an HTML string representing a single element, and return that element
+    """
+    return BeautifulSoup(source,'html.parser').contents[0]
 
-def getRecapHTML(code):
-    return '<div class="recap-aspect-ratio"><iframe class="recap" src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id=' + code + '&v=1" \
-                            frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
+def replace_tag(name):
+    def dec(fn):
+        def wrapper(soup):
+            for t in soup.find_all(name):
+                t.replace_with(fn(t))
+        return wrapper
+    return dec
 
-def getYoutubeHTML(code):
-    return '<div class="youtube-aspect-ratio"><iframe class="youtube" src="https://www.youtube.com/embed/' + code + '?ecver=1" \
-                            frameborder="0" allowfullscreen></iframe></div>'
+@replace_tag('numbas-embed')
+def embed_numbas(embed):
+    iframe = html_fragment('<iframe class="numbas" frameborder="0"></iframe>')
+    iframe['src'] = embed['data-url']
+    return iframe
 
-def getNumbasHTML(URL):
-    return '<iframe class="numbas" src="' + URL + '" frameborder="0"></iframe>'
+@replace_tag('vimeo-embed')
+def embed_vimeo(embed):
+    div = html_fragment('<div class="vimeo-aspect-ratio"><iframe class="vimeo" frameborder="0" \
+                            webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
+    div.iframe['src'] = "https://player.vimeo.com/video/" + embed['data-id']
+    return div
 
-def replaceLabels(course, mdContents):
-    for l in gen_dict_extract('label', course.config):
-        mdLink = re.compile(r'\[([^\]]*)\]\(' + l['label'] + r'\)')
-        mdContents = mdLink.sub(lambda m: "[" + m.group(1) + "](" + course.get_web_root() + l['outFile'] + ".html)", mdContents)
-    return mdContents
+@replace_tag('youtube-embed')
+def embed_youtube(embed):
+    div = html_fragment('<div class="youtube-aspect-ratio"><iframe class="youtube" \
+                            frameborder="0" allowfullscreen></iframe></div>')
+    div.iframe['src'] = "https://www.youtube.com/embed/{code}?ecver=1".format(code=embed['data-id'])
+    return div
 
-def burnInExtras(course, mdContents, force_local, out_format):
-    mdContentsOrig = mdContents
-    reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
-    reRecap = re.compile(r'{%recap\s*([\d\DA-z-]*?)\s*%}')
-    reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
-    reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
-    reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-    if out_format == 'pdf':
-        mdContents = reVimeo.sub(lambda m: r"\n\n\url{https://vimeo.com/" + m.group(1) + "}", mdContents)
-        mdContents = reRecap.sub(lambda m: r"\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id=" + m.group(1) + "}", mdContents)
-        mdContents = reYoutube.sub(lambda m: r"\n\n\url{https://www.youtube.com/watch?v=" + m.group(1) + "}", mdContents)
-        mdContents = reNumbas.sub(lambda m: r"\n\n\url{" + m.group(1) + "}", mdContents)
-    else:
-        mdContents = reVimeo.sub(lambda m: getVimeoHTML(m.group(1)), mdContents)
-        mdContents = reRecap.sub(lambda m: getRecapHTML(m.group(1)), mdContents)
-        mdContents = reYoutube.sub(lambda m: getYoutubeHTML(m.group(1)), mdContents)
-        mdContents = reNumbas.sub(lambda m: getNumbasHTML(m.group(1)), mdContents)
+@replace_tag('oembed')
+def oembed(embed):
+    url = embed['data-url']
+    html = get_oembed_html(url)
+    embed_code = BeautifulSoup(html,'html.parser')
+    d = html_fragment('<div class="oembed"></div>')
+    o = urlparse(url)
+    d['data-embed-domain'] = o.netloc
+    for t in embed_code.contents:
+        d.append(t)
+    return d
 
-    if mdContents != mdContentsOrig:
-        logger.debug('    Embedded iframes & extras.')
-    mdContents = replaceLabels(course, mdContents)
-    return mdContents
+def burnInExtras(course, html, force_local, out_format):
+    soup = BeautifulSoup(html, 'html.parser')
+    filters = [embed_numbas, embed_vimeo, embed_youtube, oembed]
+    for f in filters:
+        f(soup)
+    return str(soup)

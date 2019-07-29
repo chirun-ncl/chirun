@@ -21,6 +21,7 @@ from distutils.dir_util import copy_tree
 from makeCourse import *
 import makeCourse
 from makeCourse.theme import *
+from makeCourse import oembed
 from pathlib import Path
 from subprocess import Popen, PIPE
 import logging
@@ -246,6 +247,8 @@ def main():
     class Builder(MakeCourse, *extensions):
         pass
 
+    oembed.load_cache()
+
     mc = Builder(args)
 
     mc.load_config()
@@ -260,6 +263,8 @@ def main():
 
     if not mc.args.lazy:
         mc.cleanup()
+
+    oembed.save_cache()
 
     print("All done! Output written to {}".format(mc.get_build_dir()))
 
