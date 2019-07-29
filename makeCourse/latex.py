@@ -12,10 +12,15 @@ def runPdflatex(course, item):
     cmd = ['pdflatex', '-halt-on-error', str(item.in_file)]
     logger.info('Running pdflatex: {}'.format(inDir / item.in_file))
 
+    env = os.environ.copy()
+    TEXINPUTS = [os.path.dirname(os.path.realpath(__file__)),'']
+    TEXINPUTS += [env.get('TEXINPUTS','')]
+    env['TEXINPUTS'] = ':'.join(TEXINPUTS)
+
     # latex often requires 2 runs to resolve labels
     # TODO: make number of runs a parameter
     for _ in range(2):
-        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(inDir), universal_newlines=True)
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(inDir), universal_newlines=True, env=env)
         for stdout_line in iter(proc.stdout.readline, ""):
             logger.debug(stdout_line)
 
