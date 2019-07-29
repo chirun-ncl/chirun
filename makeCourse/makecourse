@@ -76,20 +76,12 @@ class MakeCourse:
         if self.args.local or force_local:
             return str(self.get_build_dir().resolve()) + '/'
         else:
-            if 'root_url' in self.config:
-                root = self.config.get('root_url')
-            else:
-                root = '/module'
+            url_format = self.config.get('root_url','/module/{code}/{year}/{theme}/')
 
             # TODO: add an option to turn off the code and year parts of the URL
             code = self.config.get('code')
             year = self.config.get('year')
-            if code:
-                root += '/' + self.config.get('code', '')
-            if year:
-                root += '/' + str(self.config.get('year', ''))
-
-            root += '/' + self.theme.path + '/'
+            root = url_format.format(code=code, year=year, theme = self.theme.path)
             return root
 
     def default_config(self):
