@@ -24,7 +24,6 @@ class ItemProcess(object):
     def visit(self, item):
         if item.is_hidden:
             return
-        logging.info("Processing {}".format(item))
         fn = getattr(self,'visit_'+item.type)
         return fn(item)
 
@@ -38,9 +37,13 @@ class ItemProcess(object):
         """ Default visit method, used when a type-specific visit method isn't defined """
         pass
 
+    def visit_part(self, item):
+        for subitem in item.content:
+            self.visit(subitem)
+
 class RenderProcess(ItemProcess):
 
-    name = 'Run pandoc'
+    name = 'Render items to HTML'
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -51,8 +54,7 @@ class RenderProcess(ItemProcess):
 
     def visit_part(self, item):
         self.visit_default(item)
-        for subitem in item.content:
-            self.visit(subitem)
+        super().visit_part(item)
 
     def visit_url(self, item):
         pass
@@ -96,17 +98,18 @@ class CourseProcessor:
         elif item.type == 'slides':
             self.run_decktape(item)
         else:
-            pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
+            pandoc_item(self, item, template_file='notes.latex', out_format='pdf', force_local=True)
+        item.has_pdf = True
 
-    processor_classes = [RenderProcess, PDFProcess]
+    processor_classes = [PDFProcess, RenderProcess]
 
     def process(self):
         logger.debug("Starting processing...")
 
-        logger.debug('Preprocessing Structure...')
+        logger.debug('Preprocessing structure...')
         self.structure = [load_item(self, obj) for obj in self.config['structure']]
 
-        logger.debug('Deep exploring Structure...')
+        logger.debug('Deep exploring structure...')
 
         self.partsEnabled = False
         for item in self.structure:
@@ -120,7 +123,7 @@ class CourseProcessor:
 
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
-            logger.info(processor.name+'\n'+'-'*len(processor.name))
+            logger.info(processor.name)
             for item in self.structure:
                 processor.visit(item)
 
