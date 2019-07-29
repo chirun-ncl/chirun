@@ -43,7 +43,7 @@ def pandoc_item(course, item, template_file=None, out_format='html', force_local
     mkdir_p(outDir)
     if template_file is None:
         template_file = item.template_name
-    template_path = course.theme.source / template_file
+    template_path = course.theme.source / 'templates' / template_file
     date = datetime.date.today()
 
     logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
@@ -51,6 +51,8 @@ def pandoc_item(course, item, template_file=None, out_format='html', force_local
     args = [
         '--mathjax={}'.format(course.mathjax_url),
         '-V', 'web_root={}'.format(root),
+        '-o',str(outPath),
+        '--template=' + str(template_path),
     ]
     if template_file == 'slides.revealjs':
         args += [
@@ -60,6 +62,9 @@ def pandoc_item(course, item, template_file=None, out_format='html', force_local
             '-V', 'revealjs-url={}/static/reveal.js'.format(root + course.theme.path),
         ]
     else:
+        if out_format=='pdf':
+            args += ['-t','latex']
+
         args += [
             '--toc',
             '--toc-depth=2',
@@ -78,10 +83,7 @@ def pandoc_item(course, item, template_file=None, out_format='html', force_local
     body = item.markdown_content(force_local=force_local, out_format=out_format)
 
     logger.info('Running pandoc on {}'.format(item))
-    output = run_pandoc(body, context, args)
-
-    with open(str(outPath),'wb') as f:
-        f.write(output)
+    run_pandoc(body, context, args)
 
 if __name__ == "__main__":
     pass
