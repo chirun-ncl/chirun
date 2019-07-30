@@ -33,8 +33,8 @@ def getEmbeddedImages(course, html, sourceItem):
         raw_path = Path(m.group('url'))
         inFile = raw_path.name
         inPath = sourceItem.temp_path() / 'images' / inFile
-        finalURL = Path('images') / inFile
-        outPath = course.get_build_dir() / sourceItem.out_file.parent / finalURL
+        finalURL = sourceItem.out_file / 'images' / inFile
+        outPath = course.get_build_dir() / finalURL
 
         # Move the file into build tree's static dir
         mkdir_p(outPath.parent)
@@ -45,7 +45,7 @@ def getEmbeddedImages(course, html, sourceItem):
         start -= m.start()
         end -= m.start()
         img = m.group(0)
-        return img[:start] + str(finalURL) + img[end:]
+        return img[:start] + course.get_web_root() + str(finalURL) + img[end:]
 
     for pattern in patterns:
         html = pattern.sub(fix_image_path, html)
@@ -67,7 +67,7 @@ class PlastexRunner:
 
         root_dir = self.get_root_dir()
 
-        source_file = root_dir / tmpDir / sourceItem.url
+        source_file = tmpDir / sourceItem.url
         with open(str(source_file), encoding='utf-8') as f:
             html = f.read()
         # TODO: an abstraction for applying the following as a series of filters
@@ -86,8 +86,8 @@ class PlastexRunner:
     def runPlastex(self, sourceItem):
         logger.debug("PlasTeX: "+str(sourceItem.source))
         root_dir = self.get_root_dir()
-        outPath = root_dir / sourceItem.temp_path()
-        outPaux = root_dir / self.temp_path()
+        outPath = sourceItem.temp_path()
+        outPaux = self.temp_path()
         inPath = root_dir / sourceItem.source
         plasTeX.Logging.disableLogging()
 
