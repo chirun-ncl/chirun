@@ -1,0 +1,13 @@
+{% if not subitem.hidden %}
+    {% if subitem.type == 'url' %}
+        <a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
+    {% else %}
+        <a href="{{subitem.url|url}}">{{subitem.title}}</a>
+        {% if subitem.has_slides %}
+            <a target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}"><i class="fa fa-desktop"></i></a>
+        {% endif %}
+        {% if subitem.has_pdf %}
+            <a target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}"><i class="fa fa-file-pdf-o"></i></a>
+        {% endif %}
+    {% endif %}
+{% endif %}

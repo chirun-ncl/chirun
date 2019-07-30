@@ -1,0 +1,12 @@
+{% if course.themes|length > 1 %}
+<div class="theme-switch">
+    <label for="themes">Switch theme:</label>
+    <select class="form-control" id="themes" onchange="location.href=this.value;">
+        {% for theme in course.themes %}
+            {% with active = theme == course.theme %}
+            <option value="{{'index.html'|url}}"{% if active %} selected{% endif %}>{{theme.title}}{% if active %} (active){% endif %}</option>
+            {% endwith %}
+        {% endfor %}
+    </select>
+</div>
+{% endif %}
