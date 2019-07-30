@@ -113,7 +113,7 @@ class MakeCourse:
         """
         config_file = self.get_config_file()
 
-        logger.info("Reading config file {}".format(config_file))
+        logger.debug("Reading config file {}".format(config_file))
 
         with open(str(config_file), 'r') as f:
             config = self.loaded_config = yaml.load(f)
@@ -250,7 +250,7 @@ class MakeCourse:
         """
             Make the output directory
         """
-        logger.info("Creating build directory...")
+        logger.debug("Creating build directory...")
         mkdir_p(self.get_build_dir())
         mkdir_p(self.get_build_dir() / 'static')
 
