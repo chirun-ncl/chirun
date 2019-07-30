@@ -37,6 +37,7 @@ class MakeCourse:
         self.args = args
 
         self.root_dir = self.get_root_dir()
+        self.build_dir = Path(args.build_path) if args.build_path is not None else self.root_dir / 'build'
 
         if args.veryverbose:
             args.verbose = True
@@ -61,7 +62,7 @@ class MakeCourse:
         """
             The path the output will be put in
         """
-        return self.get_root_dir() / 'build' / self.theme.path
+        return self.build_dir / self.theme.path
 
     def get_static_dir(self):
         """
@@ -210,10 +211,13 @@ The web root directory is: {web_root}
 
         self.make_directories()
         theme.copy_static_files()
+        self.copy_static_files()
+        self.load_structure()
         self.process()
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-o','--output', dest='build_path', help='directory to put build files in')
     parser.add_argument('-v', dest='verbose', action='store_true', help='verbose output')
     parser.add_argument('-vv', dest='veryverbose', action='store_true', help='very verbose output')
     parser.add_argument('-d', dest='deleteFirst', action='store_true', help='delete temporary files first')
