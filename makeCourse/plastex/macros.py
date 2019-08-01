@@ -1,4 +1,4 @@
-from plasTeX import Command, sourceChildren
+from plasTeX import Command, sourceChildren, Environment
 from plasTeX.Base.LaTeX import Math
 
 class numbas(Command):
@@ -17,3 +17,9 @@ class math(Math.math):
     @property
     def source(self):
         return '<script type="math/tex">{content}</script>'.format(content=sourceChildren(self).strip())
+
+class cssclass(Command):
+    args = '[ classes:str ] content:str'
+
+class div(Environment):
+    args = '[ classes:str ]'

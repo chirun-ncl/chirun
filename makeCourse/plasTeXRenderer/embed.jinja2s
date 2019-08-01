@@ -13,3 +13,9 @@ name: youtube
 
 name: embed
 <oembed data-url="{{ obj.attributes.content }}"></oembed>
+
+name: cssclass
+<span class="{{obj.attributes.classes}}">{{obj.attributes.content}}</span>
+
+name: div
+<div class="{{obj.attributes.classes}}">{{obj}}</div>
