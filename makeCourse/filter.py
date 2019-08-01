@@ -15,7 +15,7 @@ def html_fragment(source):
 
 def replace_tag(name):
     def dec(fn):
-        def wrapper(soup):
+        def wrapper(soup, **kwargs):
             for t in soup.find_all(name):
                 t.replace_with(fn(t))
         return wrapper
@@ -53,9 +53,13 @@ def oembed(embed):
         d.append(t)
     return d
 
+def fix_refs(soup, course):
+    for a in soup.find_all('a',{'class':'ref'}):
+        a['href'] = course.get_web_root() + a['href']
+
 def burnInExtras(course, html, force_local, out_format):
     soup = BeautifulSoup(html, 'html.parser')
     filters = [embed_numbas, embed_vimeo, embed_youtube, oembed]
     for f in filters:
-        f(soup)
+        f(soup, course=course)
     return str(soup)
