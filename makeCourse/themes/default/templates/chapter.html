@@ -22,18 +22,21 @@
 {% block body_attributes %}data-spy="scroll" data-target="#chapterTOC" data-offset="50"{% endblock %}
 
 {% block nav %}
-    <nav class="navbar navbar-expand d-none d-md-block navbar-light bg-light rounded">
-      <div class="collapse navbar-collapse justify-content-md-flex-end">
-        <ul class="navbar-nav">
-          <li class="nav-item mr-3">
-              <a class="nav-link pl-3 pr-3" href="{{'index.html'|url}}">&larr; Back</a>
-          </li>
-          {% for sibling in item.siblings() %}
-              {% include "chapter_nav_sibling.html" %}
-          {% endfor %}
-        </ul>
-      </div>
-    </nav>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{'index.html'|url}}">{{course.config.title}}</a>
+                </li>
+                {% if item.parent %}
+                <li class="breadcrumb-item">
+                    <a href="{{item.parent.url|url}}">{{item.parent.title}}</a>
+                </li>
+                {% endif %}
+                <li class="breadcrumb-item active">
+                    {{item.title}}
+                </li>
+            </ul>
+        </nav>
 {% endblock %}
 
 {% block main %}

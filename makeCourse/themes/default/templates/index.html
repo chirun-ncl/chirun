@@ -2,9 +2,11 @@
 
 {% block header %}
     <div class="container">
-        <h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
-        <h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
-        <h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
+        <div class="jumbotron">
+            <h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
+            <h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
+            <h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
+        </div>
     </div>
 {% endblock header %}
 
@@ -18,7 +20,7 @@
                     <div class="col-md-4 pb-4 mx-auto">
                         <div class="card mb-4 h-100 box-shadow">
                             <div class="card-header text-center">
-                                <h4 class="my-0 font-weight-normal"><a href="{{part.slug|url}}.html">{{part.title}}</a></h4>
+                                <h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">
