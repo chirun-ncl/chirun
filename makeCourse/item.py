@@ -24,6 +24,8 @@ def load_item(course, data, parent=None):
 class Item(object):
     template_name = 'item.html'
     type = None
+    source_mtime = None
+    last_built = None
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -45,16 +47,26 @@ class Item(object):
         }
         return context
 
+    def recently_built(self):
+        """
+            Has this item been built since the source was last modified?
+        """
+        return self.last_built is not None and self.last_built > self.source_modified
+
     @property
-    def out_file(self):
+    def out_path(self):
         path = PurePath(self.slug)
         if self.parent:
-            path = self.parent.out_file / path
+            path = self.parent.out_path / path
         return path
 
     @property
+    def out_file(self):
+        return str(self.out_path / 'index.html')
+
+    @property
     def url(self):
-        return str(self.out_file.with_suffix('.html'))
+        return str(self.out_path)
 
     @property
     def pdf_url(self):
@@ -200,6 +212,10 @@ class Introduction(Item):
 
     def __str__(self):
         return 'introduction'
+
+    out_path = Path('')
+    out_file = 'index.html'
+    url = ''
 
     def get_context(self):
         context = super().get_context()

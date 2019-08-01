@@ -33,7 +33,7 @@ logger = logging.getLogger('makeCourse')
 class MakeCourse:
 
     mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-    processor_classes = [process.PDFProcess, process.RenderProcess]
+    processor_classes = [process.LastBuiltProcess, process.PDFProcess, process.RenderProcess]
 
     def __init__(self, args):
         self.args = args
@@ -204,8 +204,11 @@ class MakeCourse:
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
             logger.info(processor.name)
-            for item in self.structure:
-                processor.visit(item)
+            for n in range(processor.num_runs):
+                if processor.num_runs>1:
+                    logger.debug("Run {}".format(n+1))
+                for item in self.structure:
+                    processor.visit(item)
 
         logger.debug('Done processing!')
 

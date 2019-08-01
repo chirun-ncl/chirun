@@ -23,9 +23,12 @@ class Renderer(object):
     def render_item(self, item):
         logging.debug("Rendering item {}".format(item))
 
-        outPath = self.course.get_build_dir() / item.url
+        outPath = self.course.get_build_dir() / item.out_file
         outDir = outPath.parent
         mkdir_p(outDir)
+
+        if self.course.args.lazy and item.recently_built():
+            return
 
         template = self.env.get_template(item.template_name)
         context = {
