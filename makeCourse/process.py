@@ -1,11 +1,11 @@
 import logging
-from . import latex
-from pathlib import Path
+import shutil
 import os
 import re
-from makeCourse import mkdir_p
+from . import latex, mkdir_p
 from .pandoc import pandoc_item
 from .render import Renderer
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ class ItemProcess(object):
     """
 
     name = ''
+    num_runs = 1
 
     def __init__(self,course):
         self.course = course
@@ -40,9 +41,22 @@ class ItemProcess(object):
         for subitem in item.content:
             self.visit(subitem)
 
+class LastBuiltProcess(ItemProcess):
+    name = 'Establish when each item was last built'
+
+    def visit_default(self, item):
+        item.source_modified = (self.course.get_root_dir() / item.source).stat().st_mtime
+
+        outPath = self.course.get_build_dir() / item.out_file
+        if outPath.exists():
+            item.last_built = outPath.stat().st_mtime
+        else:
+            item.last_built = None
+
 class RenderProcess(ItemProcess):
 
     name = 'Render items to HTML'
+    num_runs = 2
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
