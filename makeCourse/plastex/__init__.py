@@ -1,3 +1,4 @@
+import glob
 import logging
 import re
 import os
@@ -18,9 +19,7 @@ plastex_config += html_config.config
 
 logger = logging.getLogger(__name__)
 
-def getEmbeddedImages(course, html, sourceItem):
-    title = sourceItem.title
-    logger.debug('    Moving embedded images')
+def getEmbeddedImages(course, html, item):
 
     # TODO: make this extensible
     patterns = [
@@ -32,8 +31,8 @@ def getEmbeddedImages(course, html, sourceItem):
         # TODO: don't rewrite URLs with a URI scheme, i.e. only rewrite relative URLs
         raw_path = Path(m.group('url'))
         inFile = raw_path.name
-        inPath = sourceItem.temp_path() / 'images' / inFile
-        finalURL = sourceItem.out_file / 'images' / inFile
+        inPath = item.temp_path() / 'images' / inFile
+        finalURL = item.out_path / 'images' / inFile
         outPath = course.get_build_dir() / finalURL
 
         # Move the file into build tree's static dir
@@ -53,25 +52,17 @@ def getEmbeddedImages(course, html, sourceItem):
     return html
 class PlastexRunner:
 
-    def load_latex_content(self, sourceItem):
+    def load_latex_content(self, item):
         """
             Convert a LaTeX file to HTML, and do some processing with its images
         """
-        tmpDir = sourceItem.temp_path()
-        self.runPlastex(sourceItem)
+        self.runPlastex(item)
 
-        # All the paux files for the course are collected in the temp_path
-        original_paux_path = sourceItem.temp_path() / sourceItem.base_file.with_suffix('.paux')
-        collated_paux_path = self.temp_path() / (str(sourceItem.out_file).replace('/','-') + '.paux')
-        shutil.move(str(original_paux_path), str(collated_paux_path))
-
-        root_dir = self.get_root_dir()
-
-        source_file = tmpDir / sourceItem.url
+        source_file = item.temp_path() / item.out_file
         with open(str(source_file), encoding='utf-8') as f:
             html = f.read()
         # TODO: an abstraction for applying the following as a series of filters
-        html = getEmbeddedImages(self, html, sourceItem)
+        html = getEmbeddedImages(self, html, item)
         return html
 
 
@@ -83,33 +74,45 @@ class PlastexRunner:
         else:
             return ""
 
-    def runPlastex(self, sourceItem):
-        logger.debug("PlasTeX: "+str(sourceItem.source))
+    def runPlastex(self, item):
+        logger.debug("PlasTeX: "+str(item.source))
         root_dir = self.get_root_dir()
-        outPath = sourceItem.temp_path()
-        outPaux = self.temp_path()
-        inPath = root_dir / sourceItem.source
-        plasTeX.Logging.disableLogging()
+        outPath = item.temp_path()
+        outPaux = self.temp_path().resolve()
+        inPath = root_dir / item.source
+        plasTeX.Logging.fileLogging(str(item.temp_path() / 'plastex.log'))
 
         wd = os.getcwd()
         os.chdir(str(outPath))
 
-        plastex_config['files']['filename'] = sourceItem.url
-        plastex_config['general']['paux-dirs'] = [outPaux]
-        doc = TeXDocument(config=plastex_config)
-        doc.userdata['working-dir'] = '.'
-        doc.context.importMacros({"numbas": macros.numbas, "youtube": macros.youtube, "vimeo": macros.vimeo, "embed": macros.embed, "math": macros.math})
+        plastex_config['files']['filename'] = item.out_file
+        rname = plastex_config['general']['renderer'] = 'makecourse'
+        plastex_config['document']['base-url'] = self.get_web_root()
+        document = TeXDocument(config=plastex_config)
+        document.userdata['working-dir'] = '.'
+        document.context.importMacros(vars(macros))
 
-        with open(str(Path(wd) / inPath)) as f:
-            tex = TeX(doc, myfile=f)
-            doc.userdata['jobname'] = tex.jobname
-            pauxname = os.path.join(doc.userdata.get('working-dir','.'),
-                                '%s.paux' % doc.userdata.get('jobname',''))
-            tex.parse()
+        f = open(str(Path(wd) / inPath))
+        tex = TeX(document, myfile=f)
+        document.userdata['jobname'] = tex.jobname
+        pauxname = os.path.join(document.userdata.get('working-dir','.'),
+                            '%s.paux' % document.userdata.get('jobname',''))
+
+        for fname in glob.glob(str(outPaux / '*.paux')):
+            if os.path.basename(fname) == pauxname:
+                continue
+            document.context.restore(fname,'makecourse')
+
+        tex.parse()
+        f.close()
 
         renderer = Renderer()
-        renderer.loadTemplates(doc)
+        renderer.loadTemplates(document)
         renderer.importDirectory(str(self.theme.source / 'plastex'))
-        renderer.render(doc)
- 
+        renderer.render(document)
+
         os.chdir(wd)
+
+        original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
+        collated_paux_path = self.temp_path() / (str(item.out_path).replace('/','-') + '.paux')
+        shutil.move(str(original_paux_path), str(collated_paux_path))
