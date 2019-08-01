@@ -1,10 +1,10 @@
 name: ref
-<a href="{{here.idref.label.url}}">{{here.idref.label.ref}}</a>
+<a class="ref" href="{{here.idref.label.url}}">{{here.idref.label.ref}}</a>
 
 name: eqref
-<a href="{{here.idref.label.url}}">({{here.idref.label.ref}})</a>
+<a class="ref eqref" href="{{here.idref.label.url}}">({{here.idref.label.ref}})</a>
 
 name: pageref
-<a href="{{ obj.idref.label.url }}">*</a>
+<a class="ref crossref" href="{{ obj.idref.label.url }}">*</a>
 
 name: label
