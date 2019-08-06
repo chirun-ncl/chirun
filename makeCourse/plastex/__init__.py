@@ -83,7 +83,6 @@ class PlastexRunner:
         plasTeX.Logging.fileLogging(str(item.temp_path() / 'plastex.log'))
 
         wd = os.getcwd()
-        os.chdir(str(outPath))
 
         plastex_config['files']['filename'] = item.out_file
         rname = plastex_config['general']['renderer'] = 'makecourse'
@@ -106,6 +105,7 @@ class PlastexRunner:
         tex.parse()
         f.close()
 
+        os.chdir(str(outPath))
         renderer = Renderer()
         renderer.loadTemplates(document)
         renderer.importDirectory(str(self.theme.source / 'plastex'))
@@ -115,4 +115,4 @@ class PlastexRunner:
 
         original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
         collated_paux_path = self.temp_path() / (str(item.out_path).replace('/','-') + '.paux')
-        shutil.move(str(original_paux_path), str(collated_paux_path))
+        shutil.copyfile(str(original_paux_path), str(collated_paux_path))
