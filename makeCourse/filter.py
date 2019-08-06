@@ -57,9 +57,22 @@ def fix_refs(soup, course):
     for a in soup.find_all('a',{'class':'ref'}):
         a['href'] = course.get_web_root() + a['href']
 
+def fix_local_links(soup, course):
+    """
+        Rewrite URLs relative to the top level, i.e. those starting with a /,
+        to use the course's root URL if they don't already.
+    """
+    root = course.get_web_root()
+    for a in soup.find_all('a'):
+        url = a.get('href')
+        if url and url[0]=='/' and url[:len(root)]!=root:
+            url = root + url[1:]
+            a['href'] = url
+
+
 def burnInExtras(course, html, force_local, out_format):
     soup = BeautifulSoup(html, 'html.parser')
-    filters = [embed_numbas, embed_vimeo, embed_youtube, oembed]
+    filters = [embed_numbas, embed_vimeo, embed_youtube, oembed, fix_local_links]
     for f in filters:
         f(soup, course=course)
     return str(soup)
