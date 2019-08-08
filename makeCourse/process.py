@@ -97,6 +97,6 @@ class PDFProcess(ItemProcess):
             latex.runPdflatex(self.course, item)
         elif item.type == 'slides':
             self.course.run_decktape(item)
-        else:
+        elif ext == '.md':
             pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
         item.has_pdf = True
