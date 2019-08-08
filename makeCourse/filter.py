@@ -69,6 +69,11 @@ def fix_local_links(soup, course):
             url = root + url[1:]
             a['href'] = url
 
+    for img in soup.find_all('img'):
+        url = img.get('src')
+        if url and url[0]=='/' and url[:len(root)]!=root:
+            url = root + url[1:]
+            img['src'] = url
 
 def burnInExtras(course, html, force_local, out_format):
     soup = BeautifulSoup(html, 'html.parser')
