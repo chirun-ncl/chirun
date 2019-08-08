@@ -13,7 +13,7 @@ def load_cache(cache_filename=default_cache_filename):
 
 def get_oembed_html(url):
     if url not in oembed_cache:
-        res = oEmbed(url)
+        res = oEmbed(url,maxwidth=600)
         oembed_cache[url] = res['html']
     return oembed_cache[url]
 
