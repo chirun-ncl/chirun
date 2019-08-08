@@ -81,7 +81,6 @@ class MakeCourse:
         else:
             url_format = self.config.get('root_url','/module/{code}/{year}/{theme}/')
 
-            # TODO: add an option to turn off the code and year parts of the URL
             code = self.config.get('code')
             year = self.config.get('year')
             root = url_format.format(code=code, year=year, theme = self.theme.path)
