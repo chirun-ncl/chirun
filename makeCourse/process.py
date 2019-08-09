@@ -1,158 +1,102 @@
 import logging
-from . import latex
-from . import pandoc
-from . import plastex
-from .item import load_item
+import shutil
 import os
 import re
-import sys
-from makeCourse import *
+from . import latex, mkdir_p
+from .pandoc import pandoc_item
+from .render import Renderer
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-class CourseProcessor:
+class ItemProcess(object):
+    """ 
+        Performs a process on each item in the course structure. 
+        Visits each item in a depth-first search.
+    """
 
-	def temp_path(self, sourceItem=False):
-		tmp_dir = 'tmp'
-		if not os.path.exists(tmp_dir):
-			os.makedirs(tmp_dir)
+    name = ''
+    num_runs = 1
 
-		tmp_theme_dir = os.path.join(tmp_dir,self.theme.path)
-		if not os.path.exists(tmp_theme_dir):
-			os.makedirs(tmp_theme_dir)
+    def __init__(self,course):
+        self.course = course
 
-		if sourceItem:
-			tpath = os.path.join(tmp_theme_dir,re.sub('/','-',sourceItem.url))
-		else:
-			tpath = tmp_theme_dir
-		return tpath
+    def visit(self, item):
+        if item.is_hidden:
+            return
+        fn = getattr(self,'visit_'+item.type)
+        return fn(item)
 
-	def replaceLabels(self,mdContents):
-		for l in gen_dict_extract('label',self.config):
-			mdLink = re.compile(r'\[([^\]]*)\]\('+l['label']+r'\)')
-			mdContents = mdLink.sub(lambda m: "[" + m.group(1)+"]("+self.config['web_root']+self.theme.path+l['outFile']+".html)", mdContents)
-		return mdContents
+    def __getattr__(self, name):
+        if name[:6]=='visit_':
+            return self.visit_default
+        else:
+            raise AttributeError
 
-	def getVimeoHTML(self, code):
-		return '<div class="vimeo-aspect-ratio"><iframe class="vimeo" src="https://player.vimeo.com/video/'+code+'" frameborder="0" \
-				webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
-	def getRecapHTML(self, code):
-		return '<div class="recap-aspect-ratio"><iframe class="recap" src="https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id='+code+'&v=1" \
-				frameborder="0" gesture=media webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>'
-	def getYoutubeHTML(self, code):
-		return '<div class="youtube-aspect-ratio"><iframe class="youtube" src="https://www.youtube.com/embed/'+code+'?ecver=1" \
-				frameborder="0" allowfullscreen></iframe></div>'
-	def getNumbasHTML(self, URL):
-		return '<iframe class="numbas" src="'+URL+'" frameborder="0"></iframe>'
+    def visit_default(self, item):
+        """ Default visit method, used when a type-specific visit method isn't defined """
+        pass
 
-	def burnInExtras(self,mdContents,force_local,out_format):
-		mdContentsOrig = mdContents
-		reVimeo = re.compile(r'{%vimeo\s*([\d\D]*?)\s*%}')
-		reRecap = re.compile(r'{%recap\s*([\d\DA-z-]*?)\s*%}')
-		reYoutube = re.compile(r'{%youtube\s*([\d\D]*?)\s*%}')
-		reNumbas = re.compile(r'{%numbas\s*([^%{}]*?)\s*%}')
-		reSlides = re.compile(r'{%slides\s*([^%{}]*?)\s*%}')
-		if out_format=='pdf':
-			mdContents = reVimeo.sub(lambda m: r"\n\n\url{https://vimeo.com/"+m.group(1)+"}", mdContents)
-			mdContents = reRecap.sub(lambda m: r"\n\n\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id="+m.group(1)+"}", mdContents)
-			mdContents = reYoutube.sub(lambda m: r"\n\n\url{https://www.youtube.com/watch?v="+m.group(1)+"}", mdContents)
-			mdContents = reNumbas.sub(lambda m: r"\n\n\url{"+m.group(1)+"}", mdContents)
-			mdContents = reSlides.sub(lambda m: r"\n\n\url{"+self.getSlidesURL(m.group(1))+"}", mdContents)
-		else:
-			mdContents = reVimeo.sub(lambda m: self.getVimeoHTML(m.group(1)), mdContents)
-			mdContents = reRecap.sub(lambda m: self.getRecapHTML(m.group(1)), mdContents)
-			mdContents = reYoutube.sub(lambda m: self.getYoutubeHTML(m.group(1)), mdContents)
-			mdContents = reNumbas.sub(lambda m: self.getNumbasHTML(m.group(1)), mdContents)
+    def visit_part(self, item):
+        for subitem in item.content:
+            self.visit(subitem)
 
-		if force_local:
-			relativeImageDir = self.config['local_root']+self.theme.path+"/static/"
-		else:
-			relativeImageDir = self.config['web_root']+self.theme.path+"/static/"
+class LastBuiltProcess(ItemProcess):
+    name = 'Establish when each item was last built'
 
-		logger.info("    Webize images: replacing './build/static/' with '%s' in paths."%relativeImageDir)
-		mdContents = mdContents.replace('./build/static/', relativeImageDir)
+    def visit_default(self, item):
+        item.source_modified = (self.course.get_root_dir() / item.source).stat().st_mtime
 
-		if mdContents != mdContentsOrig:
-			logger.debug('    Embedded iframes & extras.')
-		mdContents = self.replaceLabels(mdContents)
-		return mdContents
+        outPath = self.course.get_build_dir() / item.out_file
+        if outPath.exists():
+            item.last_built = outPath.stat().st_mtime
+        else:
+            item.last_built = None
 
-	def makePDF(self,item):
-		_, ext = os.path.splitext(item.source)
-		if ext == '.tex':
-			latex.runPdflatex(self,item)
-		elif item.type == 'slides':
-			self.run_decktape(item)
-		else:
-			self.run_pandoc(item,template_file='notes.latex', out_format='pdf',force_local=True)
+class RenderProcess(ItemProcess):
 
-	def doProcess(self):
-		logger.info('Preprocessing Structure...')
-		self.structure = [load_item(self,obj) for obj in self.config['structure']]
+    name = 'Render items to HTML'
+    num_runs = 2
 
-		logger.info('Deep exploring Structure...')
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.renderer = Renderer(self.course)
 
-		for obj in self.structure:
-			if obj.is_hidden:
-				continue
-			if obj.type == 'introduction':
-				logger.info('Building Index file index.html')
-				self.run_pandoc(obj)
+    def visit_default(self, item):
+        self.renderer.render_item(item)
 
-			elif obj.type == 'part':
-				mkdir_p(os.path.join(self.config['build_dir'],obj.out_file))
-				self.run_pandoc(obj)
-				for chapter in obj.content:
-					if(chapter.type == 'chapter'):
-						logger.info('Building chapter: {}'.format(chapter.title))
-						self.config['partsEnabled'] = True
-						if chapter.is_hidden:
-							continue
-						self.run_pandoc(chapter)
-						if self.config["build_pdf"]:
-							self.makePDF(chapter)
-					elif(chapter.type == 'recap'):
-						logger.info('Building recap: {}'.format(chapter.title))
-						self.config['partsEnabled'] = True
-						if chapter.is_hidden:
-							continue
-						self.run_pandoc(chapter)
-					elif(chapter.type == 'url'):
-						self.config['partsEnabled'] = True
-						if chapter.is_hidden:
-							continue
-					elif(chapter.type == 'slides'):
-						logger.info('Building slides: {}'.format(chapter.title))
-						self.config['partsEnabled'] = True
-						if chapter.is_hidden:
-							continue
-						self.run_pandoc(chapter)
-						self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html',force_local=True)
-						if self.config["build_pdf"]:
-							self.makePDF(chapter)
-						if not self.args.local:
-							self.run_pandoc(chapter,template_file='slides.revealjs',out_format='slides.html')
-					else:
-						raise Exception("Error: Unsupported chapter type! {} is a {}".format(chapter.title, chapter.type))
-			else:
-				if obj.is_hidden:
-						continue
-				if self.config['partsEnabled']:
-					raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
-				if obj.type == 'chapter':
-					logger.info('Building chapter: {}'.format(obj.title))
-					self.run_pandoc(obj)
-					if self.config["build_pdf"]:
-							self.makePDF(obj)
-				elif obj.type == 'recap':
-					logger.info('Building recap: {}'.format(obj.title))
-					self.run_pandoc(obj)
-				elif obj.type == 'slides':
-					logger.info('Building slides: {}'.format(obj.title))
-					self.run_pandoc(obj)
-					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html',force_local=True)
-					if self.config["build_pdf"]:
-						self.makePDF(obj)
-					self.run_pandoc(obj,template_file='slides.revealjs',out_format='slides.html')
+    def visit_part(self, item):
+        self.visit_default(item)
+        super().visit_part(item)
 
-		logger.info('Done!')
+    def visit_url(self, item):
+        pass
+
+#    def visit_slides(self, item):
+#        pandoc_item(self.course, item)
+#        pandoc_item(self.course, item, template_file='slides.revealjs', out_format='slides.html', force_local=self.course.args.local)
+
+class PDFProcess(ItemProcess):
+
+    name = 'Make PDFs'
+    
+    def visit(self,item):
+        if not self.course.config['build_pdf']:
+            return
+        super().visit(item)
+
+    def visit_chapter(self, item):
+        self.makePDF(item)
+
+    def visit_slides(self, item):
+        self.makePDF(item)
+
+    def makePDF(self, item):
+        ext = item.source.suffix
+        if ext == '.tex':
+            latex.runPdflatex(self.course, item)
+        elif item.type == 'slides':
+            self.course.run_decktape(item)
+        elif ext == '.md':
+            pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
+        item.has_pdf = True

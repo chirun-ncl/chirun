@@ -1,0 +1,76 @@
+div.sourceCode {
+    background-color: #e0e0e0;
+    border: 1px solid #cccccc;
+	border-radius: 4px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+pre.sourceCode {
+	border: none;
+	border-radius: 0px;
+	margin: 0;
+	background-color: #FFFFFF;
+}
+pre.runnable {
+	margin: 0;
+	border-top: 1px solid #ccc;
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+	border-radius: 0px;
+	background-color: white;
+}
+pre.ran {
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.run-code {
+    display: block;
+    padding: 5px 10px 5px 10px;
+    border: none;
+    color: #fff;
+    background-color: #4CAF50;
+}
+
+.run-code:hover{
+	color: #111111;
+	background-color: #eeeeee;
+}
+
+.sourceCode pre{
+	box-shadow:none;
+	width: 100%;
+}
+
+.hidden {
+	display:none !important;
+}
+
+.CodeMirror {
+	height: auto;
+	min-height: 10px;
+}
+
+.CodeMirror-scroll{
+	min-height: 10px;
+}
+
+pre.runnable > div.CodeMirror {
+	min-height: 30px;
+}
+pre.runnable > div.CodeMirror .CodeMirror-scroll {
+	min-height: 50px;
+}
+
+div.sourceCode + div[data-code-dir="output"] {
+	margin-top: -16px;
+}
+div.sourceCode + div[data-code-dir="output"] > pre {
+	padding-left: 15px;
+	box-sizing: border-box;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}

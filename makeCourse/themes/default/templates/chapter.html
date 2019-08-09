@@ -1,0 +1,66 @@
+{% extends "item.html" %}
+
+{% block stylesheets %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
+    <link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
+    <link rel="stylesheet" href="{{'boole.css'|static_url}}">
+{% endblock stylesheets %}
+
+{% block javascript %}
+    {{ super() }}
+    <script defer src="{{'jquery.flexibleArea.js'|static_url}}"></script>
+    <script defer src="{{'spin.min.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/lib/codemirror.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/octave/octave.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
+    <script defer src="{{'boole.js'|static_url}}"></script>
+    <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
+{% endblock %}
+
+{% block body_attributes %}data-spy="scroll" data-target="#chapterTOC" data-offset="50"{% endblock %}
+
+{% block nav %}
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{'index.html'|url}}">{{course.config.title}}</a>
+                </li>
+                {% if item.parent %}
+                <li class="breadcrumb-item">
+                    <a href="{{item.parent.url|url}}">{{item.parent.title}}</a>
+                </li>
+                {% endif %}
+                <li class="breadcrumb-item active">
+                    {{item.title}}
+                </li>
+            </ul>
+        </nav>
+{% endblock %}
+
+{% block main %}
+    <div class="container mt-3">
+        <div class="row">
+            {% if item.has_sidebar %}
+            <div class="col-md-3">
+                <nav class="mb-3" id="chapterTOC" data-toggle="toc">
+                    <ul class="nav navbar-nav">
+                        {% if item.has_pdf %}
+                        <li><a class="nav-link" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download Chapter as PDF</a></li>
+                        {% endif %}
+                    </ul>
+                    <hr>
+                    {% include "theme_switch.html" %}
+                </nav>
+            </div>
+            <div class="col-md-9"> 
+            {% else %}
+            <div class="col-md-12">
+            {% endif %}
+
+            {{item.as_html()|safe}}
+            </div>
+        </div>
+    </div>
+{% endblock main %}

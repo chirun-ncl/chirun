@@ -1,0 +1,6 @@
+[flake8]
+ignore = W191,E117,E501,E101
+
+[pycodestyle]
+max_line_length = 1000
+ignore = E501

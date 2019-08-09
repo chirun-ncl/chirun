@@ -1,0 +1,21 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{custom}[2013/01/13 Custom Package]
+
+\ProcessOptions\relax
+
+% The following LaTeX code is required for processing to the web.
+% Removing it may break the build process.
+\newif\ifplastex\plastexfalse
+\ifplastex
+    \usepackage{embed}
+\else
+    \usepackage{comment,xr}
+	\newcommand\qed{\begin{flushright}$\blacksquare$\end{flushright}}
+    \excludecomment{HTML}
+    \newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
+    \newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
+	\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
+    \newcommand{\embed}[1]{\url{#1}}
+\fi
+
+\endinput

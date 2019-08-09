@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <div class="container">
+        <h1 class="jumbotron-heading">{{item.title}}</h1>
+        <div class="lead text-muted">
+            {{ item.as_html() }}
+        </div>
+    </div>
+{% endblock header %}
+
+{% block main %}
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for subitem in item.content %}
+                <div class="col-md-4 pb-4">
+                    <div class="card mb-4 h-100 box-shadow">
+                        <div class="card-body">
+                            <p class="card-text">
+                            <ul class="list-unstyled">
+                                {% if subitem.type == 'url' %}
+                                    <li><a href="{{subitem.source}}"><b>{{subitem.title}}</b></a></li>
+                                {% else %}
+                                    <li><a href="{{subitem.url|url}}"><b>{{subitem.title}}</b></a></li>
+                                {% endif %}
+                            </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <section>
+        {% include "theme_switch.html" %}
+    </section>
+{% endblock main %}

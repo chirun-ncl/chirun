@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
+            <h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
+            <h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
+        </div>
+    </div>
+{% endblock header %}
+
+{% block main %}
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% if course.partsEnabled %}
+                    {% for part in course.structure %}
+                    {% if part.type != 'introduction' %}
+                    <div class="col-md-4 pb-4 mx-auto">
+                        <div class="card mb-4 h-100 box-shadow">
+                            <div class="card-header text-center">
+                                <h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                <ul class="list-unstyled">
+                                    {% for subitem in part.content %}
+                                        <li class="mb-3">
+                                            {% include "introduction_subitem.html" %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="col-md-4 pb-4 mx-auto">
+                        <div class="card mb-4 h-100 box-shadow">
+                            <div class="card-header text-center">
+                                <h4 class="my-0 font-weight-normal">Course Material</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <ul class="list-unstyled">
+                                        {% for subitem in course.structure %}
+                                            {% if subitem.type != 'introduction' %}
+                                                <li class="mb-3">
+                                                    {% include "introduction_subitem.html" %}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <section>
+        <div class="container">
+            {% include "theme_switch.html" %}
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="lead text-muted">
+                {{ item.as_html()|safe }}
+            </div>
+        </div>
+    </section>
+{% endblock main %}
+
+{% block javascript %}
+    {{ super() }}
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            document.getElementById("themes").value = "{{'index.html'|url}}";
+        });
+    </script>
+{% endblock javascript %}

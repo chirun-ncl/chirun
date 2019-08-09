@@ -1,0 +1,35 @@
+name: itemize
+<ul class="itemize">
+{% for item in obj %}
+  <li id={{ item.id }}>{{ item }}</li>
+{% endfor %}
+</ul>
+
+name: enumerate
+{% if obj.listType == "(a)" %}
+<ol style="list-style-type: lower-alpha" class="enumerate">
+{% elif obj.listType == "(i)" %}
+<ol style="list-style-type: lower-roman" class="enumerate">
+{% elif obj.listType == "(1)" %}
+<ol style="list-style-type: decimal" class="enumerate">
+{% elif obj.listDepth == 1 %}
+<ol style="list-style-type: decimal" class="enumerate">
+{% elif obj.listDepth == 2 %}
+<ol style="list-style-type: lower-alpha" class="enumerate">
+{% elif obj.listDepth == 3 %}
+<ol style="list-style-type: lower-roman" class="enumerate">
+{% else %}
+<ol class="enumerate">
+{% endif %}
+{% for item in obj %}
+  <li id={{ item.id }}> {{ item }} </li>
+{% endfor %}
+</ol>
+
+name: list trivlist description
+<dl class="{{ obj.nodeName }}">
+{% for item in obj %}
+  <dt>{{ item.attributes.term or obj.attributes.defaultlabel }}</dt>
+  <dd>{{ item }}</dd>
+{% endfor %}
+</dl>
