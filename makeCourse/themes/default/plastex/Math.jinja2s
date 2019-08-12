@@ -1,5 +1,5 @@
-name: math
-{{ obj.source }}
+name: cb_math math
+<script type="math/tex">{{ obj.source }}</script>
 
 name: ensuremath gather gather* flalign flalign* \
       multline multline* alignat alignat* split DeclareMathOperator
