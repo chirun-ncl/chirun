@@ -19,6 +19,9 @@ plastex_config += html_config.config
 
 logger = logging.getLogger(__name__)
 
+# Add makecourse's custom plastex packages to the path
+sys.path.append(os.path.dirname(__file__))
+
 def getEmbeddedImages(course, html, item):
 
     # TODO: make this extensible

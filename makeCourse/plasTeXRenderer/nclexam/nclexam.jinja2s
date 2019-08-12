@@ -1,0 +1,81 @@
+name: sect
+<h2 id="{{ obj.id }}" style="text-transform: uppercase">Section {{ obj.section }}</h2>
+{{ obj }}
+
+name: question
+{% if obj.hidden %}
+{% else %}
+  <div  id="{{ obj.id }}" class="exam_question">
+  <h3>Question {{ obj.section }}{{ obj.ref }}</h3>
+  {{obj}}
+  <div class="exam_marks">
+  [Total: {{obj.markText}}]
+  </div>
+  </div>
+{% endif %}
+
+name: submarks
+<div id="{{ obj.id }}" class="exam_marks exam_submarks">
+[{{obj.markText}}]
+</div>
+
+name: solution
+{% if obj.ownerDocument.userdata.solshow %}
+<div id="{{ obj.id }}" class="exam_solution">
+{% if obj.star %}
+{% else %}
+<h4>Answer:</h4>
+{% endif %}
+{{obj.solution}}
+</div>
+{% endif %}
+
+name: comment
+{% if obj.ownerDocument.userdata.solshow %}
+<div id="{{ obj.id }}" class="exam_comment">
+{{obj.comment}}
+</div>
+{% endif %}
+
+name: enumerate
+<ul style="list-style: none" class="enumerate">
+{% for item in obj %}
+  {% if item.attributes.term %}
+    <li id={{ item.id }}>{{item.attributes.term}}&nbsp;{{ item }}</li>
+  {% else %}
+    {% if item.counter == "enumi" %}
+      <li id={{ item.id }}>({{item.alph}})&nbsp;{{ item }} </li>
+    {% elif item.counter == "enumii" %}
+      <li id={{ item.id }}>({{item.roman}})&nbsp;{{ item }} </li>
+    {% elif item.counter == "enumiii" %}
+      <li id={{ item.id }}>{{item.Alph}}.&nbsp;{{ item }} </li>
+    {% else %}
+      <li id={{ item.id }}>({{item.ref}})&nbsp;{{ item }} </li>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+</ul>
+
+name: theend
+<div id="{{ obj.id }}" class="exam_theend">
+THE END
+</div>
+
+name: makefront
+<h2>Exam Information</h2>
+<div id="{{ obj.id }}" class="exam_title">
+<p>Module Title: {{ obj.ownerDocument.userdata.modulename }}</p>
+<p>Module Code: {{ obj.modulecode }} </p>
+<p>{{ obj.ownerDocument.userdata.semestertext }} {{ obj.ownerDocument.userdata.examyear }}</p>
+<p>Time allowed: {{ obj.ownerDocument.userdata.examtime }}</p>
+{% if obj.ownerDocument.userdata.extrainstructions %}
+  <p>{{ obj.ownerDocument.userdata.extrainstructions }}</p>
+{% endif %}
+{% if obj.ownerDocument.userdata.calculatorpermitted %}
+<p>Calculators may be used.</p>
+{% else %}
+<p>Calculators may not be used.</p>
+{% endif %}
+</div>
+
+name: setvariant solutionshow

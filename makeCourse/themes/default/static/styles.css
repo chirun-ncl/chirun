@@ -377,6 +377,6 @@ pre.plain {
   font-family: "Courier New", Courier, monospace;
 }
 
-.itemize>li>p:first-of-type {
+.itemize>li>p:first-of-type, .enumerate>li>p:first-of-type {
   display: inline;
 }
