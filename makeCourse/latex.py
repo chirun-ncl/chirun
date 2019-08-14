@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 from subprocess import Popen, PIPE
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,8 @@ def runPdflatex(course, item):
 
     inPath = inDir / item.base_file.with_suffix('.pdf')
     outPath = course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
+    logger.debug('    Creating directory for pdf output: {outDir}'.format(outDir=outPath.parent))
+    Path.mkdir(outPath.parent, parents=True, exist_ok=True)
     logger.debug('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
     shutil.move(str(inPath), str(outPath))
 
