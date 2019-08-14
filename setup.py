@@ -8,7 +8,7 @@ misc_files = ['misc/*']
 
 setup(name="makeCourse",
       description="A framework designed to easily convert a set of latex or markdown formatted notes into a course website.",
-      version="0.1",
+      version="0.2",
       author="George Stagg",
       author_email="george.stagg@ncl.ac.uk",
       #url="",
