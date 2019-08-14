@@ -70,6 +70,8 @@ class Item(object):
 
     @property
     def url(self):
+        if self.course.args.local:
+            return str(self.out_file)
         return str(self.out_path)
 
     @property
