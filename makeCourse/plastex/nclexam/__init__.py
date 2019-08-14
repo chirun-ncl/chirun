@@ -78,9 +78,9 @@ class semester(Command):
 
     def invoke(self,tex):
         Command.invoke(self,tex)
-        if self.attributes['semestertext'] == 1:
+        if self.attributes['semestertext'] == '1':
             self.ownerDocument.userdata['semestertext'] = "Semester 1"
-        elif self.attributes['semestertext'] == 2:
+        elif self.attributes['semestertext'] == '2':
             self.ownerDocument.userdata['semestertext'] = "Semester 2"
         else:
             self.ownerDocument.userdata['semestertext'] = self.attributes['semestertext']

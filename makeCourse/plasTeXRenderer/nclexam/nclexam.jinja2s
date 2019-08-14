@@ -62,20 +62,20 @@ THE END
 </div>
 
 name: makefront
-<h2>Exam Information</h2>
+<h2>{{ obj.modulecode }} - {{ obj.ownerDocument.userdata.modulename }}</h2>
 <div id="{{ obj.id }}" class="exam_title">
-<p>Module Title: {{ obj.ownerDocument.userdata.modulename }}</p>
-<p>Module Code: {{ obj.modulecode }} </p>
-<p>{{ obj.ownerDocument.userdata.semestertext }} {{ obj.ownerDocument.userdata.examyear }}</p>
-<p>Time allowed: {{ obj.ownerDocument.userdata.examtime }}</p>
+<p>
+{{ obj.ownerDocument.userdata.semestertext }} {{ obj.ownerDocument.userdata.examyear }}<br>
+Time allowed: {{ obj.ownerDocument.userdata.examtime }}<br>
 {% if obj.ownerDocument.userdata.extrainstructions %}
-  <p>{{ obj.ownerDocument.userdata.extrainstructions }}</p>
+  {{ obj.ownerDocument.userdata.extrainstructions }}<br>
 {% endif %}
 {% if obj.ownerDocument.userdata.calculatorpermitted %}
-<p>Calculators may be used.</p>
+Calculators may be used.
 {% else %}
-<p>Calculators may not be used.</p>
+Calculators may not be used.
 {% endif %}
+</p>
 </div>
 
 name: setvariant solutionshow
