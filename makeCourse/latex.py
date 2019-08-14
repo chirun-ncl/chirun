@@ -31,7 +31,7 @@ def runPdflatex(course, item):
             raise Exception("Error: Something went wrong running pdflatex!")
 
     inPath = inDir / item.base_file.with_suffix('.pdf')
-    outPath = course.get_build_dir() / item.out_file.with_suffix('.pdf')
+    outPath = course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
     logger.debug('    Moving pdf output: {inPath} => {outPath}'.format(inPath=inPath, outPath=outPath))
     shutil.move(str(inPath), str(outPath))
 

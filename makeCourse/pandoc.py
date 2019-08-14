@@ -38,7 +38,7 @@ def pandoc_item(course, item, template_file=None, out_format='html', force_local
         (To be removed!)
     """
     root = course.get_web_root(force_local=force_local)
-    outPath = course.get_build_dir() / (item.out_file.with_suffix('.' + out_format))
+    outPath = course.get_build_dir() / (item.named_out_file.with_suffix('.' + out_format))
     outDir = outPath.parent
     mkdir_p(outDir)
     if template_file is None:

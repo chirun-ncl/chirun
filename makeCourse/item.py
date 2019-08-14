@@ -62,7 +62,11 @@ class Item(object):
 
     @property
     def out_file(self):
-        return str(self.out_path / 'index.html')
+        return self.out_path / 'index.html'
+
+    @property
+    def named_out_file(self):
+        return self.out_path / PurePath(self.slug)
 
     @property
     def url(self):
@@ -70,7 +74,7 @@ class Item(object):
 
     @property
     def pdf_url(self):
-        return str(self.out_file.with_suffix('.pdf'))
+        return str(self.named_out_file.with_suffix('.pdf'))
 
     @property
     def in_file(self):
