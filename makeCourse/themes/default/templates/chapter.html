@@ -4,7 +4,8 @@
     {{ super() }}
     <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
     <link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
-    <link rel="stylesheet" href="{{'boole.css'|static_url}}">
+		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
+    <link rel="stylesheet" href="{{'pygmentize.css'|static_url}}">
     <link rel="stylesheet" href="{{'nclexam.css'|static_url}}">
 {% endblock stylesheets %}
 
@@ -16,7 +17,7 @@
     <script defer src="{{'codemirror-5.26.0/mode/octave/octave.js'|static_url}}"></script>
     <script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
     <script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
-    <script defer src="{{'boole.js'|static_url}}"></script>
+		<script defer src="{{'boole.js'|static_url}}"></script>
     <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
 {% endblock %}
 
@@ -47,6 +48,9 @@
             <div class="col-md-3">
                 <nav class="mb-3" id="chapterTOC" data-toggle="toc">
                     <ul class="nav navbar-nav">
+                        {% if item.has_slides %}
+                        <li><a class="nav-link" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a></li>
+                        {% endif %}
                         {% if item.has_pdf %}
                         <li><a class="nav-link" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download Chapter as PDF</a></li>
                         {% endif %}

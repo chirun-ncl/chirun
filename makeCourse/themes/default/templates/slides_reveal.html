@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		{% block meta %}
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex">
+		<meta name="author" content="{{course.config.author}}" />
+		<meta name="date" content="{{date}}" />
+		{% endblock meta %}
+
+		<title>{% block title %}{{item.title}}{% endblock %}</title>
+
+		{% block stylesheets %}
+		<link rel="stylesheet" href="{{'pygmentize.css'|static_url}}">
+		<link rel="stylesheet" href="{{ROOT_URL}}/static/slides.css">
+		<link rel="stylesheet" href="{{'reveal.js/css/reveal.css'|static_url}}">
+		<link rel="stylesheet" href="{{'reveal.js/css/theme/white.css'|static_url}}">
+		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
+		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
+		{% for css in item.data.css %}
+		<link rel="stylesheet" href="{{css|static_url}}">
+		{% endfor %}
+		{% endblock stylesheets %}
+
+		{% block javascript %}
+		<script defer src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+		<script defer src="{{'jquery.flexibleArea.js'|static_url}}"></script>
+		<script defer src="{{'spin.min.js'|static_url}}"></script>
+		<script defer src="{{'codemirror-5.26.0/lib/codemirror.js'|static_url}}"></script>
+		<script defer src="{{'codemirror-5.26.0/mode/octave/octave.js'|static_url}}"></script>
+		<script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
+		<script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
+		<!--<script defer src="{{'boole.js'|static_url}}"></script>-->
+		<script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
+		<script defer src="{{course.mathjax_url}}"></script>
+		{% endblock %}
+
+	</head>
+	<body {% block body_attributes %}{% endblock %}>
+		<div class="reveal">
+
+			{% block header_slides %}
+			<div class="header-l">{{item.title}}</div>
+			<div class="header-r">{{course.config.author}}</div>
+			{% endblock %}
+
+			<div class="slides">
+				{% block title_slide %}
+				<section id="title-slide">
+					<h1 class="title">{{item.title}}</h1>
+					<p class="author">{{course.config.author}}</p>
+				</section>
+				{% endblock %}
+
+				{% block main_slides %}
+				<section data-markdown data-separator="^<hr/?>$">
+					<textarea data-template>
+						{{item.as_html()|safe}}
+					</textarea>
+				</section>
+				{% endblock %}
+
+			</div>
+
+		</div>
+		<script src="{{'reveal.js/js/reveal.js'|static_url}}"></script>
+		<script src="{{'reveal.js/plugin/markdown/marked.js'|static_url}}"></script>
+		<script src="{{'reveal.js/plugin/markdown/markdown.js'|static_url}}"></script>
+		<script>
+			Reveal.initialize();
+		</script>
+	</body>
+</html>

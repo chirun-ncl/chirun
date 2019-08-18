@@ -72,9 +72,10 @@ class RenderProcess(ItemProcess):
     def visit_url(self, item):
         pass
 
-#    def visit_slides(self, item):
-#        pandoc_item(self.course, item)
-#        pandoc_item(self.course, item, template_file='slides.revealjs', out_format='slides.html', force_local=self.course.args.local)
+    def visit_slides(self, item):
+        item.has_slides = True
+        self.renderer.render_item(item)
+        self.renderer.render_item(item, 'template_slides', 'out_slides')
 
 class PDFProcess(ItemProcess):
 

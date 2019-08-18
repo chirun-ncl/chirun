@@ -69,26 +69,6 @@ footer p {
   display: inline-block;
 }
 
-pre, code {
-  padding: 0.3em;
-  line-height: 1.42857143;
-  color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-code {
-    display: inline-block;
-}
-pre {
-  padding: 10px;
-  display: block;
-  margin: 1em 0;
-  font-size: 13px;
-}
-
 .centered{
   display:block;
   text-align: center;
@@ -273,10 +253,6 @@ h3 {
   font-size: 1.5rem;
 }
 
-.sourceCode pre {
-  font-size: 1.1em;
-}
-
 .CodeMirror {
   min-height: 30px;
 }
@@ -343,35 +319,6 @@ figcaption, .reveal figcaption {
   color: white;
     background: #b73333;  
 }
-
-.reveal pre.plain {
-  margin: 0;
-  width: 100%;
-}
-
-pre.plain {
-  margin: 0;
-  width: 100%;
-  border: 1px solid #333;
-  padding-left: 5px;
-}
-
-
-.reveal pre.plain code {
-    color: #333;
-    font-size: 1.5em;
-    line-height: 1.5em;
-}
-
-.reveal pre code {
-  max-height: 600px;
-}
-
-.reveal pre.compactcode code {
-    font-size: 0.8em;
-    line-height: 0.8em;
-}
-
 
 .ttfamily{
   font-family: "Courier New", Courier, monospace;

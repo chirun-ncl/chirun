@@ -13,6 +13,8 @@ packaging==16.8
 pbr==2.0.0
 Pillow==4.2.1
 py==1.4.33
+Pygments==2.4.2
+pymdown-extensions==6.0
 pyoembed==0.1.2
 pyparsing==2.2.0
 pytest==3.0.7

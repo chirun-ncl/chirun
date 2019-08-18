@@ -20,17 +20,18 @@ class Renderer(object):
     def url_filter(self, url):
         return self.course.get_web_root() + url
 
-    def render_item(self, item):
-        logging.debug("Rendering item {}".format(item))
+    def render_item(self, item, template_attr = 'template_name', out_attr = 'out_file'):
+        template_file = getattr(item,template_attr)
+        logger.debug("Rendering {item} using {template}".format(item=item, template=template_file))
 
-        outPath = self.course.get_build_dir() / item.out_file
+        outPath = self.course.get_build_dir() / getattr(item,out_attr)
         outDir = outPath.parent
         mkdir_p(outDir)
 
         if self.course.args.lazy and item.recently_built():
             return
 
-        template = self.env.get_template(item.template_name)
+        template = self.env.get_template(template_file)
         context = {
             'course': self.course,
             'item': item,
@@ -41,4 +42,3 @@ class Renderer(object):
 
         with open(str(outPath),'w') as f:
             f.write(html)
-

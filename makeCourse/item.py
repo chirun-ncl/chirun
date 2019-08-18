@@ -1,6 +1,6 @@
 import logging
 import re
-from markdown import markdown as render_markdown
+from makeCourse.markdownRenderer import render_markdown
 from pathlib import Path, PurePath
 from . import slugify
 from .filter import burnInExtras
@@ -70,9 +70,7 @@ class Item(object):
 
     @property
     def url(self):
-        if self.course.args.local:
-            return str(self.out_file)
-        return str(self.out_path)
+        return str(self.out_file)
 
     @property
     def pdf_url(self):
@@ -187,6 +185,7 @@ class Slides(Chapter):
     type = 'slides'
     title = 'Untitled Slides'
     template_name = 'slides.html'
+    template_slides = 'slides_reveal.html'
 
     def get_context(self):
         context = super().get_context()
@@ -196,6 +195,13 @@ class Slides(Chapter):
         })
         return context
 
+    @property
+    def out_slides(self):
+      return self.named_out_file.with_suffix('.slides.html')
+
+    @property
+    def slides_url(self):
+      return str(self.out_slides)
 
 class Recap(Chapter):
     type = 'recap'
