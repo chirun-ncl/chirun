@@ -43,9 +43,11 @@ function waitForSubmission(submissionid,codeBlock){
 				} else {
 					console.log(JSON.stringify(data));
 					codeBlock.prev().removeAttr("disabled").removeAttr('style');
-					codeBlock.append("<pre class='ran'><code class='sourceCode'>"+data['stdout']+data['stderr']+"</code></pre>");
 					$('div.spinner').remove();
-					if (typeof(Reveal) != "undefined"){
+					if (typeof(Reveal) == "undefined"){
+						codeBlock.append("<pre id='ran-"+codeBlock.data('uuid')+"' class='ran'><code class='sourceCode'>"+data['stdout']+data['stderr']+"</code></pre>");
+					} else {
+						codeBlock.after("<pre id='ran-"+codeBlock.data('uuid')+"' class='ran'><code class='sourceCode'>"+data['stdout']+data['stderr']+"</code></pre>");
 						Reveal.layout();
 					}
 				}
@@ -67,9 +69,7 @@ $( document ).ready(function() {
 	$("pre.cm-block[data-runnable='true']").before('<button class="run-code">Run Code »</button>');
 
 	$('pre.cm-block').each(function(){
-		if (typeof(Reveal) != "undefined"){
-			Reveal.layout();
-		} else {
+		if (typeof(Reveal) == "undefined"){
 			var codeTag = $(this).find("code")[0];
 			var codeMirrorOpts = {value: $(this).find("code").text()};
 			codeMirrorOpts["lineNumbers"] = true;
@@ -78,24 +78,37 @@ $( document ).ready(function() {
 				codeTag.parentNode.replaceChild(elt, codeTag);
 			} ,codeMirrorOpts);
 			codeMirrorInstances[$(this).data('uuid')] = theCodeMirror;
+		} else {
+			$(this).find("code").attr("contenteditable","true");
 		}
 	});
 
 	$('pre.cm-block').on('keydown',function(e){
-		$(this).find('pre.ran').remove();
+			var codeUUID = $(this).data('uuid');
+			$('#ran-'+codeUUID).remove();
 	});
+
+	if (typeof(Reveal) != "undefined"){
+		$('pre.cm-block code').on('input',function(e){
+			var codeUUID = $(this).parent().data('uuid');
+			$('#ran-'+codeUUID).remove();
+			Reveal.layout();
+		});
+	}
 
 	$('button.run-code').click(function(e){
 		$(this).attr("disabled","disabled").css("background-color","#eeeeee").css("color","#111111");
 		var codeBlock = $(this).next();
 		var codeUUID = codeBlock.data('uuid');
 		var codeLang = codeBlock.data('language');
-		codeBlock.find('pre.ran').remove();
+		$('#ran-'+codeUUID).remove();
 		codeBlock.append(spinner.spin().el)
-		data = {"@action":"getCodeOutput",
-			"codetype":codeLang+"_getoutput",
-			"codeSource":codeMirrorInstances[codeUUID].getValue()
-		};
+		var data = {"@action":"getCodeOutput", "codetype":codeLang+"_getoutput"}
+		if (typeof(Reveal) == "undefined"){
+			data["codeSource"] = codeMirrorInstances[codeUUID].getValue();
+		} else {
+			data["codeSource"] = codeBlock.find("code").text();
+		}
 		console.log("Sending message to Inginious:"+JSON.stringify(data));
 		$.post(runnerURL,data,recieveRunnerConfirm(codeBlock));
 	});

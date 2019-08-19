@@ -30,9 +30,7 @@
 		<script defer src="{{'codemirror-5.26.0/mode/octave/octave.js'|static_url}}"></script>
 		<script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
 		<script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
-		<!--<script defer src="{{'boole.js'|static_url}}"></script>-->
-		<script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
-		<script defer src="{{course.mathjax_url}}"></script>
+		<script defer src="{{'boole.js'|static_url}}"></script>
 		{% endblock %}
 
 	</head>
@@ -66,6 +64,7 @@
 		<script src="{{'reveal.js/js/reveal.js'|static_url}}"></script>
 		<script src="{{'reveal.js/plugin/markdown/marked.js'|static_url}}"></script>
 		<script src="{{'reveal.js/plugin/markdown/markdown.js'|static_url}}"></script>
+		<script src="{{'reveal.js/plugin/math/math.js'|static_url}}"></script>
 		<script>
 			Reveal.initialize();
 		</script>

@@ -29,3 +29,20 @@ pre.cm-block {
 .CodeMirror-scroll{
 	min-height: 10px;
 }
+
+.reveal pre {
+	width:100%;
+	margin: 0 0 10px 0;
+	padding: 5px;
+	box-shadow: none;
+	border: 2px solid #ccc;
+}
+
+.reveal pre.ran {
+	margin: -10px 0 10px 0;
+	border-top: none;
+}
+
+.reveal button.run-code:focus, .reveal code:focus {
+    outline: none !important;
+}
