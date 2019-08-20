@@ -62,11 +62,17 @@
 
 		</div>
 		<script src="{{'reveal.js/js/reveal.js'|static_url}}"></script>
-		<script src="{{'reveal.js/plugin/markdown/marked.js'|static_url}}"></script>
-		<script src="{{'reveal.js/plugin/markdown/markdown.js'|static_url}}"></script>
-		<script src="{{'reveal.js/plugin/math/math.js'|static_url}}"></script>
+		<script src="{{'reveal.js/lib/js/head.min.js'|static_url}}"></script>
 		<script>
-			Reveal.initialize();
+			Reveal.initialize({
+				dependencies: [
+					{ src: "{{'reveal.js/plugin/markdown/marked.js'|static_url}}" },
+					{ src: "{{'reveal.js/plugin/math/math.js'|static_url}}" },
+					{ src: "{{'reveal.js/plugin/markdown/markdown.js'|static_url}}" },
+					{ src: "{{'reveal.js/plugin/notes/notes.js'|static_url}}", async: true },
+					{ src: "{{'reveal.js/plugin/highlight/highlight.js'|static_url}}", async: true }
+				]
+			});
 		</script>
 	</body>
 </html>

@@ -20,6 +20,11 @@ pre.cm-block {
 	border: 1px solid #ccc;
 }
 
+div.highlight > pre {
+	border: 1px solid #ccc;
+	padding: 5px;
+}
+
 .CodeMirror {
 	height: auto;
 	min-height: 10px;

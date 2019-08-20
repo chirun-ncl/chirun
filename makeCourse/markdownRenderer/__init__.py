@@ -10,6 +10,9 @@ def render_markdown(content):
                 'pymdownx.superfences'
             ],
             extension_configs={
+                "pymdownx.arithmatex": {
+                    "preview": False
+                    },
                 "pymdownx.superfences": {
                     "custom_fences": [{
                         'name': 'runnable',
