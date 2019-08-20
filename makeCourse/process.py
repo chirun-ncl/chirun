@@ -97,6 +97,8 @@ class PDFProcess(ItemProcess):
         if ext == '.tex':
             latex.runPdflatex(self.course, item)
         elif item.type == 'slides':
+            # TODO: Handle md->html->decktape better with a direct pdf write out
+            Renderer(self.course).render_item(item, 'template_slides', 'out_slides')
             self.course.run_decktape(item)
         elif ext == '.md':
             pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)

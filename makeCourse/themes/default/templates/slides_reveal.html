@@ -31,6 +31,15 @@
 		<script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
 		<script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
 		<script defer src="{{'boole.js'|static_url}}"></script>
+		<script>
+			if( window.location.search.match( /print-pdf/gi )){
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'reveal.js/css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
 		{% endblock %}
 
 	</head>
