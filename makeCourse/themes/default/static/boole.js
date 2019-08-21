@@ -80,6 +80,7 @@ $( document ).ready(function() {
 			codeMirrorInstances[$(this).data('uuid')] = theCodeMirror;
 		} else {
 			$(this).find("code").attr("contenteditable","true");
+			$(this).find("code").attr("spellcheck","false");
 		}
 	});
 
