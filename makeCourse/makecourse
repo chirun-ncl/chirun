@@ -10,7 +10,6 @@ import errno
 import makeCourse.plastex
 import makeCourse.pandoc
 import makeCourse.latex
-import makeCourse.decktape
 import os
 import re
 import shutil
@@ -299,7 +298,6 @@ def main():
 
     extensions = [
         makeCourse.plastex.PlastexRunner,
-        makeCourse.decktape.DecktapeRunner,
     ]
 
     class Builder(MakeCourse, *extensions):

@@ -6,6 +6,8 @@ from . import latex, mkdir_p
 from .pandoc import pandoc_item
 from .render import Renderer
 from pathlib import Path
+import asyncio
+from pyppeteer import launch
 
 logger = logging.getLogger(__name__)
 
@@ -88,18 +90,29 @@ class PDFProcess(ItemProcess):
 
     def visit_chapter(self, item):
         self.makePDF(item)
+        item.has_pdf = True
 
     def visit_slides(self, item):
-        self.makePDF(item)
+        Renderer(self.course).render_item(item, 'template_slides', 'out_slides')
+        asyncio.get_event_loop().run_until_complete(self.makeSlidesPDF(item))
+        item.has_pdf = True
+        
+    async def makeSlidesPDF(self, item):
+        logger.info("Printing {} as PDF".format(item))
+        absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.named_out_file.with_suffix('.slides.html')
+        outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
+        logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
+        browser = await launch({'headless': True})
+        page = await browser.newPage()
+        await page.goto('file://{}?print-pdf'.format(absHTMLPath))
+        await page.setViewport({'width': 1366, 'height': 768})
+        await page.waitFor(500);
+        await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
+        await browser.close()
 
     def makePDF(self, item):
         ext = item.source.suffix
         if ext == '.tex':
             latex.runPdflatex(self.course, item)
-        elif item.type == 'slides':
-            # TODO: Handle md->html->decktape better with a direct pdf write out
-            Renderer(self.course).render_item(item, 'template_slides', 'out_slides')
-            self.course.run_decktape(item)
         elif ext == '.md':
             pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
-        item.has_pdf = True
