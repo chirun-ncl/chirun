@@ -8,7 +8,6 @@ import argparse
 import datetime
 import errno
 import makeCourse.plastex
-import makeCourse.pandoc
 import makeCourse.latex
 import os
 import re

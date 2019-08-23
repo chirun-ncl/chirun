@@ -29,6 +29,10 @@ def runnable_formatter(source, language, css_class, options, md):
     pretag["data-runnable"] = 'true'
     return str(pretag)
 
+def output_formatter(source, language, css_class, options, md):
+    html = fence_code_format(source, language, 'output-block', options, md)
+    return html
+
 def runnable_validator(language, options):
     """Options validator for runnable codemirror code blocks."""
     okay = True
@@ -37,6 +41,11 @@ def runnable_validator(language, options):
     return okay
 
 def editable_validator(language, options):
+    """Options validator for codemirror code blocks."""
+    okay = True
+    return okay
+
+def output_validator(language, options):
     """Options validator for codemirror code blocks."""
     okay = True
     return okay

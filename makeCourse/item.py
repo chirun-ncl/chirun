@@ -4,7 +4,6 @@ from makeCourse.markdownRenderer import render_markdown
 from pathlib import Path, PurePath
 from . import slugify
 from .filter import burnInExtras
-from .pandoc import run_pandoc
 
 logger = logging.getLogger(__name__)
 
@@ -157,6 +156,8 @@ class Chapter(Item):
     type = 'chapter'
     title = 'Untitled chapter'
     template_name = 'chapter.html'
+    template_pdfheader = 'print_header.html'
+    template_pdffooter = 'print_footer.html'
 
     has_sidebar = True
 

@@ -3,11 +3,9 @@ import shutil
 import os
 import re
 from . import latex, mkdir_p
-from .pandoc import pandoc_item
-from .render import Renderer
+from .render import Renderer, SlidesRenderer
 from pathlib import Path
 import asyncio
-from pyppeteer import launch
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +20,8 @@ class ItemProcess(object):
 
     def __init__(self,course):
         self.course = course
+        self.renderer = Renderer(self.course)
+        self.slides_renderer = SlidesRenderer(self.course)
 
     def visit(self, item):
         if item.is_hidden:
@@ -60,10 +60,6 @@ class RenderProcess(ItemProcess):
     name = 'Render items to HTML'
     num_runs = 2
 
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-        self.renderer = Renderer(self.course)
-
     def visit_default(self, item):
         self.renderer.render_item(item)
 
@@ -76,43 +72,32 @@ class RenderProcess(ItemProcess):
 
     def visit_slides(self, item):
         item.has_slides = True
-        self.renderer.render_item(item)
-        self.renderer.render_item(item, 'template_slides', 'out_slides')
+        self.slides_renderer.render_item(item)
 
 class PDFProcess(ItemProcess):
 
     name = 'Make PDFs'
     
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.slides_renderer = SlidesRenderer(self.course)
+
     def visit(self,item):
         if not self.course.config['build_pdf']:
             return
         super().visit(item)
 
     def visit_chapter(self, item):
-        self.makePDF(item)
         item.has_pdf = True
+        self.makePDF(item)
 
     def visit_slides(self, item):
-        Renderer(self.course).render_item(item, 'template_slides', 'out_slides')
-        asyncio.get_event_loop().run_until_complete(self.makeSlidesPDF(item))
         item.has_pdf = True
-        
-    async def makeSlidesPDF(self, item):
-        logger.info("Printing {} as PDF".format(item))
-        absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.named_out_file.with_suffix('.slides.html')
-        outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
-        logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
-        browser = await launch({'headless': True})
-        page = await browser.newPage()
-        await page.goto('file://{}?print-pdf'.format(absHTMLPath))
-        await page.setViewport({'width': 1366, 'height': 768})
-        await page.waitFor(500);
-        await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
-        await browser.close()
+        asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
 
     def makePDF(self, item):
         ext = item.source.suffix
         if ext == '.tex':
             latex.runPdflatex(self.course, item)
         elif ext == '.md':
-            pandoc_item(self.course, item, template_file='notes.latex', out_format='pdf', force_local=True)
+            asyncio.get_event_loop().run_until_complete(self.renderer.to_pdf(item))

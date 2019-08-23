@@ -25,6 +25,22 @@ div.highlight > pre {
 	padding: 5px;
 }
 
+pre.output-block {
+	border: 1px solid #ccc;
+	border-top: none;
+	padding: 5px;
+	margin-top: -1rem;
+}
+
+p code {
+	background-color: rgba(27,31,35,.05);
+	border-radius: 3px;
+	margin: 0;
+	padding: .2em .4em;
+	color: #111;
+	font-size: 95%;
+}
+
 .CodeMirror {
 	height: auto;
 	min-height: 10px;

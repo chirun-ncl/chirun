@@ -4,10 +4,11 @@ import makeCourse.markdownRenderer.codemirror
 def render_markdown(content):
     return markdown(content,
             extensions=[
+                'mdx_outline',
                 'pymdownx.highlight',
                 'pymdownx.arithmatex',
                 'pymdownx.extra',
-                'pymdownx.superfences'
+                'pymdownx.superfences',
             ],
             extension_configs={
                 "pymdownx.arithmatex": {
@@ -24,6 +25,11 @@ def render_markdown(content):
                         'class': 'editable',
                         'format': makeCourse.markdownRenderer.codemirror.editable_formatter,
                         'validator': makeCourse.markdownRenderer.codemirror.editable_validator
+                    },{
+                        'name': 'output',
+                        'class': 'output',
+                        'format': makeCourse.markdownRenderer.codemirror.output_formatter,
+                        'validator': makeCourse.markdownRenderer.codemirror.output_validator
                     }]
                 }
             })

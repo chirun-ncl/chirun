@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
     <link rel="stylesheet" href="{{'pygmentize.css'|static_url}}">
     <link rel="stylesheet" href="{{'nclexam.css'|static_url}}">
+    <link rel="stylesheet" href="{{'print.css'|static_url}}">
 {% endblock stylesheets %}
 
 {% block javascript %}
@@ -45,7 +46,7 @@
     <div class="container mt-3">
         <div class="row">
             {% if item.has_sidebar %}
-            <div class="col-md-3">
+            <div id="sidebar" class="col-md-3">
                 <nav class="mb-3" id="chapterTOC" data-toggle="toc">
                     <ul class="nav navbar-nav">
                         {% if item.has_slides %}

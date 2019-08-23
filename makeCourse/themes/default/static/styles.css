@@ -78,10 +78,6 @@ footer p {
   width:100%;
 }
 
-table {
-  width: 100%;
-}
-
 h4 {
     font-size: 1.3rem;
 }
@@ -202,18 +198,16 @@ tr, img {
 
 thead {
   border-bottom: solid #333 1px;
+  line-height: 3rem;
 }
+
 
 table {
-  margin-bottom: 1em;
-  line-height: 1rem;
-}
-
-.table td{
-  padding-top: .2rem;
-  padding-bottom: 0rem;
-  padding-left: .75rem;
-  padding-right: .75rem;
+	width: 100%;
+  margin-bottom: 1rem;
+	line-height: 2rem;
+	border-top: solid #333 2px;
+	border-bottom: solid #333 2px;
 }
 
 span.danger{
@@ -236,12 +230,8 @@ span.danger{
   border-radius: 5px;
 }
 
-.exercise h3, .interlude h3 {
-  margin-top: 1rem;
-}
-
 h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
 }
 
