@@ -67,3 +67,9 @@ p code {
 .reveal button.run-code:focus, .reveal code:focus {
     outline: none !important;
 }
+
+.reveal pre.output-block {
+	margin-top: -0.65em;
+	padding: 0;
+	border: 1px solid #ccc;
+}

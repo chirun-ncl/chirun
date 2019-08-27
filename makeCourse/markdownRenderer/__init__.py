@@ -1,16 +1,14 @@
 from markdown import markdown
 import makeCourse.markdownRenderer.codemirror
+from mdfigure import FigureExtension
 
-def render_markdown(content):
-    return markdown(content,
-            extensions=[
-                'mdx_outline',
-                'pymdownx.highlight',
-                'pymdownx.arithmatex',
-                'pymdownx.extra',
-                'pymdownx.superfences',
-            ],
-            extension_configs={
+
+class MarkdownRenderer(object):
+    def __init__(self):
+        self.extensions = [FigureExtension(),'mdx_outline',
+                'pymdownx.highlight','pymdownx.arithmatex',
+                'pymdownx.extra','pymdownx.superfences']
+        self.extension_configs={
                 "pymdownx.arithmatex": {
                     "preview": False
                     },
@@ -32,4 +30,14 @@ def render_markdown(content):
                         'validator': makeCourse.markdownRenderer.codemirror.output_validator
                     }]
                 }
-            })
+            }
+
+    def render(self, content):
+        return markdown(content, extensions=self.extensions, extension_configs=self.extension_configs)
+
+class SlidesMarkdownRenderer(MarkdownRenderer):
+     def __init__(self):
+        super().__init__()
+
+        self.extensions = [FigureExtension(),'pymdownx.highlight','pymdownx.arithmatex','pymdownx.extra','pymdownx.superfences']
+

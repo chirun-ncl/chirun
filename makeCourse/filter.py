@@ -1,4 +1,5 @@
 import logging
+import itertools
 import re
 from . import gen_dict_extract
 from bs4 import BeautifulSoup
@@ -75,9 +76,29 @@ def fix_local_links(soup, course):
             url = root + url[1:]
             img['src'] = url
 
+def dots_pause(soup, course):
+    """
+        Rewrite three dots on thier own paragraph into a set of divs with
+        class "fragment" applied. This is used in slideshows to create pauses
+    """
+    pauses = soup.find_all("p", string=". . .")
+    for el in pauses:
+        els = [i for i in itertools.takewhile(
+            lambda x: x.name != 'hr' and x not in pauses, el.next_siblings)]
+        fragment = soup.new_tag('div', attrs={"class": "fragment"})
+        el.wrap(fragment)
+        el.decompose()
+        for tag in els:
+            fragment.append(tag)
+
+def list_fragment(soup, course):
+    for li in soup.find_all("li"):
+        li['class'] = li.get('class', []) + ['fragment']
+
 def burnInExtras(course, html, force_local, out_format):
     soup = BeautifulSoup(html, 'html.parser')
-    filters = [embed_numbas, embed_vimeo, embed_youtube, oembed, fix_local_links]
+    filters = [embed_numbas, embed_vimeo, embed_youtube,
+            oembed, fix_local_links, dots_pause, list_fragment]
     for f in filters:
         f(soup, course=course)
     return str(soup)

@@ -48,4 +48,7 @@
 	footer {
 		display: none;
 	}
+	section.exercise,section.interlude {
+		page-break-inside: avoid;
+	}
 }

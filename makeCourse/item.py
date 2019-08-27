@@ -1,6 +1,6 @@
 import logging
 import re
-from makeCourse.markdownRenderer import render_markdown
+from makeCourse.markdownRenderer import MarkdownRenderer,SlidesMarkdownRenderer
 from pathlib import Path, PurePath
 from . import slugify
 from .filter import burnInExtras
@@ -35,6 +35,7 @@ class Item(object):
         self.source = Path(self.data.get('source', ''))
         self.is_hidden = self.data.get('hidden', False)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
+        self.markdownRenderer = MarkdownRenderer()
 
     def __str__(self):
         return '{} "{}"'.format(self.type, self.title)
@@ -105,7 +106,7 @@ class Item(object):
         ext = self.source.suffix
         
         if ext == '.md':
-            html = render_markdown(self.markdown_content())
+            html = self.markdownRenderer.render(self.markdown_content())
         elif ext == '.tex':
             html = self.course.load_latex_content(self)
         else:
@@ -187,6 +188,10 @@ class Slides(Chapter):
     title = 'Untitled Slides'
     template_name = 'slides.html'
     template_slides = 'slides_reveal.html'
+
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.markdownRenderer = SlidesMarkdownRenderer()
 
     def get_context(self):
         context = super().get_context()

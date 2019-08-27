@@ -12,9 +12,9 @@
 
 		{% block stylesheets %}
 		<link rel="stylesheet" href="{{'pygmentize.css'|static_url}}">
-		<link rel="stylesheet" href="{{ROOT_URL}}/static/slides.css">
 		<link rel="stylesheet" href="{{'reveal.js/css/reveal.css'|static_url}}">
 		<link rel="stylesheet" href="{{'reveal.js/css/theme/white.css'|static_url}}">
+		<link rel="stylesheet" href="{{'slides.css'|static_url}}">
 		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
 		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
 		{% for css in item.data.css %}
@@ -60,7 +60,7 @@
 				{% endblock %}
 
 				{% block main_slides %}
-				<section data-markdown data-separator="^<hr/?>$">
+				<section data-markdown data-separator="<hr/?>" data-separator-notes="^Data-Note:">
 					<textarea data-template>
 						{{item.as_html()|safe}}
 					</textarea>
