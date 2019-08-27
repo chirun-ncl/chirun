@@ -251,10 +251,6 @@ h3 {
   min-height: 30px;
 }
 
-figcaption {
-  font-size: 0.7em;
-}
-
 pre.output {
     border: 1px solid #ccc;
     margin-top: -30px;
@@ -277,10 +273,6 @@ pre.output {
 
 figure {
       text-align: center;
-}
-
-figcaption, .reveal figcaption {
-  font-size: 0.7em;
 }
 
 .reveal code {
