@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block nav %}
+<nav>
+	<a href="{{'index.html'|url}}">{{course.config.title}}</a> - {{item.title}}
+</nav>
+{% endblock %}
+
+{% block main %}
+<div class="album py-5 bg-light">
+	<div class="container">
+		<div class="row">
+			{% for subitem in item.content %}
+			<div class="col-md-4 pb-4">
+				<div class="card mb-4 h-100 box-shadow">
+					<div class="card-body">
+						<p class="card-text">
+						<ul class="list-unstyled">
+							{% if not subitem.hidden %}
+							{% if subitem.type == 'url' %}
+							<a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
+							{% else %}
+							<a href="{{subitem.url|url}}">{{subitem.title}}</a>
+							{% endif %}
+							{% endif %}
+						</ul>
+						</p>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock main %}

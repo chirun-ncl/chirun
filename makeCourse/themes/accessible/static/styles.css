@@ -1,0 +1,92 @@
+body{
+	margin:0 auto;
+	line-height:2.5rem;
+	color: #222;
+	font-size: 20px;
+	font-family: Verdana, Geneva, sans-serif;
+	background-color: hsl(60, 100%, 96%);
+}
+
+main{
+	max-width:800px;
+	margin-left: auto;
+	margin-right: auto;
+	color: black !important;
+}
+
+a, a:visited {
+	text-decoration: none;
+	color: #2A5DB0;
+}
+
+a:hover, a:focus {
+	color: #2548AB;
+	text-decoration: underline;
+}
+
+p {
+	margin: 4rem 0;
+}
+
+h1, h2 {
+	margin: 4rem 0;
+}
+
+li {
+	margin: 2rem 0;
+}
+
+nav {
+	margin-bottom: 4rem;
+}
+
+.vimeo-aspect-ratio iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0; top: 0;
+}
+
+.vimeo-aspect-ratio {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+}
+
+.recap-aspect-ratio iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0; top: 0;
+}
+
+.recap-aspect-ratio {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+}
+
+.youtube-aspect-ratio iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0; top: 0;
+}
+
+.youtube-aspect-ratio {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+}
+
+
+.numbas-aspect-ratio iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0; top: 0;
+}
+

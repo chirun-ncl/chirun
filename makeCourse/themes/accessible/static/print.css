@@ -1,0 +1,14 @@
+@media print {
+	@page {
+		margin: 4.0cm 3.225cm;
+	}
+	body {
+		background: #FFF !important;
+	}
+	nav {
+		display: none;
+	}
+	section.exercise,section.interlude {
+		page-break-inside: avoid;
+	}
+}

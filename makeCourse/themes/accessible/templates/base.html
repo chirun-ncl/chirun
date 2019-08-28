@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% block meta %}
+            <meta charset="utf-8">
+            <meta name="robots" content="noindex">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="author" content="{{course.config.author}}" />
+            <meta name="date" content="{{date}}" />
+        {% endblock meta %}
+
+        <title>{% block title %}{{course.config.title}}{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="{{ROOT_URL}}/static/styles.css">
+            {% for css in item.data.css %}
+                <link rel="stylesheet" href="{{css|static_url}}">
+            {% endfor %}
+        {% endblock stylesheets %}
+
+        {% block javascript %}
+            <script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
+            <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+            <script defer src="{{course.mathjax_url}}"></script>
+        {% endblock %}
+    </head>
+    <body {% block body_attributes %}{% endblock %}>
+        {% block nav %}{% endblock %}
+        <header>
+            {% block header %}
+            {% endblock header %}
+        </header>
+        <main>
+            {% block main %}
+                {{item.as_html()|safe}}
+            {% endblock main %}
+        </main>
+
+    </body>
+</html>
+

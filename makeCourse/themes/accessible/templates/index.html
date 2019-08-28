@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<nav>
+		{{course.config.title}}
+	</nav>
+{% endblock header %}
+
+{% block main %}
+        <div class="container">
+            <div class="row">
+                {% if course.partsEnabled %}
+                    {% for part in course.structure %}
+                    {% if part.type != 'introduction' %}
+										<h3><a href="{{part.url|url}}">{{part.title}}</a></h3>
+                    <ul>
+                             {% for subitem in part.content %}
+                              <li class="mb-3">
+                                            {% include "introduction_subitem.html" %}
+                             </li>
+                                    {% endfor %}
+                                </ul>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="col-md-4 pb-4 mx-auto">
+                        <div class="card mb-4 h-100 box-shadow">
+                            <div class="card-header text-center">
+                                <h4 class="my-0 font-weight-normal">Course Material</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <ul class="list-unstyled">
+                                        {% for subitem in course.structure %}
+                                            {% if subitem.type != 'introduction' %}
+                                                <li class="mb-3">
+                                                    {% include "introduction_subitem.html" %}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+				</section>
+    <section>
+        <div class="container">
+            {{ item.as_html()|safe }}
+        </div>
+    </section>
+{% endblock main %}
