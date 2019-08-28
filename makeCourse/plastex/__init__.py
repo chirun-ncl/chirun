@@ -14,6 +14,7 @@ import plasTeX.Logging
 from plasTeX.Config import config as plastex_config
 import makeCourse.plasTeXRenderer.Config as html_config
 from . import macros
+from . import math
 
 plastex_config += html_config.config
 
@@ -93,6 +94,7 @@ class PlastexRunner:
         document = TeXDocument(config=plastex_config)
         document.userdata['working-dir'] = '.'
         document.context.importMacros(vars(macros))
+        document.context.importMacros(vars(math))
 
         f = open(str(Path(wd) / inPath))
         tex = TeX(document, myfile=f)
