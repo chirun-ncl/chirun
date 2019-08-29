@@ -183,6 +183,12 @@ class Chapter(Item):
         else:
             return [item for item in self.course.structure if item.type != 'introduction']
 
+class Exam(Chapter):
+    type = 'exam'
+    title = 'Untitled exam'
+    template_name = 'exam.html'
+    has_sidebar = False
+
 class Slides(Chapter):
     type = 'slides'
     title = 'Untitled Slides'
@@ -253,6 +259,7 @@ item_types = {
     'url': Url,
     'slides': Slides,
     'recap': Recap,
+    'exam': Exam,
 }
 
 

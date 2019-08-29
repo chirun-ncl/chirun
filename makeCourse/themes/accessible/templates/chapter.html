@@ -22,14 +22,14 @@
 
 {% block nav %}
 <nav>
-	<a href="{{'index.html'|url}}">{{course.config.title}}</a> - 
-	<a href="{{item.parent.url|url}}">{{item.parent.title}}</a> - {{item.title}}
+	<a href="{{'index.html'|url}}">{{course.config.title}}</a>  &mdash; 
+	<a href="{{item.parent.url|url}}">{{item.parent.title}}</a>  &mdash; {{item.title}}
 </nav>
 {% endblock %}
 
 {% block main %}
 <nav>
-<ul style="list-style-type:none">
+<ul style="padding:0;list-style-type:none">
 	{% if item.has_slides %}
 	<li><a class="nav-link" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a></li>
 	{% endif %}
