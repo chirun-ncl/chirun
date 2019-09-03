@@ -77,11 +77,12 @@ class MakeCourse:
         if self.args.local or force_local:
             return str(self.get_build_dir().resolve()) + '/'
         else:
-            url_format = self.config.get('root_url','/module/{code}/{year}/{theme}/')
+            url_format = self.config.get('root_url','/{base}/{code}/{year}/{theme}/')
 
+            base = self.config.get('base_dir')
             code = self.config.get('code')
             year = self.config.get('year')
-            root = url_format.format(code=code, year=year, theme = self.theme.path)
+            root = url_format.format(base=base, code=code, year=year, theme = self.theme.path)
             return root
 
     def default_config(self):
