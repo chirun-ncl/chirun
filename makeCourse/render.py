@@ -19,8 +19,8 @@ class Renderer(object):
             return self.url_filter('static/'+url)
         self.env.filters['static_url'] = static_url
 
-    def url_filter(self, url):
-        return self.course.get_web_root() + url
+    def url_filter(self, url, theme=False):
+        return self.course.get_web_root(force_theme=theme) + url
 
     def render_item(self, item):
         if self.course.args.lazy and item.recently_built():

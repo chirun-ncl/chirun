@@ -7,7 +7,7 @@ body{
 	background-color: hsl(60, 100%, 96%);
 }
 
-main{
+main, footer{
 	max-width:800px;
 	margin-left: auto;
 	margin-right: auto;
@@ -38,6 +38,11 @@ li {
 
 nav {
 	margin-bottom: 4rem;
+}
+
+.theme-switch {
+	float: right;
+	margin-bottom: 3rem;
 }
 
 .vimeo-aspect-ratio iframe {

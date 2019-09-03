@@ -58,11 +58,12 @@ class MakeCourse:
         """
         return Path(self.args.dir)
 
-    def get_build_dir(self):
+    def get_build_dir(self, force_theme=False):
         """
             The path the output will be put in
         """
-        return self.build_dir / self.theme.path
+        theme_path = force_theme.path if force_theme else self.theme.path
+        return self.build_dir / theme_path
 
     def get_static_dir(self):
         """
@@ -70,19 +71,19 @@ class MakeCourse:
         """
         return Path(self.config['static_dir'])
 
-    def get_web_root(self, force_local=False):
+    def get_web_root(self, force_local=False, force_theme=False):
         """
             The root URL of the course. All URLs are under this.
         """
         if self.args.local or force_local:
-            return str(self.get_build_dir().resolve()) + '/'
+            return str(self.get_build_dir(force_theme = force_theme).resolve()) + '/'
         else:
             url_format = self.config.get('root_url','/{base}/{code}/{year}/{theme}/')
-
             base = self.config.get('base_dir')
             code = self.config.get('code')
             year = self.config.get('year')
-            root = url_format.format(base=base, code=code, year=year, theme = self.theme.path)
+            theme_path = force_theme.path if force_theme else self.theme.path
+            root = url_format.format(base=base, code=code, year=year, theme = theme_path)
             return root
 
     def default_config(self):

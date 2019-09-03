@@ -14,7 +14,7 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-            <link rel="stylesheet" href="{{ROOT_URL}}/static/styles.css">
+            <link rel="stylesheet" href="{{'styles.css'|static_url}}">
             {% for css in item.data.css %}
                 <link rel="stylesheet" href="{{css|static_url}}">
             {% endfor %}

@@ -12,7 +12,7 @@
         <title>{% block title %}{{course.config.title}}{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-            <link rel="stylesheet" href="{{ROOT_URL}}/static/styles.css">
+            <link rel="stylesheet" href="{{'styles.css'|static_url}}">
             {% for css in item.data.css %}
                 <link rel="stylesheet" href="{{css|static_url}}">
             {% endfor %}
@@ -35,7 +35,7 @@
                 {{item.as_html()|safe}}
             {% endblock main %}
         </main>
-
+				{% include "footer.html" %}
     </body>
 </html>
 

@@ -1,8 +1,9 @@
 <footer class="text-muted">
     <div class="container">
-        <p class="float-right">
-            <a href="#">Back to top</a>
-        </p>
+        <div class="float-right">
+					<p><a href="#">Back to top</a></p>
+						{% include "theme_switch.html" %}
+        </div>
         <p>&copy; {{course.config.author}} - Newcastle University {{course.config.year}}</p>
         <p>Generated using software written by the E-Learning Unit, School of Mathematics &amp; Statistics, Newcastle University</p>
         <p>Site last generated: {{date}}</p>
