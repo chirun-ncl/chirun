@@ -95,7 +95,7 @@ def list_fragment(soup, course):
     for li in soup.find_all("li"):
         li['class'] = li.get('class', []) + ['fragment']
 
-def burnInExtras(course, html, force_local, out_format):
+def burnInExtras(course, html, out_format):
     soup = BeautifulSoup(html, 'html.parser')
     filters = [embed_numbas, embed_vimeo, embed_youtube,
             oembed, fix_local_links, dots_pause, list_fragment]

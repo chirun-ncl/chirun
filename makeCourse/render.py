@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class Renderer(object):
     def __init__(self, course):
         self.course = course
-        self.force_local = False
         self.env = Environment(
             loader=FileSystemLoader(str(self.course.theme.template_path)),
             autoescape=select_autoescape(['html'])
@@ -21,7 +20,7 @@ class Renderer(object):
         self.env.filters['static_url'] = static_url
 
     def url_filter(self, url, theme=False):
-        return self.course.get_web_root(force_theme=theme, force_local=self.force_local) + url
+        return self.course.get_web_root(force_theme=theme) + url
 
     def render_item(self, item):
         if self.course.args.lazy and item.recently_built():
@@ -30,8 +29,8 @@ class Renderer(object):
         outDir = outPath.parent
         mkdir_p(outDir)
         template_file = item.template_name
-        if self.force_local:
-            logger.debug("Rendering {item} using {template} (with local paths)".format(item=item, template=template_file))
+        if self.course.force_local or self.course.args.local:
+            logger.debug("Rendering {item} using {template} with local paths".format(item=item, template=template_file))
         else:
             logger.debug("Rendering {item} using {template}".format(item=item, template=template_file))
         html = self.to_html(item, template_file)

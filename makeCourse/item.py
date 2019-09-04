@@ -85,7 +85,7 @@ class Item(object):
     def base_file(self):
         return Path(self.in_file.stem)
 
-    def markdown_content(self, force_local=False, out_format='html'):
+    def markdown_content(self, out_format='html'):
         ext = self.source.suffix
 
         if ext == '.md':
@@ -112,7 +112,7 @@ class Item(object):
         else:
             raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
-        html = burnInExtras(self.course, html, force_local=False, out_format='html')
+        html = burnInExtras(self.course, html, out_format='html')
         return html
 
     def temp_path(self):

@@ -60,7 +60,11 @@ class RenderProcess(ItemProcess):
     name = 'Render items to HTML'
     num_runs = 2
 
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
     def visit_default(self, item):
+        self.course.force_local = False
         self.renderer.render_item(item)
 
     def visit_part(self, item):
@@ -80,13 +84,11 @@ class PDFProcess(ItemProcess):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.slides_renderer = SlidesRenderer(self.course)
-        self.renderer.force_local = True
-        self.slides_renderer.force_local = True
 
     def visit(self,item):
         if not self.course.config['build_pdf']:
             return
+        self.course.force_local = True
         super().visit(item)
 
     def visit_chapter(self, item):
