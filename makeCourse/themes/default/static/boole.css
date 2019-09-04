@@ -39,13 +39,11 @@ p code, li code, table code {
 	margin: 0;
 	padding: .2em .4em;
 	color: #111;
-	font-size: 95%;
 }
 
 .CodeMirror {
 	height: auto;
 	min-height: 10px;
-	font-size:13px;
 }
 
 .CodeMirror-scroll{

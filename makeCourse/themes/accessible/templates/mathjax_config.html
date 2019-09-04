@@ -2,5 +2,7 @@ MathJax.Hub.Config({
     TeX: { extensions: ["color.js"] },
     tex2jax: {
         inlineMath: [['\\(','\\)']]
-    }
+    },
+		skipStartupTypeset: false
 });
+MathJax.Hub.Register.StartupHook("End",function () { window.mathjax_is_loaded = 1 });

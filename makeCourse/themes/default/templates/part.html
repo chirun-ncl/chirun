@@ -27,7 +27,7 @@
 	<div class="container">
 		<div class="row">
 			{% for subitem in item.content %}
-			<div class="col-md-4 pb-4">
+			<div class="col-md-4 pb-4 lti-hint-item">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-body">
 						<p class="card-text">
@@ -54,8 +54,4 @@
 		</div>
 	</div>
 </div>
-
-<section>
-	{% include "theme_switch.html" %}
-</section>
 {% endblock main %}

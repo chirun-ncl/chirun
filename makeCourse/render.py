@@ -60,7 +60,7 @@ class Renderer(object):
         browser = await launch({'headless': True})
         page = await browser.newPage()
         await page.goto('file://{}'.format(absHTMLPath))
-        await page.waitFor(1000);
+        await page.waitForFunction('window.mathjax_is_loaded == 1', options = {'timeout':10000});
         await page.pdf({'path': outPath, 'format': 'A4', 'displayHeaderFooter': True, \
                 'headerTemplate': headerHTML, 'footerTemplate': footerHTML, \
                 'printBackground': True})
@@ -90,6 +90,6 @@ class SlidesRenderer(Renderer):
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
         await page.setViewport({'width': 1366, 'height': 768})
-        await page.waitFor(1000);
+        await page.waitForFunction('Reveal.isReady() && window.mathjax_is_loaded == 1', options = {'timeout':10000});
         await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
         await browser.close()

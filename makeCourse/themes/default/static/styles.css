@@ -261,15 +261,9 @@ h3 {
   min-height: 30px;
 }
 
-pre.output {
-    border: 1px solid #ccc;
-    margin-top: -30px;
-    border-top: 0;
-    font-size: 1em;
-    padding: 10px;
-    background: #eee;
+pre {
+	font-size: 110%;
 }
-
 
 .thin-table {
     text-align: center;

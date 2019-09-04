@@ -17,7 +17,7 @@
                 {% if course.partsEnabled %}
                     {% for part in course.structure %}
                     {% if part.type != 'introduction' %}
-                    <div class="col-md-4 pb-4 mx-auto">
+                    <div class="col-md-4 pb-4 mx-auto lti-hint-part">
                         <div class="card mb-4 h-100 box-shadow">
                             <div class="card-header text-center">
                                 <h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
@@ -26,7 +26,7 @@
                                 <p class="card-text">
                                 <ul class="list-unstyled">
                                     {% for subitem in part.content %}
-                                        <li class="mb-3">
+                                        <li class="mb-3 lti-hint-item">
                                             {% include "introduction_subitem.html" %}
                                         </li>
                                     {% endfor %}
