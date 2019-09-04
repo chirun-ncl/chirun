@@ -81,6 +81,8 @@ class PDFProcess(ItemProcess):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.slides_renderer = SlidesRenderer(self.course)
+        self.renderer.force_local = True
+        self.slides_renderer.force_local = True
 
     def visit(self,item):
         if not self.course.config['build_pdf']:
