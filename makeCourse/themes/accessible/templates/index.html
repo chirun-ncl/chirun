@@ -12,15 +12,17 @@
                 {% if course.partsEnabled %}
                     {% for part in course.structure %}
                     {% if part.type != 'introduction' %}
+										<div class="lti-hint-part">
 										<h3><a href="{{part.url|url}}">{{part.title}}</a></h3>
                     <ul>
                              {% for subitem in part.content %}
-                              <li class="mb-3">
+                              <li class="mb-3 lti-hint-item">
                                             {% include "introduction_subitem.html" %}
                              </li>
                                     {% endfor %}
                                 </ul>
                     {% endif %}
+										</div>
                     {% endfor %}
                 {% else %}
                     <div class="col-md-4 pb-4 mx-auto">
@@ -33,7 +35,7 @@
                                     <ul class="list-unstyled">
                                         {% for subitem in course.structure %}
                                             {% if subitem.type != 'introduction' %}
-                                                <li class="mb-3">
+                                                <li class="mb-3 lti-hint-item">
                                                     {% include "introduction_subitem.html" %}
                                                 </li>
                                             {% endif %}
@@ -48,7 +50,7 @@
         </div>
 				</section>
     <section>
-        <div class="container">
+        <div class="container lti-hint-introduction">
             {{ item.as_html()|safe }}
         </div>
     </section>

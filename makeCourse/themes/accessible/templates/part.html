@@ -17,11 +17,13 @@
 						<p class="card-text">
 						<ul class="list-unstyled">
 							{% if not subitem.hidden %}
+							<li class="lti-hint-item">
 							{% if subitem.type == 'url' %}
 							<a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
 							{% else %}
 							<a href="{{subitem.url|url}}">{{subitem.title}}</a>
 							{% endif %}
+							</li>
 							{% endif %}
 						</ul>
 						</p>
