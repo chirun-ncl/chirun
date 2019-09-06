@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
     <link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
 		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
-    <link rel="stylesheet" href="{{'pygmentize.css'|static_url}}">
     <link rel="stylesheet" href="{{'print.css'|static_url}}">
 {% endblock stylesheets %}
 
@@ -23,24 +22,6 @@
 
 {% block body_attributes %}data-spy="scroll" data-target="#chapterTOC" data-offset="50"{% endblock %}
 
-{% block nav %}
-        <nav aria-label="breadcrumb">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{{'index.html'|url}}">{{course.config.title}}</a>
-                </li>
-                {% if item.parent %}
-                <li class="breadcrumb-item">
-                    <a href="{{item.parent.url|url}}">{{item.parent.title}}</a>
-                </li>
-                {% endif %}
-                <li class="breadcrumb-item active">
-                    {{item.title}}
-                </li>
-            </ul>
-        </nav>
-{% endblock %}
-
 {% block main %}
     <div class="container mt-3">
         <div class="row">
@@ -57,7 +38,7 @@
                     </ul>
                 </nav>
             </div>
-            <div class="col-md-9"> 
+            <div id="content" class="col-md-9"> 
             {% else %}
             <div class="col-md-12">
             {% endif %}

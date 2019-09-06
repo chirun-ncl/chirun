@@ -7,13 +7,6 @@ button.run-code {
 	display: block;
 	padding: 5px 10px 5px 10px;
 	border: none;
-	color: #fff;
-	background-color: #4CAF50;
-}
-
-button.run-code:hover{
-	color: #111111;
-	background-color: #eeeeee;
 }
 
 pre.cm-block {
@@ -30,24 +23,21 @@ pre.output-block {
 	border-top: none;
 	padding: 5px;
 	margin-top: -1rem;
-	background-color: #FFF;
 }
 
 p code, li code, table code {
-	background-color: rgba(27,31,35,.05);
 	border-radius: 3px;
 	margin: 0;
 	padding: .2em .4em;
-	color: #111;
 }
 
 .CodeMirror {
 	height: auto;
-	min-height: 10px;
+	min-height: 3rem;
 }
 
 .CodeMirror-scroll{
-	min-height: 10px;
+	min-height: 3rem;
 }
 
 .reveal pre {

@@ -10,23 +10,16 @@ nav[data-toggle='toc'] .nav > li > a {
   display: block;
   padding: 4px 20px;
   font-weight: 500;
-  color: rgba(0,0,0,.65);
 }
 nav[data-toggle='toc'] .nav > li > a:hover,
 nav[data-toggle='toc'] .nav > li > a:focus {
   padding-left: 19px;
-  color: rgba(0,0,0,.85);
   text-decoration: none;
-  background-color: transparent;
-  border-left: 1px solid rgba(0,0,0,.85);
 }
 nav[data-toggle='toc'] .nav-link.active,
 nav[data-toggle='toc'] .nav-link.active:hover,
 nav[data-toggle='toc'] .nav-link.active:focus {
   padding-left: 18px;
-  color: rgba(0, 0, 0, 0.85);
-  background-color: transparent;
-  border-left: 2px solid rgba(0, 0, 0, 0.85);
 }
 
 /* Nav: second level (shown on .active) */

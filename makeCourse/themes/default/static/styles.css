@@ -10,7 +10,6 @@ body {
   padding-top: var(--jumbotron-padding-y);
   padding-bottom: var(--jumbotron-padding-y);
   margin-bottom: 0;
-  background-color: #fff;
 }
 @media (min-width: 768px) {
   .jumbotron {
@@ -31,16 +30,15 @@ body {
   max-width: 40rem;
 }
 
-.breadcrumb-item > a {
-	color: rgba(0,0,0,.65);
+.breadcrumb {
+	border-radius: 0px;
 }
 .breadcrumb-item > a:hover,
 .breadcrumb-item > a:focus {
-	color: rgba(0,0,0,.85);
 	text-decoration: none;
 }
-.breadcrumb-item.active {
-	color: rgba(0,0,0,.85);
+.navbar-toggler{
+	padding: 0;
 }
 
 footer {
@@ -207,25 +205,16 @@ tr, img {
 }
 
 thead {
-  border-bottom: solid #333 1px;
   line-height: 3rem;
 }
-
 
 table {
 	width: 100%;
   margin-bottom: 1rem;
 	line-height: 2rem;
-	border-top: solid #333 2px;
-	border-bottom: solid #333 2px;
-}
-
-span.danger{
-  color: #AA2222;
 }
 
 .exercise {
-  background-color: #F6F6FF;
   padding: 10px;
   margin-bottom:20px;
   border: 1px solid;
@@ -233,7 +222,6 @@ span.danger{
 }
 
 .interlude {
-  background-color: #eeffd3;
   padding: 10px;
   margin-bottom:20px;
   border: 1px solid;
@@ -281,29 +269,7 @@ figure {
 
 .reveal code {
   font-size: 87.5%;
-  color: #e83e8c;
   word-break: break-word;
-}
-
-.btn {
-    background: #b73333;
-    padding: 6px 10px;
-    text-align: center;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    margin: 20px 0;
-    font-size: 0.8em;
-}
-
-.btn-lg {
-    font-size: 1.1em;
-    padding: 8px 20px;
-}
-
-.btn:hover {
-  color: white;
-    background: #b73333;  
 }
 
 .ttfamily{
@@ -312,4 +278,14 @@ figure {
 
 .itemize>li>p:first-of-type, .enumerate>li>p:first-of-type {
   display: inline;
+}
+
+.btn-pastel {
+	color: #222;
+	background-color: #FFFFE6;
+	border-color: #FFFFE6;
+}
+#font-size-display {
+	width: 2.5rem;
+	text-align: center;
 }

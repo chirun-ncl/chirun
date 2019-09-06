@@ -1,4 +1,4 @@
-var opts = {
+var spinner_opts = {
 	lines: 13 // The number of lines to draw
 	, length: 28 // The length of each line
 	, width: 14 // The line thickness
@@ -20,7 +20,7 @@ var opts = {
 	, hwaccel: false // Whether to use hardware acceleration
 	, position: 'relative' // Element positioning
 }
-var spinner = new Spinner(opts);
+var spinner;
 var codeMirrorInstances = {};
 var runnerURL = "https://www.mas.ncl.ac.uk/coderunner";
 
@@ -43,7 +43,7 @@ function waitForSubmission(submissionid,codeBlock){
 				} else {
 					console.log(JSON.stringify(data));
 					codeBlock.prev().removeAttr("disabled").removeAttr('style');
-					$('div.spinner').remove();
+					$('div.spinner'+codeBlock.data('uuid')).remove();
 					if (typeof(Reveal) == "undefined"){
 						codeBlock.append("<pre id='ran-"+codeBlock.data('uuid')+"' class='ran'><code class='sourceCode'>"+data['stdout']+data['stderr']+"</code></pre>");
 					} else {
@@ -74,6 +74,7 @@ $( document ).ready(function() {
 			var codeMirrorOpts = {value: $(this).find("code").text()};
 			codeMirrorOpts["lineNumbers"] = true;
 			codeMirrorOpts["mode"] = $(this).data('language');
+			codeMirrorOpts["theme"] = "light default";
 			var theCodeMirror = CodeMirror(function(elt) {
 				codeTag.parentNode.replaceChild(elt, codeTag);
 			} ,codeMirrorOpts);
@@ -98,11 +99,14 @@ $( document ).ready(function() {
 	}
 
 	$('button.run-code').click(function(e){
-		$(this).attr("disabled","disabled").css("background-color","#eeeeee").css("color","#111111");
+		$(this).attr("disabled","disabled");
 		var codeBlock = $(this).next();
 		var codeUUID = codeBlock.data('uuid');
 		var codeLang = codeBlock.data('language');
 		$('#ran-'+codeUUID).remove();
+		spinner_opts.color = $('body').css("color");
+		spinner_opts.className = "spinner"+codeUUID;
+		spinner = new Spinner(spinner_opts);
 		codeBlock.append(spinner.spin().el)
 		var data = {"@action":"getCodeOutput", "codetype":codeLang+"_getoutput"}
 		if (typeof(Reveal) == "undefined"){

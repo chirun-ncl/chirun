@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "item.html" %}
 
 {% block header %}
 <div class="container">
@@ -8,19 +8,6 @@
 	</div>
 </div>
 {% endblock header %}
-
-{% block nav %}
-<nav aria-label="breadcrumb">
-	<ul class="breadcrumb">
-		<li class="breadcrumb-item">
-			<a href="{{'index.html'|url}}">{{course.config.title}}</a>
-		</li>
-		<li class="breadcrumb-item active">
-			{{item.title}}
-		</li>
-	</ul>
-</nav>
-{% endblock %}
 
 {% block main %}
 <div class="album py-5 bg-light">
