@@ -29,10 +29,7 @@ class Renderer(object):
         outDir = outPath.parent
         mkdir_p(outDir)
         template_file = item.template_name
-        if self.course.force_local or self.course.args.local:
-            logger.debug("Rendering {item} using {template} with local paths".format(item=item, template=template_file))
-        else:
-            logger.debug("Rendering {item} using {template}".format(item=item, template=template_file))
+        logger.debug("Rendering {item} using {template}{local}.".format(item=item, template=template_file, local=' with local paths' if self.course.force_local or self.course.args.local else ''))
         html = self.to_html(item, template_file)
         with open(str(outPath),'w') as f:
             f.write(html)

@@ -1,8 +1,18 @@
-from plasTeX import Command, sourceChildren, Environment
+from plasTeX import Command, sourceChildren, sourceArguments, Environment
 from plasTeX.Base.LaTeX import Math
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.TeX import Primitives
 from plasTeX.Tokenizer import Token, EscapeSequence, Other
+
+ 
+class mbox(Primitives.BoxCommand):
+    args = 'self'
+    class math(Math.MathEnvironment):
+        @property
+        def source(self):
+            if self.hasChildNodes():
+                return u'$%s$' % sourceChildren(self)
+            return '$'
 
 class math(Math.math):
     @property

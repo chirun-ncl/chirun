@@ -40,6 +40,12 @@ nav {
 	margin-bottom: 4rem;
 }
 
+.tabular{
+	width: 100%;
+	border-top: initial;
+	border-bottom: initial;
+}
+
 .theme-switch {
 	float: right;
 	margin-bottom: 3rem;

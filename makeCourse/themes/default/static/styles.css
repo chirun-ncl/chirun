@@ -63,6 +63,7 @@ footer p {
 .tikzpicture{
     max-width: 400px;
     width: 100%;
+		display: inline;
 }
 
 .flushright{
@@ -86,6 +87,8 @@ footer p {
 
 .tabular{
   width:100%;
+	border-top: initial;
+	border-bottom: initial;
 }
 
 h4 {

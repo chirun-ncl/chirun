@@ -69,15 +69,6 @@ class PlastexRunner:
         html = getEmbeddedImages(self, html, item)
         return html
 
-
-    def getTikzTemplateArgs(self):
-        tikzPath = self.config.get('tikz_template')
-        if tikzPath:
-            logger.debug('Using tikz template: ' + tikzPath)
-            return "--tikz-template=%s" % tikzPath
-        else:
-            return ""
-
     def runPlastex(self, item):
         logger.debug("PlasTeX: "+str(item.source))
         root_dir = self.get_root_dir()
@@ -93,6 +84,10 @@ class PlastexRunner:
         plastex_config['document']['base-url'] = self.get_web_root()
         document = TeXDocument(config=plastex_config)
         document.userdata['working-dir'] = '.'
+        tikzPath = self.config.get('tikz_template')
+        if tikzPath:
+            logger.debug('Using tikz template: ' + tikzPath)
+            document.userdata['tikz-template'] = tikzPath
         document.context.importMacros(vars(macros))
         document.context.importMacros(vars(math))
 

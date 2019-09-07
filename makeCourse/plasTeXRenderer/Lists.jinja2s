@@ -22,7 +22,11 @@ name: enumerate
 <ol class="enumerate">
 {% endif %}
 {% for item in obj %}
+	{% if item.attributes.term %}
+	<li id={{ item.id }} value={{ item.attributes.term }}> {{ item }} </li>
+	{% else %}
   <li id={{ item.id }}> {{ item }} </li>
+	{% endif %}
 {% endfor %}
 </ol>
 
