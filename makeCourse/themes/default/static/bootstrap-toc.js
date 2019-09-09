@@ -135,7 +135,7 @@
         } else {
           opts = arg;
         }
-        opts.$scope = opts.$scope || $(document.body);
+        opts.$scope = opts.$scope || $('body main');
         return opts;
       }
     },
