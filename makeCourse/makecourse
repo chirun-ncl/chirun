@@ -137,6 +137,7 @@ class MakeCourse:
             yield Path(self.config.get('themes_dir'))
         yield self.get_root_dir() / 'themes'
         yield Path(__file__).parent / 'themes'
+        yield Path(makeCourse.__file__).parent / 'themes'
         yield Path('themes')
 
     def find_theme(self, name):
