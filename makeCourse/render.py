@@ -31,7 +31,7 @@ class Renderer(object):
         template_file = item.template_name
         logger.debug("Rendering {item} using {template}{local}.".format(item=item, template=template_file, local=' with local paths' if self.course.force_local or self.course.args.local else ''))
         html = self.to_html(item, template_file)
-        with open(str(outPath),'w') as f:
+        with open(str(outPath),'w', encoding='utf-8') as f:
             f.write(html)
 
     def to_html(self, item, template_file):
@@ -74,7 +74,7 @@ class SlidesRenderer(Renderer):
         outPath = self.course.get_build_dir() / item.out_slides
         template_file = item.template_slides
         html = self.to_html(item, template_file)
-        with open(str(outPath),'w') as f:
+        with open(str(outPath),'w', encoding='utf-8') as f:
             f.write(html)
 
     async def to_pdf(self, item):
