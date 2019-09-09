@@ -1,11 +1,9 @@
 name: frameenv
-<!-- New Frame -->
-
 {{ obj }}
 
 name: frametitle
-<!-- Frame title to markdown section -->
+<hr/>
+<h2>{{ obj }}</h2>
 
-## {{ obj }}
+name: pause
 
-<br>

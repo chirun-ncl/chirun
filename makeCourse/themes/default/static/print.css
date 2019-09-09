@@ -60,4 +60,7 @@
 	h1, h2, h3 {
 		page-break-after: avoid;
 	}
+	button.run-code {
+		display: none !important;
+	}
 }

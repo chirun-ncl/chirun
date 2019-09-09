@@ -146,6 +146,10 @@ class Url(NoContentMixin, Item):
     title = 'Untitled URL'
     template_name = 'part.html'
 
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.source = self.data.get('source', '')
+
     def get_context(self):
         return {
             'title': self.title,
