@@ -12,7 +12,7 @@ setup(name="makeCourse",
       #url="",
       packages=find_packages(),
       package_data = {
-         'makeCourse': ['misc/*', 'themes/*'],
+         'makeCourse': ['themes/**/*'],
       },
       scripts=['makeCourse/makecourse'],
       install_requires = [
