@@ -12,11 +12,8 @@ setup(name="makeCourse",
       author_email="george.stagg@ncl.ac.uk",
       #url="",
       packages=find_packages(),
-      package_data = {
-         'makeCourse': ['themes/**/*'],
-      },
       data_files = [
-          ('themes', glob('themes/**/*', recursive=True))
+          ('themes', glob('makeCourse/themes/**/*', recursive=True))
           ],
       scripts=['makeCourse/makecourse'],
       install_requires = [
