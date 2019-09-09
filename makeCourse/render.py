@@ -54,7 +54,9 @@ class Renderer(object):
         absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.out_file
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
-        browser = await launch({'headless': True})
+        browser = await launch({'headless': True, 'args': [
+            '--no-sandbox', '--disable-setuid-sandbox'
+            ]})
         page = await browser.newPage()
         await page.goto('file://{}'.format(absHTMLPath))
         await page.waitForFunction('window.mathjax_is_loaded == 1', options = {'timeout':10000});
@@ -83,7 +85,9 @@ class SlidesRenderer(Renderer):
         absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.named_out_file.with_suffix('.slides.html')
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
-        browser = await launch({'headless': True})
+        browser = await launch({'headless': True, 'args': [
+            '--no-sandbox', '--disable-setuid-sandbox'
+            ]})
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
         await page.setViewport({'width': 1366, 'height': 768})
