@@ -3,6 +3,7 @@ try:
     from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup
+from glob import glob
 
 setup(name="makeCourse",
       description="A framework designed to easily convert a set of latex or markdown formatted notes into a course website.",
@@ -14,6 +15,9 @@ setup(name="makeCourse",
       package_data = {
          'makeCourse': ['themes/**/*'],
       },
+      data_files = [
+          ('themes', glob('themes/**/*', recursive=True))
+          ],
       scripts=['makeCourse/makecourse'],
       install_requires = [
          'appdirs>=1.4.3',
