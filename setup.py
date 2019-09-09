@@ -4,8 +4,6 @@ try:
 except ImportError:
     from distutils.core import setup
 
-misc_files = ['misc/*']
-
 setup(name="makeCourse",
       description="A framework designed to easily convert a set of latex or markdown formatted notes into a course website.",
       version="0.2",
@@ -14,7 +12,7 @@ setup(name="makeCourse",
       #url="",
       packages=find_packages(),
       package_data = {
-         'makeCourse': misc_files,
+         'makeCourse': ['misc/*', 'themes/*'],
       },
       scripts=['makeCourse/makecourse'],
       install_requires = [
