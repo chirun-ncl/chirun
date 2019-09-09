@@ -38,6 +38,11 @@
 				link.type = 'text/css';
 				link.href = "{{'reveal.js/css/print/pdf.css'|static_url}}";
 				document.getElementsByTagName( 'head' )[0].appendChild( link );
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = "{{'slides_print.css'|static_url}}";
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
 			}
 		</script>
 		<script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
