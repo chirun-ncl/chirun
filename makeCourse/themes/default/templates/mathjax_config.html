@@ -1,8 +1,10 @@
 MathJax.Hub.Config({
-    TeX: { extensions: ["color.js"] },
+    TeX: { extensions: ["color.js"],
+		    Macros: { mathsterling: '{\\unicode{xA3}}', pounds: '{\\unicode{xA3}}', euro: '\\unicode{x20AC}' }
+		},
     tex2jax: {
         inlineMath: [['\\(','\\)']]
     },
-		skipStartupTypeset: false
+		skipStartupTypeset: false,
 });
 MathJax.Hub.Register.StartupHook("End",function () { window.mathjax_is_loaded = 1 });

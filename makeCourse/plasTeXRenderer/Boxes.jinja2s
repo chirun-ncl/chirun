@@ -11,13 +11,3 @@ name: minipage
 <div class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: raisebox rule
-
-name: example
-<div id="{{ obj.id }}" class="thm thm-example">
-{% if obj.ref %}
-<h4>Example {% if obj.ref %}{{obj.ref}}{% endif %}</h4>
-{% else %}
-<h4>Example</h4>
-{% endif %}
-{{ obj }}
-</div>

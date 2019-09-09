@@ -85,11 +85,21 @@ footer p {
   text-align: center;
 }
 
-.tabular{
-  width:100%;
+/* Try to match LaTeX table styles */
+.tabular {
+	display: inline-block;
+  width: initial;
 	border-top: initial;
 	border-bottom: initial;
+	line-height: initial;
 }
+.tabular p {
+	margin: 0;
+}
+.tabular td {
+	padding: 0.1em 0.5em;
+}
+/*------*/
 
 h4 {
     font-size: 1.3rem;
