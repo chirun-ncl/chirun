@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup
 
@@ -12,9 +12,7 @@ setup(name="makeCourse",
       author="George Stagg",
       author_email="george.stagg@ncl.ac.uk",
       #url="",
-      packages = [
-         'makeCourse',
-      ],
+      packages=find_packages(),
       package_data = {
          'makeCourse': misc_files,
       },
@@ -44,6 +42,6 @@ setup(name="makeCourse",
          'plasTeX'
       ],
       dependency_links = [
-         'git+ssh://git@mas-gitlab.ncl.ac.uk/makecourse-tools/plastex.git@ncl-changes#egg=plasTeX'
+         'git+ssh://git@mas-gitlab.ncl.ac.uk/makecourse-tools/plastex.git#egg=plasTeX'
       ]
 )
