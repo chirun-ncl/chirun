@@ -55,6 +55,10 @@ class tikzpicture(NoCharSubEnvironment):
     class clip(Macro):
         """ Only avoids unrecognized command warning. """
 
+    class scope(Environment):
+        args='*'
+        """ Only avoids unrecognized command warning. """
+
     class MathEnvironment(Environment):
         mathMode = True
 

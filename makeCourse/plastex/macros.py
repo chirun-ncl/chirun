@@ -20,3 +20,6 @@ class cssclass(Command):
 
 class div(Environment):
     args = '[ classes:str ]'
+
+class eqref(Command):
+    args = 'label:idref'
