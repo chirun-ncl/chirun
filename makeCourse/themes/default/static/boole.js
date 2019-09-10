@@ -66,7 +66,7 @@ function recieveRunnerConfirm(codeBlock){
 }
 
 $( document ).ready(function() {
-	$("pre.cm-block[data-runnable='true']").before('<button class="run-code">Run Code »</button>');
+	$("pre.cm-block[data-runnable='true']").before('<button class="run-code">Run Code &#187;</button>');
 
 	$('pre.cm-block').each(function(){
 		if (typeof(Reveal) == "undefined"){
@@ -112,7 +112,7 @@ $( document ).ready(function() {
 		if (typeof(Reveal) == "undefined"){
 			data["codeSource"] = codeMirrorInstances[codeUUID].getValue();
 		} else {
-			data["codeSource"] = codeBlock.find("code").text();
+			data["codeSource"] = codeBlock.find("code")[0].innerText;
 		}
 		console.log("Sending message to Inginious:"+JSON.stringify(data));
 		$.post(runnerURL,data,recieveRunnerConfirm(codeBlock));

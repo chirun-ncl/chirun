@@ -69,6 +69,11 @@ p code, li code, table code {
 
 .reveal pre.output-block {
 	margin-top: -0.65em;
-	padding: 0;
 	border: 1px solid #ccc;
 }
+
+.reveal pre code {
+	min-height: 1.5rem;
+	white-space: pre;
+}
+

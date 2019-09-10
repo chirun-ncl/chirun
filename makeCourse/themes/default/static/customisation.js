@@ -21,8 +21,12 @@ $("#navbarCustomise > #font-scale").on("input change", function() {
 
 function handleThemeUpdate(theme) {
 	var t =  $('#customiseCSS')[0].getAttribute('href'); 
-	$('#customiseCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+theme+'.css'); 
-	$('#customiseCodeCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+'pygmentize.'+theme+'.css'); 
+	if($('#customiseCSS')[0]){
+		$('#customiseCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+theme+'.css'); 
+	}
+	if($('#customiseCodeCSS')[0]){
+		$('#customiseCodeCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+'pygmentize.'+theme+'.css'); 
+	}
 	
 	// Save in local storage
 	localStorage.setItem('theme',theme);

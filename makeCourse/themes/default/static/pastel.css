@@ -233,8 +233,3 @@ nav[data-toggle='toc'] .nav-link.active:focus {
 	background-color: #aec6cf;
 	color: #212529;
 }
-
-/* slides */
-.reveal code {
-  color: #e83e8c;
-}

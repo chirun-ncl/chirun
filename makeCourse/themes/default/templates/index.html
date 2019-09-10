@@ -1,81 +1,98 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <div class="container">
-        <div class="jumbotron">
-            <h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
-            <h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
-            <h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
-        </div>
-    </div>
+<div class="collapse" id="navbarToggleCustomise">
+	<div class="bg-secondary text-white p-2">
+		<h5>Theme Customisation</h5>
+		<form onsubmit="return false;" id="navbarCustomise" class="form-inline">
+			<button class="btn btn-dark mr-2" value="dark">Dark</button>
+			<button class="btn btn-pastel mr-2" value="pastel">Pastel</button>
+			<button class="btn btn-light mr-4" value="light">Light</button>
+			<label class="mr-2" for="font-scale">Font size (<span id="font-size-display">100%</span>)</label>
+			<input type="range" class="form-control-range col-md-3 mr-2" id="font-scale" min="60" max="700" value="100">
+		</form>
+	</div>
+</div>
+<div class="pull-right mr-3 mt-2">			
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
+		<span class="fa fa-cog"></span>
+	</button>
+</div>
+<div class="container">
+	<div class="jumbotron">
+		<h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
+		<h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
+		<h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
+	</div>
+</div>
 {% endblock header %}
 
 {% block main %}
-    <div class="album py-5 bg-light mb-3">
-        <div class="container">
-            <div class="row">
-                {% if course.partsEnabled %}
-                    {% for part in course.structure %}
-                    {% if part.type != 'introduction' %}
-                    <div class="col-md-4 pb-4 mx-auto lti-hint-part">
-                        <div class="card mb-4 h-100 box-shadow">
-                            <div class="card-header text-center">
-                                <h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">
-                                <ul class="list-unstyled">
-                                    {% for subitem in part.content %}
-                                        <li class="mb-3 lti-hint-item">
-                                            {% include "introduction_subitem.html" %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <div class="col-md-4 pb-4 mx-auto">
-                        <div class="card mb-4 h-100 box-shadow">
-                            <div class="card-header text-center">
-                                <h4 class="my-0 font-weight-normal">Course Material</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <ul class="list-unstyled">
-                                        {% for subitem in course.structure %}
-                                            {% if subitem.type != 'introduction' %}
-                                                <li class="mb-3">
-                                                    {% include "introduction_subitem.html" %}
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <section>
-        <div class="container lti-hint-introduction">
-            <div class="lead">
-                {{ item.as_html()|safe }}
-            </div>
-        </div>
-    </section>
+<div class="album py-5 bg-light mb-3">
+	<div class="container">
+		<div class="row">
+			{% if course.partsEnabled %}
+			{% for part in course.structure %}
+			{% if part.type != 'introduction' %}
+			<div class="col-md-4 pb-4 mx-auto lti-hint-part">
+				<div class="card mb-4 h-100 box-shadow">
+					<div class="card-header text-center">
+						<h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
+					</div>
+					<div class="card-body">
+						<p class="card-text">
+						<ul class="list-unstyled">
+							{% for subitem in part.content %}
+							<li class="mb-3 lti-hint-item">
+								{% include "introduction_subitem.html" %}
+							</li>
+							{% endfor %}
+						</ul>
+						</p>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+			{% else %}
+			<div class="col-md-4 pb-4 mx-auto">
+				<div class="card mb-4 h-100 box-shadow">
+					<div class="card-header text-center">
+						<h4 class="my-0 font-weight-normal">Course Material</h4>
+					</div>
+					<div class="card-body">
+						<div class="card-text">
+							<ul class="list-unstyled">
+								{% for subitem in course.structure %}
+								{% if subitem.type != 'introduction' %}
+								<li class="mb-3">
+									{% include "introduction_subitem.html" %}
+								</li>
+								{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<section>
+	<div class="container lti-hint-introduction">
+		<div class="lead">
+			{{ item.as_html()|safe }}
+		</div>
+	</div>
+</section>
 {% endblock main %}
 
 {% block javascript %}
-    {{ super() }}
-    <script>
-        window.addEventListener('pageshow', function(event) {
-            document.getElementById("themes").value = "{{'index.html'|url}}";
-        });
-    </script>
+{{ super() }}
+<script>
+	window.addEventListener('pageshow', function(event) {
+		document.getElementById("themes").value = "{{'index.html'|url}}";
+	});
+</script>
 {% endblock javascript %}
