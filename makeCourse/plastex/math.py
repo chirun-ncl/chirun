@@ -4,7 +4,15 @@ from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.TeX import Primitives
 from plasTeX.Tokenizer import Token, EscapeSequence, Other
 
- 
+class label(Command):
+    args = "label:id"
+    def invoke(self, tex):
+        # Allow _ character in labels
+        catcode = self.ownerDocument.context.whichCode('_')
+        self.ownerDocument.context.catcode('_', Token.CC_LETTER)
+        a = self.parse(tex)
+        self.ownerDocument.context.catcode('_', catcode)
+
 class mbox(Primitives.BoxCommand):
     args = 'self'
     class math(Math.MathEnvironment):
