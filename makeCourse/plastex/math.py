@@ -91,3 +91,22 @@ class eqnarray(EqnarrayStar):
         res[1].ref = self.ref
         return res
 Math.eqnarray = eqnarray
+
+class ThinSpace(Command):
+    macroName = '.'
+    str = '\u2009'
+
+class NegativeThinSpace(Command):
+    macroName = '!'
+
+class MediumSpace(Command):
+    macroName = ':'
+    str = '\u2004'
+
+class ThickSpace(Command):
+    macroName = ';'
+    str = '\u2002'
+
+class ThinSpace_(Command):
+    macroName = '/'
+    str = '\u2009'
