@@ -1,3 +1,0 @@
-name: includegraphics rotatebox scalebox reflectbox resizebox
-<img src="{{ obj.image.url }}">
-

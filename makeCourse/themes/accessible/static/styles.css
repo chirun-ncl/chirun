@@ -64,6 +64,10 @@ figure {
 	max-width: 35%;
 }
 
+.flushright {
+	text-align: right;
+}
+
 img {
   max-width: 100%;
   max-height: 60vh;
