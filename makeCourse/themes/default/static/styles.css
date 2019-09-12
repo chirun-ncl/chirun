@@ -132,22 +132,6 @@ tr, img {
     page-break-inside: avoid;
 }
 
-.figure {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-  width: 100%;
-}
-
-.figure img {
-  border: none;
-  margin: 0 auto;
-}
-
-.figure .caption::before {
-   content: "Figure: ";
-}
-
 .vimeo-aspect-ratio iframe {
   position: absolute;
   width: 100%;
@@ -278,6 +262,10 @@ pre {
 
 figure {
       text-align: center;
+}
+
+.wrapfig {
+	max-width: 35%;
 }
 
 .reveal code {

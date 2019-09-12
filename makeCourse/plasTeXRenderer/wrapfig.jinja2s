@@ -1,2 +1,2 @@
 name: wrapfigure wraptable
-<div style="float: {{ obj.float }}">>{{ obj }}</div>
+<div class="wrapfig" style="float: {{ obj.float }}">{{ obj }}</div>
