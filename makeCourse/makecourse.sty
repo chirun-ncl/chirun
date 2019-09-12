@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
-\ProvidesPackage{custom}[2013/01/13 Custom Package]
+\ProvidesPackage{makecourse}[2013/01/13 Coursebuilder Package]
 
 \ProcessOptions\relax
 
@@ -7,14 +7,15 @@
 % Removing it may break the build process.
 \newif\ifplastex\plastexfalse
 \ifplastex
-    \usepackage{embed}
+		\usepackage{embed}
+		\newcommand{\bm}{\mathbf{#1}}
 \else
-    \usepackage{comment,xr}
-    \excludecomment{HTML}
-    \newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
-    \newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
+		\usepackage{comment,xr,bm}
+		\excludecomment{HTML}
+		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
+		\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
 	\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
-    \newcommand{\embed}[1]{\url{#1}}
+		\newcommand{\embed}[1]{\url{#1}}
 \fi
 
 \endinput

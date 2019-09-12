@@ -1,6 +1,10 @@
 MathJax.Hub.Config({
-    TeX: { extensions: ["color.js"],
-		    Macros: { mathsterling: '{\\unicode{xA3}}', pounds: '{\\unicode{xA3}}', euro: '\\unicode{x20AC}' }
+    TeX: { extensions: ["color.js", "boldsymbol.js"],
+		    Macros: { mathsterling: '{\\unicode{xA3}}',
+									pounds: '{\\unicode{xA3}}',
+									euro: '\\unicode{x20AC}',
+									bm: ["\\boldsymbol{ #1 }",1],
+								}
 		},
     tex2jax: {
         inlineMath: [['\\(','\\)']]
