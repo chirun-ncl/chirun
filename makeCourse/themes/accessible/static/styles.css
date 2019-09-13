@@ -60,8 +60,16 @@ figure {
       text-align: center;
 }
 
+.centered {
+	text-align: center;
+}
+
 .wrapfig{
-	max-width: 35%;
+	float: initial !important;
+	text-align: center;
+}
+.wrapfig > img {
+	width: initial !important;
 }
 
 .flushright {
