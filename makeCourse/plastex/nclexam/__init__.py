@@ -179,26 +179,32 @@ class makefront(Command):
         self.modulecode = self.ownerDocument.userdata['modulecodes'][self.ownerDocument.userdata['variant']]
 
 class theend(Command):
-    args = ''
+    args = '[str]'
 
-class nclitem(List.item):
-    macroName = 'item'
-    def invoke(self, tex):
-        """ Set up counter for this list depth """
-        try:
-            self.counter = List.counters[List.depth-1]
-            self.position = self.ownerDocument.context.counters[self.counter].value + 1
-        except (KeyError, IndexError):
-            pass
-        res = Command.invoke(self, tex)
-        if self.attributes['term'] == '':
-            self.attributes['term'] = ' ';
-        return res
+class List(List):
+    class item(List.item):
+        def invoke(self, tex):
+            """ Set up counter for this list depth """
+            try:
+                self.counter = List.counters[List.depth-1]
+                self.position = self.ownerDocument.context.counters[self.counter].value + 1
+            except (KeyError, IndexError):
+                pass
+            res = Command.invoke(self, tex)
+            if self.attributes['term'] == '':
+                self.attributes['term'] = ' ';
+            return res
 
-    def postArgument(self, arg, value, tex):
-        res = Command.postArgument(self, arg, value, tex)
-        self.alph = self.ownerDocument.context.counters[self.counter].alph
-        self.roman = self.ownerDocument.context.counters[self.counter].roman
-        self.Alph = self.ownerDocument.context.counters[self.counter].Alph
-        return res
-List.item = nclitem
+        def postArgument(self, arg, value, tex):
+            res = Command.postArgument(self, arg, value, tex)
+            self.alph = self.ownerDocument.context.counters[self.counter].alph
+            self.roman = self.ownerDocument.context.counters[self.counter].roman
+            self.Alph = self.ownerDocument.context.counters[self.counter].Alph
+            return res
+
+class enumerate_(List):
+    macroName = 'enumerate'
+    args = '[ type ]'
+
+class itemize(List):
+    pass

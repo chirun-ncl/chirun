@@ -37,9 +37,12 @@ class tikzpicture(NoCharSubEnvironment):
         mechanism.
         """
 
+    class textwidth(Macro):
+        """ Only avoids unrecognized command warning. """
+
     class draw(Macro):
         """ Only avoids unrecognized command warning. """
-    
+
     class fill(Macro):
         """ Only avoids unrecognized command warning. """
 
@@ -55,9 +58,15 @@ class tikzpicture(NoCharSubEnvironment):
     class clip(Macro):
         """ Only avoids unrecognized command warning. """
 
-    class scope(Environment):
-        args='*'
+    class axis(Environment):
         """ Only avoids unrecognized command warning. """
+
+    class groupplot(Environment):
+        """ Only avoids unrecognized command warning. """
+
+    class scope(Environment):
+        """ Only avoids unrecognized command warning. """
+        args='*'
 
     class MathEnvironment(Environment):
         mathMode = True

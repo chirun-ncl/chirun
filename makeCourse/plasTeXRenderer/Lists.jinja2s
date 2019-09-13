@@ -1,7 +1,16 @@
 name: itemize
 <ul class="itemize">
+{{obj.source}}
 {% for item in obj %}
-  <li id={{ item.id }}>{{ item }}</li>
+	{% if item.attributes.term %}
+		{% if item.attributes.term|int(-1) != -1 %}
+			<li id={{ item.id }} value={{ item.attributes.term }}> {{ item }} </li>
+		{% else %}
+			<li style="list-style: none" id={{ item.id }}> {{ item.attributes.term }} {{ item }} </li>
+		{% endif %}
+	{% else %}
+		<li id={{ item.id }}> {{ item }} </li>
+	{% endif %}
 {% endfor %}
 </ul>
 
@@ -23,9 +32,13 @@ name: enumerate
 {% endif %}
 {% for item in obj %}
 	{% if item.attributes.term %}
-	<li id={{ item.id }} value={{ item.attributes.term }}> {{ item }} </li>
+		{% if item.attributes.term|int(-1) != -1 %}
+			<li id={{ item.id }} value={{ item.attributes.term }}> {{ item }} </li>
+		{% else %}
+			<li style="list-style: none" id={{ item.id }}> {{ item.attributes.term }} {{ item }} </li>
+		{% endif %}
 	{% else %}
-  <li id={{ item.id }}> {{ item }} </li>
+		<li id={{ item.id }}> {{ item }} </li>
 	{% endif %}
 {% endfor %}
 </ol>
