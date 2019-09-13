@@ -8,9 +8,8 @@
 \newif\ifplastex\plastexfalse
 \ifplastex
 		\usepackage{embed}
-		\newcommand{\bm}{\mathbf{#1}}
 \else
-		\usepackage{comment,xr,bm}
+		\usepackage{comment,xr,bm,amssymb,amsbsy}
 		\excludecomment{HTML}
 		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
 		\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
