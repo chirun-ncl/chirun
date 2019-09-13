@@ -238,6 +238,10 @@ class Introduction(Item):
     template_name = 'index.html'
     title = 'index'
 
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.leading_text = self.data.get('leading_text', '')
+
     def __str__(self):
         return 'introduction'
 

@@ -14,6 +14,7 @@
                     {% if part.type != 'introduction' %}
 										<div class="lti-hint-part">
 										<h3><a href="{{part.url|url}}">{{part.title}}</a></h3>
+										<p>{{ item.leading_text | safe }}</p>
                     <ul>
                              {% for subitem in part.content %}
                               <li class="mb-3 lti-hint-item">
