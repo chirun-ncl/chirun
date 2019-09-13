@@ -1,6 +1,5 @@
 name: itemize
 <ul class="itemize">
-{{obj.source}}
 {% for item in obj %}
 	{% if item.attributes.term %}
 		{% if item.attributes.term|int(-1) != -1 %}
