@@ -67,7 +67,7 @@
 				{% endblock %}
 
 				{% block main_slides %}
-				<section data-markdown data-separator="<hr/?>" data-separator-notes="^Data-Note:">
+				<section data-splitter data-separator="<hr/?>" data-separator-notes="^Data-Note:">
 					<textarea data-template>
 						{{item.as_html()|safe}}
 					</textarea>
@@ -82,9 +82,8 @@
 		<script>
 			Reveal.initialize({
 				dependencies: [
-					{ src: "{{'reveal.js/plugin/markdown/marked.js'|static_url}}" },
+					{ src: "{{'reveal.js/plugin/splitter/splitter.js'|static_url}}" },
 					{ src: "{{'reveal.js/plugin/math/math.js'|static_url}}" },
-					{ src: "{{'reveal.js/plugin/markdown/markdown.js'|static_url}}" },
 					{ src: "{{'reveal.js/plugin/notes/notes.js'|static_url}}", async: true },
 					{ src: "{{'reveal.js/plugin/highlight/highlight.js'|static_url}}", async: true }
 				]
