@@ -64,17 +64,19 @@ def fix_local_links(soup, course):
         to use the course's root URL if they don't already.
     """
     root = course.get_web_root()
-    for a in soup.find_all('a'):
-        url = a.get('href')
-        if url and url[0]=='/' and url[:len(root)]!=root:
-            url = root + url[1:]
-            a['href'] = url
+    tags = {
+		'a': ['href'],
+		'img':['src'],
+		'section': ['data-background','data-background-video'],
+	}
 
-    for img in soup.find_all('img'):
-        url = img.get('src')
-        if url and url[0]=='/' and url[:len(root)]!=root:
-            url = root + url[1:]
-            img['src'] = url
+    for tag, attrs in tags.items():
+        for el in soup.find_all(tag):
+            for attr in attrs:
+                url = el.get(attr)
+                if url and url[0]=='/' and url[:len(root)]!=root:
+                    url = root + url[1:]
+                    el[attr] = url
 
 def dots_pause(soup, course):
     """
@@ -83,13 +85,21 @@ def dots_pause(soup, course):
     """
     pauses = soup.find_all("p", string=". . .")
     for el in pauses:
-        els = [i for i in itertools.takewhile(
-            lambda x: x.name != 'hr' and x not in pauses, el.next_siblings)]
-        fragment = soup.new_tag('div', attrs={"class": "fragment"})
-        el.wrap(fragment)
-        el.decompose()
-        for tag in els:
-            fragment.append(tag)
+        next_els = [e for e in el.next_siblings]
+        next_els.remove('\n')
+        if len(next_els) > 0:
+			# There are some elements after this one within the <section>.
+            els = [i for i in itertools.takewhile(
+                lambda x: x.name != 'hr' and x not in pauses, el.next_siblings)]
+            fragment = soup.new_tag('div', attrs={"class": "fragment"})
+            el.wrap(fragment)
+            el.decompose()
+            for tag in els:
+                fragment.append(tag)
+        else:
+			# There are no other elements, so fragment the entire next section
+            el.parent.next_sibling['class'] = el.parent.next_sibling['class']+['fragment']
+            el.decompose()
 
 def list_fragment(soup, course):
     for li in soup.find_all("li"):

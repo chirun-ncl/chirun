@@ -38,6 +38,3 @@ class MarkdownRenderer(object):
 class SlidesMarkdownRenderer(MarkdownRenderer):
      def __init__(self):
         super().__init__()
-
-        self.extensions = [FigureExtension(),'pymdownx.highlight','pymdownx.arithmatex','pymdownx.extra','pymdownx.superfences']
-
