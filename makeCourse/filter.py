@@ -42,6 +42,13 @@ def embed_youtube(embed):
     div.iframe['src'] = "https://www.youtube.com/embed/{code}?ecver=1".format(code=embed['data-id'])
     return div
 
+@replace_tag('recap-embed')
+def embed_recap(embed):
+    div = html_fragment('<div class="recap-aspect-ratio"><iframe class="recap" \
+                            frameborder="0" allowfullscreen></iframe></div>')
+    div.iframe['src'] = "https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id={code}&v=1".format(code=embed['data-id'])
+    return div
+
 @replace_tag('oembed')
 def oembed(embed):
     url = embed['data-url']
@@ -88,7 +95,7 @@ def dots_pause(soup, course):
         next_els = [e for e in el.next_siblings]
         next_els.remove('\n')
         if len(next_els) > 0:
-			# There are some elements after this one within the <section>.
+            # There are some elements after this one within the <section>.
             els = [i for i in itertools.takewhile(
                 lambda x: x.name != 'hr' and x not in pauses, el.next_siblings)]
             fragment = soup.new_tag('div', attrs={"class": "fragment"})
@@ -97,7 +104,7 @@ def dots_pause(soup, course):
             for tag in els:
                 fragment.append(tag)
         else:
-			# There are no other elements, so fragment the entire next section
+	    # There are no other elements, so fragment the entire next section
             el.parent.next_sibling['class'] = el.parent.next_sibling['class']+['fragment']
             el.decompose()
 
@@ -107,7 +114,7 @@ def list_fragment(soup, course):
 
 def burnInExtras(course, html, out_format):
     soup = BeautifulSoup(html, 'html.parser')
-    filters = [embed_numbas, embed_vimeo, embed_youtube,
+    filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
             oembed, fix_local_links, dots_pause, list_fragment]
     for f in filters:
         f(soup, course=course)
