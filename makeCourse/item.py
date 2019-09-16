@@ -35,6 +35,7 @@ class Item(object):
         self.source = Path(self.data.get('source', ''))
         self.is_hidden = self.data.get('hidden', False)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
+        self.markdownRenderer = MarkdownRenderer()
 
     def __str__(self):
         return '{} "{}"'.format(self.type, self.title)
@@ -105,7 +106,7 @@ class Item(object):
         ext = self.source.suffix
         
         if ext == '.md':
-            html = MarkdownRenderer.render(self.markdown_content())
+            html = self.markdownRenderer.render(self.markdown_content())
         elif ext == '.tex':
             html = self.course.load_latex_content(self)
         else:
