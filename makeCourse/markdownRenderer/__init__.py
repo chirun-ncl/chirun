@@ -34,7 +34,3 @@ class MarkdownRenderer(object):
 
     def render(self, content):
         return markdown(content, extensions=self.extensions, extension_configs=self.extension_configs)
-
-class SlidesMarkdownRenderer(MarkdownRenderer):
-     def __init__(self):
-        super().__init__()
