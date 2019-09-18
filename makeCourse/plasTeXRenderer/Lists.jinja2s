@@ -14,11 +14,11 @@ name: itemize
 </ul>
 
 name: enumerate
-{% if obj.listType == "(a)" %}
+{% if obj.listType == "(a)" or obj.listType == "a)" %}
 <ol style="list-style-type: lower-alpha" class="enumerate">
-{% elif obj.listType == "(i)" %}
+{% elif obj.listType == "(i)" or obj.listType == "i)" %}
 <ol style="list-style-type: lower-roman" class="enumerate">
-{% elif obj.listType == "(1)" %}
+{% elif obj.listType == "(1)" or obj.listType == "1)" %}
 <ol style="list-style-type: decimal" class="enumerate">
 {% elif obj.listDepth == 1 %}
 <ol style="list-style-type: decimal" class="enumerate">

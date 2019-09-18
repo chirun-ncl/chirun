@@ -1,10 +1,10 @@
 name: thebibliography
-<dl class="bibliography">
+<h2>Bibliography</h2>
+<ul class="bibliography">
 {% for item in obj %}
-  <dt><a name="{{ item.id }}">{{ item.bibcite }}</a></dt>
-  <dd>{{ item }}</dd>
+	<li style="list-style: none" id={{ item.id }}> <div class="bibcite">[{{ item.bibcite }}]</div> {{ item }} </li>
 {% endfor %}
-</dl>
+</ul>
 
 name: bibliographystyle
 
@@ -21,6 +21,7 @@ name: cite
   <a href="{{ item.idref.bibitem.url }}">{{ item }}</a>
   {% else %}
   {{ item }}
+	{% endif %}
 {% endfor %}
 </span>
 

@@ -14,7 +14,7 @@ import plasTeX.Logging
 from plasTeX.Config import config as plastex_config
 import makeCourse.plasTeXRenderer.Config as html_config
 from . import macros
-from . import math
+from . import overrides
 
 plastex_config += html_config.config
 
@@ -89,7 +89,7 @@ class PlastexRunner:
             logger.debug('Using tikz template: ' + tikzPath)
             document.userdata['tikz-template'] = tikzPath
         document.context.importMacros(vars(macros))
-        document.context.importMacros(vars(math))
+        document.context.importMacros(vars(overrides))
 
         f = open(str(Path(wd) / inPath))
         tex = TeX(document, myfile=f)

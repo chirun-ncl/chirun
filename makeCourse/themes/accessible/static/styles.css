@@ -137,10 +137,15 @@ img {
     height: 1000px;
 }
 
-.itemize>li>p:first-of-type, .enumerate>li>p:first-of-type {
+.bibliography>li>p:first-of-type, .itemize>li>p:first-of-type,
+.enumerate>li>p:first-of-type {
   display: inline;
 }
 
+.bibliography .bibcite {
+	display: inline-block;
+	margin-right: 0.5em;
+}
 
 pre.output-block {
 	margin-top: -1.25rem !important;

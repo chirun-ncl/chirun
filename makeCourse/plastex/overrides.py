@@ -1,5 +1,5 @@
 from plasTeX import Command, sourceChildren, sourceArguments, Environment
-from plasTeX.Base.LaTeX import Math
+from plasTeX.Base.LaTeX import Math, Lists
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.TeX import Primitives
 from plasTeX.Tokenizer import Token, EscapeSequence, Other
@@ -118,3 +118,13 @@ class ThickSpace(Command):
 class ThinSpace_(Command):
     macroName = '/'
     str = '\u2009'
+
+class enumerate_(Lists.List):
+    macroName = 'enumerate'
+    args = '[ type:str ]'
+
+    def invoke(self, tex):
+        Lists.List.invoke(self,tex)
+        if 'type' in self.attributes:
+            self.listType = self.attributes['type']
+        self.listDepth = Lists.List.depth
