@@ -4,7 +4,10 @@
 .slides-large{font-size: 100% !important;}
 .slides-larger{font-size: 125% !important;}
 
-.reveal section figure img { border: 1px solid #888;}
+.reveal section figure img {
+	border: none !important;
+	box-shadow: none !important;
+}
 
 .reveal .header-l {
     position: absolute;
@@ -40,4 +43,9 @@ h2{
 }
 .reveal ol {
   display: block;
+}
+
+.reveal code {
+  font-size: 87.5%;
+  word-break: break-word;
 }

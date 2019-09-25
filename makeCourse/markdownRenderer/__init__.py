@@ -1,6 +1,6 @@
 from markdown import markdown
 import makeCourse.markdownRenderer.codemirror
-from mdfigure import FigureExtension
+from .markdown_figure.mdfigure import FigureExtension
 
 
 class MarkdownRenderer(object):

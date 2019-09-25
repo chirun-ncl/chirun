@@ -268,11 +268,6 @@ figure {
 	max-width: 35%;
 }
 
-.reveal code {
-  font-size: 87.5%;
-  word-break: break-word;
-}
-
 .ttfamily{
   font-family: "Courier New", Courier, monospace;
 }
