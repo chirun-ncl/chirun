@@ -16,6 +16,9 @@
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="{{'styles.css'|static_url}}">
             <link rel="stylesheet" id="customiseCSS" href="{{'light.css'|static_url}}">
+            {% for css in course.config.css %}
+                <link rel="stylesheet" href="{{css|static_url}}">
+            {% endfor %}
             {% for css in item.data.css %}
                 <link rel="stylesheet" href="{{css|static_url}}">
             {% endfor %}

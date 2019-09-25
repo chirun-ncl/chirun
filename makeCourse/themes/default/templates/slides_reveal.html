@@ -17,8 +17,11 @@
 		<link rel="stylesheet" href="{{'slides.css'|static_url}}">
 		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
 		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
+		{% for css in course.config.css %}
+			<link rel="stylesheet" href="{{css|static_url}}">
+		{% endfor %}
 		{% for css in item.data.css %}
-		<link rel="stylesheet" href="{{css|static_url}}">
+			<link rel="stylesheet" href="{{css|static_url}}">
 		{% endfor %}
 		{% endblock stylesheets %}
 
