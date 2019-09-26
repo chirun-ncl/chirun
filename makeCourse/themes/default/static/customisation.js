@@ -24,6 +24,7 @@ function handleThemeUpdate(theme) {
 	if($('#customiseCSS')[0]){
 		$('#customiseCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+theme+'.css'); 
 	}
+	var t =  $('#customiseCodeCSS')[0].getAttribute('href'); 
 	if($('#customiseCodeCSS')[0]){
 		$('#customiseCodeCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+'pygmentize.'+theme+'.css'); 
 	}
