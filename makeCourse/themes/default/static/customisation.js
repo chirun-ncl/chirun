@@ -20,12 +20,12 @@ $("#navbarCustomise > #font-scale").on("input change", function() {
 });
 
 function handleThemeUpdate(theme) {
-	var t =  $('#customiseCSS')[0].getAttribute('href'); 
 	if($('#customiseCSS')[0]){
+		var t =  $('#customiseCSS')[0].getAttribute('href');
 		$('#customiseCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+theme+'.css'); 
 	}
-	var t =  $('#customiseCodeCSS')[0].getAttribute('href'); 
 	if($('#customiseCodeCSS')[0]){
+		var t =  $('#customiseCodeCSS')[0].getAttribute('href'); 
 		$('#customiseCodeCSS')[0].setAttribute('href',t.substring(0, t.lastIndexOf("/") + 1)+'pygmentize.'+theme+'.css'); 
 	}
 	
