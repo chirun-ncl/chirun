@@ -44,8 +44,3 @@ h2{
 .reveal ol {
   display: block;
 }
-
-.reveal code {
-  font-size: 87.5%;
-  word-break: break-word;
-}
