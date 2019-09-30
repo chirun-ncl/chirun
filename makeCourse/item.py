@@ -201,6 +201,7 @@ class Slides(Chapter):
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
+        self.title_slide = self.data.get('title_slide', True)
 
     def get_context(self):
         context = super().get_context()

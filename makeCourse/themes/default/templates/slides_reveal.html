@@ -63,10 +63,12 @@
 
 			<div class="slides">
 				{% block title_slide %}
-				<section id="title-slide">
-					<h1 class="title">{{item.title}}</h1>
-					<p class="author">{{course.config.author}}</p>
-				</section>
+					{% if item.title_slide %}
+					<section id="title-slide">
+						<h1 class="title">{{item.title}}</h1>
+						<p class="author">{{course.config.author}}</p>
+					</section>
+					{% endif %}
 				{% endblock %}
 
 				{% block main_slides %}
