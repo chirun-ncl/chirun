@@ -4,7 +4,7 @@ const themeBtns = document.querySelectorAll('#navbarCustomise > button')
 if(localStorage.getItem("css-font-size")) {
 	changeFontSize(localStorage.getItem("css-font-size"))
 }
-if(localStorage.getItem("css-font-size")) {
+if(localStorage.getItem("theme")) {
 	handleThemeUpdate(localStorage.getItem("theme"))
 }
 
