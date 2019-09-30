@@ -114,9 +114,9 @@ pre.ran {
 .cm-s-default.cm-s-light .CodeMirror-line::selection, .cm-s-light .CodeMirror-line > span::selection, .cm-s-light .CodeMirror-line > span > span::selection { background: #eee8d5; }
 .cm-s-default.cm-s-light .CodeMirror-line::-moz-selection, .cm-s-ligh .CodeMirror-line > span::-moz-selection, .cm-s-ligh .CodeMirror-line > span > span::-moz-selection { background: #eee8d5; }
 .cm-s-default.CodeMirror {
-  -moz-box-shadow: inset 7px 0 12px -6px #000;
-  -webkit-box-shadow: inset 7px 0 12px -6px #000;
-  box-shadow: inset 7px 0 12px -6px #000;
+  -moz-box-shadow: inset 3px 0 6px -3px #000;
+  -webkit-box-shadow: inset 3px 0 6px -3px #000;
+  box-shadow: inset 3px 0 6px -3px #000;
 }
 .cm-s-default .CodeMirror-gutters {
   border-right: 0;
@@ -151,7 +151,7 @@ pre.ran {
 	border-color: #efead9;
 }
 .breadcrumb-item > a {
-	color: #839496;
+	color: #586e75;
 }
 .breadcrumb-item > a:hover,
 .breadcrumb-item > a:focus {
@@ -234,7 +234,7 @@ body {
 }
 
 a {
-	color: #657b83;
+	color: #586e75;
 }
 
 a:hover, a:focus {
@@ -243,20 +243,20 @@ a:hover, a:focus {
 
 /* bootstrap-toc */
 nav[data-toggle='toc'] .nav > li > a {
-  color: #839496;
+  color: #586e75;
 }
 nav[data-toggle='toc'] .nav > li > a:hover,
 nav[data-toggle='toc'] .nav > li > a:focus {
-  color: #586e75;
+  color: #445258;
   background-color: transparent;
-  border-left: 1px solid #586e75;
+  border-left: 1px solid #445258;
 }
 nav[data-toggle='toc'] .nav-link.active,
 nav[data-toggle='toc'] .nav-link.active:hover,
 nav[data-toggle='toc'] .nav-link.active:focus {
-  color: #586e75;
+  color: #445258;
   background-color: transparent;
-  border-left: 2px solid #586e75;
+  border-left: 2px solid #445258;
 }
 
 /* coursebuilder */
