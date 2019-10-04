@@ -23,7 +23,10 @@
 {% block nav %}
 <nav>
 	<a href="{{'index.html'|url}}">{{course.config.title}}</a>  &mdash; 
-	<a href="{{item.parent.url|url}}">{{item.parent.title}}</a>  &mdash; {{item.title}}
+	{% if item.parent.url %}
+	<a href="{{item.parent.url|url}}">{{item.parent.title}}</a>  &mdash;
+	{% endif %}
+	{{item.title}}
 </nav>
 {% endblock %}
 
