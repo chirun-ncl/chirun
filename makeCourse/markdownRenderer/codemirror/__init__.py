@@ -30,7 +30,11 @@ def runnable_formatter(source, language, css_class, options, md):
     return str(pretag)
 
 def output_formatter(source, language, css_class, options, md):
-    html = fence_code_format(source, language, 'output-block', options, md)
+    if 'class' in options:
+        cls = options['class']
+    else:
+        cls = 'output-block'
+    html = fence_code_format(source, language, cls, options, md)
     return html
 
 def runnable_validator(language, options):
