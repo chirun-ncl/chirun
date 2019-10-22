@@ -65,7 +65,7 @@ function recieveRunnerConfirm(codeBlock){
 	}
 }
 
-$( document ).ready(function() {
+$(window).on('load', function() {
 	$("pre.cm-block[data-runnable='true']").before('<button class="run-code">Run Code &#187;</button>');
 
 	$('pre.cm-block').each(function(){
