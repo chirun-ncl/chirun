@@ -74,6 +74,7 @@ def fix_local_links(soup, course):
     tags = {
 		'a': ['href'],
 		'img':['src'],
+		'source':['src'],
 		'section': ['data-background','data-background-video'],
 	}
 
