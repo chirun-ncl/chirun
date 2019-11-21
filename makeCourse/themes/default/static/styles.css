@@ -267,6 +267,13 @@ pre {
 figure {
       text-align: center;
 }
+figure + em, .reveal figure + em {
+  display: inherit;
+  text-align: center;
+  font-size: 0.8em;
+  margin-top: -10px;
+}
+
 
 .wrapfig {
 	max-width: 35%;

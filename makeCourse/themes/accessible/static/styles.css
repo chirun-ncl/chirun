@@ -60,6 +60,13 @@ figure {
       text-align: center;
 }
 
+figure + em, .reveal figure + em {
+  display: inherit;
+  text-align: center;
+  margin-top: -10px;
+}
+
+
 .centered {
 	text-align: center;
 }
