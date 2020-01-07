@@ -53,6 +53,9 @@ class LastBuiltProcess(ItemProcess):
         else:
             item.last_built = None
 
+    def visit_url(self, item):
+        pass
+
 class RenderProcess(ItemProcess):
 
     name = 'Render items to HTML'
