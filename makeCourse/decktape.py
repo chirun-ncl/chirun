@@ -15,8 +15,8 @@ class DecktapeRunner:
         cmd = [
             'decktape', '-s', '1366x768',
             '-p', '10',
-            htmlPath,
-            outPath,
+            str(htmlPath),
+            str(outPath),
             '--chrome-arg=--no-sandbox',
         ]
 
