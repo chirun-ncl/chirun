@@ -205,11 +205,14 @@ class MakeCourse:
             logger.info(processor.name)
             for n in range(processor.num_runs):
                 if processor.num_runs>1:
-                    logger.debug("Run {}".format(n+1))
+                    logger.debug("Run {}/{}".format(n+1,processor.num_runs))
                 for item in self.structure:
                     processor.visit(item)
 
         logger.debug('Done processing!')
+
+    def optimize(self):
+        pass
 
     def temp_path(self, subpath=None):
         """
@@ -277,6 +280,7 @@ The web root directory is: {web_root}
         self.copy_static_files()
         self.load_structure()
         self.process()
+        self.optimize()
 
 def parse_args():
     parser = argparse.ArgumentParser()
