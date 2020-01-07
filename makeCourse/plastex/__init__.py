@@ -108,7 +108,7 @@ class PlastexRunner:
         os.chdir(str(outPath))
         renderer = Renderer()
         renderer.loadTemplates(document)
-        renderer.importDirectory(str(self.theme.source / 'plastex'))
+        renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
         renderer.render(document)
 
         os.chdir(wd)
