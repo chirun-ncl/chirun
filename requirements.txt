@@ -22,7 +22,7 @@ pyparsing==2.2.0
 pyppeteer==0.0.25
 pytest==3.0.7
 python-dateutil==2.6.0
-PyYAML==3.12
+PyYAML==5.3
 six==1.10.0
 -e git+git@mas-gitlab.ncl.ac.uk:makecourse-tools/plastex.git@master#egg=plasTeX
 Unidecode==1.0.22

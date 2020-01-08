@@ -116,7 +116,7 @@ class MakeCourse:
         logger.debug("Reading config file {}".format(config_file))
 
         with open(str(config_file), 'r') as f:
-            config = self.loaded_config = yaml.load(f)
+            config = self.loaded_config = yaml.load(f, Loader=yaml.CLoader)
 
         config['args'] = self.args
 
