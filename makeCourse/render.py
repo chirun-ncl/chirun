@@ -2,6 +2,7 @@ import logging
 import datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from . import mkdir_p
+from distutils.dir_util import copy_tree
 import asyncio
 from pyppeteer import launch
 
@@ -33,6 +34,9 @@ class Renderer(object):
         html = self.to_html(item, template_file)
         with open(str(outPath),'w', encoding='utf-8') as f:
             f.write(html)
+        staticDir = item.source.parent / 'static'
+        if staticDir.exists():
+            copy_tree(str(staticDir),str(outDir / 'static'))
 
     def to_html(self, item, template_file):
         template = self.env.get_template(template_file)
