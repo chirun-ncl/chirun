@@ -91,9 +91,9 @@ def dots_pause(soup, course):
         Rewrite three dots on thier own paragraph into a set of divs with
         class "fragment" applied. This is used in slideshows to create pauses
     """
-    pauses = soup.find_all("p", string=". . .")
+    pauses = soup.find_all("p", string=re.compile(r"\. \. \."))
     for el in pauses:
-        next_els = [e for e in el.next_siblings]
+        next_els = list(el.next_siblings)
         next_els.remove('\n')
         if len(next_els) > 0:
             # There are some elements after this one within the <section>.
