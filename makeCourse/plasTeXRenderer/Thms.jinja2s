@@ -1,6 +1,6 @@
 name: thmenv
 <div id="{{ obj.id }}" class="thm thm-{{ obj.thmName |replace("*", "") }}">
-<h4>{{ obj.caption }} {% if obj.ref %}{{obj.ref}}{% endif %}</h4>
+<h4>{{ obj.caption }} {% if obj.ref %}{{obj.ref}}{% endif %} {% if obj.title %}{{ obj.title }}{% endif %}</h4>
 {{ obj }}
 </div>
 
