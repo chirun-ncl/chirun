@@ -1,11 +1,11 @@
 name: mbox makebox
-<div class="mbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+<div class="mbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: fbox framebox
-<div class="fbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+<div class="fbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: parbox
-<div class="parbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</span>
+<div class="parbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: minipage
 <div class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
