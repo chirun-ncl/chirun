@@ -1,5 +1,4 @@
 import glob
-import logging
 import re
 import os
 import shutil
@@ -10,7 +9,7 @@ from subprocess import Popen, PIPE
 from plasTeX import TeXDocument
 from makeCourse.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
-import plasTeX.Logging
+from plasTeX.Logging import getLogger
 from plasTeX.Config import config as plastex_config
 import makeCourse.plasTeXRenderer.Config as html_config
 from . import macros
@@ -18,7 +17,7 @@ from . import overrides
 
 plastex_config += html_config.config
 
-logger = logging.getLogger(__name__)
+logger = getLogger()
 
 # Add makecourse's custom plastex packages to the path
 sys.path.insert(0,os.path.dirname(__file__))
@@ -56,6 +55,9 @@ def getEmbeddedImages(course, html, item):
     return html
 class PlastexRunner:
 
+    def exception_handler(exception_type, exception, traceback):
+        print("%s: %s" % (exception_type.__name__, exception))
+
     def load_latex_content(self, item):
         """
             Convert a LaTeX file to HTML, and do some processing with its images
@@ -75,7 +77,6 @@ class PlastexRunner:
         outPath = item.temp_path()
         outPaux = self.temp_path().resolve()
         inPath = root_dir / item.source
-        plasTeX.Logging.fileLogging(str(item.temp_path() / 'plastex.log'))
 
         wd = os.getcwd()
 
@@ -102,6 +103,7 @@ class PlastexRunner:
                 continue
             document.context.restore(fname,'makecourse')
 
+        sys.excepthook = PlastexRunner.exception_handler
         tex.parse()
         f.close()
 
