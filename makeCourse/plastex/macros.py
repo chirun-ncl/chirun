@@ -23,3 +23,7 @@ class div(Environment):
 
 class eqref(Command):
     args = 'label:idref'
+
+class rightline(Command):
+    args = 'self'
+
