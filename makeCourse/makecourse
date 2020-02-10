@@ -51,7 +51,7 @@ class MakeCourse:
                 logger.setLevel(logging.INFO)
                 logging.basicConfig(format='%(message)s')
 
-        TEXINPUTS = [os.path.dirname(os.path.realpath(__file__)),'']
+        TEXINPUTS = [os.path.dirname(os.path.realpath(makeCourse.__file__)),'']
         TEXINPUTS += [os.environ.get('TEXINPUTS','')]
         os.environ['TEXINPUTS'] = ':'.join(TEXINPUTS)
 
