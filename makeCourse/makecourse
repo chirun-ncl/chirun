@@ -51,6 +51,10 @@ class MakeCourse:
                 logger.setLevel(logging.INFO)
                 logging.basicConfig(format='%(message)s')
 
+        TEXINPUTS = [os.path.dirname(os.path.realpath(__file__)),'']
+        TEXINPUTS += [os.environ.get('TEXINPUTS','')]
+        os.environ['TEXINPUTS'] = ':'.join(TEXINPUTS)
+
         print("Running makecourse for directory {}".format(self.get_root_dir().resolve()))
 
     def get_root_dir(self):

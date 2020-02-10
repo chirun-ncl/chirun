@@ -18,6 +18,8 @@ from . import overrides
 plastex_config += html_config.config
 
 logger = getLogger()
+imagelog = getLogger('imager')
+imagelog.setLevel('INFO')
 
 # Add makecourse's custom plastex packages to the path
 sys.path.insert(0,os.path.dirname(__file__))
