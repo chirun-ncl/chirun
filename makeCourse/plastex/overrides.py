@@ -3,6 +3,9 @@ from plasTeX.Base.LaTeX import Math, Lists
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.TeX import Primitives
 from plasTeX.Tokenizer import Token, EscapeSequence, Other
+from plasTeX.Logging import getLogger
+
+log = getLogger()
 
 class label(Command):
     args = "label:id"
@@ -119,7 +122,41 @@ class ThinSpace_(Command):
     macroName = '/'
     str = '\u2009'
 
-class enumerate_(Lists.List):
+class List(Lists.List):
+    def digest(self, tokens):
+        if self.macroMode != Environment.MODE_END:
+        # Drop any whitespace before the first item
+            for tok in tokens:
+                if tok.isElementContentWhitespace:
+                    continue
+                elif tok.nodeName == 'itemsep':
+                    tok.digest([])
+                    continue
+                elif tok.nodeName == 'setcounter':
+                    tok.digest([])
+                    continue
+                if tok.nodeName != 'item':
+                    log.warning('dropping non-item from beginning of list')
+                    continue
+                tokens.push(tok)
+                break
+        Environment.digest(self, tokens)
+Lists.List = List
+
+class description(List):
+    pass
+
+class trivlist(List):
+    pass
+
+class itemize(List):
+    pass
+
+class ConfigurableList(List):
+    macroName = 'list'
+    args = 'defaultlabel decls:nox'
+
+class enumerate_(List):
     macroName = 'enumerate'
     args = '[ type:str ]'
 
