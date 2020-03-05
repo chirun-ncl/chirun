@@ -5,9 +5,9 @@ except ImportError:
     from distutils.core import setup
 
 setup(name="makeCourse",
-      description="A framework designed to easily convert a set of latex or markdown formatted notes into a course website.",
-      version="0.2",
-      author="George Stagg",
+      description="Produce flexible and accessible course notes, in a variety of formats, using LaTeX or Markdown source",
+      version="0.3",
+      author="E-Learning Team, School of Mathematics, Statistics & Physics, Newcastle University",
       author_email="george.stagg@ncl.ac.uk",
       url="https://mas-coursebuild.ncl.ac.uk",
       packages=find_packages(),
@@ -21,10 +21,10 @@ setup(name="makeCourse",
          'funcsigs>=1.0.2',
          'Jinja2>=2.9.6',
          'jinja2-time>=0.2.0',
-         'Markdown>=3.1.1',
-         'MarkupSafe>=1.0',
-         'markdown-figure>=0.0.1',
-         'mdx-outline>=1.3.0',
+         'Markdown==3.1.1',
+         'MarkupSafe==1.0',
+         'markdown-figure==0.0.1',
+         'mdx-outline==1.3.0',
          'mock>=2.0.0',
          'olefile>=0.44',
          'packaging>=16.8',
@@ -32,7 +32,7 @@ setup(name="makeCourse",
          'Pillow>=4.2.1',
          'py>=1.4.33',
          'Pygments>=2.4.2',
-         'pymdown-extensions<=6.0',
+         'pymdown-extensions==6.0',
          'pyoembed>=0.1.2',
          'pyparsing>=2.2.0',
          'pyppeteer>=0.0.25',
@@ -44,6 +44,6 @@ setup(name="makeCourse",
          'Unidecode>=1.0.22'
       ],
       dependency_links = [
-         'git+ssh://git@mas-gitlab.ncl.ac.uk/makecourse-tools/plastex.git#egg=plasTeX'
+         'git+https://github.com/plastex/plastex.git@master#egg=plasTeX'
       ]
 )
