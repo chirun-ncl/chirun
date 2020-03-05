@@ -34,5 +34,15 @@ The command `makecourse` is now available for use. You should now compile the sa
 ### Compile the Sample Course
  * Install the `makecourse` package using the instructions above
  * Clone the sample course: `git clone https://github.com/coursebuilder-ncl/sample_course.git`
- * Change into the directory you just cloned to and run "make local" to build and view a local version of the sample course.
+ * Change into the directory you just cloned to and run `make local` to build and view a local version of the sample course.
  * The finished website output will be in `./sample_course/build`
+ 
+### Help! My LaTeX notes won't compile!
+
+LaTeX is compiled using the plasTeX python package. While it supports a large array of TeX and LaTeX features, not all packages are compatible. Complex packages must be implemented in python independently.
+
+If your notes are not compiling at all, the first thing to do is to take a look at which LaTeX packages you are using. Try removing one or more, simplifying your notes, until things start working. Complex packages that use PDF special commands are a common problem.
+
+If your notes compile, but the output is broken, you should check indiviual mathematical equations in your notes. Coursebuilder renders mathematics on the web with MathJax, and not all features available in LaTeX work in MathJax out of the box.
+
+In short you should start with short, simple LaTeX documents and slowly build up complexity once they are converting through CourseBuilder cleanly!
