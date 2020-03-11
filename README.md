@@ -46,3 +46,7 @@ If your notes are not compiling at all, the first thing to do is to take a look 
 If your notes compile, but the output is broken, you should check indiviual mathematical equations in your notes. Coursebuilder renders mathematics on the web with MathJax, and not all features available in LaTeX work in MathJax out of the box.
 
 In short you should start with short, simple LaTeX documents and slowly build up complexity once they are converting through CourseBuilder cleanly!
+
+### Help! I get the error "AttributeError: module 'yaml' has no attribute 'CLoader'"
+
+Reinstall pyyaml, ensuring that it is linked to the system `libyaml` by issuing the command: `pip --no-cache-dir install --verbose --force-reinstall -I pyyaml`
