@@ -61,16 +61,16 @@ def oembed(embed):
         d.append(t)
     return d
 
-def fix_refs(soup, course):
+def fix_refs(soup, item):
     for a in soup.find_all('a',{'class':'ref'}):
-        a['href'] = course.get_web_root() + a['href']
+        a['href'] = item.course.get_web_root() + a['href']
 
-def fix_local_links(soup, course):
+def fix_local_links(soup, item):
     """
         Rewrite URLs relative to the top level, i.e. those starting with a /,
         to use the course's root URL if they don't already.
     """
-    root = course.get_web_root()
+    root = item.course.get_web_root()
     tags = {
 		'a': ['href'],
 		'img':['src'],
@@ -82,11 +82,10 @@ def fix_local_links(soup, course):
         for el in soup.find_all(tag):
             for attr in attrs:
                 url = el.get(attr)
-                if url and url[0]=='/' and url[:len(root)]!=root:
-                    url = root + url[1:]
-                    el[attr] = url
+                if url and url[0]=='/':
+                    el[attr] = item.course.make_absolute_url(item,url[1:])
 
-def dots_pause(soup, course):
+def dots_pause(soup, item):
     """
         Rewrite three dots on thier own paragraph into a set of divs with
         class "fragment" applied. This is used in slideshows to create pauses
@@ -109,14 +108,14 @@ def dots_pause(soup, course):
             el.parent.next_sibling['class'] = el.parent.next_sibling['class']+['fragment']
             el.decompose()
 
-def list_fragment(soup, course):
+def list_fragment(soup, item):
     for li in soup.find_all("li"):
         li['class'] = li.get('class', []) + ['fragment']
 
-def burnInExtras(course, html, out_format):
+def burnInExtras(item, html, out_format):
     soup = BeautifulSoup(html, 'html.parser')
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
-            oembed, fix_local_links, dots_pause, list_fragment]
+            oembed, fix_local_links, dots_pause]
     for f in filters:
-        f(soup, course=course)
+        f(soup, item=item)
     return str(soup)

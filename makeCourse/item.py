@@ -112,7 +112,7 @@ class Item(object):
         else:
             raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
-        html = burnInExtras(self.course, html, out_format='html')
+        html = burnInExtras(self, html, out_format='html')
         return html
 
     def temp_path(self):
@@ -213,7 +213,7 @@ class Slides(Chapter):
 
     @property
     def out_slides(self):
-      return self.named_out_file.with_suffix('.slides.html')
+      return self.out_file.with_suffix('.slides.html')
 
     @property
     def slides_url(self):
@@ -246,7 +246,7 @@ class Introduction(Item):
         return 'introduction'
 
     out_path = Path('')
-    out_file = 'index.html'
+    out_file = Path('index.html')
     url = ''
 
     def get_context(self):

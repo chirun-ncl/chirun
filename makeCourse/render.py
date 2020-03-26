@@ -1,6 +1,6 @@
 import logging
 import datetime
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter
 from . import mkdir_p
 from distutils.dir_util import copy_tree
 import asyncio
@@ -15,13 +15,16 @@ class Renderer(object):
             loader=FileSystemLoader(str(self.course.theme.template_path)),
             autoescape=select_autoescape(['html'])
         )
-        self.env.filters['url'] = self.url_filter
-        def static_url(url):
-            return self.url_filter('static/'+url)
+        @contextfilter
+        def url_filter(context, url, theme=False):
+            url = self.course.make_absolute_url(context['item'],url)
+            return url
+        self.env.filters['url'] = url_filter
+        @contextfilter
+        def static_url(context, url):
+            return url_filter(context, 'static/'+url)
         self.env.filters['static_url'] = static_url
 
-    def url_filter(self, url, theme=False):
-        return self.course.get_web_root(force_theme=theme) + url
 
     def render_item(self, item):
         if self.course.args.lazy and item.recently_built():
