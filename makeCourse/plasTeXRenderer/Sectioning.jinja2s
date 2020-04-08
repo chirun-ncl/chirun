@@ -37,96 +37,16 @@ name: section
 <section class="section">
 <h2 id="{{ obj.id }}">{{ obj.fullTitle }}</h2>
 
-<a class="id-link id-link-section" href="#{{ obj.id }}">&#x1f517;</a>
-<div class="links-section-top nav-links">
-{%if obj.prev %}
-<div class="prev-section">
-<a href="#{{ obj.prev.id }}">[Prev Section]</a>
-</div>
-{% endif %}
-<div class="bTot-section">
-<a href="#TOC">[Back to top]</a>
-</div>
-{%if obj.next %}
-<div class="next-section">
-<a href="#{{ obj.next.id }}">[Next Section]</a>
-</div>
-{% endif %}
-</div>
-
 {{ obj }}
 
-<div class="links-section-bottom nav-links">
-{%if obj.prev %}
-<div class="prev-section">
-<a href="#{{ obj.prev.id }}">[Prev Section]</a>
-</div>
-{% endif %}
-<div class="bTot-section">
-<a href="#TOC">[Back to top]</a>
-</div>
-{%if obj.next %}
-<div class="next-section">
-<a href="#{{ obj.next.id }}">[Next Section]</a>
-</div>
-{% endif %}
-</div>
 </section>
 
 name: subsection
 <section class="subsection">
 <h3 id="{{ obj.id }}">{{ obj.fullTitle }}</h3>
 
-<a class="id-link id-link-subsection" href="#{{ obj.id }}">&#x1f517;</a>
-<div class="links-subsection-top nav-links">
-{%if obj.prev %}
-<div class="prev-subsection">
-<a href="#{{ obj.prev.id }}">[Prev Subsection]</a>
-</div>
-{%elif obj.links.up.prev %}
-<div class="prev-subsection">
-<a href="#{{ obj.links.up.prev.id }}">[Prev Section]</a>
-</div>
-{% endif %}
-<div class="bTot-subsection">
-<a href="#TOC">[Back to top]</a>
-</div>
-{%if obj.next %}
-<div class="next-subsection">
-<a href="#{{ obj.next.id }}">[Next Subsection]</a>
-</div>
-{%elif obj.links.up.next %}
-<div class="next-subsection">
-<a href="#{{ obj.links.up.next.id }}">[Next Section]</a>
-</div>
-{% endif %}
-</div>
-
 {{ obj }}
 
-<div class="links-subsection-bottom nav-links">
-{%if obj.prev %}
-<div class="prev-subsection">
-<a href="#{{ obj.prev.id }}">[Prev Subsection]</a>
-</div>
-{%elif obj.links.up.prev %}
-<div class="prev-subsection">
-<a href="#{{ obj.links.up.prev.id }}">[Prev Section]</a>
-</div>
-{% endif %}
-<div class="bTot-subsection">
-<a href="#TOC">[Back to top]</a>
-</div>
-{%if obj.next %}
-<div class="next-subsection">
-<a href="#{{ obj.next.id }}">[Next Subsection]</a>
-</div>
-{%elif obj.links.up.next %}
-<div class="next-subsection">
-<a href="#{{ obj.links.up.next.id }}">[Next Section]</a>
-</div>
-{% endif %}
-</div>
 </section>
 
 name: subsubsection
