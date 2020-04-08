@@ -259,11 +259,29 @@ class Introduction(Item):
 
         return context
 
+class Standalone(Item):
+    type = 'standalone'
+    title = 'document'
+    template_name = 'standalone.html'
+    out_path = Path('')
+    out_file = Path('index.html')
+    url = ''
+
+    def get_context(self):
+        context = super().get_context()
+        context.update({
+            'build_pdf': self.course.config['build_pdf'],
+            'file': '{}.html'.format(self.url),
+            'pdf': '{}.pdf'.format(self.url),
+        })
+
+        return context
 
 item_types = {
     'introduction': Introduction,
     'part': Part,
     'chapter': Chapter,
+    'standalone': Standalone,
     'url': Url,
     'slides': Slides,
     'recap': Recap,

@@ -102,6 +102,10 @@ class PDFProcess(ItemProcess):
         item.has_pdf = True
         self.makePDF(item)
 
+    def visit_standalone(self, item):
+        item.has_pdf = True
+        self.makePDF(item)
+
     def visit_slides(self, item):
         item.has_pdf = True
         asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))

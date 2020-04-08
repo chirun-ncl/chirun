@@ -1,0 +1,31 @@
+{% extends "item.html" %}
+
+{% block stylesheets %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
+    <link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
+    <link rel="stylesheet" href="{{'boole.css'|static_url}}">
+    <link rel="stylesheet" href="{{'print.css'|static_url}}">
+{% endblock stylesheets %}
+
+{% block javascript %}
+    {{ super() }}
+    <script defer src="{{'jquery.flexibleArea.js'|static_url}}"></script>
+    <script defer src="{{'spin.min.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/lib/codemirror.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/octave/octave.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
+    <script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
+    <script defer src="{{'boole.js'|static_url}}"></script>
+    <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12">
+            {{item.as_html()|safe}}
+            </div>
+        </div>
+    </div>
+{% endblock main %}
