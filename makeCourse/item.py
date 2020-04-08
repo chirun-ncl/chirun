@@ -263,6 +263,8 @@ class Standalone(Item):
     type = 'standalone'
     title = 'document'
     template_name = 'standalone.html'
+    template_pdfheader = 'print_header.html'
+    template_pdffooter = 'print_footer.html'
     out_path = Path('')
     out_file = Path('index.html')
     url = ''

@@ -45,6 +45,9 @@
 	nav {
 		display: none;
 	}
+	.navbar-toggler {
+		display: none;
+	}
 	footer {
 		display: none;
 	}
