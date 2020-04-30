@@ -49,7 +49,7 @@ def getEmbeddedImages(course, html, item):
         start -= m.start()
         end -= m.start()
         img = m.group(0)
-        return img[:start] + course.get_web_root() + str(finalURL) + img[end:]
+        return img[:start] + '/' +str(finalURL) + img[end:]
 
     for pattern in patterns:
         html = pattern.sub(fix_image_path, html)
