@@ -213,7 +213,7 @@ class Slides(Chapter):
 
     @property
     def out_slides(self):
-      return self.out_file.with_suffix('.slides.html')
+      return self.named_out_file.with_suffix('.slides.html')
 
     @property
     def slides_url(self):
