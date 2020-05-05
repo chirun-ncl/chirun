@@ -72,11 +72,11 @@ def fix_local_links(soup, item):
     """
     root = item.course.get_web_root()
     tags = {
-		'a': ['href'],
-		'img':['src'],
-		'source':['src'],
-		'section': ['data-background','data-background-video'],
-	}
+        'a': ['href'],
+        'img':['src'],
+        'source':['src'],
+        'section': ['data-background','data-background-video'],
+    }
 
     for tag, attrs in tags.items():
         for el in soup.find_all(tag):
@@ -104,7 +104,7 @@ def dots_pause(soup, item):
             for tag in els:
                 fragment.append(tag)
         else:
-	    # There are no other elements, so fragment the entire next section
+        # There are no other elements, so fragment the entire next section
             el.parent.next_sibling['class'] = el.parent.next_sibling['class']+['fragment']
             el.decompose()
 

@@ -17,7 +17,7 @@ class Renderer(object):
         )
         @contextfilter
         def url_filter(context, url, theme=False):
-            url = self.course.make_absolute_url(context['item'],url)
+            url = self.course.make_absolute_url(context['item'],url,theme=theme)
             return url
         self.env.filters['url'] = url_filter
         @contextfilter

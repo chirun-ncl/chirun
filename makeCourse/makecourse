@@ -91,16 +91,18 @@ class MakeCourse:
             root = url_format.format(base=base, code=code, year=year, theme = theme_path)
             return root
 
-    def make_absolute_url(self, item, url):
+    def make_absolute_url(self, item, url, theme=False):
         """
             Add the web root to the beginning of absolute URLs (those starting with /)
 
             If the 'local' option is turned on, the URL is made relative to the item's location.
         """
-        root = self.get_web_root()
+        root = self.get_web_root(force_theme=theme)
         if self.args.local:
             levels = len(item.out_file.parents)-1
-            if levels>0:
+            if theme:
+                return '/'.join(['..']*levels)+'/../'+theme.path+'/'+url
+            elif levels>0:
                 return '/'.join(['..']*levels)+'/'+url
             else:
                 return url
