@@ -10,6 +10,10 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 * Markdown parsing is provided by [Python Markdown](https://github.com/Python-Markdown/markdown).
 * LaTeX parsing is provided by [plasTeX](https://github.com/plastex/plastex).
 
+### Demo
+
+[Sample course](https://coursebuilder-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/coursebuilder-ncl/sample_course).
+
 ### Prerequisites
  * Ensure a system TeX distribution such as TeX Live or MacTeX is installed.
  * Install pdf2svg using your standard package manager (e.g. `apt install pdf2svg`)
