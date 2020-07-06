@@ -100,6 +100,8 @@ class MakeCourse:
         root = self.get_web_root(force_theme=theme)
         if self.args.local:
             levels = len(item.out_file.parents)-1
+            if url[:len(root)-1]==root[1:]:
+                url = url[len(root)-1:]
             if theme:
                 return '/'.join(['..']*levels)+'/../'+theme.path+'/'+url
             elif levels>0:
@@ -107,8 +109,10 @@ class MakeCourse:
             else:
                 return url
         else:
-            if url[:len(root)]!=root:
+            if url[:len(root)-1]!=root[1:]:
                 url = root + url
+            else:
+                url = '/' + url
             return url
 
     def default_config(self):

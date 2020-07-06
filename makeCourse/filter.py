@@ -61,10 +61,6 @@ def oembed(embed):
         d.append(t)
     return d
 
-def fix_refs(soup, item):
-    for a in soup.find_all('a',{'class':'ref'}):
-        a['href'] = item.course.get_web_root() + a['href']
-
 def fix_local_links(soup, item):
     """
         Rewrite URLs relative to the top level, i.e. those starting with a /,
