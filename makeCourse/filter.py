@@ -64,7 +64,7 @@ def oembed(embed):
 def fix_local_links(soup, item):
     """
         Rewrite URLs relative to the top level, i.e. those starting with a /,
-        to use the course's root URL if they don't already.
+        to use the course's root URL or into paths relative to the item.
     """
     root = item.course.get_web_root()
     tags = {
@@ -79,7 +79,7 @@ def fix_local_links(soup, item):
             for attr in attrs:
                 url = el.get(attr)
                 if url and url[0]=='/':
-                    el[attr] = item.course.make_absolute_url(item,url[1:])
+                    el[attr] = item.course.make_relative_url(item,url[1:])
 
 def dots_pause(soup, item):
     """

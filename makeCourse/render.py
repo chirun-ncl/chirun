@@ -17,7 +17,9 @@ class Renderer(object):
         )
         @contextfilter
         def url_filter(context, url, theme=False):
-            url = self.course.make_absolute_url(context['item'],url,theme=theme)
+            self.course.force_theme = theme
+            url = self.course.make_relative_url(context['item'],url)
+            self.course.force_theme = False
             return url
         self.env.filters['url'] = url_filter
         @contextfilter
@@ -33,7 +35,8 @@ class Renderer(object):
         outDir = outPath.parent
         mkdir_p(outDir)
         template_file = item.template_name
-        logger.debug("Rendering {item} using {template}{local}.".format(item=item, template=template_file, local=' with local paths' if self.course.force_local or self.course.args.local else ''))
+        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,\
+                rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute else ''))
         html = self.to_html(item, template_file)
         with open(str(outPath),'w', encoding='utf-8') as f:
             f.write(html)

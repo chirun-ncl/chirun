@@ -67,7 +67,7 @@ class RenderProcess(ItemProcess):
         super().__init__(*args,**kwargs)
 
     def visit_default(self, item):
-        self.course.force_local = False
+        self.course.force_relative_build = False
         self.renderer.render_item(item)
 
     def visit_part(self, item):
@@ -91,7 +91,7 @@ class PDFProcess(ItemProcess):
     def visit(self,item):
         if not self.course.config['build_pdf']:
             return
-        self.course.force_local = True
+        self.course.force_relative_build = True
         super().visit(item)
 
     def visit_chapter(self, item):

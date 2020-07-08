@@ -35,7 +35,8 @@ class MakeCourse:
 
     def __init__(self, args):
         self.args = args
-        self.force_local = False
+        self.force_relative_build = False
+        self.force_theme = False
 
         self.root_dir = self.get_root_dir()
         self.build_dir = Path(args.build_path) if args.build_path is not None else self.root_dir / 'build'
@@ -63,11 +64,11 @@ class MakeCourse:
         """
         return Path(self.args.dir)
 
-    def get_build_dir(self, force_theme=False):
+    def get_build_dir(self):
         """
             The path the output will be put in
         """
-        theme_path = force_theme.path if force_theme else self.theme.path
+        theme_path = self.force_theme.path if self.force_theme else self.theme.path
         return self.build_dir / theme_path
 
     def get_static_dir(self):
@@ -76,44 +77,45 @@ class MakeCourse:
         """
         return Path(self.config['static_dir'])
 
-    def get_web_root(self, force_theme=False):
+    def get_web_root(self):
         """
             The root URL of the course. All URLs are under this.
         """
-        if self.args.local or self.force_local:
-            return str(self.get_build_dir(force_theme = force_theme).resolve()) + '/'
+        if not self.args.absolute or self.force_relative_build:
+            return str(self.get_build_dir().resolve()) + '/'
         else:
             url_format = self.config.get('root_url','/{base}/{code}/{year}/{theme}/')
             base = self.config.get('base_dir')
             code = self.config.get('code')
             year = self.config.get('year')
-            theme_path = force_theme.path if force_theme else self.theme.path
-            root = url_format.format(base=base, code=code, year=year, theme = theme_path)
+            theme_path = self.force_theme.path if self.force_theme else self.theme.path
+            root = url_format.format(base=base, code=code, year=year, theme=theme_path)
             return root
 
-    def make_absolute_url(self, item, url, theme=False):
+    def make_relative_url(self, item, url):
         """
-            Add the web root to the beginning of absolute URLs (those starting with /)
+            Make the URL relative to the item's location.
 
-            If the 'local' option is turned on, the URL is made relative to the item's location.
+            If the 'absolute' option is turned on, the web root is instead added
+            to the beginning of absolute URLs, when required.
         """
-        root = self.get_web_root(force_theme=theme)
-        if self.args.local:
-            levels = len(item.out_file.parents)-1
-            if url[:len(root)-1]==root[1:]:
-                url = url[len(root)-1:]
-            if theme:
-                return '/'.join(['..']*levels)+'/../'+theme.path+'/'+url
-            elif levels>0:
-                return '/'.join(['..']*levels)+'/'+url
-            else:
-                return url
-        else:
+        root = self.get_web_root()
+        if self.args.absolute:
             if url[:len(root)-1]!=root[1:]:
                 url = root + url
             else:
                 url = '/' + url
             return url
+        else:
+            levels = len(item.out_file.parents)-1
+            if url[:len(root)-1]==root[1:]:
+                url = url[len(root)-1:]
+            if self.force_theme:
+                return '/'.join(['..']*levels)+'/../'+self.force_theme.path+'/'+url
+            elif levels>0:
+                return '/'.join(['..']*levels)+'/'+url
+            else:
+                return url
 
     def default_config(self):
         root_dir = self.get_root_dir()
@@ -228,7 +230,8 @@ class MakeCourse:
         if self.partsEnabled:
             for item in self.structure:
                 if item.type not in ['introduction','part']:
-                    raise Exception("Error: Both parts and chapters found at top level. To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
+                    raise Exception("Error: Both parts and chapters found at top level.\
+                            To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
 
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
@@ -314,14 +317,19 @@ The web root directory is: {web_root}
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o','--output', dest='build_path', help='directory to put build files in')
-    parser.add_argument('-v', dest='verbose', action='store_true', help='verbose output')
-    parser.add_argument('-vv', dest='veryverbose', action='store_true', help='very verbose output')
-    parser.add_argument('-d', dest='deleteFirst', action='store_true', help='delete temporary files first')
-    parser.add_argument('-z', dest='lazy', action='store_true', help='don\'t delete latex aux files when finished')
-    parser.add_argument('-l', dest='local', action='store_true', help='create with local file paths')
-    parser.add_argument('--config', dest='config_file', help='Path to config file')
-    parser.add_argument('dir', help='a course definition directory', default='.', nargs='?')
+    parser.add_argument('-o','--output', dest='build_path', help='Set a directory to put build files in.\
+            Defaults to a directory named \'build\' in the current directory.')
+    parser.add_argument('-v', dest='verbose', action='store_true', help='Verbose output.')
+    parser.add_argument('-vv', dest='veryverbose', action='store_true', help='Very verbose output.')
+    parser.add_argument('-d', dest='deleteFirst', action='store_true', help='Delete temporary files before starting.')
+    parser.add_argument('-z', dest='lazy', action='store_true', help='Don\'t delete temporary files when finished.')
+    parser.add_argument('-a', dest='absolute', action='store_true', help='Output using absolute file paths,\
+            relative to the configured root_url.')
+    parser.add_argument('--config', dest='config_file', help='Path to a config file. Defaults to \'config.yml\'.')
+    parser.add_argument('-l', dest='local-deprecated', action='store_true', help='Deprecated and has no effect.\
+            This option will be removed in a future version.')
+    parser.add_argument('dir', help='Path to a makecourse compatible source directory.\
+            Defaults to the current directory.', default='.', nargs='?')
     parser.set_defaults(build_pdf=None)
     args = parser.parse_args()
 
