@@ -41,15 +41,15 @@
 						<h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
 					</div>
 					<div class="card-body">
-						<p class="card-text">
-						<ul class="list-unstyled">
-							{% for subitem in part.content %}
-							<li class="mb-3 lti-hint-item">
-								{% include "introduction_subitem.html" %}
-							</li>
-							{% endfor %}
-						</ul>
-						</p>
+						<div class="card-text">
+                            <ul class="list-unstyled">
+                                {% for subitem in part.content %}
+                                <li class="mb-3 lti-hint-item">
+                                    {% include "introduction_subitem.html" %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+						</div>
 					</div>
 				</div>
 			</div>
