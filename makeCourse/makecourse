@@ -276,9 +276,10 @@ class MakeCourse:
             A dictionary of context information about the course, for templates to use
         """
         return {
-            'author': self.config['author'],
-            'code': self.config['code'],
-            'year': self.config['year'],
+            'author': self.config.get('author'),
+            'institution': self.config.get('institution'),
+            'code': self.config.get('code'),
+            'year': self.config.get('year'),
             'theme': self.theme.get_context(),
             'alt_themes': self.theme.alt_themes_contexts(),
         }
