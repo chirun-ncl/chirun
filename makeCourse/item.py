@@ -32,6 +32,7 @@ class Item(object):
         self.data = data
         self.title = self.data.get('title', self.title)
         self.slug = slugify(self.title)
+        self.author = self.data.get('author', self.parent.author if self.parent else self.course.config.get('author'))
         self.source = Path(self.data.get('source', ''))
         self.is_hidden = self.data.get('hidden', False)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
