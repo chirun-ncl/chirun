@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros.html" as macros %}
 
 {% block stylesheets %}
     {{ super() }}
@@ -33,7 +34,7 @@
 		</li>
 		<li class="ml-auto">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
-				<span class="fa fa-cog"></span>
+				{{macros.icon('cog','Toggle customisations panel')}}
 			</button>
 		</li>
 	</ul>

@@ -1,4 +1,5 @@
 {% extends "item.html" %}
+{% import "macros.html" as macros %}
 
 {% block stylesheets %}
     {{ super() }}
@@ -30,10 +31,10 @@
                 <nav class="mb-3" id="chapterTOC" data-toggle="toc">
                     <ul class="nav navbar-nav">
                         {% if item.has_slides %}
-                        <li><a class="nav-link" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a></li>
+                        <li><a class="nav-link" href="{{item.slides_url|url}}" target="_blank">{{macros.icon('desktop','View as Slides',True)}}</a></li>
                         {% endif %}
                         {% if item.has_pdf %}
-                        <li><a class="nav-link" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download Chapter as PDF</a></li>
+                        <li><a class="nav-link" href="{{item.pdf_url|url}}" target="_blank">{{macros.icon('file-pdf-o','Download Chapter as PDF',True)}}</a></li>
                         {% endif %}
                     </ul>
                 </nav>
