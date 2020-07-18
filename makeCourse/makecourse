@@ -111,7 +111,7 @@ class MakeCourse:
             if url[:len(root)-1]==root[1:]:
                 url = url[len(root)-1:]
             if self.force_theme:
-                return '/'.join(['..']*levels)+'/../'+self.force_theme.path+'/'+url
+                return '/'.join(['..']*(levels+1))+'/'+self.force_theme.path+'/'+url
             elif levels>0:
                 return '/'.join(['..']*levels)+'/'+url
             else:
