@@ -4,7 +4,7 @@
 {% block header %}
 <div class="collapse" id="navbarToggleCustomise">
 	<div class="bg-secondary text-white p-2">
-		<h5>Theme Customisation</h5>
+		<p>Theme Customisation</p>
 		<form onsubmit="return false;" id="navbarCustomise" class="form-inline">
 			<button class="btn btn-dark mr-2" value="dark">Dark</button>
 			<button class="btn btn-pastel mr-2" value="pastel">Pastel</button>
@@ -21,9 +21,9 @@
 </div>
 <div class="container">
 	<div class="jumbotron">
-		<h1 class="jumbotron-heading" id="jumbo-title">{{course.config.title}}</h1>
-		<h3 class="jumbotron-heading" id="jumbo-author">{{course.config.author}}</h3>
-		<h3 class="jumbotron-heading" id="jumbo-year">{{course.config.year}}</h3>
+		<h1 id="jumbo-title">{{course.config.title}}</h1>
+		<p id="jumbo-author">{{course.config.author}}</p>
+		<p id="jumbo-year">{{course.config.year}}</p>
 		<p>{{ item.leading_text }}</p>
 	</div>
 </div>
@@ -39,7 +39,7 @@
 			<div class="col-md-4 pb-4 mx-auto lti-hint-part">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-header text-center">
-						<h4 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h4>
+						<h2 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h2>
 					</div>
 					<div class="card-body">
 						<div class="card-text">
@@ -60,7 +60,7 @@
 			<div class="col-md-4 pb-4 mx-auto">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-header text-center">
-						<h4 class="my-0 font-weight-normal">Course Material</h4>
+						<h2 class="my-0 font-weight-normal">Course Material</h2>
 					</div>
 					<div class="card-body">
 						<div class="card-text">

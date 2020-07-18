@@ -22,12 +22,16 @@ body {
   margin-bottom: 0;
 }
 
-.jumbotron-heading {
-  font-weight: 300;
+#jumbo-author, #jumbo-year {
+    font-size: 1.5rem;
 }
 
 .jumbotron .container {
   max-width: 40rem;
+}
+
+.card-header h2 {
+    font-size: 1.3rem;
 }
 
 .breadcrumb {
