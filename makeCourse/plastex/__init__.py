@@ -10,6 +10,7 @@ from plasTeX import TeXDocument
 from makeCourse.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
+import plasTeX.Logging
 from plasTeX.Config import config as plastex_config
 import makeCourse.plasTeXRenderer.Config as html_config
 from . import macros
@@ -55,6 +56,7 @@ def getEmbeddedImages(course, html, item):
         html = pattern.sub(fix_image_path, html)
 
     return html
+
 class PlastexRunner:
 
     def exception_handler(exception_type, exception, traceback):
@@ -74,6 +76,9 @@ class PlastexRunner:
         return html
 
     def runPlastex(self, item):
+        if not item.course.args.veryverbose:
+            plasTeX.Logging.disableLogging()
+
         logger.debug("PlasTeX: "+str(item.source))
         root_dir = self.get_root_dir()
         outPath = item.temp_path()
