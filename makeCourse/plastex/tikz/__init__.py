@@ -140,7 +140,7 @@ def ProcessOptions(options, document):
     try:
         with open(document.userdata['tikz-template'], "r") as file:
             template = file.read()
-    except IOError:
+    except:
         log.info('Using default TikZ template.')
         template = u"\\documentclass{standalone}\n\\usepackage{tikz}" + \
                    u"\\begin{document}{{ tikzpicture }}\\end{document}"
