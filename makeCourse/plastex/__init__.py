@@ -4,9 +4,10 @@ import os
 import shutil
 import sys
 from makeCourse import mkdir_p
+from makeCourse.plastex.Imagers.pdf2svg import Imager as VectorImager
 from pathlib import Path
 from subprocess import Popen, PIPE
-from plasTeX import TeXDocument
+from plasTeX import Environment, TeXDocument
 from makeCourse.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
@@ -29,8 +30,7 @@ def getEmbeddedImages(course, html, item):
 
     # TODO: make this extensible
     patterns = [
-        re.compile(r'<img.*? src="(?P<url>[^"]*)".*?>'),
-        re.compile(r'<object class=\"tikzpicture\" data=\"(?P<url>[^\)]*)\" type=\"image/svg\+xml\">'),
+        re.compile(r'<img.*? src="(?P<url>[^"]*)".*?>(?s)'),
     ]
 
     def fix_image_path(m):
@@ -90,12 +90,11 @@ class PlastexRunner:
         plastex_config['files']['filename'] = item.out_file
         rname = plastex_config['general']['renderer'] = 'makecourse'
         plastex_config['document']['base-url'] = self.get_web_root()
+        plastex_config['images']['vector-imager'] = 'none'
+        plastex_config['images']['imager'] = 'dvipng'
         document = TeXDocument(config=plastex_config)
         document.userdata['working-dir'] = '.'
-        tikzPath = self.config.get('tikz_template')
-        if tikzPath:
-            logger.debug('Using tikz template: ' + tikzPath)
-            document.userdata['tikz-template'] = tikzPath
+
         document.context.importMacros(vars(macros))
         document.context.importMacros(vars(overrides))
 
@@ -118,6 +117,7 @@ class PlastexRunner:
         renderer = Renderer()
         renderer.loadTemplates(document)
         renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
+        renderer.vectorImager = VectorImager(document, renderer.vectorImageTypes)
         renderer.render(document)
 
         os.chdir(wd)
@@ -125,3 +125,95 @@ class PlastexRunner:
         original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
         collated_paux_path = self.temp_path() / (str(item.out_path).replace('/','-') + '.paux')
         shutil.copyfile(str(original_paux_path), str(collated_paux_path))
+
+class NoCharSubEnvironment(Environment):
+    """
+    A subclass of Environment which prevents character substitution inside
+    itself.
+    """
+
+    def normalize(self, charsubs=None):
+        """ Normalize, but don't allow character substitutions """
+        return Environment.normalize(self, charsubs=None)
+
+class VerbatimEnvironment(NoCharSubEnvironment):
+    """
+    A subclass of Environment that prevents processing of the contents. This is
+    used for the verbatim environment.
+
+    It is also useful in cases where you want to leave the processing to the
+    renderer (e.g. via the imager) and the content is sufficiently complex that
+    we don't want plastex to deal with the commands within it.
+
+    For example, for tikzpicture, there are many Tikz commands and it would be
+    tedious to attempt to define all of them in the python file, when we are
+    not going to use them anyway.
+    """
+
+    blockType = True
+    captionable = True
+
+    def invoke(self, tex):
+        """
+        We enter verbatim mode by setting all category codes to CC_LETTER
+        or CC_OTHER. However, we will have to manually scan for the end of the
+        environment since the tokenizer does not tokenize the end of the
+        environment as an EscapeSequence Token.
+        """
+        if self.macroMode == Environment.MODE_END:
+            return
+
+        escape = self.ownerDocument.context.categories[0][0]
+        bgroup = self.ownerDocument.context.categories[1][0]
+        egroup = self.ownerDocument.context.categories[2][0]
+        self.ownerDocument.context.push(self)
+        self.parse(tex)
+        self.ownerDocument.context.setVerbatimCatcodes()
+        tokens = [self]
+
+        # Get the name of the currently expanding environment
+        name = self.nodeName
+        if self.macroMode != Environment.MODE_NONE:
+            if self.ownerDocument.context.currenvir is not None:
+                name = self.ownerDocument.context.currenvir
+
+        # If we were invoked by a \begin{...} look for an \end{...}
+        endpattern = list(r'%send%s%s%s' % (escape, bgroup, name, egroup))
+
+        # If we were invoked as a command (i.e. \verbatim) look
+        # for an end without groupings (i.e. \endverbatim)
+        endpattern2 = list(r'%send%s' % (escape, name))
+
+        endlength = len(endpattern)
+        endlength2 = len(endpattern2)
+        # Iterate through tokens until the endpattern is found
+        for tok in tex:
+            tokens.append(tok)
+            if len(tokens) >= endlength:
+                if tokens[-endlength:] == endpattern:
+                    tokens = tokens[:-endlength]
+                    self.ownerDocument.context.pop(self)
+                    # Expand the end of the macro
+                    end = self.ownerDocument.createElement(name)
+                    end.parentNode = self.parentNode
+                    end.macroMode = Environment.MODE_END
+                    res = end.invoke(tex)
+                    if res is None:
+                        res = [end]
+                    tex.pushTokens(res)
+                    break
+            if len(tokens) >= endlength2:
+                if tokens[-endlength2:] == endpattern2:
+                    tokens = tokens[:-endlength2]
+                    self.ownerDocument.context.pop(self)
+                    # Expand the end of the macro
+                    end = self.ownerDocument.createElement(name)
+                    end.parentNode = self.parentNode
+                    end.macroMode = Environment.MODE_END
+                    res = end.invoke(tex)
+                    if res is None:
+                        res = [end]
+                    tex.pushTokens(res)
+                    break
+
+        return tokens
