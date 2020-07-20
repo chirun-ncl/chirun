@@ -91,7 +91,7 @@ class PlastexRunner:
         rname = plastex_config['general']['renderer'] = 'makecourse'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
-        plastex_config['images']['imager'] = 'dvipng'
+        plastex_config['images']['imager'] = 'pdftoppm'
         document = TeXDocument(config=plastex_config)
         document.userdata['working-dir'] = '.'
 

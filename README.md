@@ -16,8 +16,7 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 
 ### Prerequisites
  * Ensure a system TeX distribution such as TeX Live or MacTeX is installed.
- * Install pdf2svg using your standard package manager (e.g. `apt install pdf2svg`)
- * Install libyaml using your standard package manager (e.g. `apt install libyaml-dev`)
+ * Install pdf2svg, pdf2ppm and libyaml using your standard package manager (e.g. on Ubuntu: `apt install pdf2svg poppler-utils libyaml-dev`)
  * Ensure the `virtualenv` python package is installed.
 
 ### Quick Installation
