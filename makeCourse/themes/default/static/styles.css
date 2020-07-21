@@ -278,6 +278,12 @@ figure + em, .reveal figure + em {
   margin-top: -10px;
 }
 
+.caption_title {
+	font-weight: bold;
+}
+.caption_ref {
+	font-weight: bold;
+}
 
 .wrapfig {
 	max-width: 35%;

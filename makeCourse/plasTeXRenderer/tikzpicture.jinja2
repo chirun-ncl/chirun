@@ -1,7 +1,15 @@
 <div class="tikzcd" id="{{ obj.id }}">
   {% if obj.renderer.vectorImager.enabled %}
-    <img src="{{ obj.vectorImage.url }}" alt="{{ obj.source|e }}" />
+	{% if obj.altText %}
+		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.altText.textContent|e }}"/>
+	{% else %}
+		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.source|e }}" />
+	{% endif %}
   {% else %}
-    <img src="{{ obj.image.url }}" alt="{{ obj.source|e }}" />
+	{% if obj.altText %}
+		<img src="{{ obj.image.url }}" alt="{{ obj.altText.textContent|e }}" />
+	{% else %}
+		<img src="{{ obj.image.url }}" alt="{{ obj.source|e }}" />
+	{% endif %}
   {% endif %}
 </div>

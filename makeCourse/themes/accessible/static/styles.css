@@ -66,6 +66,13 @@ figure + em, .reveal figure + em {
   margin-top: -10px;
 }
 
+.caption_title {
+	font-weight: bold;
+}
+.caption_ref {
+	font-weight: bold;
+}
+
 
 .centered {
 	text-align: center;

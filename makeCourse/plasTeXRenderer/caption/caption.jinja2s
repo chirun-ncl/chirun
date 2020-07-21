@@ -1,6 +1,6 @@
 name: caption
 <figcaption>
-  {% if obj.title %}<span class="caption_title"><b>{{ obj.title }}</b></span>{% endif %}
-  {% if obj.ref %}<span class="caption_ref"><b>{{ obj.ref }}</b></span>{% endif %}
-  <span class="caption_text">{{ obj }}</span> 
+  {% if obj.title %}<span class="caption_title">{{ obj.title }}</span>{% endif %}
+  {% if obj.ref %}<span class="caption_ref">{{ obj.ref }}</span>{% endif %}
+  <span class="caption_text">{{ obj }}</span>
 </figcaption>
