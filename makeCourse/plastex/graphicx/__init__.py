@@ -1,6 +1,8 @@
 import plasTeX
 from plasTeX import Command
 
+import plasTeX.Packages.graphicx
+
 class includegraphics(plasTeX.Packages.graphicx.includegraphics):
     altText = None
 
