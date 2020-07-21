@@ -13,7 +13,7 @@ name: marginpar
 
 name: caption
 <figcaption>
-  <span class="caption_title"><b>{{ obj.title }}</b></span>
-  <span class="caption_ref"><b>{{ obj.ref }}</b></span>
+  <span class="caption_title">{{ obj.title }}</span>
+  <span class="caption_ref">{{ obj.ref }}</span>
   <span class="caption_text">{{ obj }}</span> 
 </figcaption>
