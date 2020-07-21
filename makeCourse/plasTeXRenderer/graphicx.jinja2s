@@ -15,6 +15,10 @@ name: endvimeo
 " frameborder="0"></iframe>
 
 name: includegraphics rotatebox scalebox reflectbox resizebox
-<img src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
+{% if obj.altText %}
+	<img alt="{{ obj.altText|e }}" src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
+{% else %}
+	<img src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
+{% endif %}
 
-name: DeclareGraphicsExtensions graphicspath
+name: DeclareGraphicsExtensions graphicspath alt
