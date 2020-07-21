@@ -16,7 +16,7 @@ name: endvimeo
 
 name: includegraphics rotatebox scalebox reflectbox resizebox
 {% if obj.altText %}
-	<img alt="{{ obj.altText|e }}" src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
+	<img alt="{{ obj.altText.textContent|e }}" src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
 {% else %}
 	<img src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
 {% endif %}
