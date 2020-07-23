@@ -4,20 +4,23 @@
 \ProcessOptions\relax
 \usepackage{hyperref}
 
-% The following LaTeX code is required for processing to the web.
-% Removing it may break the build process.
 \newif\ifplastex\plastexfalse
 \ifplastex
 		\usepackage{embed}
 \else
-		\usepackage{comment,xr,bm,amssymb,amsbsy,a4wide}
+		\usepackage{comment,xr,bm,amssymb,amsbsy}
+		\ifcsname setbeamerfont\endcsname% Are these beamer slides?
+		\else%
+			\usepackage{a4wide}
+		\fi%
 		\excludecomment{HTML}
 		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
 		\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
-	\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
+		\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
 		\newcommand{\embed}[1]{\url{#1}}
 		\newcommand{\recap}[2][Visit the URL below to view recap:]{\bigskip\noindent\textbf{Recap} \textrm{#1}\\\expandafter\url{https://campus.recap.ncl.ac.uk/Panopto/Pages/Viewer.aspx?id=#2}\par}
-		\newcommand{\alt}[1]{}
+		\providecommand{\alt}[1]{}
+		\providecommand{\alttext}[1]{}
 \fi
 
 \endinput

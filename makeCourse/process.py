@@ -108,7 +108,11 @@ class PDFProcess(ItemProcess):
 
     def visit_slides(self, item):
         item.has_pdf = True
-        asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
+        ext = item.source.suffix
+        if ext == '.tex':
+            latex.runPdflatex(self.course, item)
+        elif ext == '.md':
+            asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
 
     def makePDF(self, item):
         ext = item.source.suffix

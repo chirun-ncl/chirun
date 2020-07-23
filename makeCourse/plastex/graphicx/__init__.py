@@ -97,3 +97,6 @@ class alt(Command):
         doc = self.ownerDocument
         gfx = doc.userdata.getPath('packages/makecourse/currentimage')
         gfx.altText = self.attributes['text']
+
+class alttext(alt):
+    args = 'text'

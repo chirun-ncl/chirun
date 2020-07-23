@@ -21,4 +21,4 @@ name: includegraphics rotatebox scalebox reflectbox resizebox
 	<img src="{{ obj.image.url }}" style="{{ obj.style.inline }}">
 {% endif %}
 
-name: DeclareGraphicsExtensions graphicspath alt
+name: DeclareGraphicsExtensions graphicspath alt alttext
