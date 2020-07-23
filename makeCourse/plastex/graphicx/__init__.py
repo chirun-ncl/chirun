@@ -1,7 +1,7 @@
 import os,re
 import plasTeX
 from plasTeX import Macro,Token,Command
-
+from plasTeX.Packages.graphicx import *
 import plasTeX.Packages.graphicx
 
 class includegraphics(plasTeX.Packages.graphicx.includegraphics):

@@ -312,3 +312,8 @@ figure + em, .reveal figure + em {
 	width: 2.5rem;
 	text-align: center;
 }
+
+.beamer-columns {
+	display: flex;
+	justify-content: space-evenly;
+}

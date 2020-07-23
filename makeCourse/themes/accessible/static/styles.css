@@ -164,3 +164,7 @@ img {
 pre.output-block {
 	margin-top: -1.25rem !important;
 }
+
+.beamer-column {
+	width: 100% !important;
+}

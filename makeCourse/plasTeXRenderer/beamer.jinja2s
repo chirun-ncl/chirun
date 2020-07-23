@@ -7,3 +7,12 @@ name: frametitle
 
 name: pause
 
+name: columns
+<div class="beamer-columns">
+{{ obj }}
+</div>
+
+name: columnenv
+<div {% if obj.attributes.width %}style="width:{{ obj.attributes.width }}"{% endif %} class="beamer-column">
+{{ obj }}
+</div>
