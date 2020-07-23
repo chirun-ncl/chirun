@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% import "macros.html" as macros %}
 
-{% block header %}
+{% block nav %}
 <div class="collapse" id="navbarToggleCustomise">
 	<div class="bg-secondary text-white p-2">
 		<p>Theme Customisation</p>
@@ -19,6 +19,9 @@
         {{macros.icon('cog','Toggle customisations panel')}}
 	</button>
 </div>
+{% endblock nav %}
+
+{% block header %}
 <div class="container">
 	<div class="jumbotron">
 		<h1 id="jumbo-title">{{course.config.title}}</h1>
@@ -36,7 +39,7 @@
 			{% if course.partsEnabled %}
 			{% for part in course.structure %}
 			{% if part.type != 'introduction' %}
-			<div class="col-md-4 pb-4 mx-auto lti-hint-part">
+			<div class="col-md-6 col-lg-4 pb-4 mx-auto lti-hint-part">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-header text-center">
 						<h2 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h2>
@@ -57,7 +60,7 @@
 			{% endif %}
 			{% endfor %}
 			{% else %}
-			<div class="col-md-4 pb-4 mx-auto">
+			<div class="col-md-6 col-lg-4 pb-4 mx-auto">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-header text-center">
 						<h2 class="my-0 font-weight-normal">Course Material</h2>
@@ -89,12 +92,3 @@
 	</div>
 </section>
 {% endblock main %}
-
-{% block javascript %}
-{{ super() }}
-<script>
-	window.addEventListener('pageshow', function(event) {
-		document.getElementById("themes").value = "{{'index.html'|url}}";
-	});
-</script>
-{% endblock javascript %}

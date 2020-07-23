@@ -38,11 +38,13 @@ function changeFontSize(fontScale) {
 	$('body > nav').css("font-size", (fs*1.0)+"rem");
 	$('body > header').css("font-size", (fs*1.0)+"rem");
 	$('body > main').css("font-size", (fs*1.0)+"rem");
+	$('.nav .nav > li > a').css("font-size", (fs*0.8)+"rem");
 	$('body > footer').css("font-size", (fs*1.0)+"rem");
 	$('h1').css("font-size", (fs*2.5)+"rem");
 	$('h2').css("font-size", (fs*2.0)+"rem");
-	$('h3').css("font-size", (fs*1.75)+"rem");
-	$('h4').css("font-size", (fs*1.5)+"rem");
+	$('h3').css("font-size", (fs*1.5)+"rem");
+	$('h4').css("font-size", (fs*1.3)+"rem");
+	$('.card-header > h2').css("font-size", (fs*1.3)+"rem");
 	//$('body>main .btn').css("font-size", (fs*1.0)+"rem");
 	//$('nav[data-toggle="toc"] .nav > li > a').css("font-size", (fs*1.0)+"rem");
 
@@ -54,7 +56,7 @@ function changeFontSize(fontScale) {
 	localStorage.setItem('css-font-size',fontScale);
 
 	// Change some of the layout if large font size
-	if(fontScale>200){
+	if(fontScale>150){
 		$('#sidebar').removeClass('col-md-3');
 		$('#sidebar').addClass('col-md-12');    
 		$('#content').removeClass('col-md-9');
