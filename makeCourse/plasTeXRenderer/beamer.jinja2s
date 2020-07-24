@@ -1,8 +1,29 @@
+name: titlepage
+{% set metadata=obj.ownerDocument.userdata %}
+<div class="breamer-titlepage">
+<h1>{{ metadata.title }}</h1>
+{% if metadata.author %}
+<p class="beamer-authors">
+{%for author in metadata.author %}
+<span class="author">{{ author }}</span>
+{% endfor %}
+</p>
+{% endif %}
+{% if metadata.date %}
+<p class="beamer-date">{{ metadata.date }}</p>
+{% endif %}
+{% if metadata.thanks %}
+<p class="beamer-thanks">{{ metadata.thanks }}</p>
+{% endif %}
+</div>
+
 name: frameenv
+<div class="beamer-frame">
 {{ obj }}
+</div>
+<hr/>
 
 name: frametitle
-<hr/>
 <h2>{{ obj }}</h2>
 
 name: pause
