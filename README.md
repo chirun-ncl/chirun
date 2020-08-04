@@ -15,9 +15,18 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 [Sample course](https://coursebuilder-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/coursebuilder-ncl/sample_course).
 
 ### Prerequisites
- * Ensure a system TeX distribution such as TeX Live or MacTeX is installed.
- * Install pdf2svg, pdf2ppm and libyaml using your standard package manager (e.g. on Ubuntu: `apt install pdf2svg poppler-utils libyaml-dev`)
- * Ensure the `virtualenv` python package is installed.
+#### Linux (Ubuntu 16.04+)
+ * Ensure a system TeX distribution is installed, such as TeX Live (`apt install texlive-full`).
+ * Install `pdf2svg`, `pdftoppm` and `libyaml` using your standard package manager (`apt install pdf2svg poppler-utils libyaml-dev`).
+ * Ensure the `virtualenv` python package is installed (`apt install python3-virtualenv`).
+ 
+#### MacOS
+* Install a system TeX distribution, such as MacTeX from https://tug.org/mactex/.
+* Install Homebrew by following the instructions at https://brew.sh and once installed use the `brew` command to install `pdf2svg`, `pdftoppm` and `libyaml`:
+  - `brew install poppler`
+  - `brew install pdf2svg`
+  - `brew install libyaml`
+* Install `virtualenv` by running `pip3 install virtualenv`.
 
 ### Quick Installation
  * Create a Python3 virtualenv: `virtualenv -p python3 coursebuilder_env` and activate it: `source ./coursebuilder_env/bin/activate`
