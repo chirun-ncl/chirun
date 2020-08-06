@@ -27,3 +27,9 @@ class eqref(Command):
 class rightline(Command):
     args = 'self'
 
+class kframe(Environment):
+    blockType = True
+    def invoke(self, tex):
+        a = self.parse(tex)
+        colors = self.ownerDocument.userdata.getPath('packages/color/colors')
+        self.style['background-color'] = colors['shadecolor']
