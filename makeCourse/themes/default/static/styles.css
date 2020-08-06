@@ -321,3 +321,7 @@ figure + em, .reveal figure + em {
 .kframe {
 	margin-top: 1rem;
 }
+
+.collapse-content {
+	margin-bottom: 1rem;
+}

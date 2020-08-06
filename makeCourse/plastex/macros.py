@@ -33,3 +33,15 @@ class kframe(Environment):
         a = self.parse(tex)
         colors = self.ownerDocument.userdata.getPath('packages/color/colors')
         self.style['background-color'] = colors['shadecolor']
+
+class collapse(Command):
+    blockType = True
+    args = 'btnClass:str btnText:str parText:str hintText:str'
+
+class collapsehint(Command):
+    blockType = True
+    args = 'hintText:str'
+
+class collapsesolution(Command):
+    blockType = True
+    args = 'hintText:str'
