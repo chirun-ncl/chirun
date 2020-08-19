@@ -36,12 +36,12 @@ class kframe(Environment):
 
 class collapse(Command):
     blockType = True
-    args = 'btnClass:str btnText:str parText:str hintText:str'
+    args = 'btnClass:str btnText:str parText hintText'
 
 class collapsehint(Command):
     blockType = True
-    args = 'hintText:str'
+    args = 'hintText'
 
 class collapsesolution(Command):
     blockType = True
-    args = 'hintText:str'
+    args = 'hintText'
