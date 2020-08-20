@@ -27,6 +27,9 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
   - `brew install pdf2svg`
   - `brew install libyaml`
 * Install `virtualenv` by running `pip3 install virtualenv`.
+* If you are not using the default Apple-provided build of Python 3 ( e.g. Python is installed under `/Applications/Python 3.X`, where `3.X` is the version),
+  ensure that the SSL CA certificates are installed by running:
+    - `sudo /Applications/Python\ 3.X/Install\ Certificates.command`
 
 ### Quick Installation
  * Create a Python3 virtualenv: `virtualenv -p python3 coursebuilder_env` and activate it: `source ./coursebuilder_env/bin/activate`
@@ -62,3 +65,7 @@ In short you should start with short, simple LaTeX documents and slowly build up
 ### Help! I get the error "AttributeError: module 'yaml' has no attribute 'CLoader'"
 
 Reinstall pyyaml, ensuring that it is linked to the system `libyaml` by issuing the command: `pip --no-cache-dir install --verbose --force-reinstall -I pyyaml`
+
+### Help! Running makecourse throws an error related to certificate validation on macOS
+
+Run `sudo /Applications/Python\ 3.X/Install\ Certificates.command` (where `3.X` is your version of Python) to install the appropriate SSL CA certificates. This allows the headless version of Chromium to successfully download.
