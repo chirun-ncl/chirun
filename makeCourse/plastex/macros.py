@@ -18,6 +18,9 @@ class embed(Command):
 class cssclass(Command):
     args = '[ classes:str ] content:str'
 
+class iframe(Command):
+    args = '[ options:dict ] content:str'
+
 class div(Environment):
     args = '[ classes:str ]'
 

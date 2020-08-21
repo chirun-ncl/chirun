@@ -16,6 +16,10 @@ name: recap
 name: embed
 <oembed data-url="{{ obj.attributes.content }}"></oembed>
 
+name: iframe
+<iframe width="{{ obj.attributes.options.width }}" height="{{ obj.attributes.options.height }}"
+src="{{ obj.attributes.content }}" {{ obj.attributes.options.attrs }}></iframe>
+
 name: cssclass
 <span class="{{obj.attributes.classes}}">{{obj.attributes.content}}</span>
 
