@@ -107,7 +107,8 @@ class Item(object):
         ext = self.source.suffix
         
         if ext == '.md':
-            html = self.markdownRenderer.render(self.markdown_content())
+            outPath = (self.course.get_build_dir() / self.out_file).parent
+            html = self.markdownRenderer.render(self, outPath)
         elif ext == '.tex':
             html = self.course.load_latex_content(self)
         else:
