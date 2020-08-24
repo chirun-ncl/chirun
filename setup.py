@@ -30,6 +30,7 @@ setup(name="makeCourse",
          'packaging>=16.8',
          'pbr>=2.0.0',
          'Pillow>=4.2.1',
+         'plasTeX==2.1',
          'py>=1.4.33',
          'Pygments>=2.4.2',
          'pymdown-extensions==6.0',
@@ -42,8 +43,5 @@ setup(name="makeCourse",
          'six>=1.10.0',
          'plasTeX',
          'Unidecode>=1.0.22'
-      ],
-      dependency_links = [
-         'git+https://github.com/plastex/plastex.git@master#egg=plasTeX'
       ]
 )
