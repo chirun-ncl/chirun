@@ -92,6 +92,7 @@ class PDFProcess(ItemProcess):
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        self.num_runs = self.course.config['num_pdf_runs']
 
     def visit(self,item):
         if not self.course.config['build_pdf']:

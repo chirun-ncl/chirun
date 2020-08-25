@@ -122,6 +122,7 @@ class MakeCourse:
         config = {
             'static_dir': root_dir / 'static',
             'build_pdf': True,
+            'num_pdf_runs': 1,
             'year': datetime.datetime.now().year,
         }
         return config
