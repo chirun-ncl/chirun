@@ -14,6 +14,7 @@ olefile>=0.44
 packaging>=16.8
 pbr>=2.0.0
 Pillow>=4.2.1
+plasTeX==2.1
 py>=1.4.33
 Pygments>=2.4.2
 pymdown-extensions==6.0
@@ -24,5 +25,4 @@ pytest>=3.0.7
 python-dateutil>=2.6.0
 PyYAML>=5.3
 six>=1.10.0
--e git+https://github.com/plastex/plastex.git@master#egg=plasTeX
 Unidecode>=1.0.22
