@@ -25,6 +25,8 @@ class Item(object):
     type = None
     source_mtime = None
     last_built = None
+    has_footer = True
+    has_topbar = True
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -35,6 +37,8 @@ class Item(object):
         self.author = self.data.get('author', self.parent.author if self.parent else self.course.config.get('author'))
         self.source = Path(self.data.get('source', ''))
         self.is_hidden = self.data.get('hidden', False)
+        self.has_topbar = self.data.get('topbar', self.has_topbar)
+        self.has_footer = self.data.get('footer', self.has_footer)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
         self.markdownRenderer = MarkdownRenderer()
 
@@ -167,6 +171,11 @@ class Chapter(Item):
     template_pdffooter = 'print_footer.html'
 
     has_sidebar = True
+    has_topbar = True
+
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
 
     def get_context(self):
         context = super().get_context()
@@ -174,7 +183,6 @@ class Chapter(Item):
             'build_pdf': self.course.config['build_pdf'],
             'file': '{}.html'.format(self.url),
             'pdf': '{}.pdf'.format(self.url),
-            'sidebar': self.has_sidebar,
         })
 
         if self.parent:

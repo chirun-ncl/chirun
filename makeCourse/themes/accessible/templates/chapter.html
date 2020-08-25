@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block nav %}
+{% if item.has_topbar %}
 <nav>
 	<a href="{{'index.html'|url}}">{{course.config.title}}</a>  &mdash; 
 	{% if item.parent.url %}
@@ -28,6 +29,7 @@
 	{% endif %}
 	{{item.title}}
 </nav>
+{% endif %}
 {% endblock %}
 
 {% block main %}

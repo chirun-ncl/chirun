@@ -19,6 +19,7 @@
 		</form>
 	</div>
 </div>
+{% if item.has_topbar %}
 <nav aria-label="breadcrumb">
 	<ul class="breadcrumb">
 		<li class="breadcrumb-item">
@@ -39,6 +40,7 @@
 		</li>
 	</ul>
 </nav>
+{% endif %}
 {% endblock %}
 
 {% block title %}{{item.title}} | {{ super() }}{% endblock title %}

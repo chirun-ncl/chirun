@@ -38,7 +38,9 @@
                 {{item.as_html()|safe}}
             {% endblock main %}
         </main>
-				{% include "footer.html" %}
+		{% if item.has_footer %}
+		{% include "footer.html" %}
+		{% endif %}
     </body>
 </html>
 
