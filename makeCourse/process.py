@@ -74,6 +74,11 @@ class RenderProcess(ItemProcess):
         self.visit_default(item)
         super().visit_part(item)
 
+    def visit_document(self, item):
+        item.generate_chapter_subitems()
+        self.visit_default(item)
+        super().visit_part(item)
+
     def visit_url(self, item):
         pass
 
@@ -100,15 +105,15 @@ class PDFProcess(ItemProcess):
         self.course.force_relative_build = True
         super().visit(item)
 
+    def visit_document(self, item):
+        item.has_pdf = True
+        self.makePDF(item)
+
     def visit_chapter(self, item):
         item.has_pdf = True
         self.makePDF(item)
 
     def visit_exam(self, item):
-        item.has_pdf = True
-        self.makePDF(item)
-
-    def visit_standalone(self, item):
         item.has_pdf = True
         self.makePDF(item)
 

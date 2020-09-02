@@ -27,6 +27,7 @@ class Item(object):
     last_built = None
     has_footer = True
     has_topbar = True
+    splitlevel = -2
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -74,6 +75,10 @@ class Item(object):
         return self.out_path / PurePath(self.slug)
 
     @property
+    def plastex_filename_rules(self):
+        return self.out_file
+
+    @property
     def url(self):
         return str(self.out_file)
 
@@ -101,7 +106,8 @@ class Item(object):
                 mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
             body = mdContents
         elif ext == '.tex':
-            body = self.course.load_latex_content(self)
+            plastex_output = self.course.load_latex_content(self)
+            body = plastex_output['index.html']['html']
         else:
             raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
 
@@ -114,7 +120,8 @@ class Item(object):
             outPath = (self.course.get_build_dir() / self.out_file).parent
             html = self.markdownRenderer.render(self, outPath)
         elif ext == '.tex':
-            html = self.course.load_latex_content(self)
+            plastex_output = self.course.load_latex_content(self)
+            html = plastex_output['index.html']['html']
         else:
             raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
@@ -134,6 +141,30 @@ class NoContentMixin:
     def as_html(self):
         return ''
 
+class Html(Item):
+    type = 'html'
+    title = 'Untitled'
+    template_name = 'chapter.html'
+    has_sidebar = False
+    pdf_url = False
+
+    @property
+    def out_path(self):
+        path = ''
+        if self.parent:
+            path = self.parent.out_path / path
+        return path
+
+    @property
+    def out_file(self):
+        return self.out_path / self.in_file
+
+    def markdown_content(self,*args,**kwargs):
+        return self.data.get('html', '')
+
+    def as_html(self):
+        return self.data.get('html', '')
+
 class Part(NoContentMixin, Item):
     type = 'part'
     title = 'Untitled part'
@@ -144,6 +175,49 @@ class Part(NoContentMixin, Item):
         context.update({
             'part-slug': self.slug,
             'chapters': [item.get_context() for item in self.content if not item.is_hidden],
+        })
+        return context
+
+class Document(Item):
+    type = 'document'
+    title = 'Untitled part'
+    template_name = 'part.html'
+    splitlevel = 0
+    generated = False
+    has_sidebar = True
+
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
+
+    def generate_chapter_subitems(self):
+        ext = self.source.suffix
+        if ext == '.tex':
+            if not self.generated:
+                self.generated = True
+                plastex_output = self.course.load_latex_content(self)
+                for fn,chapter in plastex_output.items():
+                    if fn != 'index.html':
+                        chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
+                        item = Html(self.course, chapter, self)
+                        item.has_sidebar = self.has_sidebar
+                        item.has_pdf = self.course.config['build_pdf']
+                        item.pdf_url = self.pdf_url
+                        self.content.append(item)
+        else:
+            raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}.".format(self.title, self.source))
+
+    @property
+    def plastex_filename_rules(self):
+        fnstr = self.out_path / '[$id, $title(4), $num(4)]'
+        return '%s %s'%(self.out_file, fnstr)
+
+    def get_context(self):
+        context = super().get_context()
+        context.update({
+            'part-slug': self.slug,
+            'chapters': [item.get_context() for item in self.content if not item.is_hidden],
+            'pdf': '{}.pdf'.format(self.url),
         })
         return context
 
@@ -269,32 +343,13 @@ class Introduction(Item):
 
         return context
 
-class Standalone(Item):
-    type = 'standalone'
-    title = 'document'
-    template_name = 'standalone.html'
-    template_pdfheader = 'print_header.html'
-    template_pdffooter = 'print_footer.html'
-    out_path = Path('')
-    out_file = Path('index.html')
-    url = ''
-
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'build_pdf': self.course.config['build_pdf'],
-            'file': '{}.html'.format(self.url),
-            'pdf': '{}.pdf'.format(self.url),
-        })
-
-        return context
-
 item_types = {
     'introduction': Introduction,
     'part': Part,
+    'document': Document,
     'chapter': Chapter,
-    'standalone': Standalone,
     'url': Url,
+    'html': Html,
     'slides': Slides,
     'recap': Recap,
     'exam': Exam,

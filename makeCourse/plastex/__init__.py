@@ -67,13 +67,19 @@ class PlastexRunner:
             Convert a LaTeX file to HTML, and do some processing with its images
         """
         self.runPlastex(item)
+        plastex_output = {}
 
-        source_file = item.temp_path() / item.out_file
-        with open(str(source_file), encoding='utf-8') as f:
-            html = f.read()
-        # TODO: an abstraction for applying the following as a series of filters
-        html = getEmbeddedImages(self, html, item)
-        return html
+        for section,filename in self.renderer.files.items():
+            filepath = item.temp_path() / filename
+            if filepath.is_file():
+                with open(filepath, encoding='utf-8') as f:
+                    plastex_output[filepath.name] = {
+                        # TODO: an abstraction for applying the following as a series of filters
+                        'html': getEmbeddedImages(self, f.read(), item),
+                        'title': section.title if isinstance(section.title,str) else section.title.textContent,
+                        'source': filepath.name
+                    }
+        return plastex_output
 
     def runPlastex(self, item):
         if not item.course.args.veryverbose:
@@ -87,38 +93,39 @@ class PlastexRunner:
 
         wd = os.getcwd()
 
-        plastex_config['files']['filename'] = item.out_file
+        plastex_config['files']['filename'] = item.plastex_filename_rules
+        plastex_config['files']['split-level'] = item.splitlevel
         rname = plastex_config['general']['renderer'] = 'makecourse'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
         plastex_config['images']['imager'] = 'pdftoppm'
-        document = TeXDocument(config=plastex_config)
-        document.userdata['working-dir'] = '.'
+        self.document = TeXDocument(config=plastex_config)
+        self.document.userdata['working-dir'] = '.'
 
-        document.context.importMacros(vars(macros))
-        document.context.importMacros(vars(overrides))
+        self.document.context.importMacros(vars(macros))
+        self.document.context.importMacros(vars(overrides))
 
         f = open(str(Path(wd) / inPath))
-        tex = TeX(document, myfile=f)
-        document.userdata['jobname'] = tex.jobname
-        pauxname = os.path.join(document.userdata.get('working-dir','.'),
-                            '%s.paux' % document.userdata.get('jobname',''))
+        tex = TeX(self.document, myfile=f)
+        self.document.userdata['jobname'] = tex.jobname
+        pauxname = os.path.join(self.document.userdata.get('working-dir','.'),
+                            '%s.paux' % self.document.userdata.get('jobname',''))
 
         for fname in glob.glob(str(outPaux / '*.paux')):
             if os.path.basename(fname) == pauxname:
                 continue
-            document.context.restore(fname,'makecourse')
+            self.document.context.restore(fname,'makecourse')
 
         sys.excepthook = PlastexRunner.exception_handler
         tex.parse()
         f.close()
 
         os.chdir(str(outPath))
-        renderer = Renderer()
-        renderer.loadTemplates(document)
-        renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
-        renderer.vectorImager = VectorImager(document, renderer.vectorImageTypes)
-        renderer.render(document)
+        self.renderer = Renderer()
+        self.renderer.loadTemplates(self.document)
+        self.renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
+        self.renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
+        self.renderer.render(self.document)
 
         os.chdir(wd)
 

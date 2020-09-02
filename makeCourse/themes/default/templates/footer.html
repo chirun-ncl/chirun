@@ -1,11 +1,15 @@
 <footer class="text-muted">
-    <div class="container">
-        <div class="float-right">
-            <p><a href="#">Back to top</a></p>
-            {% include "theme_switch.html" %}
-        </div>
-        <p>&copy; {{item.author}} - {{course.config.institution}} {{course.config.year}}</p>
-        <p>Generated using software written by the E-Learning Unit, School of Mathematics &amp; Statistics, Newcastle University</p>
-        <p>Site last generated: {{date}}</p>
-    </div>
+	<hr>
+	<div class="container">
+		<div class="float-right">
+			<ul style="list-style: none">
+			<li><a href="#">Back to top</a></li>
+			{% if item.has_pdf %}
+			<li><a href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download as PDF</a></li>
+			{% endif %}
+			</ul>
+		</div>
+		<p>Generated using <a target="_blank" href="https://github.com/coursebuilder-ncl/makecourse">NCL Coursebuilder</a>, written by the E-Learning Unit, School of Mathematics &amp; Statistics, Newcastle University</p>
+		<p>Site last generated: {{date}}</p>
+	</div>
 </footer>
