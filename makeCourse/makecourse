@@ -367,7 +367,7 @@ def main():
 
     oembed.save_cache()
 
-    print("All done! Output written to {}".format(mc.get_build_dir()))
+    print("All done! Output written to {}".format(mc.build_dir.resolve()))
 
 
 if __name__ == "__main__":
