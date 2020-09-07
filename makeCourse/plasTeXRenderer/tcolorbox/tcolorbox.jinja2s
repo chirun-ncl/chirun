@@ -1,0 +1,4 @@
+name: tcolorbox
+<div class="tcolorbox" {% if obj.attributes.colback %}style="background-color: {{ obj.attributes.colback }}" {% endif %}>
+{{ obj }}
+</div>
