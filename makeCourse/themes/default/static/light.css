@@ -68,3 +68,8 @@ nav[data-toggle='toc'] .nav-link.active:focus {
 .interlude {
   background-color: #eeffd3;
 }
+
+.tcolorbox {
+  background-color: #EEE;
+  border: 2px solid #555;
+}

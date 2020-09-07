@@ -325,3 +325,16 @@ figure + em, .reveal figure + em {
 .collapse-content {
 	margin-bottom: 1rem;
 }
+
+.tcolorbox {
+  margin: 1em 0;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.tcolorbox .frametitle {
+  font-weight: 400;
+  font-size: 1.2em;
+  display: inline-block;
+  margin-bottom: 1em;
+}

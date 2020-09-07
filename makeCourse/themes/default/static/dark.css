@@ -215,3 +215,8 @@ nav[data-toggle='toc'] .nav-link.active:focus {
 	background-color: #00a379;
 	border-color: #00a379;
 }
+
+.tcolorbox {
+  background-color: #444;
+  border: 2px solid #555;
+}
