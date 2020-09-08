@@ -295,6 +295,21 @@ To fix: put all chapters inside parts or don't include parts at all. Quitting...
         mkdir_p(self.get_build_dir())
         mkdir_p(self.get_build_dir() / 'static')
 
+    def save_manifest(self):
+        """
+            Write out a manifest similar to config.yml, but
+            including possible changes to the structure introduced
+            by item types that dynamically create further content
+            items.
+        """
+        manifest_path = self.build_dir / 'MANIFEST.yml'
+        manifest = self.config
+        manifest.update({'structure': [item.content_tree() for item in self.structure]})
+        del manifest['args']
+        del manifest['static_dir']
+        with open(manifest_path, 'w') as f:
+            yaml.dump(manifest,f)
+
     def build_with_theme(self, theme):
         """
             Build the course using the given theme
@@ -362,6 +377,8 @@ def main():
 
     for theme in mc.themes:
         mc.build_with_theme(theme)
+
+    mc.save_manifest()
 
     if not mc.args.lazy:
         mc.cleanup()

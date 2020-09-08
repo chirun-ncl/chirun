@@ -76,7 +76,7 @@ class PlastexRunner:
                     plastex_output[filepath.name] = {
                         # TODO: an abstraction for applying the following as a series of filters
                         'html': getEmbeddedImages(self, f.read(), item),
-                        'title': section.title if isinstance(section.title,str) else section.title.textContent,
+                        'title': section.title if isinstance(section.title,str) else section.title.textContent.strip(),
                         'source': filepath.name
                     }
         return plastex_output
