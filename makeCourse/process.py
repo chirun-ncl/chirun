@@ -117,6 +117,10 @@ class PDFProcess(ItemProcess):
         item.has_pdf = True
         self.makePDF(item)
 
+    def visit_standalone(self, item):
+        item.has_pdf = True
+        self.makePDF(item)
+
     def visit_slides(self, item):
         item.has_pdf = True
         ext = item.source.suffix
