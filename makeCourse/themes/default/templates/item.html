@@ -34,12 +34,16 @@
 			{{item.title}}
 		</li>
 		<li class="ml-auto">
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
+			<button class="navbar-toggler p0" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
 				{{macros.icon('cog','Toggle customisations panel')}}
 			</button>
 		</li>
 	</ul>
 </nav>
+{% else %}
+<button class="navbar-toggler standalone-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
+	<span class="fa fa-cog"></span>
+</button>
 {% endif %}
 {% endblock %}
 

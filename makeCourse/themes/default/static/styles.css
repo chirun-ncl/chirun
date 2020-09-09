@@ -3,7 +3,7 @@
 }
 
 body {
-  position: relative;
+	top:0;
 }
 
 .jumbotron {
@@ -41,8 +41,10 @@ body {
 .breadcrumb-item > a:focus {
 	text-decoration: none;
 }
-.navbar-toggler{
-	padding: 0;
+.standalone-toggler{
+	position: absolute;
+	top:0;
+	right:0;
 }
 
 footer {
