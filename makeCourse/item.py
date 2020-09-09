@@ -349,11 +349,19 @@ class Introduction(Item):
 
         return context
 
+class Standalone(Chapter):
+    type = 'standalone'
+    title = 'document'
+    out_path = Path('')
+    out_file = Path('index.html')
+    url = ''
+
 item_types = {
     'introduction': Introduction,
     'part': Part,
     'document': Document,
     'chapter': Chapter,
+    'standalone': Standalone,
     'url': Url,
     'html': Html,
     'slides': Slides,
