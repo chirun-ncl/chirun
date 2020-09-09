@@ -226,7 +226,7 @@ class MakeCourse:
 
         self.partsEnabled = False
         for item in self.structure:
-            if item.type=='part':
+            if item.type in ['part', 'document']:
                 self.partsEnabled = True
                 break
         if self.partsEnabled:
