@@ -31,11 +31,19 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
   ensure that the SSL CA certificates are installed by running:
     - `sudo /Applications/Python\ 3.X/Install\ Certificates.command`
 
+---
+
 ### Quick Installation
  * Create a Python3 virtualenv: `virtualenv -p python3 coursebuilder_env` and activate it: `source ./coursebuilder_env/bin/activate`
  * Install makeCourse: `pip install git+https://github.com/coursebuilder-ncl/makecourse.git`
 
 The command `makecourse` is now available for use. You should now compile the sample course and ensure everything works.
+
+#### Upgrade Instructions
+ * Run the following command with the virtualenv active to upgrade the installed version of `makecourse`:
+ * `pip install --upgrade git+https://github.com/coursebuilder-ncl/makecourse.git`
+
+---
 
 ### Development installation
  * Create a Python3 virtualenv: `virtualenv -p python3 coursebuilder_env` and activate it: `source ./coursebuilder_env/bin/activate`
@@ -46,11 +54,21 @@ The command `makecourse` is now available for use. You should now compile the sa
 
 The command `makecourse` is now available for use. You should now compile the sample course and ensure everything works.
 
+#### Development Upgrade Instructions
+ * To upgrade the development installation pull the latest changes from this git repository and install any new requirements, e.g.
+ * `cd makecourse`
+ * `git pull`
+ * `pip install -r requirements.txt`
+ 
+---
+
 ### Compile the Sample Course
  * Install the `makecourse` package using the instructions above
  * Clone the sample course: `git clone https://github.com/coursebuilder-ncl/sample_course.git`
  * Change into the directory you just cloned to and run `make local` to build and view a local version of the sample course.
  * The finished website output will be in `./sample_course/build`
+
+---
  
 ### Help! My LaTeX notes won't compile!
 
