@@ -176,6 +176,10 @@ class Part(NoContentMixin, Item):
     title = 'Untitled part'
     template_name = 'part.html'
 
+    def __init__(self, course, data, parent=None):
+        super().__init__(course, data, parent)
+        self.leading_text = self.data.get('leading_text', '')
+
     def get_context(self):
         context = super().get_context()
         context.update({
