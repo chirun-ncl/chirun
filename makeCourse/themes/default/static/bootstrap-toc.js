@@ -73,7 +73,9 @@
         var anchor = this.generateAnchor(headingEl);
         var $heading = $(headingEl);
         var text = $heading.data('toc-text') || $heading.html();
-        return this.generateNavEl(anchor, text);
+        if(text.replace(/\s/g, '').replace(/&nbsp;/g,'').length){
+            return this.generateNavEl(anchor, text);
+        } else return null;
       },
 
       // Find the first heading level (`<h1>`, then `<h2>`, etc.) that has more than one element. Defaults to 1 (for `<h1>`).
