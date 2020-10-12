@@ -20,6 +20,14 @@
             <div id="content" class="col-md-9"> 
             {% else %}
             <div id="content" class="col-md-12">
+			<div class="standalone-nav">
+				{% if item.has_slides %}
+				<a class="standalone-navitem" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a>
+				{% endif %}
+				{% if item.has_pdf %}
+				<a class="standalone-navitem" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download as PDF</a>
+				{% endif %}
+			</div>
             {% endif %}
                 {{item.as_html()|safe}}
             </div>

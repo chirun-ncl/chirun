@@ -205,6 +205,13 @@ nav[data-toggle='toc'] .nav-link.active:focus {
   background-color: transparent;
   border-left: 2px solid #FFF;
 }
+.standalone-nav > a {
+  color: #BBB;
+}
+.standalone-nav > a:hover,
+.standalone-nav > a:focus {
+  color: #FFF;
+}
 
 /* coursebuilder */
 .exercise {

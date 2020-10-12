@@ -46,7 +46,13 @@ body {
 	top:0;
 	right:0;
 }
-
+.standalone-nav{
+	display: flex;
+	margin-bottom: 0.5rem;
+}
+.standalone-navitem{
+	margin-right: 1rem;
+}
 footer {
   padding-top: 3rem;
   padding-bottom: 3rem;
