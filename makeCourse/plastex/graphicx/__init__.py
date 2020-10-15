@@ -90,10 +90,3 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
         plasTeX.Packages.graphicx.includegraphics.invoke(self,tex)
         self.ownerDocument.userdata.setPath('packages/makecourse/currentimage', self)
 
-class alttext(Command):
-    args = 'text'
-    def invoke(self, tex):
-        Command.invoke(self,tex)
-        doc = self.ownerDocument
-        gfx = doc.userdata.getPath('packages/makecourse/currentimage')
-        gfx.altText = self.attributes['text']

@@ -51,3 +51,11 @@ class collapsesolution(Command):
 
 class text(Primitives.BoxCommand):
     args = 'self'
+
+class alttext(Command):
+    args = 'text'
+    def invoke(self, tex):
+        Command.invoke(self,tex)
+        doc = self.ownerDocument
+        gfx = doc.userdata.getPath('packages/makecourse/currentimage')
+        gfx.altText = self.attributes['text']
