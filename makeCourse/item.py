@@ -195,10 +195,12 @@ class Document(Item):
     splitlevel = 0
     generated = False
     has_sidebar = True
+    has_topbar = True
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
+        self.has_topbar = self.data.get('topbar', self.has_topbar)
 
     def generate_chapter_subitems(self):
         ext = self.source.suffix
@@ -211,6 +213,7 @@ class Document(Item):
                         chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
                         item = Html(self.course, chapter, self)
                         item.has_sidebar = self.has_sidebar
+                        item.has_topbar = self.has_topbar
                         item.has_pdf = self.course.config['build_pdf']
                         item.pdf_url = self.pdf_url
                         self.content.append(item)
