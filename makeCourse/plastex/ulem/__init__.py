@@ -13,5 +13,5 @@ class uwave(Command):
     args = 'obj'
     @property
     def source(self):
-        return r'\stackrel{{{obj}}}{{\tiny\sim}}'.format(obj=sourceArguments(self).strip())
+        return r'\lower2pt\stackrel{{\large\smash{{{obj}}}}}{{\lower 3pt\sim}}'.format(obj=sourceArguments(self).strip())
 
