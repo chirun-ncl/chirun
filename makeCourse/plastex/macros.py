@@ -48,3 +48,6 @@ class collapsehint(Command):
 class collapsesolution(Command):
     blockType = True
     args = 'hintText'
+
+class text(Primitives.BoxCommand):
+    args = 'self'

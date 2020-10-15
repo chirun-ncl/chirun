@@ -13,15 +13,17 @@ name: align eqnarray
 {% for row in obj %}
 {% if row.ref != None %}<div class="eqnarrayid" id="{{ row.id }}"></div>{% endif %}
 {% endfor %}
+<script type="math/tex; mode=display">
 \begin{align}
 {% for row in obj %}
 {{ row.source }}
 {% endfor %}
 \end{align}
+</script>
 </div>
 
 name: align* eqnarray*
-<span>{{ obj.source }}</span>
+<span><script type="math/tex; mode=display">{{ obj.source }}</script></span>
 
 name: equation
 <div class="eqn" id="{{ obj.id }}">

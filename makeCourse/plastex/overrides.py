@@ -16,26 +16,13 @@ class label(Command):
         a = self.parse(tex)
         self.ownerDocument.context.catcode('_', catcode)
 
-class mbox(Primitives.BoxCommand):
-    args = 'self'
-    class math(Math.MathEnvironment):
-        @property
-        def source(self):
-            if self.hasChildNodes():
-                return u'$%s$' % sourceChildren(self)
-            return '$'
-
 class math(Math.math):
     @property
     def source(self):
-        return sourceChildren(self).strip()
+        if self.hasChildNodes():
+            return r'\({}\)'.format(sourceChildren(self))
+        return r'\('
 Math.math = math
-
-class displaymath(Math.displaymath):
-    @property
-    def source(self):
-        return sourceChildren(self).strip()
-Math.displaymath = displaymath
 
 class MathEnvironment(Math.Environment):
     mathMode = True
