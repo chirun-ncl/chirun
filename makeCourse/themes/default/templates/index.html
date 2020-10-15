@@ -22,6 +22,7 @@
 {% endblock nav %}
 
 {% block header %}
+{% if item.has_topbar %}
 <div class="container">
 	<div class="jumbotron">
 		<h1 id="jumbo-title">{{course.config.title}}</h1>
@@ -30,6 +31,7 @@
 		<p>{{ item.leading_text }}</p>
 	</div>
 </div>
+{% endif %}
 {% endblock header %}
 
 {% block main %}
