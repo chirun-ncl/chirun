@@ -152,3 +152,46 @@ class enumerate_(List):
         if 'type' in self.attributes:
             self.listType = self.attributes['type']
         self.listDepth = Lists.List.depth
+
+class MathShift(Command):
+    """
+    The '$' character in TeX
+    This macro detects whether this is a '$' or '$$' grouping.  If
+    it is the former, a 'math' environment is invoked.  If it is
+    the latter, a 'displaymath' environment is invoked.
+    """
+    macroName = 'active::$'
+    inEnv = []
+
+    def invoke(self, tex):
+        r"""
+        This gets a bit tricky because we need to keep track of both
+        our beginning and ending.  We also have to take into
+        account \mbox{}es.
+        """
+        inEnv = type(self).inEnv
+
+        current = self.ownerDocument.createElement('math')
+        for t in tex.itertokens():
+            if t.catcode == Token.CC_MATHSHIFT:
+                if inEnv and inEnv[-1] is not None and type(inEnv[-1]) is type(current):
+                    # Don't switch to displaymath element if already inside a math element
+                    tex.pushToken(t)
+                else:
+                    current = self.ownerDocument.createElement('displaymath')
+            else:
+                tex.pushToken(t)
+            break
+
+        # See if this is the end of the environment
+        if inEnv and inEnv[-1] is not None and type(inEnv[-1]) is type(current):
+            inEnv.pop()
+            current.macroMode = Command.MODE_END
+            self.ownerDocument.context.pop(current)
+            return [current]
+
+        inEnv.append(current)
+        self.ownerDocument.context.push(current)
+
+        return [current]
+Primitives.MathShift = MathShift
