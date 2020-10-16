@@ -2,7 +2,7 @@ from plasTeX import Command, sourceChildren, sourceArguments, Environment, NewCo
 from plasTeX.Base.LaTeX import Math, Lists
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.TeX import Primitives
-from plasTeX.Tokenizer import Token, EscapeSequence, Other
+from plasTeX.Tokenizer import Token, Tokenizer, EscapeSequence, Other
 from plasTeX.Logging import getLogger
 from plasTeX.Context import Context
 
