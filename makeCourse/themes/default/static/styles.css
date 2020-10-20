@@ -326,6 +326,9 @@ figure + em, .reveal figure + em {
 	justify-content: space-evenly;
 }
 
+.beamer-frame > header {
+  margin-bottom: 1.0rem;
+}
 .beamer-frame-title {
   font-size: 1.5rem;
 }
@@ -335,6 +338,7 @@ figure + em, .reveal figure + em {
 .beamer-section-heading {
   overflow: hidden;
   height: 0;
+  margin: 0;
 }
 .beamer-section-title {
   font-size: 2rem;

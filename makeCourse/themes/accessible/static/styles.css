@@ -169,6 +169,30 @@ pre.output-block {
 	width: 100% !important;
 }
 
+.beamer-frame > header {
+  margin-bottom: 1.0rem;
+}
+.beamer-frame-title {
+  font-size: 1.5rem;
+}
+.beamer-frame-subtitle {
+  font-size: 1.3rem;
+}
+.beamer-section-heading {
+  overflow: hidden;
+  height: 0;
+  margin: 0;
+}
+.beamer-section-title {
+  font-size: 2rem;
+}
+.beamer-subsection-title {
+  font-size: 1.5rem;
+}
+.beamer-subsubsection-title {
+  font-size: 1.3rem;
+}
+
 .kframe {
 	margin-top: 1rem;
 }
