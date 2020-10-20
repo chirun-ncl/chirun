@@ -6,6 +6,15 @@ class frame(plasTeX.Packages.beamer.frame):
 
 class frameenv(plasTeX.Packages.beamer.frameenv):
     blockType = True
+    def addToFrames(self):
+        """ Add this frame to the frame collection """
+        u = self.ownerDocument.userdata
+        frames = u.get('frames')
+        if frames is None:
+            frames = []
+            u['frames'] = frames
+        self.subtitle = self.attributes['subtitle']
+        frames.append(self)
 
 class columns(plasTeX.Packages.beamer.columns):
     blockType = True

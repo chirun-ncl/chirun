@@ -19,14 +19,19 @@ name: titlepage
 
 name: frameenv
 <div class="beamer-frame">
+{% if obj.title %}
+<header>
+<h2>{{ obj.title }}</h2>
+{% if obj.subtitle %}
+<p>{{ obj.subtitle }}</p>
+{% endif %}
+</header>
+{% endif %}
 {{ obj }}
 </div>
 <hr/>
 
-name: frametitle
-<h2>{{ obj }}</h2>
-
-name: pause
+name: framesubtitle frametitle pause
 
 name: columns
 <div class="beamer-columns">
