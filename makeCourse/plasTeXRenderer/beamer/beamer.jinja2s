@@ -69,3 +69,12 @@ name: subsubsection
 <h4 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h4>
 {{ obj }}
 </section>
+
+name: thesection thesubsection
+
+name: sectionname
+{{ obj.currentSection.links.section.title }}
+
+name: subsectionname
+{{ obj.currentSection.links.subsection.title }}
+

@@ -3,6 +3,13 @@ from plasTeX.Packages.beamer import *
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
 
+from plasTeX.PackageResource import (
+	PackageResource, PackageCss, PackageJs, PackageTemplateDir)
+
+def ProcessOptions(options, document):
+    tpl = PackageTemplateDir(renderers='html5',package='beamer')
+    document.addPackageResource([tpl])
+
 class frame(plasTeX.Packages.beamer.frame):
     blockType = True
 
@@ -43,6 +50,18 @@ class insertsubsectionhead(Command):
 
 class insertsubsubsectionhead(Command):
     blockType = True
+
+class thesection(Command):
+    pass
+
+class thesubsection(Command):
+    pass
+
+class sectionname(Command):
+    pass
+
+class subsectionname(Command):
+    pass
 
 class tableofcontents(Command):
     blockType = True
