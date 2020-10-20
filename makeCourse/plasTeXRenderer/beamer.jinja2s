@@ -21,9 +21,9 @@ name: frameenv
 <div class="beamer-frame">
 {% if obj.title %}
 <header>
-<h2>{{ obj.title }}</h2>
+<span class="beamer-frame-title">{{ obj.title }}</span>
 {% if obj.subtitle %}
-<p>{{ obj.subtitle }}</p>
+<p class="beamer-frame-subtitle">{{ obj.subtitle }}</p>
 {% endif %}
 </header>
 {% endif %}
@@ -42,3 +42,30 @@ name: columnenv
 <div {% if obj.attributes.width %}style="width:{{ obj.attributes.width }}"{% endif %} class="beamer-column">
 {{ obj }}
 </div>
+
+name: insertsectionhead
+<div class="beamer-section-title">{{ obj.currentSection.links.section.title }}</div>
+
+name: insertsubsectionhead
+<div class="beamer-subsection-title">{{ obj.currentSection.links.subsection.title }}</div>
+
+name: insertsubsubsectionhead
+<div class="beamer-subsubsection-title">{{ obj.currentSection.links.subsubsection.title }}</div>
+
+name: section
+<section class="beamer-section">
+<h2 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h2>
+{{ obj }}
+</section>
+
+name: subsection
+<section class="beamer-subsection">
+<h3 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h3>
+{{ obj }}
+</section>
+
+name: subsubsection
+<section class="beamer-subsection">
+<h4 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h4>
+{{ obj }}
+</section>

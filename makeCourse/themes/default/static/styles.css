@@ -326,6 +326,26 @@ figure + em, .reveal figure + em {
 	justify-content: space-evenly;
 }
 
+.beamer-frame-title {
+  font-size: 1.5rem;
+}
+.beamer-frame-subtitle {
+  font-size: 1.3rem;
+}
+.beamer-section-heading {
+  overflow: hidden;
+  height: 0;
+}
+.beamer-section-title {
+  font-size: 2rem;
+}
+.beamer-subsection-title {
+  font-size: 1.5rem;
+}
+.beamer-subsubsection-title {
+  font-size: 1.3rem;
+}
+
 .kframe {
 	margin-top: 1rem;
 }

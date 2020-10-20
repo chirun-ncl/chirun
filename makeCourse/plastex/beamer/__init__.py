@@ -1,4 +1,6 @@
+from plasTeX import Command
 from plasTeX.Packages.beamer import *
+from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
 
 class frame(plasTeX.Packages.beamer.frame):
@@ -32,3 +34,32 @@ class frametitle(plasTeX.Packages.beamer.frametitle):
 
 class framesubtitle(plasTeX.Packages.beamer.framesubtitle):
     blockType = True
+
+class insertsectionhead(Command):
+    blockType = True
+
+class insertsubsectionhead(Command):
+    blockType = True
+
+class insertsubsubsectionhead(Command):
+    blockType = True
+
+class tableofcontents(Command):
+    blockType = True
+
+class section(Sectioning.StartSection):
+    level = Command.SECTION_LEVEL
+    counter = 'section'
+
+    def invoke(self, tex):
+        Sectioning.StartSection.invoke(self, tex)
+        toks = self.ownerDocument.userdata.getPath('packages/beamer/atbeginsection')
+        if toks is not None and self.attributes['*modifier*'] != '*':
+            tex.pushTokens(toks)
+
+class AtBeginSection(Command):
+    args = '[ special ] text:nox'
+
+    def invoke(self, tex):
+        Command.invoke(self, tex)
+        self.ownerDocument.userdata.setPath('packages/beamer/atbeginsection', self.attributes['text'])
