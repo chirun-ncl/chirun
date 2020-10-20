@@ -63,9 +63,6 @@ class sectionname(Command):
 class subsectionname(Command):
     pass
 
-class tableofcontents(Command):
-    blockType = True
-
 class section(Sectioning.StartSection):
     level = Command.SECTION_LEVEL
     counter = 'section'

@@ -78,3 +78,14 @@ name: sectionname
 name: subsectionname
 {{ obj.currentSection.links.subsection.title }}
 
+name: tableofcontents
+<ul style="list-style: none;">
+{% for section in obj.currentSection.documentSections %}
+{% if section.level == 1 %}
+<li><a href="{{ section.url }}" >{{ section.fullTocEntry }}</a>
+  {% for subsection in section.subsections %}
+    <ul><a href="{{ subsection.url }}" >{{ subsection.fullTocEntry }}</ul>
+  {% endfor %}
+{% endif %}
+{% endfor %}
+</ul>
