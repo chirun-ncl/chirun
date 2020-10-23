@@ -124,6 +124,7 @@ class MakeCourse:
             'build_pdf': True,
             'num_pdf_runs': 1,
             'year': datetime.datetime.now().year,
+            'format_version': 2,
         }
         return config
 

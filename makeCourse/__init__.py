@@ -4,7 +4,7 @@ import yaml
 
 
 def slugify(value):
-    return "".join([c for c in re.sub(r'\s+', '_', value) if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()
+    return "".join([c for c in re.sub(r'\s+', '_', value) if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()[:20]
 
 
 def gen_dict_extract(key, var):
