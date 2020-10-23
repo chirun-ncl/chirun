@@ -1,5 +1,9 @@
 name: thebibliography
-<h2>Bibliography</h2>
+{% if obj.ownerDocument.context.bibliography.level == 1 %}
+	<h2 id="{{obj.id}}">References</h2>
+{% else %}
+	<h1 id="{{obj.id}}">Bibliography</h1>
+{% endif %}
 <ul class="bibliography">
 {% for item in obj %}
 	<li style="list-style: none" id={{ item.id }}> <div class="bibcite">[{{ item.bibcite }}]</div> {{ item }} </li>
@@ -9,10 +13,9 @@ name: thebibliography
 name: bibliographystyle
 
 name: bibliography
-<div class="bibliography">
-<h1>{{ obj.title }}</h1>
+<section class="section bibliography">
 {{ obj }}
-</div>
+</section>
 
 name: cite
 <span class="cite">
