@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import collections
 from subprocess import Popen, PIPE
 from pathlib import Path
 
@@ -9,22 +10,24 @@ logger = logging.getLogger(__name__)
 
 def runPdflatex(course, item):
     inDir = course.get_root_dir() / item.source.parent
+    stdout_tail = collections.deque(maxlen=8)
 
     cmd = ['pdflatex', '-halt-on-error', str(item.in_file)]
     logger.info('Running pdflatex: {}'.format(inDir / item.in_file))
 
-    # latex often requires 2 runs to resolve labels
-    # TODO: make number of runs a parameter
+    # Run pdflatex twice to resolve labels, even if num_pdf_runs = 1
     for _ in range(2):
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(inDir), universal_newlines=True)
         for stdout_line in iter(proc.stdout.readline, ""):
+            if not stdout_line.isspace():
+                stdout_tail.append(stdout_line)
             logger.debug(stdout_line)
 
         out, err = proc.communicate()
 
         if proc.returncode != 0:
             logger.error(err)
-            raise Exception("Error: Something went wrong running pdflatex!")
+            raise Exception("Error: Something went wrong running: {}\n\n{}".format(' '.join(cmd), ''.join(stdout_tail)))
 
     inPath = inDir / item.base_file.with_suffix('.pdf')
     outPath = course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
