@@ -3,8 +3,12 @@ import os
 import yaml
 
 
-def slugify(value):
-    return "".join([c for c in re.sub(r'\s+', '_', value) if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()[:20]
+def slugify(value, v=0):
+    slug = "".join([c for c in re.sub(r'\s+', '_', value) if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()[:20]
+    if(v==0):
+        return slug
+    else:
+        return '{}_{}'.format(slug,str(v))
 
 
 def gen_dict_extract(key, var):

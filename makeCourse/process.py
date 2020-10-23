@@ -2,7 +2,7 @@ import logging
 import shutil
 import os
 import re
-from . import latex, mkdir_p
+from . import latex, mkdir_p, slugify
 from .render import Renderer, SlidesRenderer
 from pathlib import Path
 import asyncio
@@ -42,6 +42,21 @@ class ItemProcess(object):
     def visit_part(self, item):
         for subitem in item.content:
             self.visit(subitem)
+
+class SlugCollisionProcess(ItemProcess):
+    name = 'Checking for duplicated filenames or paths'
+    slugs = []
+
+    def visit(self,item):
+        logger.debug("Checking slug: {}".format(item.slug))
+        n = 1
+        while item.slug in self.slugs:
+            newslug = slugify(item.title, n)
+            logger.info("Slug {} already used. Trying {}...".format(item.slug, newslug))
+            item.slug = newslug
+            n = n + 1
+        self.slugs.append(item.slug)
+        super().visit(item)
 
 class LastBuiltProcess(ItemProcess):
     name = 'Establish when each item was last built'

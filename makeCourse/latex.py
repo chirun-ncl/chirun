@@ -62,7 +62,7 @@ def runPdflatex(course, item):
     shutil.move(str(inPath), str(outPath))
 
     if not course.args.lazy:
-        logger.info('    Cleaning up after pdflatex...')
+        logger.debug('    Cleaning up after pdflatex...')
         extensions = ['.log', '.aux', '.out', '.pdf', '.snm', '.nav', '.toc']
         for extension in extensions:
             filename = '{base}{extension}'.format(base=in_dir / item.base_file, extension=extension)

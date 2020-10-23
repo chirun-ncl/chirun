@@ -136,9 +136,9 @@ class Item(object):
 
     def content_tree(self):
         if self.content:
-            return {'type': self.type, 'title': self.title, 'content': [item.content_tree() for item in self.content]}
+            return {'type': self.type, 'slug': self.slug, 'title': self.title, 'content': [item.content_tree() for item in self.content]}
         else:
-            return {'type': self.type, 'title': self.title, 'source': str(self.source)}
+            return {'type': self.type, 'slug': self.slug, 'title': self.title, 'source': str(self.source)}
 
 class NoContentMixin:
     def markdown_content(self,*args,**kwargs):
