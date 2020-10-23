@@ -54,19 +54,19 @@ name: insertsubsubsectionhead
 
 name: section
 <section class="beamer-section">
-<h2 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h2>
+<h2 aria-hidden="true" class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h2>
 {{ obj }}
 </section>
 
 name: subsection
 <section class="beamer-subsection">
-<h3 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h3>
+<h3 aria-hidden="true" class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h3>
 {{ obj }}
 </section>
 
 name: subsubsection
 <section class="beamer-subsection">
-<h4 class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h4>
+<h4 aria-hidden="true" class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h4>
 {{ obj }}
 </section>
 
