@@ -21,7 +21,7 @@ name: frameenv
 <div class="beamer-frame">
 {% if obj.title %}
 <header>
-<span class="beamer-frame-title">{{ obj.title }}</span>
+<p class="beamer-frame-title">{{ obj.title }}</p>
 {% if obj.subtitle %}
 <p class="beamer-frame-subtitle">{{ obj.subtitle }}</p>
 {% endif %}
@@ -44,13 +44,13 @@ name: columnenv
 </div>
 
 name: insertsectionhead
-<div class="beamer-section-title">{{ obj.currentSection.links.section.title }}</div>
+<p class="beamer-section-title">{{ obj.currentSection.links.section.title }}</p>
 
 name: insertsubsectionhead
-<div class="beamer-subsection-title">{{ obj.currentSection.links.subsection.title }}</div>
+<p class="beamer-subsection-title">{{ obj.currentSection.links.subsection.title }}</p>
 
 name: insertsubsubsectionhead
-<div class="beamer-subsubsection-title">{{ obj.currentSection.links.subsubsection.title }}</div>
+<p class="beamer-subsubsection-title">{{ obj.currentSection.links.subsubsection.title }}</p>
 
 name: section
 <section class="beamer-section">
