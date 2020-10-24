@@ -14,12 +14,12 @@ class LatexRunner(object):
 
     def __init__(self,filename, wd='.'):
         self.wd = wd
-        self.args = [str(filename), '-halt-on-error']
+        self.args = ['-halt-on-error', str(filename)]
 
     def exec(self):
         stdout_tail = collections.deque(maxlen=8)
         cmd = [self.compiler] + self.args
-        logger.info('Running {}: {}'.format(self.compiler, self.wd / self.args[0]))
+        logger.info('Running {}: {}'.format(self.compiler, self.wd / self.args[-1]))
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(self.wd), universal_newlines=True)
         for stdout_line in iter(proc.stdout.readline, ""):
             if not stdout_line.isspace():
