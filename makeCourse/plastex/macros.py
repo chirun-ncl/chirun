@@ -49,9 +49,6 @@ class collapsesolution(Command):
     blockType = True
     args = 'hintText'
 
-class text(Primitives.BoxCommand):
-    args = 'self'
-
 class alttext(Command):
     args = 'text'
     def invoke(self, tex):

@@ -17,13 +17,37 @@ class label(Command):
         a = self.parse(tex)
         self.ownerDocument.context.catcode('_', catcode)
 
+# Overrive boxcommands inside MathJaX to avoid extra <script type="math/tex">
+class BoxCommand(Primitives.BoxCommand):
+    class math(Math.math):
+        @property
+        def source(self):
+            if self.hasChildNodes():
+                return u'\(%s\)' % sourceChildren(self)
+            return '\('
+class hbox(BoxCommand): pass
+class vbox(BoxCommand): pass
+class text(BoxCommand):
+    args = 'self'
+class mbox(BoxCommand):
+    args = 'self'
+class TextCommand(BoxCommand):
+    pass
+
+# Use <script type="math/tex"> to avoid problems with less than symbol in MathJax
 class math(Math.math):
     @property
     def source(self):
         if self.hasChildNodes():
-            return r'\({}\)'.format(sourceChildren(self))
-        return r'\('
+            return r'<script type="math/tex">{}</script>'.format(sourceChildren(self))
+        return ''
 Math.math = math
+
+class displaymath(Math.displaymath):
+     @property
+     def source(self):
+         return sourceChildren(self).strip()
+Math.displaymath = displaymath
 
 class MathEnvironment(Math.Environment):
     mathMode = True

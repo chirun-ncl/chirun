@@ -3,10 +3,10 @@ name: math
 
 name: ensuremath gather gather* flalign flalign* \
       multline multline* alignat alignat* split DeclareMathOperator
-<span class="dmath">{{ obj.source }}</span>
+<span class="dmath"><script type="math/tex; mode=display">{{ obj.source }}</script></span>
 
 name: displaymath equation*
-<span class="dmath">{{ obj.source }}</span>
+<span class="dmath"><script type="math/tex; mode=display">{{ obj.source }}</script></span>
 
 name: align eqnarray
 <div id="{{ obj.id }}">
@@ -27,5 +27,5 @@ name: align* eqnarray*
 
 name: equation
 <div class="eqn" id="{{ obj.id }}">
-{{ obj.source }}
+<script type="math/tex; mode=display">{{ obj.source }}</script>
 </div>
