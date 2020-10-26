@@ -40,19 +40,18 @@ class BibtexRunner(LatexRunner):
 
 def runPdflatex(course, item):
     in_dir = course.get_root_dir() / item.source.parent
-    tex_filename = in_dir / item.in_file
     aux_filename = in_dir / item.in_file.with_suffix('.aux')
 
-    LatexRunner(tex_filename, in_dir).exec()
+    LatexRunner(item.in_file, in_dir).exec()
 
     # Test for bibtex commands
     with open(aux_filename) as f:
         f_read = f.read()
         if r'\bibstyle' in f_read or r'\bibdata' in f_read:
-            BibtexRunner(aux_filename, in_dir).exec()
-            LatexRunner(tex_filename, in_dir).exec()
+            BibtexRunner(item.in_file, in_dir).exec()
+            LatexRunner(item.in_file, in_dir).exec()
 
-    LatexRunner(tex_filename, in_dir).exec()
+    LatexRunner(item.in_file, in_dir).exec()
 
     inPath = in_dir / item.base_file.with_suffix('.pdf')
     outPath = course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
