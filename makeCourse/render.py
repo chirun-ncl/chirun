@@ -92,7 +92,7 @@ class SlidesRenderer(Renderer):
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
         browser = await launch({'headless': True, 'args': [
-            '--no-sandbox', '--disable-setuid-sandbox', '--single-process'
+            '--no-sandbox','--single-process','--disable-dev-shm-usage','--disable-gpu','--no-zygote'
             ]})
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
