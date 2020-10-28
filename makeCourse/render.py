@@ -61,7 +61,7 @@ class Renderer(object):
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
         browser = await launch({'headless': True, 'args': [
-            '--no-sandbox', '--disable-setuid-sandbox'
+            '--no-sandbox', '--disable-setuid-sandbox', '--single-process'
             ]})
         page = await browser.newPage()
         await page.goto('file://{}'.format(absHTMLPath))
@@ -92,7 +92,7 @@ class SlidesRenderer(Renderer):
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
         browser = await launch({'headless': True, 'args': [
-            '--no-sandbox', '--disable-setuid-sandbox'
+            '--no-sandbox', '--disable-setuid-sandbox', '--single-process'
             ]})
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
