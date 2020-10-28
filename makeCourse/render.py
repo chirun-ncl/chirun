@@ -7,6 +7,23 @@ from pyppeteer import launch
 
 logger = logging.getLogger(__name__)
 
+
+async def get_browser():
+    browser = None
+    attempts = 0
+
+    while browser is None and attempts<20:
+        try:
+            browser = await launch({'headless': True, 'args': ['--no-sandbox', '--disable-setuid-sandbox', '--single-process']})
+        except:
+            logger.info('Warning: Browser failed to start. Trying again...({})'.format(str(attempts)))
+            attempts = attempts + 1
+
+    if not browser:
+        raise Exception('Error: Headless chrome failed to start!')
+
+    return browser
+
 class Renderer(object):
     def __init__(self, course):
         self.course = course
@@ -60,9 +77,7 @@ class Renderer(object):
         absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.out_file
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
-        browser = await launch({'headless': True, 'args': [
-            '--no-sandbox', '--disable-setuid-sandbox', '--single-process'
-            ]})
+        browser = await get_browser()
         page = await browser.newPage()
         await page.goto('file://{}'.format(absHTMLPath))
         await page.waitForFunction('window.mathjax_is_loaded == 1', options = {'timeout':10000});
@@ -91,9 +106,7 @@ class SlidesRenderer(Renderer):
         absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.named_out_file.with_suffix('.slides.html')
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
-        browser = await launch({'headless': True, 'args': [
-            '--no-sandbox','--single-process','--disable-dev-shm-usage','--disable-gpu','--no-zygote'
-            ]})
+        browser = await get_browser()
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
         await page.setViewport({'width': 1366, 'height': 768})
