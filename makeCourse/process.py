@@ -45,17 +45,22 @@ class ItemProcess(object):
 
 class SlugCollisionProcess(ItemProcess):
     name = 'Checking for duplicated filenames or paths'
-    slugs = []
+    slugs = {}
 
     def visit(self,item):
         logger.debug("Checking slug: {}".format(item.slug))
+
+        if not self.course.theme.path in self.slugs.keys():
+            self.slugs[self.course.theme.path] = []
+
         n = 1
-        while item.slug in self.slugs:
+        while item.slug in self.slugs[self.course.theme.path]:
             newslug = slugify(item.title, n)
             logger.info("Slug {} already used. Trying {}...".format(item.slug, newslug))
             item.slug = newslug
             n = n + 1
-        self.slugs.append(item.slug)
+
+        self.slugs[self.course.theme.path].append(item.slug)
         super().visit(item)
 
 class LastBuiltProcess(ItemProcess):
