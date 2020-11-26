@@ -20,6 +20,7 @@ Pygments>=2.4.2
 pymdown-extensions==6.0
 pyoembed>=0.1.2
 pyparsing>=2.2.0
+PyPDF2>=1.26.0
 pyppeteer>=0.0.25
 pytest>=3.0.7
 python-dateutil>=2.6.0
