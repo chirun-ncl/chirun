@@ -5,6 +5,7 @@ import shutil
 import sys
 from makeCourse import mkdir_p
 from makeCourse.plastex.Imagers.pdf2svg import Imager as VectorImager
+from makeCourse.plastex.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
 from subprocess import Popen, PIPE
 from plasTeX import Environment, TeXDocument
@@ -98,7 +99,7 @@ class PlastexRunner:
         rname = plastex_config['general']['renderer'] = 'makecourse'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
-        plastex_config['images']['imager'] = 'pdftoppm'
+        plastex_config['images']['imager'] = 'none'
         self.document = TeXDocument(config=plastex_config)
         self.document.userdata['working-dir'] = '.'
 
@@ -125,6 +126,7 @@ class PlastexRunner:
         self.renderer.loadTemplates(self.document)
         self.renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
         self.renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
+        self.renderer.imager = Imager(self.document, self.renderer.imageTypes)
         self.renderer.render(self.document)
 
         os.chdir(wd)
