@@ -57,7 +57,29 @@ class Item(object):
         """
             Has this item been built since the source was last modified?
         """
-        return self.last_built is not None and self.last_built > self.source_modified
+        if self.in_file.suffix == '.md':
+            return self.last_built is not None and self.last_built > self.source_modified
+
+        elif self.in_file.suffix == '.tex':
+            extensions = ['.log', '.aux', '.out', '.bbl', '.snm', '.nav', '.toc', '.fls']
+            in_dir = self.course.get_root_dir() / self.source.parent
+            fls_filename = in_dir / self.in_file.with_suffix('.fls')
+
+            if not fls_filename.exists() or self.last_built is None:
+                return False
+
+            with open(fls_filename) as f:
+                for line in f:
+                    if 'INPUT' in line:
+                        input_file = Path(line[6:-1])
+                        if not input_file.is_absolute():
+                            input_file = in_dir / input_file
+                        if input_file.stat().st_mtime > self.last_built and input_file.suffix not in extensions:
+                            return False
+            return True
+
+        else:
+            return False
 
     @property
     def out_path(self):

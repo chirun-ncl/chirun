@@ -14,7 +14,7 @@ class LatexRunner(object):
 
     def __init__(self,filename, wd='.'):
         self.wd = wd
-        self.args = ['-halt-on-error', str(filename)]
+        self.args = ['-halt-on-error', '-recorder', str(filename)]
 
     def exec(self):
         stdout_tail = collections.deque(maxlen=8)
@@ -41,6 +41,8 @@ class BibtexRunner(LatexRunner):
 def runPdflatex(course, item):
     in_dir = course.get_root_dir() / item.source.parent
     aux_filename = in_dir / item.in_file.with_suffix('.aux')
+    if course.args.lazy and item.recently_built():
+        return
 
     LatexRunner(item.in_file, in_dir).exec()
 
@@ -62,7 +64,7 @@ def runPdflatex(course, item):
 
     if not course.args.lazy:
         logger.debug('    Cleaning up after pdflatex...')
-        extensions = ['.log', '.aux', '.out', '.pdf', '.snm', '.nav', '.toc']
+        extensions = ['.log', '.aux', '.out', '.bbl', '.blg', '.snm', '.nav', '.toc', '.fls', '.pdf', '.dvi']
         for extension in extensions:
             filename = '{base}{extension}'.format(base=in_dir / item.base_file, extension=extension)
             logger.debug('        Deleting: {}'.format(filename))
