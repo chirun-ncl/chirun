@@ -1,14 +1,16 @@
 MathJax.Hub.Config({
-    TeX: { extensions: ["color.js", "boldsymbol.js"],
-		    Macros: { mathsterling: '{\\unicode{xA3}}',
-									pounds: '{\\unicode{xA3}}',
-									euro: '\\unicode{x20AC}',
-									bm: ["\\boldsymbol{ #1 }",1],
-								}
-		},
-    tex2jax: {
-        inlineMath: [['\\(','\\)']]
-    },
-		skipStartupTypeset: false,
+	TeX: { extensions: ["color.js", "boldsymbol.js"],
+		Macros: { mathsterling: '{\\unicode{xA3}}',
+				pounds: '{\\unicode{xA3}}',
+				euro: '\\unicode{x20AC}',
+				bm: ["\\boldsymbol{ #1 }",1],
+				lefteqn: ["\\rlap{ #1 }\\quad",1],
+				pause: '',
+		}
+	},
+	tex2jax: {
+		inlineMath: [['\\(','\\)']]
+	},
+	skipStartupTypeset: false,
 });
 MathJax.Hub.Register.StartupHook("End",function () { window.mathjax_is_loaded = 1 });
