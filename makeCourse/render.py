@@ -51,6 +51,8 @@ class Renderer(object):
         outDir = outPath.parent
         mkdir_p(outDir)
         template_file = item.template_name
+        if not (item.source.name == ''):
+            logger.info("Rendering: {item}".format(item=item.source))
         logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,\
                 rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute else ''))
         html = self.to_html(item, template_file)

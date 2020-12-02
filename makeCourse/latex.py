@@ -24,7 +24,7 @@ class LatexRunner(object):
         for stdout_line in iter(proc.stdout.readline, ""):
             if not stdout_line.isspace():
                 stdout_tail.append(stdout_line)
-            logger.debug(stdout_line)
+            logger.debug(stdout_line[:-1])
         out, err = proc.communicate()
         if proc.returncode != 0:
             logger.error(err)
