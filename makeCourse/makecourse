@@ -340,12 +340,13 @@ def parse_args():
             Defaults to a directory named \'build\' in the current directory.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Verbose output.')
     parser.add_argument('-vv', dest='veryverbose', action='store_true', help='Very verbose output.')
-    parser.add_argument('-d', dest='deleteFirst', action='store_true', help='Delete temporary files before starting.')
-    parser.add_argument('-z', dest='lazy', action='store_true', help='Don\'t delete temporary files when finished.')
+    parser.add_argument('-d', dest='cleanup_all', action='store_true', help='Delete auxillary files.')
     parser.add_argument('-a', dest='absolute', action='store_true', help='Output using absolute file paths,\
             relative to the configured root_url.')
     parser.add_argument('--config', dest='config_file', help='Path to a config file. Defaults to \'config.yml\'.')
     parser.add_argument('-l', dest='local-deprecated', action='store_true', help='Deprecated and has no effect.\
+            This option will be removed in a future version.')
+    parser.add_argument('-z', dest='lazy-deprecated', action='store_true', help='Deprecated and has no effect.\
             This option will be removed in a future version.')
     parser.add_argument('dir', help='Path to a makecourse compatible source directory.\
             Defaults to the current directory.', default='.', nargs='?')
@@ -373,16 +374,12 @@ def main():
 
     mc.load_themes()
 
-    if args.deleteFirst:
-        mc.cleanup()
-
     for theme in mc.themes:
         mc.build_with_theme(theme)
 
     mc.save_manifest()
 
-    if not mc.args.lazy:
-        mc.cleanup()
+    mc.cleanup()
 
     oembed.save_cache()
 

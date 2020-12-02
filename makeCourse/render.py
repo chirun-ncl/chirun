@@ -45,7 +45,7 @@ class Renderer(object):
 
 
     def render_item(self, item):
-        if self.course.args.lazy and item.recently_built():
+        if item.recently_built():
             return
         outPath = self.course.get_build_dir() / item.out_file
         outDir = outPath.parent
@@ -69,7 +69,7 @@ class Renderer(object):
         return template.render(context)
 
     async def to_pdf(self, item):
-        if self.course.args.lazy and item.recently_built():
+        if item.recently_built():
             return
         self.render_item(item)
         headerHTML= self.to_html(item, item.template_pdfheader)
@@ -101,7 +101,7 @@ class SlidesRenderer(Renderer):
             f.write(html)
 
     async def to_pdf(self, item):
-        if self.course.args.lazy and item.recently_built():
+        if item.recently_built():
             return
         self.render_item(item)
         logger.info("Printing {} as PDF".format(item))
