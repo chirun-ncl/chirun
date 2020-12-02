@@ -25,6 +25,12 @@
             <script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
             <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
             <script defer src="{{course.mathjax_url}}"></script>
+            {% for js in course.config.js %}
+				<script defer src="{{js|static_url}}"></script>
+            {% endfor %}
+            {% for js in item.data.js %}
+				<script defer src="{{js|static_url}}"></script>
+            {% endfor %}
         {% endblock %}
     </head>
     <body {% block body_attributes %}{% endblock %}>
