@@ -217,6 +217,13 @@ tr, img {
   font-size: 13px;
 }
 
+#navbarCustomise #font-scale {
+	display: inline-block;
+}
+#navbarCustomise #p-space {
+	display: inline-block;
+}
+
 thead {
   line-height: 3rem;
 }

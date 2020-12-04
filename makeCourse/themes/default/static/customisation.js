@@ -1,4 +1,4 @@
-const themeBtns = document.querySelectorAll('#navbarCustomise > button')
+const themeBtns = document.querySelectorAll('#themeSelector > button')
 
 // Load local storage
 if(localStorage.getItem("css-font-size")) {
@@ -6,6 +6,9 @@ if(localStorage.getItem("css-font-size")) {
 }
 if(localStorage.getItem("theme")) {
 	handleThemeUpdate(localStorage.getItem("theme"))
+}
+if(localStorage.getItem("css-p-space")) {
+	changeParagraphSpacing(localStorage.getItem("css-p-space"))
 }
 
 for (var i = 0; i < themeBtns.length; i++) {
@@ -15,8 +18,20 @@ for (var i = 0; i < themeBtns.length; i++) {
 	});
 }
 
-$("#navbarCustomise > #font-scale").on("input change", function() { 
+$("#navbarCustomise #font-scale").on("input change", function() {
 	changeFontSize(this.value); 
+});
+
+$("#navbarCustomise #p-space").on("input change", function() {
+	changeParagraphSpacing(this.value);
+});
+
+$("#navbarCustomise #font-scale-reset").click(function() {
+	changeFontSize(100);
+});
+
+$("#navbarCustomise #p-space-reset").click(function() {
+	changeParagraphSpacing(100);
 });
 
 function handleThemeUpdate(theme) {
@@ -67,4 +82,19 @@ function changeFontSize(fontScale) {
 		$('#content').addClass('col-md-9');
 		$('#content').removeClass('col-md-12');      
 	}
+}
+
+function changeParagraphSpacing(paragraphScale) {
+	var ps = paragraphScale/100;
+	$('main p').css("margin-bottom", ps+"em");
+	if(paragraphScale > 100){
+		$('main p').css('line-height', ps+"em");
+	}
+
+	// Update slider display
+	$('#p-space-display').text(Math.round(paragraphScale)+'%')
+	$('#p-space').val(paragraphScale)
+
+	// Save in local storage
+	localStorage.setItem('css-p-space',paragraphScale);
 }
