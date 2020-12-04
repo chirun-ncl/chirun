@@ -25,11 +25,12 @@
         {% endblock stylesheets %}
 
         {% block javascript %}
-            <script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
             <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
             <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
             <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-            <script defer src="{{course.mathjax_url}}"></script>
+            <script>{% include "mathjax_config.html" %}</script>
+            <script type="text/javascript" id="MathJax-script" async src="{{course.mathjax_url}}">
+			</script>
             <script defer src="{{'customisation.js'|static_url}}"></script>
             {% for js in course.config.js %}
 				<script defer src="{{js|static_url}}"></script>

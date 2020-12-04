@@ -30,7 +30,7 @@ logger = logging.getLogger('makeCourse')
 
 class MakeCourse:
 
-    mathjax_url = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    mathjax_url = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js'
     processor_classes = [process.SlugCollisionProcess, process.LastBuiltProcess, process.PDFProcess, process.RenderProcess]
 
     def __init__(self, args):
