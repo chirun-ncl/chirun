@@ -27,6 +27,8 @@
 
 		{% block javascript %}
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+		<script>{% include "mathjax_config.html" %}</script>
+		<script type="text/javascript" id="MathJax-script" async src="{{course.mathjax_url}}">
 		<script defer src="{{'jquery.flexibleArea.js'|static_url}}"></script>
 		<script defer src="{{'spin.min.js'|static_url}}"></script>
 		<script defer src="{{'codemirror-5.26.0/lib/codemirror.js'|static_url}}"></script>
@@ -49,7 +51,6 @@
 				document.getElementsByTagName( 'head' )[0].appendChild( link );
 			}
 		</script>
-		<script type="text/x-mathjax-config">{% include "mathjax_config.html" %}</script>
 		{% endblock %}
 
 	</head>
@@ -90,7 +91,6 @@
 				history: true,
 				dependencies: [
 					{ src: "{{'reveal.js/plugin/splitter/splitter.js'|static_url}}" },
-					{ src: "{{'reveal.js/plugin/math/math.js'|static_url}}" },
 					{ src: "{{'reveal.js/plugin/notes/notes.js'|static_url}}", async: true },
 					{ src: "{{'reveal.js/plugin/highlight/highlight.js'|static_url}}", async: true }
 				]
