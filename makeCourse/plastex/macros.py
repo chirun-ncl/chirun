@@ -55,4 +55,9 @@ class alttext(Command):
         Command.invoke(self,tex)
         doc = self.ownerDocument
         gfx = doc.userdata.getPath('packages/makecourse/currentimage')
-        gfx.altText = self.attributes['text']
+        if gfx is not None:
+            gfx.altText = self.attributes['text']
+        else:
+            raise RuntimeError('Cannot find a graphics item to attach \\alttext{} to. Ensure \
+the graphicx or tikz package is loaded and a graphics item is defined \
+before invoking \\alttext{}.')
