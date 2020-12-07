@@ -1,12 +1,24 @@
 from plasTeX import Command
+from plasTeX.TeX import TeX
 from plasTeX.Packages.beamer import *
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
+from makeCourse.plastex.graphicx import *
 
 from plasTeX.PackageResource import (
 	PackageResource, PackageCss, PackageJs, PackageTemplateDir)
 
 def ProcessOptions(options, document):
+    context = document.context
+    # Load graphicx
+    context.loadPackage(TeX, 'graphicx', {})
+
+    # Lists
+    context.newcounter('enumi')
+    context.newcounter('enumii', resetby='enumi')
+    context.newcounter('enumiii', resetby='enumii')
+    context.newcounter('enumiv', resetby='enumiii')
+
     tpl = PackageTemplateDir(renderers='html5',package='beamer')
     document.addPackageResource([tpl])
 
