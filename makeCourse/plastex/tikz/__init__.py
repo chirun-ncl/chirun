@@ -1,7 +1,4 @@
-"""
-Implement the tikz package using the imager
-"""
-from makeCourse.plastex import VerbatimEnvironment
+from plasTeX import VerbatimEnvironment
 from plasTeX import Command
 
 class tikzpicture(VerbatimEnvironment):

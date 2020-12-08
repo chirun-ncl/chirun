@@ -98,7 +98,7 @@ class Item(object):
 
     @property
     def plastex_filename_rules(self):
-        return self.out_file
+        return str(self.out_file)
 
     @property
     def url(self):

@@ -115,25 +115,6 @@ class eqnarray(EqnarrayStar):
         return res
 Math.eqnarray = eqnarray
 
-class ThinSpace(Command):
-    macroName = '.'
-    str = '\u2009'
-
-class NegativeThinSpace(Command):
-    macroName = '!'
-
-class MediumSpace(Command):
-    macroName = ':'
-    str = '\u2004'
-
-class ThickSpace(Command):
-    macroName = ';'
-    str = '\u2002'
-
-class ThinSpace_(Command):
-    macroName = '/'
-    str = '\u2009'
-
 class List(Lists.List):
     def digest(self, tokens):
         if self.macroMode != Environment.MODE_END:
@@ -262,9 +243,3 @@ def newenvironment(self, name, nargs=0, def_before=None, def_after=None, opt=Non
                    {'nargs':0, 'opt':None, 'definition':def_after})
     self.addGlobal('end' + name, newclass)
 Context.newenvironment = newenvironment
-
-class Roman(Command):
-    args = 'name:str'
-    def invoke(self, tex):
-        a = self.parse(tex)
-        return tex.textTokens(self.ownerDocument.context.counters[a['name']].Roman)

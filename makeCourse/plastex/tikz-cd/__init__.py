@@ -1,4 +1,4 @@
-from makeCourse.plastex import VerbatimEnvironment
+from plasTeX import VerbatimEnvironment
 
 class tikzcd(VerbatimEnvironment):
         pass

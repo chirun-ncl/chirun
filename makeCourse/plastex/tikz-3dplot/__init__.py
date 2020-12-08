@@ -1,1 +1,1 @@
-from makeCourse.plastex import VerbatimEnvironment
+from plasTeX import VerbatimEnvironment

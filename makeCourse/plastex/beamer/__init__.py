@@ -11,7 +11,7 @@ from plasTeX.PackageResource import (
 def ProcessOptions(options, document):
     context = document.context
     # Load graphicx
-    context.loadPackage(TeX, 'graphicx', {})
+    context.loadPackage(TeX(), 'graphicx', {})
 
     # Lists
     context.newcounter('enumi')

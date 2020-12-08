@@ -14,7 +14,7 @@ olefile>=0.44
 packaging>=16.8
 pbr>=2.0.0
 Pillow>=4.2.1
-plasTeX==2.1
+plasTeX>=3.0
 py>=1.4.33
 Pygments>=2.4.2
 pymdown-extensions==6.0
