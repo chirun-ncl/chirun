@@ -87,7 +87,7 @@ function changeFontSize(fontScale) {
 function changeParagraphSpacing(paragraphScale) {
 	var ps = paragraphScale/100;
 	$('main p').css("margin-bottom", ps+"em");
-	if(paragraphScale > 100){
+	if(paragraphScale >= 100){
 		$('main p').css('line-height', ps+"em");
 	}
 
