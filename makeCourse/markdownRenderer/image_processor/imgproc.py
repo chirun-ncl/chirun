@@ -17,7 +17,7 @@ class ImageTreeprocessor(Treeprocessor):
 
     def run(self, root):
         moved_images = set()
-        images = root.getiterator("img")
+        images = root.iter("img")
         for count, image in enumerate(images):
             if image in moved_images:
                 continue
