@@ -58,6 +58,45 @@ def getEmbeddedImages(course, html, item):
 
     return html
 
+def _processIfContent(self, which, debug=False):
+    # Since the true content always comes first, we need to set
+    # True to case 0 and False to case 1.
+    elsefound = False
+    if isinstance(which, bool):
+        if which: which = 0
+        else: which = 1
+    cases = [[]]
+    nesting = 0
+    correctly_terminated = False
+    iterator = self.itertokens()
+    for t in iterator:
+        name = getattr(t, 'macroName', '') or ''
+        if name == 'newif':
+            cases[-1].append(t)
+            cases[-1].append(next(iterator))
+            continue
+        elif name.startswith('if'):
+            cases[-1].append(t)
+            nesting += 1
+        elif name == 'fi':
+            if not nesting:
+                correctly_terminated = True
+                break
+            cases[-1].append(t)
+            nesting -= 1
+        elif not(nesting) and name == 'else':
+            cases.append([])
+            continue
+        elif not(nesting) and name == 'or':
+            cases.append([])
+            continue
+        else:
+            cases[-1].append(t)
+    if not correctly_terminated:
+        log.warning(r'\end occurred when \if was incomplete')
+    cases.append([])
+    self.pushTokens(cases[which])
+
 class PlastexRunner:
 
     def exception_handler(exception_type, exception, traceback):
@@ -107,6 +146,7 @@ class PlastexRunner:
         self.document.context.importMacros(vars(overrides))
 
         f = open(str(Path(wd) / inPath))
+        TeX.processIfContent = _processIfContent
         tex = TeX(self.document, myfile=f)
         self.document.userdata['jobname'] = tex.jobname
         pauxname = os.path.join(self.document.userdata.get('working-dir','.'),
