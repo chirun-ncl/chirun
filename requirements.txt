@@ -26,4 +26,5 @@ pytest>=3.0.7
 python-dateutil>=2.6.0
 PyYAML>=5.3
 six>=1.10.0
+typing-extensions>=3.7.4.3
 Unidecode>=1.0.22

@@ -42,6 +42,7 @@ setup(name="makeCourse",
          'python-dateutil>=2.6.0',
          'PyYAML>=3.12',
          'six>=1.10.0',
+         'typing-extensions>=3.7.4.3',
          'plasTeX',
          'Unidecode>=1.0.22'
       ]
