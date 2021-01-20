@@ -1,6 +1,3 @@
-name: HTML XHTML html xhtml
-{{ obj }}
-
 name: numbas
 <numbas-embed data-url="{{ obj.attributes.content }}"></numbas-embed>
 
@@ -24,4 +21,8 @@ name: cssclass
 <span class="{{obj.attributes.classes}}">{{obj.attributes.content}}</span>
 
 name: div
-<div class="{{obj.attributes.classes}}">{{obj}}</div>
+<div {% if obj.attributes.classes %}class="{{obj.attributes.classes}}"{% endif %}
+{% if obj.attributes.style %}style="{{obj.attributes.style}}"{% endif %}>{{obj}}</div>
+
+name: g@p
+<div class="gap" style="margin-bottom: {{ obj.attributes.size }}">&nbsp;</div>

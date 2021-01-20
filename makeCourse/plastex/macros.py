@@ -22,7 +22,12 @@ class iframe(Command):
     args = '[ options:dict ] content:str'
 
 class div(Environment):
-    args = '[ classes:str ]'
+    args = '[ classes:str ] [ style:str ]'
+    blockType = True
+
+class _gap(Command):
+    args = 'size:dim'
+    macroName = 'g@p'
 
 class eqref(Command):
     args = 'label:idref'
