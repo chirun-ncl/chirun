@@ -75,7 +75,7 @@ def _processIfContent(self, which, debug=False):
             cases[-1].append(t)
             cases[-1].append(next(iterator))
             continue
-        elif name.startswith('if'):
+        elif name.startswith('if') and name not in ['iframe']:
             cases[-1].append(t)
             nesting += 1
         elif name == 'fi':
@@ -93,7 +93,7 @@ def _processIfContent(self, which, debug=False):
         else:
             cases[-1].append(t)
     if not correctly_terminated:
-        log.warning(r'\end occurred when \if was incomplete')
+        logger.warning(r'\end occurred when \if was incomplete')
     cases.append([])
     self.pushTokens(cases[which])
 
