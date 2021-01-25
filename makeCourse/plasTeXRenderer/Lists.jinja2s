@@ -37,7 +37,7 @@ name: enumerate
 			<li style="list-style: none" id={{ item.id }}> {{ item.attributes.term }} {{ item }} </li>
 		{% endif %}
 	{% else %}
-		<li id={{ item.id }}> {{ item }} </li>
+		<li id={{ item.id }} value="{{ item.position }}"> {{ item }} </li>
 	{% endif %}
 {% endfor %}
 </ol>
