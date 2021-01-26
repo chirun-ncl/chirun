@@ -14,6 +14,7 @@
 			\usepackage{a4wide}
 		\fi%
 		\excludecomment{div}
+		\excludecomment{HTML}
 		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
 		\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
 		\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
@@ -24,6 +25,7 @@
 		\newcommand{\collapsesolution}[1]{\collapse{btn-primary}{Show Solution}{Solution}{#1}}
 		\makeatletter
 		\newcommand{\g@p}[1]{\vspace*{#1}}
+		\def\html#1{\def\@html##1#1{}\@html}
 		\makeatother
 		\providecommand{\alttext}[1]{}
 \fi
