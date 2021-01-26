@@ -15,8 +15,7 @@ from plasTeX.Logging import getLogger
 import plasTeX.Logging
 from plasTeX.Config import config as plastex_config
 import makeCourse.plasTeXRenderer.Config as html_config
-from . import macros
-from . import overrides
+from makeCourse.plastex import overrides
 
 plastex_config += html_config.config
 
@@ -142,7 +141,6 @@ class PlastexRunner:
         self.document = TeXDocument(config=plastex_config)
         self.document.userdata['working-dir'] = '.'
 
-        self.document.context.importMacros(vars(macros))
         self.document.context.importMacros(vars(overrides))
 
         f = open(str(Path(wd) / inPath))
