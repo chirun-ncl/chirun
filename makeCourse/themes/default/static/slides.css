@@ -44,3 +44,15 @@ h2{
 .reveal ol {
   display: block;
 }
+
+.tabular{
+  width:100%;
+}
+
+.reveal {
+  font-size: 30px !important;
+}
+
+.reveal table p {
+  margin:0;
+}
