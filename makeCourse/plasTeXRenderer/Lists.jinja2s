@@ -1,45 +1,34 @@
 name: itemize
 <ul id="{{ obj.id }}" class="itemize">
 {% for item in obj %}
-	<li id="{{ item.id }}"> {{ item }} </li>
-{% endfor %}
-</ul>
-<style>
-{% for item in obj %}
 	{% if item.attributes.term %}
-		#{{ item.id }} {
-			list-style: none;
-		}
-		#{{ item.id }}::before {
-			content: '{{ item.attributes.term }}';
-			transform: translateX(-100%);
-			padding-right: 10px;
-			position: absolute;
-		}
+		<li style="list-style: none;" id="{{ item.id }}">
+		<span style="transform: translateX(-100%);padding-right: 10px;position: absolute;">
+			{{ item.attributes.term }}
+		</span>
+		{{ item }}
+		</li>
+	{% else %}
+		<li id="{{ item.id }}"> {{ item }} </li>
 	{% endif %}
 {% endfor %}
-</style>
+</ul>
 
 name: enumerate
 <ol id="{{ obj.id }}" style="list-style: none" class="enumerate">
 {% for item in obj %}
-	<li id="{{ item.id }}" value="{{ item.position }}"> {{ item }} </li>
+	<li id="{{ item.id }}" value="{{ item.position }}">
+	<span style="transform: translateX(-100%);padding-right: 10px;position: absolute;">
+	{% if item.attributes.term %}
+		{{ item.attributes.term }}
+	{% else %}
+		{{ obj.term(item.position) }}
+	{% endif %}
+	</span>
+	{{ item }}
+	</li>
 {% endfor %}
 </ol>
-<style>
-{% for item in obj %}
-#{{ item.id }}::before {
-	{% if item.attributes.term %}
-		content: '{{ item.attributes.term }}';
-	{% else %}
-		content: '{{ obj.term(item.position) }}';
-	{% endif %}
-	transform: translateX(-100%);
-	padding-right: 10px;
-	position: absolute;
-}
-{% endfor %}
-</style>
 
 name: list trivlist description
 <dl class="{{ obj.nodeName }}">
