@@ -76,12 +76,15 @@ class enumerate_(List):
     def invoke(self, tex):
         List.invoke(self,tex)
         enumerate_.refLabel = None
+        self.listLabel = None
+        self .listDepth = List.depth
         if 'options' in self.attributes:
             opt = self.attributes['options']
-            if 'label' in opt:
-                self.listLabel = opt['label']
-            if 'ref' in opt:
-                enumerate_.refLabel = opt['ref']
+            if opt is not None:
+                if 'label' in opt:
+                    self.listLabel = opt['label']
+                if 'ref' in opt:
+                    enumerate_.refLabel = opt['ref']
 
     def term(self, position):
         alph = encoding.stringletters()[position - 1]
