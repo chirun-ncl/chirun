@@ -26,8 +26,8 @@ class enumerate_(List):
                     alph = encoding.stringletters()[position - 1]
                     t = re.sub(r'_Alph_',alph.upper(), str(self.refLabel))
                     t = re.sub(r'_alph_',alph.lower(), t)
-                    t = re.sub(r'_roman_',numToRoman(position), t)
-                    t = re.sub(r'_Roman_',numToRoman(position).lower(), t)
+                    t = re.sub(r'_Roman_',numToRoman(position), t)
+                    t = re.sub(r'_roman_',numToRoman(position).lower(), t)
                     t = re.sub(r'_arabic_',str(position), t)
                     return t
                 except:
