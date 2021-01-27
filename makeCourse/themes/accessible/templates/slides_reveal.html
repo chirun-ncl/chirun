@@ -4,7 +4,7 @@
 		{% block meta %}
 		<meta charset="utf-8">
 		<meta name="robots" content="noindex">
-		<meta name="author" content="{{course.config.author}}" />
+		<meta name="author" content="{{item.author}}" />
 		<meta name="date" content="{{date}}" />
 		{% endblock meta %}
 
@@ -12,8 +12,8 @@
 
 		{% block stylesheets %}
 		<link rel="stylesheet" id="customiseCodeCSS" href="{{'pygmentize.light.css'|static_url}}">
-		<link rel="stylesheet" href="{{'reveal.js/css/reveal.css'|static_url}}">
-		<link id="customiseCSS" rel="stylesheet" href="{{'reveal.js/css/theme/white.css'|static_url}}">
+		<link rel="stylesheet" href="{{'reveal.js/dist/reveal.css'|static_url}}">
+		<link id="customiseCSS" rel="stylesheet" href="{{'reveal.js/dist/theme/light.css'|static_url}}">
 		<link rel="stylesheet" href="{{'slides.css'|static_url}}">
 		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
 		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
@@ -51,15 +51,17 @@
 
 			{% block header_slides %}
 			<div class="header-l">{{item.title}}</div>
-			<div class="header-r">{{course.config.author}}</div>
+			<div class="header-r">{{item.author}}</div>
 			{% endblock %}
 
 			<div class="slides">
 				{% block title_slide %}
-				<section id="title-slide">
-					<h1 class="title">{{item.title}}</h1>
-					<p class="author">{{course.config.author}}</p>
-				</section>
+					{% if item.title_slide %}
+					<section id="title-slide">
+						<h1 class="title">{{item.title}}</h1>
+						<p class="author">{{item.author}}</p>
+					</section>
+					{% endif %}
 				{% endblock %}
 
 				{% block main_slides %}
@@ -73,8 +75,7 @@
 			</div>
 
 		</div>
-		<script src="{{'reveal.js/js/reveal.js'|static_url}}"></script>
-		<script src="{{'reveal.js/lib/js/head.min.js'|static_url}}"></script>
+		<script src="{{'reveal.js/dist/reveal.js'|static_url}}"></script>
 		<script>
 			Reveal.initialize({
 				hash: true,
