@@ -4,6 +4,7 @@ from plasTeX.Packages.beamer import *
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
 from makeCourse.plastex.graphicx import *
+from makeCourse.plastex.overrides.lists import *
 
 from plasTeX.PackageResource import (
 	PackageResource, PackageCss, PackageJs, PackageTemplateDir)
