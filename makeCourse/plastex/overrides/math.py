@@ -20,6 +20,8 @@ class hbox(BoxCommand): pass
 class vbox(BoxCommand): pass
 class text(BoxCommand):
     args = 'self'
+class tag(BoxCommand):
+    args = 'self'
 class mbox(BoxCommand):
     args = 'self'
 class TextCommand(BoxCommand):
