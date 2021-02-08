@@ -7,7 +7,7 @@ class theoremstyle(Command):
     args = 'style:str'
 
 class newtheoremstyle(Command):
-    args = 'name:str above:dimen below:dimen bodyfont indentamount:dimen headfont punctuation:str between:dimen headspec'
+    args = 'name above below bodyfont indentamount headfont punctuation between headspec'
 
 class newtheorem(Command):
     args = '* name:str [ shared:str ] header:str [ parent:str]'
