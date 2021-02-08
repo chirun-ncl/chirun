@@ -1,0 +1,8 @@
+name: polylongdiv polylonggcd
+<div class="polynom" id="{{ obj.id }}">
+  {% if obj.renderer.vectorImager.enabled %}
+    <img src="{{ obj.vectorImage.url }}" class="polynom-vector" alt="{{ obj.source|e }}" />
+  {% else %}
+    <img src="{{ obj.image.url }}" class="polynom-bitmap" alt="{{ obj.source|e }}" />
+  {% endif %}
+</div>
