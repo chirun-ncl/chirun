@@ -28,6 +28,9 @@ name: scshape textsc
 name: textnormal
 <span class="textnormal">{{ obj }}</span>
 
+name: underline
+<u class="underline">{{ obj }}</u>
+
 name: rm
 <span class="rm">{{ obj }}</span>
 

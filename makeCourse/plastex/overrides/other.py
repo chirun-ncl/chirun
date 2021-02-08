@@ -1,4 +1,5 @@
 from plasTeX import Command
+from plasTeX.Base.TeX.Primitives import BoxCommand
 from plasTeX.Logging import getLogger
 log = getLogger()
 
@@ -20,3 +21,6 @@ class ThickSpace(Command):
 class ThinSpace_(Command):
     macroName = '/'
     str = '\u2009'
+
+class underline(BoxCommand):
+    pass
