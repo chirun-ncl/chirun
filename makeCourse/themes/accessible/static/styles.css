@@ -200,3 +200,11 @@ pre.output-block {
 .collapse-content {
 	margin-bottom: 1rem;
 }
+
+.thmcaption, .thmlabel {
+	font-weight: bold;
+}
+
+.proof_caption {
+	font-style: italic;
+}

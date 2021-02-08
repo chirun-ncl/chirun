@@ -377,3 +377,11 @@ figure + em, .reveal figure + em {
   display: inline-block;
   margin-bottom: 1em;
 }
+
+.thmcaption, .thmlabel {
+	font-weight: bold;
+}
+
+.proof_caption {
+	font-style: italic;
+}
