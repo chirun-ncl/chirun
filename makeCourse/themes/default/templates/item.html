@@ -7,32 +7,7 @@
 {% endblock stylesheets %}
 
 {% block nav %}
-<div class="collapse" id="navbarToggleCustomise">
-	<div class="bg-secondary text-white p-3">
-		<form onsubmit="return false;" id="navbarCustomise">
-			<div class="form-row">
-				<label>Theme Customisation</label>
-				<div id="themeSelector" class="form-group col-md-12">
-					<button class="btn btn-dark mr-2" value="dark">Dark</button>
-					<button class="btn btn-pastel mr-2" value="pastel">Pastel</button>
-					<button class="btn btn-light mr-4" value="light">Light</button>
-				</div>
-			</div>
-			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label style="display: block" for="font-scale">Font size (<span id="font-size-display">100%</span>)</label>
-					<input type="range" class="form-control-range col-9 mr-2" id="font-scale" min="50" max="600" value="100">
-					<button id="font-scale-reset" class="btn btn-sm">Reset</button>
-				</div>
-				<div class="form-group col-md-4">
-					<label style="display: block" for="p-space">Spacing (<span id="p-space-display">100%</span>)</label>
-					<input type="range" class="form-control-range col-9 mr-2" id="p-space" min="0" max="600" value="100">
-					<button id="p-space-reset" class="btn btn-sm">Reset</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
+{% include "theme_customise.html" %}
 {% if item.has_topbar %}
 <nav aria-label="breadcrumb">
 	<ul class="breadcrumb">
