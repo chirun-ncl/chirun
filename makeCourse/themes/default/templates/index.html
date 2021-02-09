@@ -12,12 +12,14 @@
 
 {% block header %}
 {% if item.has_topbar %}
-<div class="container">
-	<div class="jumbotron">
-		<h1 id="jumbo-title">{{course.config.title}}</h1>
-		<p id="jumbo-author">{{course.config.author}}</p>
-		<p id="jumbo-year">{{course.config.year}}</p>
-		<p>{{ item.leading_text }}</p>
+<div class="container intro-container">
+	<div class="row justify-content-center">
+		<div class="col-md-11">
+			<h1 class="intro-header">{{course.config.title}}</h1>
+			<div class="intro-header intro-author">{{course.config.author}}</div>
+			<div class="intro-header intro-year">{{course.config.year}}</div>
+			<p>{{ item.leading_text }}</p>
+		</div>
 	</div>
 </div>
 {% endif %}
@@ -30,7 +32,7 @@
 			{% if course.partsEnabled %}
 			{% for part in course.structure %}
 			{% if part.type != 'introduction' %}
-			<div class="col-md-6 col-lg-4 pb-4 mx-auto lti-hint-part">
+			<div class="card-container col-md-6 col-lg-4 pb-4 mx-auto lti-hint-part">
 				<div class="card mb-4 h-100 box-shadow">
 					<div class="card-header text-center">
 						<h2 class="my-0 font-weight-normal"><a href="{{part.url|url}}">{{part.title}}</a></h2>
@@ -77,7 +79,7 @@
 </div>
 <section>
 	<div class="container lti-hint-introduction">
-		<div class="lead">
+		<div class="intro-content">
 			{{ item.as_html()|safe }}
 		</div>
 	</div>

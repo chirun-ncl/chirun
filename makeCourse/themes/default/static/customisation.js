@@ -76,18 +76,28 @@ function changeFontSize(fontScale) {
 		$('#sidebar').addClass('col-md-12');    
 		$('#content').removeClass('col-md-9');
 		$('#content').addClass('col-md-12');    
+		$('main .card-container').addClass('col-md-8');
+		$('main .card-container').removeClass('col-md-6');
+		$('main .card-container').addClass('col-lg-6');
+		$('main .card-container').removeClass('col-lg-4');
 	}else{
 		$('#sidebar').addClass('col-md-3');
 		$('#sidebar').removeClass('col-md-12');      
 		$('#content').addClass('col-md-9');
 		$('#content').removeClass('col-md-12');      
+		$('main .card-container').addClass('col-md-6');
+		$('main .card-container').removeClass('col-md-8');
+		$('main .card-container').addClass('col-lg-4');
+		$('main .card-container').removeClass('col-lg-6');
 	}
 }
 
 function changeParagraphSpacing(paragraphScale) {
 	var ps = paragraphScale/100;
 	$('main p').css("margin-bottom", ps+"em");
+	$('header .intro-header').css("margin-bottom", Math.max(ps-1.0,0.0)+"em");
 	if(paragraphScale >= 100){
+		$('main p').css('line-height', ps+"em");
 		$('main p').css('line-height', ps+"em");
 	}
 
