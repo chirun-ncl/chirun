@@ -76,6 +76,12 @@ class sectionname(Command):
 class subsectionname(Command):
     pass
 
+class usebeamerfont(Command):
+    args = 'name'
+
+class usebeamercolor(Command):
+    args = '[layer] name'
+
 class section(Sectioning.StartSection):
     level = Command.SECTION_LEVEL
     counter = 'section'
