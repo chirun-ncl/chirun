@@ -21,6 +21,9 @@
 	div#sidebar {
 		display:none;
 	}	
+	div.standalone-nav {
+		display:none;
+	}
 	h1 {
 		font-weight:bold;
 		font-size:30px;
