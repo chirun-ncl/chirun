@@ -23,8 +23,8 @@
 
         {% block javascript %}
             <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-            <script>{% include "mathjax_config.html" %}</script>
-            <script type="text/javascript" id="MathJax-script" async src="{{course.mathjax_url}}">
+            <script defer src="{{'mathjax_config.js'|static_url}}"></script>
+            <script type="text/javascript" id="MathJax-script" defer src="{{course.mathjax_url}}"></script>
             {% for js in course.config.js %}
 				<script defer src="{{js|static_url}}"></script>
             {% endfor %}
