@@ -74,6 +74,8 @@ class Item(object):
                         input_file = Path(line[6:-1])
                         if not input_file.is_absolute():
                             input_file = in_dir / input_file
+                        if not input_file.exists():
+                            return False
                         if input_file.stat().st_mtime > self.last_built and input_file.suffix not in extensions:
                             return False
             return True
