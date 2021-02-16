@@ -96,6 +96,8 @@ class SlidesRenderer(Renderer):
         super().render_item(item)
         outPath = self.course.get_build_dir() / item.out_slides
         template_file = item.template_slides
+        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,\
+                rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute else ''))
         html = self.to_html(item, template_file)
         with open(str(outPath),'w', encoding='utf-8') as f:
             f.write(html)
