@@ -31,7 +31,7 @@ $("#navbarCustomise #font-scale-reset").click(function() {
 });
 
 $("#navbarCustomise #p-space-reset").click(function() {
-	changeParagraphSpacing(100);
+	changeParagraphSpacing(150);
 });
 
 function handleThemeUpdate(theme) {
