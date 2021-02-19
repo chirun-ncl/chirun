@@ -42,6 +42,7 @@ The command `makecourse` is now available for use. You should now compile the sa
 #### Upgrade Instructions
  * Run the following command with the virtualenv active to upgrade the installed version of `makecourse`:
  * `pip install --upgrade git+https://github.com/coursebuilder-ncl/makecourse.git`
+ * You may need to run the above command with an extra `--force-reinstall` argument if the version number has not been changed between updates.
 
 ---
 
