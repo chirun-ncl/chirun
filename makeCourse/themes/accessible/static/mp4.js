@@ -27,4 +27,9 @@ function mp4ImageFallback() {
 			img.src = src;
 		});
 }
-mp4ImageFallback();
+try {
+	mp4ImageFallback();
+} catch(err) {
+	console.log('Problem replacing MP4 images: '+err);
+}
+
