@@ -48,6 +48,12 @@
 				document.getElementsByTagName( 'head' )[0].appendChild( link );
 			}
 		</script>
+		{% for js in course.config.js %}
+			<script defer src="{{js|static_url}}"></script>
+		{% endfor %}
+		{% for js in item.data.js %}
+			<script defer src="{{js|static_url}}"></script>
+		{% endfor %}
 		{% endblock %}
 
 	</head>
@@ -98,6 +104,7 @@
 					console.log('Problem running MathJax.typeset()');
 				}
 				mp4ImageFallback();
+				updateThemeBodyTag();
 			});
 		</script>
 	</body>
