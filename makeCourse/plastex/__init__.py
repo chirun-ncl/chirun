@@ -9,6 +9,7 @@ from makeCourse.plastex.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
 from subprocess import Popen, PIPE
 from plasTeX import Environment, TeXDocument
+from plasTeX.Tokenizer import EscapeSequence
 from makeCourse.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
@@ -224,6 +225,15 @@ class VerbatimEnvironment(NoCharSubEnvironment):
             if self.ownerDocument.context.currenvir is not None:
                 name = self.ownerDocument.context.currenvir
 
+        envname = None
+        if self.ownerDocument.context.currenvir is not None:
+            envname = self.ownerDocument.context.currenvir
+            # If we were invoked by a command but should be ended by an
+            # \end{...}, look for and \end{...} and check if it really contains
+            # \endverbatim
+            endpattern3 = list(r'%send%s%s%s' % (escape, bgroup, envname, egroup))
+            endlength3 = len(endpattern3)
+
         # If we were invoked by a \begin{...} look for an \end{...}
         endpattern = list(r'%send%s%s%s' % (escape, bgroup, name, egroup))
 
@@ -262,5 +272,17 @@ class VerbatimEnvironment(NoCharSubEnvironment):
                         res = [end]
                     tex.pushTokens(res)
                     break
-
+            if envname is not None and len(tokens) >= endlength3:
+                if tokens[-endlength3:] == endpattern3:
+                    tokens = tokens[:-endlength3]
+                    self.ownerDocument.context.pop(self)
+                    # Expand the end of the macro
+                    endenv = self.ownerDocument.createElement(envname)
+                    endenv.parentNode = self.parentNode
+                    endenv.macroMode = Environment.MODE_END
+                    res = endenv.invoke(tex)
+                    end = EscapeSequence('end%s' % name)
+                    if end in res:
+                        tex.pushTokens(res)
+                        break
         return tokens
