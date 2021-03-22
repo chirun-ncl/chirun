@@ -2,6 +2,7 @@ from markdown import markdown
 import makeCourse.markdownRenderer.codemirror
 from .markdown_figure.mdfigure import FigureExtension
 from .image_processor.imgproc import ImageProcessorExtension
+from .link_processor.linkproc import LinkProcessorExtension
 from makeCourse.markdownRenderer.arithmatex import ArithmatexExtension
 
 class MarkdownRenderer(object):
@@ -28,8 +29,10 @@ class MarkdownRenderer(object):
             }
 
     def render(self, content_item, outdir):
+        struct = content_item.course.structure
         mdx_extensions = [
                 ImageProcessorExtension(item_sourcedir=str(content_item.source.parent), item_outdir=str(outdir)),
+                LinkProcessorExtension(item_sourcedir=str(content_item.source.parent), item_outdir=str(outdir), course_structure=struct),
                 FigureExtension(),
                 ArithmatexExtension(preview=False),
                 'mdx_outline',
