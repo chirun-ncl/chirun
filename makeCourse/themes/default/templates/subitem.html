@@ -1,0 +1,19 @@
+{% import "macros.html" as macros %}
+<div class="card-container col-md-6 col-lg-4 pb-4 mx-auto lti-hint-part">
+	<div class="card mb-4 h-100 box-shadow">
+		<div class="card-header text-center">
+			<h2 class="my-0 font-weight-normal"><a href="{{partitem.url|url}}">{{partitem.title}}</a></h2>
+		</div>
+		<div class="card-body">
+			<div class="card-text">
+				<ul class="list-unstyled">
+					{% for subitem in partitem.content %}
+					<li class="mb-3 lti-hint-item">
+						{% include "inner_subitem.html" %}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

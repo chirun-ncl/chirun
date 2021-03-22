@@ -21,28 +21,21 @@
 <div class="album py-5 bg-light">
 	<div class="container">
 		<div class="row">
-			{% for subitem in item.content %}
-			<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
-				<div class="card mb-4 h-100 box-shadow">
-					<div class="card-body">
-						<div class="card-text">
-                            {% if not subitem.hidden %}
-                                {% if subitem.type == 'url' %}
-                                    <a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
-                                {% else %}
-                                    <a href="{{subitem.url|url}}">{{subitem.title}}</a>
-                                    {% if subitem.has_slides %}
-                                    <a target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}" title="Slides">{{macros.icon('desktop','Slides')}}</a>
-                                    {% endif %}
-                                    {% if subitem.has_pdf %}
-                                    <a target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </div>
+			{% for partitem in item.content %}
+				{% if partitem.content %}
+					{% include "subitem.html" %}
+				{% else %}
+					<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
+						<div class="card mb-4 h-100 box-shadow">
+							<div class="card-body">
+								<div class="card-text">
+									{% set subitem = partitem %}
+									{% include "inner_subitem.html" %}
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
+				{% endif %}
 			{% endfor %}
 		</div>
 	</div>

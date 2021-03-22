@@ -195,7 +195,7 @@ class Html(Item):
     def as_html(self):
         return self.data.get('html', '')
 
-class Part(NoContentMixin, Item):
+class Part(Item):
     type = 'part'
     title = 'Untitled part'
     template_name = 'part.html'
@@ -211,6 +211,16 @@ class Part(NoContentMixin, Item):
             'chapters': [item.get_context() for item in self.content if not item.is_hidden],
         })
         return context
+
+    def markdown_content(self, *args, **kwargs):
+        if self.data.get('source', None) is not None:
+            return Item.markdown_content(self, *args, **kwargs)
+        return NoContentMixin.markdown_content(self, *args, **kwargs)
+
+    def as_html(self):
+        if self.data.get('source', None) is not None:
+            return Item.as_html(self)
+        return NoContentMixin.as_html(self)
 
 class Document(Item):
     type = 'document'
