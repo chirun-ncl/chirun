@@ -9,7 +9,6 @@
 {% block main %}
         <div class="container">
             <div class="row">
-                {% if course.partsEnabled %}
                     {% for part in course.structure %}
                     {% if part.type != 'introduction' %}
 										<div class="lti-hint-part">
@@ -25,28 +24,6 @@
                     {% endif %}
 										</div>
                     {% endfor %}
-                {% else %}
-                    <div class="col-md-4 pb-4 mx-auto">
-                        <div class="card mb-4 h-100 box-shadow">
-                            <div class="card-header text-center">
-                                <h4 class="my-0 font-weight-normal">Course Material</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <ul class="list-unstyled">
-                                        {% for subitem in course.structure %}
-                                            {% if subitem.type != 'introduction' %}
-                                                <li class="mb-3 lti-hint-item">
-                                                    {% include "introduction_subitem.html" %}
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
             </div>
         </div>
 				</section>

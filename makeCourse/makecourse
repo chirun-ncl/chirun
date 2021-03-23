@@ -228,17 +228,6 @@ class MakeCourse:
         """
         logger.debug("Starting processing")
 
-        self.partsEnabled = False
-        for item in self.structure:
-            if item.type in ['part', 'document']:
-                self.partsEnabled = True
-                break
-        if self.partsEnabled:
-            for item in self.structure:
-                if item.type not in ['introduction','part','document']:
-                    raise Exception("Error: Both parts and chapters found at top level. \
-To fix: put all chapters inside parts or don't include parts at all. Quitting...\n")
-
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
             logger.info(processor.name)

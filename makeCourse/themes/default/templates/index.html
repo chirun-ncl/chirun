@@ -29,34 +29,24 @@
 <div class="album py-5 bg-light mb-3">
 	<div class="container">
 		<div class="row">
-			{% if course.partsEnabled %}
-				{% for partitem in course.structure %}
+			{% for partitem in course.structure %}
+				{% if partitem.content %}
+					{% include "subitem.html" %}
+				{% else %}
 					{% if partitem.type != 'introduction' %}
-						{% include "subitem.html" %}
-					{% endif %}
-				{% endfor %}
-			{% else %}
-			<div class="col-md-6 col-lg-4 pb-4 mx-auto">
-				<div class="card mb-4 h-100 box-shadow">
-					<div class="card-header text-center">
-						<h2 class="my-0 font-weight-normal">Course Material</h2>
-					</div>
-					<div class="card-body">
-						<div class="card-text">
-							<ul class="list-unstyled">
-								{% for subitem in course.structure %}
-								{% if subitem.type != 'introduction' %}
-								<li class="mb-3 lti-hint-item">
-									{% include "inner_subitem.html" %}
-								</li>
-								{% endif %}
-								{% endfor %}
-							</ul>
+						<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
+							<div class="card mb-4 h-100 box-shadow">
+								<div class="card-body">
+									<div class="card-text">
+										{% set subitem = partitem %}
+										{% include "inner_subitem.html" %}
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			{% endif %}
+					{% endif %}
+				{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 </div>
