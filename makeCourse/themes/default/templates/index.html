@@ -47,6 +47,9 @@
 					{% if partitem.type != 'introduction' %}
 						<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
 							<div class="card mb-4 h-100 box-shadow">
+								{% if partitem.thumbnail %}
+									<img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
+								{% endif %}
 								<div class="card-body">
 									<div class="card-text">
 										{% set subitem = partitem %}

@@ -40,6 +40,7 @@ class Item(object):
         self.is_hidden = self.data.get('hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.has_footer = self.data.get('footer', self.has_footer)
+        self.thumbnail = self.data.get('thumbnail', None)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
         self.markdownRenderer = MarkdownRenderer()
 

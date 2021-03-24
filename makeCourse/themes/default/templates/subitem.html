@@ -4,6 +4,9 @@
 		<div class="card-header text-center">
 			<h2 class="my-0 font-weight-normal"><a href="{{partitem.url|url}}">{{partitem.title}}</a></h2>
 		</div>
+		{% if partitem.thumbnail %}
+		<img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
+		{% endif %}
 		<div class="card-body">
 			<div class="card-text">
 				<ul class="list-unstyled">
