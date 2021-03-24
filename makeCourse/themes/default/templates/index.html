@@ -23,6 +23,15 @@
 	</div>
 </div>
 {% endif %}
+{% if item.location == 'above' %}
+<section>
+	<div class="container lti-hint-introduction">
+		<div class="intro-content">
+			{{ item.as_html()|safe }}
+		</div>
+	</div>
+</section>
+{% endif %}
 {% endblock header %}
 
 {% block main %}
@@ -50,6 +59,7 @@
 		</div>
 	</div>
 </div>
+{% if item.location == 'below' %}
 <section>
 	<div class="container lti-hint-introduction">
 		<div class="intro-content">
@@ -57,4 +67,5 @@
 		</div>
 	</div>
 </section>
+{% endif %}
 {% endblock main %}
