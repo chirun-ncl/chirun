@@ -84,12 +84,16 @@ class MakeCourse:
         if not self.args.absolute or self.force_relative_build:
             return str(self.get_build_dir().resolve()) + '/'
         else:
-            url_format = self.config.get('root_url','/{base}/{code}/{year}/{theme}/')
             base = self.config.get('base_dir')
             code = self.config.get('code')
             year = self.config.get('year')
             theme_path = self.force_theme.path if self.force_theme else self.theme.path
-            root = url_format.format(base=base, code=code, year=year, theme=theme_path)
+            if year:
+                root = self.config.get('root_url','/{base}/{code}/{year}/{theme}/').format(base=base,
+                        code=code, year=year, theme=theme_path)
+            else:
+                root = self.config.get('root_url','/{base}/{code}/{theme}/').format(base=base,
+                        code=code, theme=theme_path)
             return root
 
     def make_relative_url(self, item, url):
