@@ -117,6 +117,13 @@ class Item(object):
         return base
 
     @property
+    def breadcrumbs(self):
+        if self.parent is None:
+            return [self.title]
+        else:
+            return self.parent.breadcrumbs + [self.title]
+
+    @property
     def base_file(self):
         return Path(self.in_file.stem)
 
