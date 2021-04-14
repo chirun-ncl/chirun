@@ -119,9 +119,9 @@ class Item(object):
     @property
     def breadcrumbs(self):
         if self.parent is None:
-            return [self.title]
+            return [self]
         else:
-            return self.parent.breadcrumbs + [self.title]
+            return self.parent.breadcrumbs + [self]
 
     @property
     def base_file(self):
