@@ -5,9 +5,8 @@ from plasTeX.Base.LaTeX.Lists import List
 
 def ProcessOptions(options, document):
     context = document.context
-    context.newcounter('section')
     context.newcounter('question')
-    context['theenumi'].format = '${section.Alph}${thequestion}(${enumi.alph})'
+    context['theenumi'].format = '${thesect}${thequestion}(${enumi.alph})'
     context['theenumii'].format = '${theenumi}(${enumii.roman})'
     context['theenumiii'].format = '${theenumii}${enumii.Alph}.'
 
@@ -17,6 +16,8 @@ def ProcessOptions(options, document):
     document.userdata['calculatorpermitted'] = True
     document.userdata['examyear'] = ''
     document.userdata['semestertext'] = ''
+    document.userdata['sectlet'] = ''
+    document.userdata['sectsep'] = ''
 
     tpl = PackageTemplateDir(renderers='html5',package='nclexam')
     document.addPackageResource([tpl])
@@ -27,10 +28,7 @@ class question(Environment):
 
     def invoke(self,tex):
         Command.invoke(self,tex)
-        if self.ownerDocument.context.counters['section'].value == 0:
-            self.section = ''
-        else:
-            self.section = self.ownerDocument.context.counters['section'].Alph
+        self.section = self.ownerDocument.userdata['sectlet'] + self.ownerDocument.userdata['sectsep']
 
     def postParse(self, tex):
         res = Environment.postParse(self, tex)
@@ -163,14 +161,13 @@ class submarks(Command):
             pass
 
 class sect(Command):
-    args = 'sectlet:str'
-    counter = 'section'
-    sectionNumbers = {'A': 1, 'B': 2, 'a': 1, 'b': 2}
-
+    args = '[sep:str] sectlet:str'
     def invoke(self,tex):
         Command.invoke(self,tex)
-        self.ownerDocument.context.counters['section'].value = self.sectionNumbers[self.attributes['sectlet']]
-        self.section = self.ownerDocument.context.counters['section'].Alph
+        self.ownerDocument.userdata['sectlet'] = self.attributes['sectlet'] or ''
+        self.ownerDocument.userdata['sectsep'] = self.attributes['sep'] or ''
+        self.section = self.ownerDocument.userdata['sectlet'] + self.ownerDocument.userdata['sectsep']
+        self.ownerDocument.context.newcommand('thesect', 0, self.section)
 
 class makefront(Command):
     args = ''

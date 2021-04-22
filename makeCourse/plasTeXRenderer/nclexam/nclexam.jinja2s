@@ -76,6 +76,11 @@ Calculators may be used.
 Calculators may not be used.
 {% endif %}
 </p>
+<p>
+Candidates should attempt all questions.
+Marks for each question are indicated. However you are advised that
+marks may be adjusted in accordance with the University's Moderation and Scaling Policy.
+</p>
 </div>
 
 name: setvariant solutionshow
