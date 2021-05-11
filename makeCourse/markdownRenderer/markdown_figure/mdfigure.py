@@ -21,7 +21,7 @@ class FigureTreeprocessor(Treeprocessor):
     def run(self, root):
         moved_images = set()
         parent_map = {c: p for p in root.iter() for c in p}
-        images = root.getiterator("img")
+        images = root.iter("img")
         for count, image in enumerate(images):
             if image in moved_images:
                 continue
