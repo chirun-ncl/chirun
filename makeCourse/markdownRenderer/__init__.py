@@ -3,6 +3,7 @@ import makeCourse.markdownRenderer.codemirror
 from .markdown_figure.mdfigure import FigureExtension
 from .image_processor.imgproc import ImageProcessorExtension
 from .link_processor.linkproc import LinkProcessorExtension
+from .mdx_outline.mdx_outline import OutlineExtension
 from makeCourse.markdownRenderer.arithmatex import ArithmatexExtension
 
 class MarkdownRenderer(object):
@@ -35,7 +36,7 @@ class MarkdownRenderer(object):
                 LinkProcessorExtension(item_sourcedir=str(content_item.source.parent), item_outdir=str(outdir), course_structure=struct),
                 FigureExtension(),
                 ArithmatexExtension(preview=False),
-                'mdx_outline',
+                OutlineExtension(),
                 'pymdownx.highlight',
                 'pymdownx.extra',
                 'pymdownx.superfences'
