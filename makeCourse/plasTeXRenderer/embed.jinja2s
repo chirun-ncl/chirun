@@ -22,7 +22,7 @@ src="{{ obj.attributes.content }}" {{ obj.attributes.options.attrs }}></iframe>
 name: cssclass
 <span class="{{obj.attributes.classes}}">{{obj.attributes.content}}</span>
 
-name: div
+name: divEnv
 <div {% if obj.attributes.classes %}class="{{obj.attributes.classes}}"{% endif %}
 {% if obj.attributes.style %}style="{{obj.attributes.style}}"{% endif %}>{{obj}}</div>
 

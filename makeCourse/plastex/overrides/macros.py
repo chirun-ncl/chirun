@@ -21,7 +21,7 @@ class cssclass(Command):
 class iframe(Command):
     args = '[ options:dict ] content:str'
 
-class div(Environment):
+class divEnv(Environment):
     args = '[ classes:str ] [ style:str ]'
     blockType = True
 
@@ -41,6 +41,10 @@ class kframe(Environment):
         a = self.parse(tex)
         colors = self.ownerDocument.userdata.getPath('packages/color/colors')
         self.style['background-color'] = colors['shadecolor']
+
+class collapseEnv(Environment):
+    args = 'btnClass:str btnText:str parText'
+    blockType = True
 
 class collapse(Command):
     blockType = True

@@ -128,8 +128,10 @@ class Item(object):
         return Path(self.in_file.stem)
 
     def markdown_content(self, out_format='html'):
-        ext = self.source.suffix
+        if 'html' in self.data:
+            return self.data['html']
 
+        ext = self.source.suffix
         if ext == '.md':
             with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
                 mdContents = f.read()
@@ -146,8 +148,10 @@ class Item(object):
         return body
 
     def as_html(self):
+        if 'html' in self.data:
+            return self.data['html']
+
         ext = self.source.suffix
-        
         if ext == '.md':
             outPath = (self.course.get_build_dir() / self.out_file).parent
             html = self.markdownRenderer.render(self, outPath)
@@ -171,13 +175,6 @@ class Item(object):
             return {'type': self.type, 'slug': self.slug, 'title': self.title, 'content': [item.content_tree() for item in self.content]}
         else:
             return {'type': self.type, 'slug': self.slug, 'title': self.title, 'source': str(self.source)}
-
-class NoContentMixin:
-    def markdown_content(self,*args,**kwargs):
-        return ''
-
-    def as_html(self):
-        return ''
 
 class Html(Item):
     type = 'html'
@@ -207,10 +204,12 @@ class Part(Item):
     type = 'part'
     title = 'Untitled part'
     template_name = 'part.html'
+    pdf_url = False
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.leading_text = self.data.get('leading_text', '')
+        self.location = self.data.get('location', 'below')
 
     def get_context(self):
         context = super().get_context()
@@ -219,16 +218,6 @@ class Part(Item):
             'chapters': [item.get_context() for item in self.content if not item.is_hidden],
         })
         return context
-
-    def markdown_content(self, *args, **kwargs):
-        if self.data.get('source', None) is not None:
-            return Item.markdown_content(self, *args, **kwargs)
-        return NoContentMixin.markdown_content(self, *args, **kwargs)
-
-    def as_html(self):
-        if self.data.get('source', None) is not None:
-            return Item.as_html(self)
-        return NoContentMixin.as_html(self)
 
 class Document(Item):
     type = 'document'
@@ -243,6 +232,8 @@ class Document(Item):
         super().__init__(course, data, parent)
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
+        self.splitlevel = self.data.get('splitlevel', self.splitlevel)
+        self.has_pdf = self.course.config['build_pdf']
 
     def generate_chapter_subitems(self):
         ext = self.source.suffix
@@ -250,15 +241,39 @@ class Document(Item):
             if not self.generated:
                 self.generated = True
                 plastex_output = self.course.load_latex_content(self)
-                for fn,chapter in plastex_output.items():
-                    if fn != 'index.html':
-                        chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
+                last_item = dict([(-1, self)])
+                for fn, chapter in plastex_output.items():
+                    chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
+                    if chapter['html'].isspace():
+                        chapter['html'] = ''
+                    if chapter['level'] < 0:
+                        self.data['html'] = chapter['html']
+                        last_item[-1] = self
+                    elif chapter['level'] < self.splitlevel:
+                        i = -1
+                        while i < chapter['level']:
+                            if i in last_item:
+                                parent = last_item[i]
+                            i = i + 1
+                        item = Part(self.course, chapter, parent)
+                        item.has_sidebar = self.has_sidebar
+                        item.has_topbar = self.has_topbar
+                        item.has_pdf = self.course.config['build_pdf']
+                        item.pdf_url = self.pdf_url
+                        last_item[chapter['level']] = item
+                        parent.content.append(item)
+                    elif chapter['level'] == self.splitlevel:
+                        i = -1
+                        while i < chapter['level']:
+                            if i in last_item:
+                                parent = last_item[i]
+                            i = i + 1
                         item = Html(self.course, chapter, self)
                         item.has_sidebar = self.has_sidebar
                         item.has_topbar = self.has_topbar
                         item.has_pdf = self.course.config['build_pdf']
                         item.pdf_url = self.pdf_url
-                        self.content.append(item)
+                        parent.content.append(item)
         else:
             raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}.".format(self.title, self.source))
 
@@ -276,7 +291,7 @@ class Document(Item):
         })
         return context
 
-class Url(NoContentMixin, Item):
+class Url(Item):
     type = 'url'
     title = 'Untitled URL'
     template_name = 'part.html'
@@ -284,6 +299,7 @@ class Url(NoContentMixin, Item):
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.source = self.data.get('source', '')
+        self.data['html'] = ''
 
     def get_context(self):
         return {
@@ -380,7 +396,6 @@ class Introduction(Item):
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.leading_text = self.data.get('leading_text', '')
-        self.location = self.data.get('location', 'below')
 
     def __str__(self):
         return 'introduction'

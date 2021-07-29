@@ -267,14 +267,23 @@ nav[data-toggle='toc'] .nav-link.active:focus {
 }
 
 /* coursebuilder */
-.exercise {
+.exercise, .exercise.primary {
 	border-color: #eee8d5;
 	background-color: #eae2ca;
 }
-.interlude {
+.interlude, .exercise.secondary {
 	border-color: #eee8d5;
 	background-color: #aec6cf;
 	color: #212529;
+}
+.exercise.tertiary {
+	border-color: #e8eed5;
+	background-color: #c6aecf;
+	color: #252529;
+}
+.exercise.muted {
+  border-color: #eae4d1;
+  background-color: #eee8d5;
 }
 
 .tcolorbox {

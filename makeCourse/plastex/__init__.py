@@ -117,7 +117,8 @@ class PlastexRunner:
                         # TODO: an abstraction for applying the following as a series of filters
                         'html': getEmbeddedImages(self, f.read(), item),
                         'title': section.title if isinstance(section.title,str) else section.title.textContent.strip(),
-                        'source': filepath.name
+                        'source': filepath.name,
+                        'level': section.level
                     }
         return plastex_output
 

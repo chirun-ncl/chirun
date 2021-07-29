@@ -70,11 +70,17 @@ nav[data-toggle='toc'] .nav-link.active:focus {
 }
 
 /* coursebuilder */
-.exercise {
+.exercise, .exercise.primary {
   background-color: #F6F6FF;
 }
-.interlude {
+.interlude, .exercise.secondary {
   background-color: #eeffd3;
+}
+.exercise.tertiary {
+  background-color: #ffeeee;
+}
+.exercise.muted {
+  background-color: #F6F6F6;
 }
 
 .tcolorbox {

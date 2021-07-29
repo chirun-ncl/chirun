@@ -2,9 +2,11 @@
 {% import "macros.html" as macros %}
 
 {% block header %}
+{% if not item.as_html() %}
 <div class="container">
 	<h1 class="jumbotron-heading">{{item.title}}</h1>
 </div>
+{% endif %}
 {% endblock header %}
 
 {% block main %}

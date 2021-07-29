@@ -8,6 +8,16 @@ name: collapse
 {{ obj.attributes.hintText }}
 </div>
 
+name: collapseEnv
+<p>
+<button class="btn {{ obj.attributes.btnClass }}" data-toggle="collapse" data-target="#{{ obj.id }}">
+{{ obj.attributes.btnText }}
+</button>
+</p>
+<div id="{{ obj.id }}" class="collapse collapse-content">
+{{ obj }}
+</div>
+
 name: collapsehint
 <p>
 <button class="btn btn-info" data-toggle="collapse" data-target="#{{ obj.id }}">
