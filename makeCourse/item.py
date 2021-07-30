@@ -131,19 +131,21 @@ class Item(object):
         if 'html' in self.data:
             return self.data['html']
 
-        ext = self.source.suffix
-        if ext == '.md':
-            with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
-                mdContents = f.read()
-            if mdContents[:3] == '---':
-                logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
-                mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
-            body = mdContents
-        elif ext == '.tex':
-            plastex_output = self.course.load_latex_content(self)
-            body = plastex_output['index.html']['html']
-        else:
-            raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
+        body = ''
+        if 'source' in self.data:
+            ext = self.source.suffix
+            if ext == '.md':
+                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
+                    mdContents = f.read()
+                if mdContents[:3] == '---':
+                    logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
+                    mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
+                body = mdContents
+            elif ext == '.tex':
+                plastex_output = self.course.load_latex_content(self)
+                body = plastex_output['index.html']['html']
+            else:
+                raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
 
         return body
 
@@ -151,15 +153,17 @@ class Item(object):
         if 'html' in self.data:
             return self.data['html']
 
-        ext = self.source.suffix
-        if ext == '.md':
-            outPath = (self.course.get_build_dir() / self.out_file).parent
-            html = self.markdownRenderer.render(self, outPath)
-        elif ext == '.tex':
-            plastex_output = self.course.load_latex_content(self)
-            html = plastex_output['index.html']['html']
-        else:
-            raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
+        html = ''
+        if 'source' in self.data:
+            ext = self.source.suffix
+            if ext == '.md':
+                outPath = (self.course.get_build_dir() / self.out_file).parent
+                html = self.markdownRenderer.render(self, outPath)
+            elif ext == '.tex':
+                plastex_output = self.course.load_latex_content(self)
+                html = plastex_output['index.html']['html']
+            else:
+                raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
         html = burnInExtras(self, html, out_format='html')
         return html
