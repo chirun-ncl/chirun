@@ -93,11 +93,11 @@ class enumerate_(List):
     def term(self, position):
         alph = encoding.stringletters()[position - 1]
         if self.listType:
-            t = re.sub(r'(?<!{)A(?!})',alph.upper(), self.listType)
-            t = re.sub(r'(?<!{)a(?!})',alph.lower(), t)
-            t = re.sub(r'(?<!{)I(?!})',numToRoman(position), t)
+            t = re.sub(r'(?<!{)I(?!})',numToRoman(position), self.listType)
             t = re.sub(r'(?<!{)i(?!})',numToRoman(position).lower(), t)
             t = re.sub(r'(?<!{)1(?!})',str(position), t)
+            t = re.sub(r'(?<!{)A(?!})',alph.upper(), t)
+            t = re.sub(r'(?<!{)a(?!})',alph.lower(), t)
         elif self.listDepth == 2:
             t = '({})'.format(alph.lower())
         elif self.listDepth == 3:
