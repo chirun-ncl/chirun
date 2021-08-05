@@ -178,19 +178,6 @@ tr, img {
   padding-bottom: 56.25%;
 }
 
-
-.numbas-aspect-ratio iframe {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0; top: 0;
-}
-
-.numbas {
-  width: 100%;
-  height: 1000px;
-}
-
 .oembed > iframe {
     margin: 0 auto;
     display: block;

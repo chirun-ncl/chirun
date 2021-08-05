@@ -1,0 +1,32 @@
+.numbas_container {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border:  1px solid #333;
+	margin-bottom: 10px;
+}
+.numbas_container > .feedback_bar  {
+	background-color: #F0F0F0;
+	padding: 5px 10px;
+	font-size: 1.5em;
+	height: 52px;
+}
+div.feedback_left {
+	display: inline-block;
+}
+div.feedback_right {
+	display: none;
+	float:  right;
+}
+div.feedback_bar .complete {
+	color: #11CC11; 
+}
+div.feedback_bar .incomplete {
+	color: #CC1111; 
+}
+.numbas_container iframe {
+	flex-grow: 1;
+	border: none;
+	margin: 0;
+	padding: 0;
+}

@@ -1,5 +1,5 @@
 name: numbas
-<numbas-embed data-url="{{ obj.attributes.content }}"></numbas-embed>
+<numbas-embed data-id="{{ obj.id }}" data-url="{{ obj.attributes.content }}"></numbas-embed>
 
 name: vimeo
 <vimeo-embed data-id="{{ obj.attributes.content }}"></vimeo-embed>
@@ -11,10 +11,10 @@ name: recap
 <recap-embed data-id="{{ obj.attributes.content }}"></recap-embed>
 
 name: embed
-<oembed data-url="{{ obj.attributes.content }}"></oembed>
+<oembed id="{{ obj.id }}" data-url="{{ obj.attributes.content }}"></oembed>
 
 name: iframe
-<iframe {% if obj.attributes.options.width %}width="{{ obj.attributes.options.width }}" {% endif %}
+<iframe id="{{ obj.id }}" {% if obj.attributes.options.width %}width="{{ obj.attributes.options.width }}" {% endif %}
 {% if obj.attributes.options.height %} height="{{ obj.attributes.options.height }}" {% endif %}
 {% if obj.attributes.options.style %} style="{{obj.attributes.options.style}}" {% endif %}
 src="{{ obj.attributes.content }}" {{ obj.attributes.options.attrs }}></iframe>
