@@ -1,13 +1,4 @@
-@media screen {
-	div.printFooter {
-		display: none;
-	}
-}
 @media print {
-	div.printFooter {
-		position: fixed;
-		bottom: 0;
-	}
 	@page {
 		margin: 4.0cm 3.225cm;
 	}
@@ -63,6 +54,9 @@
 		page-break-after: avoid;
 	}
 	button.run-code {
+		display: none !important;
+	}
+	button.navbar-toggler {
 		display: none !important;
 	}
 }
