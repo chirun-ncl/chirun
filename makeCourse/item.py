@@ -24,9 +24,11 @@ class Item(object):
     template_name = 'item.html'
     type = None
     source_mtime = None
+    source_modified = None
     last_built = None
     has_footer = True
     has_topbar = True
+    has_pdf = False
     splitlevel = -2
 
     def __init__(self, course, data, parent=None):
@@ -62,24 +64,27 @@ class Item(object):
             return self.last_built is not None and self.last_built > self.source_modified
 
         elif self.in_file.suffix == '.tex':
-            extensions = ['.log', '.aux', '.out', '.bbl', '.snm', '.nav', '.toc', '.fls']
-            in_dir = self.course.get_root_dir() / self.source.parent
-            fls_filename = in_dir / self.in_file.with_suffix('.fls')
+            if self.has_pdf:
+                extensions = ['.log', '.aux', '.out', '.bbl', '.snm', '.nav', '.toc', '.fls']
+                in_dir = self.course.get_root_dir() / self.source.parent
+                fls_filename = in_dir / self.in_file.with_suffix('.fls')
 
-            if not fls_filename.exists() or self.last_built is None:
-                return False
+                if not fls_filename.exists() or self.last_built is None:
+                    return False
 
-            with open(fls_filename) as f:
-                for line in f:
-                    if 'INPUT' in line:
-                        input_file = Path(line[6:-1])
-                        if not input_file.is_absolute():
-                            input_file = in_dir / input_file
-                        if not input_file.exists():
-                            return False
-                        if input_file.stat().st_mtime > self.last_built and input_file.suffix not in extensions:
-                            return False
-            return True
+                with open(fls_filename) as f:
+                    for line in f:
+                        if 'INPUT' in line:
+                            input_file = Path(line[6:-1])
+                            if not input_file.is_absolute():
+                                input_file = in_dir / input_file
+                            if not input_file.exists():
+                                return False
+                            if input_file.stat().st_mtime > self.last_built and input_file.suffix not in extensions:
+                                return False
+                return True
+            else:
+                return self.last_built is not None and self.last_built > self.source_modified
 
         else:
             return False
@@ -241,11 +246,19 @@ class Document(Item):
 
     def generate_chapter_subitems(self):
         ext = self.source.suffix
+
+        def copy_attrs(item):
+            item.last_built = self.last_built
+            item.has_sidebar = self.has_sidebar
+            item.has_topbar = self.has_topbar
+            item.has_pdf = self.course.config['build_pdf']
+            item.pdf_url = self.pdf_url
+
         if ext == '.tex':
             if not self.generated:
                 self.generated = True
                 plastex_output = self.course.load_latex_content(self)
-                last_item = dict([(-1, self)])
+                last_item = {-1:self}
                 for fn, chapter in plastex_output.items():
                     chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
                     if chapter['html'].isspace():
@@ -260,10 +273,7 @@ class Document(Item):
                                 parent = last_item[i]
                             i = i + 1
                         item = Part(self.course, chapter, parent)
-                        item.has_sidebar = self.has_sidebar
-                        item.has_topbar = self.has_topbar
-                        item.has_pdf = self.course.config['build_pdf']
-                        item.pdf_url = self.pdf_url
+                        copy_attrs(item)
                         last_item[chapter['level']] = item
                         parent.content.append(item)
                     elif chapter['level'] == self.splitlevel:
@@ -273,10 +283,7 @@ class Document(Item):
                                 parent = last_item[i]
                             i = i + 1
                         item = Html(self.course, chapter, self)
-                        item.has_sidebar = self.has_sidebar
-                        item.has_topbar = self.has_topbar
-                        item.has_pdf = self.course.config['build_pdf']
-                        item.pdf_url = self.pdf_url
+                        copy_attrs(item)
                         parent.content.append(item)
         else:
             raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}.".format(self.title, self.source))
