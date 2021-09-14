@@ -11,22 +11,30 @@
 	font-size: 1.5em;
 	height: 52px;
 }
-div.feedback_left {
+.numbas_container div.feedback_left {
 	display: inline-block;
 }
-div.feedback_right {
-	display: none;
+.numbas_container div.feedback_right {
 	float:  right;
 }
-div.feedback_bar .complete {
+.numbas_container div.feedback_right:not(.shown) {
+	display: none;
+}
+.numbas_container:not(.complete) .feedback_bar .complete,
+.numbas_container.complete .feedback_bar .incomplete {
+	display: none;
+}
+.numbas_container div.feedback_bar .complete {
 	color: #11CC11; 
 }
-div.feedback_bar .incomplete {
+.numbas_container div.feedback_bar .incomplete {
 	color: #CC1111; 
 }
-.numbas_container iframe {
+.numbas_container iframe.numbas_iframe {
 	flex-grow: 1;
 	border: none;
 	margin: 0;
 	padding: 0;
+	width: 100%;
+	height: 200px;
 }

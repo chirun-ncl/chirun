@@ -5,6 +5,7 @@ from . import gen_dict_extract
 from bs4 import BeautifulSoup
 from .oembed import get_oembed_html
 from urllib.parse import urlparse
+from .render import Renderer
 
 logger = logging.getLogger(__name__)
 
@@ -18,53 +19,20 @@ def replace_tag(name):
     def dec(fn):
         def wrapper(soup, **kwargs):
             for t in soup.find_all(name):
-                t.replace_with(fn(t))
+                t.replace_with(fn(t, **kwargs))
         return wrapper
     return dec
 
 @replace_tag('numbas-embed')
-def embed_numbas(embed):
-    numbas_div = html_fragment("""<div class="numbas_container">
-            <div class="feedback_bar" id="{id}_feedback">
-                <button class="btn btn-danger" data-target="#{id}_collapse" data-toggle="collapse">
-                    Test Yourself
-                </button>
-                <div class="feedback_right" id="{id}_info">
-                    Best score:
-                    <span class="mr-1" id="{id}_score">0</span>/<span class="mr-3 ml-1" id="{id}_marks">0</span>
-                    Completed:
-                    <span class="complete" id="{id}_complete" style="display: none;">✔</span>
-                    <span class="incomplete" id="{id}_incomplete">✕</span>
-                </div>
-            </div>
-            <div class="collapse-content collapse" id="{id}_collapse">
-                <iframe height="200px" id="{id}" src="{url}" width="100%">
-                </iframe>
-            </div>
-            <script>
-                document.getElementById("{id}").addEventListener("load", function(){{
-                    setTimeout(function(){{
-                        loadNumbasFeedback("{id}");
-                    }},200);
-                }});
-                window.addEventListener('message', function(event) {{
-                    var data = JSON.parse(event.data);
-                    if('message' in data) {{
-                        switch(data['message']){{
-			                case 'exam_ready':
-                                setTimeout(function(){{
-                                    postToFrames(
-                                        document.getElementById("{id}").contentWindow.frames,
-                                        JSON.stringify({{"message":"send_id","id":"{id}"}}),
-                                        "*"
-                                    );
-                                }},0);
-                            break;
-                        }}
-                    }}
-                }});
-            </script>
-        </div>""".format(id=embed['data-id'], url=embed['data-url']))
+def embed_numbas(embed, **kwargs):
+    item = kwargs['item']
+    renderer = Renderer(item.course)
+    context = {
+        'id': embed['data-id'],
+        'url': embed['data-url'],
+        'item': item,
+    }
+    numbas_div = html_fragment(renderer.render_template('filter/embed_numbas.html',context))
     return numbas_div
 
 @replace_tag('vimeo-embed')
