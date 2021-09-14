@@ -336,7 +336,7 @@ def parse_args():
             Defaults to a directory named \'build\' in the current directory.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Verbose output.')
     parser.add_argument('-vv', dest='veryverbose', action='store_true', help='Very verbose output.')
-    parser.add_argument('-d', dest='cleanup_all', action='store_true', help='Delete auxillary files.')
+    parser.add_argument('-d', dest='cleanup_all', action='store_true', help='Delete auxiliary files.')
     parser.add_argument('-a', dest='absolute', action='store_true', help='Output using absolute file paths,\
             relative to the configured root_url.')
     parser.add_argument('--config', dest='config_file', help='Path to a config file. Defaults to \'config.yml\'.')
