@@ -54,28 +54,26 @@ class NumbasEmbed {
         this.id = this.container.getAttribute('data-numbas-id');
         this.url = this.container.getAttribute('data-numbas-url');
         this.storageKey = "numbas_embed:"+this.url;
+        this.iframe = this.container.querySelector('.numbas_iframe');
+        this.iframe.parentElement.removeChild(this.iframe);
 
         $(this.container.querySelector('.collapse')).on('show.bs.collapse',() => {
-            if(!this.iframe) {
-                this.insertEmbed();
-            }
+            this.insertEmbed();
         });
     }
 
     insertEmbed() {
-        const iframe = document.createElement('iframe');
-        iframe.classList.add('numbas_iframe');
-        iframe.setAttribute('src',this.url);
+        if(this.iframe.parentElement) {
+            return;
+        }
         const wrapper = this.container.querySelector('.embed');
-        wrapper.appendChild(iframe);
+        wrapper.appendChild(this.iframe);
 
-        iframe.addEventListener('load', () => {
+        this.iframe.addEventListener('load', () => {
             setTimeout(() => {
                 this.loadFeedback();
             },200);
         });
-
-        this.iframe = iframe;
     }
 
     loadFeedback() {
