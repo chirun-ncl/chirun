@@ -234,7 +234,7 @@ class MakeCourse:
 
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
-            logger.info(processor.name)
+            logger.info("Process: "+processor.name)
             for n in range(processor.num_runs):
                 if processor.num_runs>1:
                     logger.info("Run {}/{}".format(n+1,processor.num_runs))
