@@ -33,7 +33,7 @@ class LatexRunner(object):
             raise Exception("Error: Something went wrong running: {}\n\n{}".format(' '.join(cmd), ''.join(stdout_tail)))
 
     def clean_aux(self):
-        logger.debug('Cleaning up pdflatex auxillary files.')
+        logger.debug('Cleaning up pdflatex auxiliary files.')
         extensions = ['.log', '.aux', '.out', '.bbl', '.blg', '.snm', '.nav', '.toc', '.fls']
         for extension in extensions:
             filename = self.wd / self.filename.with_suffix(extension)

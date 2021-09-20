@@ -1,3 +1,5 @@
+const numbas_containers = {};
+
 function postToFrames(frames, data, origin) {
 	for (var i=0; i < frames.length; i++) {
 		frames[i].postMessage(data, origin);
@@ -6,118 +8,174 @@ function postToFrames(frames, data, origin) {
 		}
 	}
 }
-function storeNumbasScore(frameID, examData) {
-	var URL = document.getElementById(frameID).src;
-	var key = "numbas_embed:"+URL;
-	window.localStorage.setItem(key, JSON.stringify(examData));
-	// Check if we're in a CB LTI environment, if so put the score in the KV store
-	if(typeof CBLTI !== 'undefined' && CBLTI.user_id){
-		console.log("Storing score in KV store at: " + CBLTI.api_path);
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", CBLTI.api_path, true);
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify({
-			'action': 'set',
-			'resource_pk': CBLTI.resource_pk,
-			'key':	key,
-			'value': JSON.stringify(examData)
-		}));
-	}
-}
-function updateFeebackBarDisplay(frameID, examData){
-	document.getElementById(`${frameID}_score`).innerText = examData.score;
-	if(examData.score >= examData.marks){
-		document.getElementById(`${frameID}_incomplete`).style.display = "none";
-		document.getElementById(`${frameID}_complete`).style.display = "inline-block";
-	}
-}
-
-function loadNumbasFeedback(frameID){
-	var URL = document.getElementById(frameID).src;
-	var key = "numbas_embed:"+URL;
-	var localExamData = JSON.parse(localStorage.getItem(key));
-	
-	// Check if we're in a CB LTI environment, if so check the KV store
-	if(typeof CBLTI !== 'undefined' && CBLTI.user_id){
-		console.log("Getting score from KV store at: " + CBLTI.api_path);
-		var req = {
-			'action': 'get',
-			'resource_pk': CBLTI.resource_pk,
-			'key':  key,
-		}
-		var qs = "";
-		for (var key in req) {
-			if (qs != "") {
-				qs += "&";
-			}
-			qs += key + "=" + encodeURIComponent(req[key]);
-		}
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if (xhr.readyState == 4 && xhr.status == 200){
-				try {
-					var respData = JSON.parse(xhr.responseText);
-					var respExamData = JSON.parse(respData['data']);
-				} catch (e){
-					console.log(e);
-					console.log("No valid CBLTI exam data for frameID: "+frameID);
-				}
-				if((!respExamData && localExamData) || (localExamData && localExamData.score >= respExamData.score)){
-					// CBLTI data missing or localstorage is higher
-					storeNumbasScore(frameID, localExamData);
-					updateFeebackBarDisplay(frameID, localExamData);
-				} else if (respExamData){
-					// No local data or local data has fewer marks
-					storeNumbasScore(frameID, respExamData);
-					updateFeebackBarDisplay(frameID, respExamData);
-				}
-			}
-		}
-		xhr.open("GET", CBLTI.api_path+'?'+qs, true);
-		xhr.send(null);
-	} else if(localExamData) {
-		storeNumbasScore(frameID, localExamData);
-		updateFeebackBarDisplay(frameID, localExamData);
-	}
-	// Nothing to load
-}
-
-function updateNumbasFeedback(frameID, examData){
-	var URL = document.getElementById(frameID).src;
-	var key = "numbas_embed:"+URL;
-	var localExamData = JSON.parse(localStorage.getItem(key));
-	if(!localExamData || examData.score >= localExamData.score){
-		storeNumbasScore(frameID, examData);
-		updateFeebackBarDisplay(frameID, examData);
-	}
-}
 
 window.addEventListener('message', function(event) {
-	var data = JSON.parse(event.data);
+    try {
+    	var data = JSON.parse(event.data);
+    } catch(e) {
+        console.log("Unexpected postMessage data:",event.data);
+        return;
+    }
 	if('message' in data) {
+        var recvFrameID = data['frame_id'];
+        const n = numbas_containers[recvFrameID];
 		switch(data['message']){
 			case 'height_changed':
-				var recvFrameID = data['frame_id'];
-				if(recvFrameID){
-					document.getElementById(recvFrameID).style.height = parseInt(data.documentHeight+50) + "px";
+				if(n){
+                    n.heightChanged(data);
 				}
 				break;
 			case 'exam_data':
-				var recvFrameID = data['frame_id'];
-				if(recvFrameID){
-					document.getElementById(`${recvFrameID}_marks`).innerText = data.exam.marks;
-					document.getElementById(`${recvFrameID}_info`).style.display = "inline-block";
+                if(n) {
+                    n.receiveExamData(data);
 				}
 				break;
 			case 'part_answered':
-				var recvFrameID = data['frame_id'];
-				if(recvFrameID){
-					updateNumbasFeedback(recvFrameID, data.exam);
-					document.getElementById(`${recvFrameID}_info`).style.display = "inline-block";
+				if(n){
+                    n.receiveExamData(data);
 				}
 				break;
+            case 'exam_ready':
+                setTimeout(function(){
+                    for(let n of Object.values(numbas_containers)) {
+                        n.sendID();
+                    }
+                },0);
+                break;
 			default:
-				console.log(data);
+				console.log("Unexpected postMessage data:",data);
 		}
 	}
+});
+
+class NumbasEmbed {
+    constructor(container) {
+        this.container = container;
+        this.id = this.container.getAttribute('data-numbas-id');
+        this.url = this.container.getAttribute('data-numbas-url');
+        this.storageKey = "numbas_embed:"+this.url;
+        this.iframe = this.container.querySelector('.numbas_iframe');
+        this.iframe.parentElement.removeChild(this.iframe);
+
+        $(this.container.querySelector('.collapse')).on('show.bs.collapse',() => {
+            this.insertEmbed();
+        });
+    }
+
+    insertEmbed() {
+        if(this.iframe.parentElement) {
+            return;
+        }
+        const wrapper = this.container.querySelector('.embed');
+        wrapper.appendChild(this.iframe);
+
+        this.iframe.addEventListener('load', () => {
+            setTimeout(() => {
+                this.loadFeedback();
+            },200);
+        });
+    }
+
+    loadFeedback() {
+        var localExamData = JSON.parse(localStorage.getItem(this.storageKey));
+        
+        // Check if we're in a CB LTI environment, if so check the KV store
+        if(typeof CBLTI !== 'undefined' && CBLTI.user_id){
+            console.log("Getting score from KV store at: " + CBLTI.api_path);
+            var req = {
+                'action': 'get',
+                'resource_pk': CBLTI.resource_pk,
+                'key':  this.storageKey,
+            }
+            var qs = "";
+            for (var key in req) {
+                if (qs != "") {
+                    qs += "&";
+                }
+                qs += key + "=" + encodeURIComponent(req[key]);
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    try {
+                        var respData = JSON.parse(xhr.responseText);
+                        var respExamData = JSON.parse(respData['data']);
+                    } catch (e){
+                        console.log(e);
+                        console.log("No valid CBLTI exam data for frameID: "+frameID);
+                    }
+                    var examData = localExamData && (!respExamData || localExamData.score >= respExamData.score) ? localExamData : respExamData;
+                    this.update(examData);
+                }
+            }
+            xhr.open("GET", CBLTI.api_path+'?'+qs, true);
+            xhr.send(null);
+        } else if(localExamData) {
+            this.update(localExamData);
+        }
+        // Nothing to load
+    }
+
+    update(examData) {
+        this.storeScore(examData);
+        this.updateFeedbackBarDisplay(examData);
+    }
+
+    storeScore(examData) {
+        window.localStorage.setItem(this.storageKey, JSON.stringify(examData));
+        // Check if we're in a CB LTI environment, if so put the score in the KV store
+        if(typeof CBLTI !== 'undefined' && CBLTI.user_id){
+            console.log("Storing score in KV store at: " + CBLTI.api_path);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", CBLTI.api_path, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                'action': 'set',
+                'resource_pk': CBLTI.resource_pk,
+                'key':	this.storageKey,
+                'value': JSON.stringify(examData)
+            }));
+        }
+    }
+
+    updateFeedbackBarDisplay(examData){
+        if(examData.score!==undefined) {
+            const score_display = this.container.querySelector('.feedback_right .score');
+            score_display.innerText = examData.score;
+
+            const complete = examData.score >= examData.marks;
+            this.container.classList.toggle('complete', complete);
+        }
+    }
+
+    sendID() {
+        if(!this.iframe) {
+            return;
+        }
+        postToFrames(
+            this.iframe.contentWindow.frames,
+            JSON.stringify({"message":"send_id","id":this.id}),
+            "*"
+        );
+    }
+
+    heightChanged(data) {
+        if(!this.iframe) {
+            return;
+        }
+        this.iframe.style.height = parseInt(data.documentHeight+50) + "px";
+    }
+
+    receiveExamData(data) {
+        this.container.querySelector('.feedback_bar .marks').innerText = data.exam.marks;
+        this.container.querySelector('.feedback_right').classList.add('shown');
+        this.update(data.exam);
+    }
+}
+
+$(function() {
+    for(let container of document.querySelectorAll('.numbas_container')) {
+        const n = new NumbasEmbed(container);
+        numbas_containers[n.id] = n;
+    }
 });

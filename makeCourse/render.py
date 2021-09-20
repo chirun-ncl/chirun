@@ -1,6 +1,6 @@
 import logging
 import datetime
-from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter
+from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 from . import mkdir_p
 import asyncio
 from pyppeteer import launch
@@ -43,6 +43,14 @@ class Renderer(object):
             return url_filter(context, 'static/'+url)
         self.env.filters['static_url'] = static_url
 
+    def render_template(self, template_file, context):
+        try:
+            template = self.env.get_template(template_file)
+        except TemplateNotFound as e:
+            print(self.course.theme.template_path)
+            raise e
+        return template.render(context)
+
 
     def render_item(self, item):
         if item.recently_built():
@@ -60,13 +68,12 @@ class Renderer(object):
             f.write(html)
 
     def to_html(self, item, template_file):
-        template = self.env.get_template(template_file)
         context = {
             'course': self.course,
             'item': item,
             'date': datetime.date.today(),
         }
-        return template.render(context)
+        return self.render_template(template_file, context)
 
     async def to_pdf(self, item):
         if item.recently_built():
