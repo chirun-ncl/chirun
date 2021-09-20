@@ -37,28 +37,28 @@ def embed_numbas(embed, **kwargs):
     return numbas_div
 
 @replace_tag('vimeo-embed')
-def embed_vimeo(embed):
+def embed_vimeo(embed, **kwargs):
     div = html_fragment('<div class="vimeo-aspect-ratio"><iframe class="vimeo" frameborder="0" \
                             webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>')
     div.iframe['src'] = "https://player.vimeo.com/video/" + embed['data-id']
     return div
 
 @replace_tag('youtube-embed')
-def embed_youtube(embed):
+def embed_youtube(embed, **kwargs):
     div = html_fragment('<div class="youtube-aspect-ratio"><iframe class="youtube" \
                             frameborder="0" allowfullscreen></iframe></div>')
     div.iframe['src'] = "https://www.youtube.com/embed/{code}?ecver=1".format(code=embed['data-id'])
     return div
 
 @replace_tag('recap-embed')
-def embed_recap(embed):
+def embed_recap(embed, **kwargs):
     div = html_fragment('<div class="recap-aspect-ratio"><iframe class="recap" \
                             frameborder="0" allowfullscreen></iframe></div>')
     div.iframe['src'] = "https://campus.recap.ncl.ac.uk/Panopto/Pages/Embed.aspx?id={code}&v=1".format(code=embed['data-id'])
     return div
 
 @replace_tag('oembed')
-def oembed(embed):
+def oembed(embed, **kwargs):
     url = embed['data-url']
     html = get_oembed_html(url)
     embed_code = BeautifulSoup(html,'html.parser')
