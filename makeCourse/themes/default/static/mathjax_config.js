@@ -10,7 +10,10 @@ window.MathJax = {
     },
     inlineMath: [['\\(','\\)']],
     autoload: {},
-    packages: {'[+]': ['noerrors','mhchem']}
+    packages: {'[+]': ['noerrors','mhchem','textmacros']},
+    textmacros: {
+      packages: {'[+]': ['bbox']}
+    }
   },
   startup: {
     typeset: true,
@@ -39,6 +42,6 @@ window.MathJax = {
     }
   },
   loader: {
-    load: ['[tex]/noerrors','[tex]/mhchem']
+    load: ['[tex]/noerrors','[tex]/mhchem', '[tex]/textmacros', '[tex]/bbox']
   }
 };
