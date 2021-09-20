@@ -30,6 +30,7 @@ def embed_numbas(embed, **kwargs):
     context = {
         'id': embed['data-id'],
         'url': embed['data-url'],
+        'cta': embed.get('data-cta', None),
         'item': item,
     }
     numbas_div = html_fragment(renderer.render_template('filter/embed_numbas.html',context))
