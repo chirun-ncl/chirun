@@ -385,20 +385,6 @@ class Slides(Chapter):
     def slides_url(self):
       return str(self.out_slides)
 
-class Recap(Chapter):
-    type = 'recap'
-    title = 'Untitled Recap'
-    template_name = 'chapter.html'
-    has_sidebar = False
-
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'build_pdf': False,
-        })
-        return context
-
-
 class Introduction(Item):
     type = 'introduction'
     template_name = 'index.html'
@@ -441,7 +427,6 @@ item_types = {
     'url': Url,
     'html': Html,
     'slides': Slides,
-    'recap': Recap,
     'exam': Exam,
 }
 
