@@ -360,3 +360,15 @@ figure + em, .reveal figure + em {
 .proof_caption {
 	font-style: italic;
 }
+
+blockquote {
+  margin: 1.5em 0.75em;
+  padding: 0.5em 1.0em;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+blockquote > p {
+  margin: 0 !important;
+}

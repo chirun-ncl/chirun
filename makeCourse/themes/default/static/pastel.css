@@ -290,3 +290,8 @@ nav[data-toggle='toc'] .nav-link.active:focus {
   background-color: #f0e7d1;
   border: 2px solid #555;
 }
+
+blockquote {
+  background-color: #eee8d5;
+  border-left: 0.75em solid #555;
+}
