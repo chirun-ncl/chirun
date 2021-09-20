@@ -120,29 +120,22 @@ class PDFProcess(ItemProcess):
         self.num_runs = self.course.config['num_pdf_runs']
 
     def visit(self,item):
-        if not self.course.config['build_pdf']:
-            return
         self.course.force_relative_build = True
         super().visit(item)
 
     def visit_document(self, item):
-        item.has_pdf = True
         self.makePDF(item)
 
     def visit_chapter(self, item):
-        item.has_pdf = True
         self.makePDF(item)
 
     def visit_exam(self, item):
-        item.has_pdf = True
         self.makePDF(item)
 
     def visit_standalone(self, item):
-        item.has_pdf = True
         self.makePDF(item)
 
     def visit_slides(self, item):
-        item.has_pdf = True
         ext = item.source.suffix
         if ext == '.tex':
             latex.runPdflatex(self.course, item)
@@ -150,6 +143,8 @@ class PDFProcess(ItemProcess):
             asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
 
     def makePDF(self, item):
+        if not item.has_pdf:
+            return
         ext = item.source.suffix
         if ext == '.tex':
             latex.runPdflatex(self.course, item)

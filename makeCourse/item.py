@@ -242,7 +242,7 @@ class Document(Item):
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.splitlevel = self.data.get('splitlevel', self.splitlevel)
-        self.has_pdf = self.course.config['build_pdf']
+        self.has_pdf = self.data.get('build_pdf', self.course.config['build_pdf'])
 
     def generate_chapter_subitems(self):
         ext = self.source.suffix
@@ -251,7 +251,7 @@ class Document(Item):
             item.last_built = self.last_built
             item.has_sidebar = self.has_sidebar
             item.has_topbar = self.has_topbar
-            item.has_pdf = self.course.config['build_pdf']
+            item.has_pdf = self.has_pdf
             item.pdf_url = self.pdf_url
 
         if ext == '.tex':
@@ -332,11 +332,12 @@ class Chapter(Item):
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
+        self.has_pdf = self.data.get('build_pdf', self.course.config['build_pdf'])
 
     def get_context(self):
         context = super().get_context()
         context.update({
-            'build_pdf': self.course.config['build_pdf'],
+            'build_pdf': self.has_pdf,
             'file': '{}.html'.format(self.url),
             'pdf': '{}.pdf'.format(self.url),
         })
