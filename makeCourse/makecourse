@@ -129,6 +129,7 @@ class MakeCourse:
             'num_pdf_runs': 1,
             'year': datetime.datetime.now().year,
             'format_version': 2,
+            'mathjax_url': self.mathjax_url,
         }
         return config
 
