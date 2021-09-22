@@ -67,6 +67,7 @@ class LastBuiltProcess(ItemProcess):
     name = 'Establish when each item was last built'
 
     def visit_default(self, item):
+        item.config_modified = self.course.get_config_file().stat().st_mtime
         item.source_modified = (self.course.get_root_dir() / item.source).stat().st_mtime
 
         outPath = self.course.get_build_dir() / item.out_file

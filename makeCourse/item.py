@@ -220,6 +220,10 @@ class Part(Item):
         self.leading_text = self.data.get('leading_text', '')
         self.location = self.data.get('location', 'below')
 
+    def recently_built(self):
+        config_stable = self.last_built is not None and self.last_built > self.config_modified
+        return super().recently_built() and config_stable
+
     def get_context(self):
         context = super().get_context()
         context.update({
@@ -386,14 +390,10 @@ class Slides(Chapter):
     def slides_url(self):
       return str(self.out_slides)
 
-class Introduction(Item):
+class Introduction(Part):
     type = 'introduction'
     template_name = 'index.html'
     title = 'index'
-
-    def __init__(self, course, data, parent=None):
-        super().__init__(course, data, parent)
-        self.leading_text = self.data.get('leading_text', '')
 
     def __str__(self):
         return 'introduction'
