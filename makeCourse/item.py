@@ -1,5 +1,6 @@
 import logging
 import re
+import yaml
 from makeCourse.markdownRenderer import MarkdownRenderer
 from pathlib import Path, PurePath
 from . import slugify
@@ -60,7 +61,7 @@ class Item(object):
         """
             Has this item been built since the source was last modified?
         """
-        if self.in_file.suffix == '.md':
+        if self.in_file.suffix in ['.md', '.html', '.htm']:
             return self.last_built is not None and self.last_built > self.source_modified
 
         elif self.in_file.suffix == '.tex':
@@ -180,10 +181,7 @@ class Item(object):
         return self.course.temp_path(self.url.replace('/','-'))
 
     def content_tree(self):
-        if self.content:
-            return {'type': self.type, 'slug': self.slug, 'title': self.title, 'content': [item.content_tree() for item in self.content]}
-        else:
-            return {'type': self.type, 'slug': self.slug, 'title': self.title, 'source': str(self.source)}
+        return {'type': self.type, 'slug': self.slug, 'title': self.title, 'source': str(self.source)}
 
 class Html(Item):
     type = 'html'
@@ -232,6 +230,11 @@ class Part(Item):
         })
         return context
 
+    def content_tree(self):
+        attr_dict = super().content_tree()
+        attr_dict['content'] = [item.content_tree() for item in self.content]
+        return attr_dict
+
 class Document(Item):
     type = 'document'
     title = 'Untitled part'
@@ -240,6 +243,10 @@ class Document(Item):
     generated = False
     has_sidebar = True
     has_topbar = True
+
+    @property
+    def out_struct_file(self):
+        return self.source.with_suffix('.dst')
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
@@ -257,38 +264,90 @@ class Document(Item):
             item.has_topbar = self.has_topbar
             item.has_pdf = self.has_pdf
             item.pdf_url = self.pdf_url
+            item.source_modified = self.source_modified
+            item.config_modified = self.config_modified
+            for subitem in item.content:
+                copy_attrs(subitem)
+
+        def generate_item(itemdata, parent):
+            if itemdata['type'] == 'part':
+                item = Part(self.course, itemdata, parent)
+                for subitemdata in itemdata.get('content',[]):
+                    subitem = generate_item(subitemdata, item)
+                    copy_attrs(subitem)
+                    item.content.append(subitem)
+                return item
+            elif itemdata['type'] == 'html':
+                return Html(self.course, itemdata, parent)
+            else:
+                raise Exception("Error: unsupported item type '{}' in document structure cache: {}.".format(itemdata.type, self.out_struct_file))
+            return None
+
+        def run_plastex_for_structure():
+            """ Run plastex and use the result to generate a document structure cache"""
+            plastex_output = self.course.load_latex_content(self)
+            last_item = {-2:self}
+            for fn, chapter in plastex_output.items():
+                chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
+                if chapter['html'].isspace():
+                    chapter['html'] = ''
+                if chapter['level'] < -1:
+                    self.data['html'] = chapter['html']
+                    last_item[-2] = self
+                elif chapter['level'] < self.splitlevel:
+                    i = -2
+                    while i < chapter['level']:
+                        if i in last_item:
+                            parent = last_item[i]
+                        i = i + 1
+                    item = Part(self.course, chapter, parent)
+                    copy_attrs(item)
+                    last_item[chapter['level']] = item
+                    parent.content.append(item)
+                elif chapter['level'] == self.splitlevel:
+                    i = -2
+                    while i < chapter['level']:
+                        if i in last_item:
+                            parent = last_item[i]
+                        i = i + 1
+                    item = Html(self.course, chapter, self)
+                    copy_attrs(item)
+                    parent.content.append(item)
+            self.generated = True
+            logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
+            with open(self.out_struct_file, 'w') as f:
+                yaml.dump(self.content_tree(),f)
+
+        def load_cached_structure():
+            """
+            Load the cached document structure if one exists and is current
+
+            Returns true if the document structure is loaded or has already been generated
+            """
+            if self.generated:
+                return True
+            # Check that the document structure cache exists and is valid
+            if self.out_struct_file.exists() and self.recently_built():
+                logger.debug('Loading document structure from cache file: {}'.format(self.out_struct_file))
+                with open(str(self.out_struct_file), 'r') as f:
+                    try:
+                        struct = yaml.load(f, Loader=yaml.CLoader)
+                    except AttributeError:
+                        struct = yaml.load(f, Loader=yaml.Loader)
+                # Check that the splitlevel for this document has not changed
+                # If it has, we'll need to regenerate the document structure with plastex instead
+                if struct.get('splitlevel', -2) == self.splitlevel:
+                    self.content = [load_item(self.course, obj, self) for obj in struct.get('content', [])]
+                    for item in self.content:
+                           copy_attrs(item)
+                    self.generated = True
+                    return True
+            self.last_built = None
+            return False
 
         if ext == '.tex':
-            if not self.generated:
-                self.generated = True
-                plastex_output = self.course.load_latex_content(self)
-                last_item = {-1:self}
-                for fn, chapter in plastex_output.items():
-                    chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
-                    if chapter['html'].isspace():
-                        chapter['html'] = ''
-                    if chapter['level'] < 0:
-                        self.data['html'] = chapter['html']
-                        last_item[-1] = self
-                    elif chapter['level'] < self.splitlevel:
-                        i = -1
-                        while i < chapter['level']:
-                            if i in last_item:
-                                parent = last_item[i]
-                            i = i + 1
-                        item = Part(self.course, chapter, parent)
-                        copy_attrs(item)
-                        last_item[chapter['level']] = item
-                        parent.content.append(item)
-                    elif chapter['level'] == self.splitlevel:
-                        i = -1
-                        while i < chapter['level']:
-                            if i in last_item:
-                                parent = last_item[i]
-                            i = i + 1
-                        item = Html(self.course, chapter, self)
-                        copy_attrs(item)
-                        parent.content.append(item)
+            if not load_cached_structure():
+                run_plastex_for_structure()
         else:
             raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}.".format(self.title, self.source))
 
@@ -305,6 +364,12 @@ class Document(Item):
             'pdf': '{}.pdf'.format(self.url),
         })
         return context
+
+    def content_tree(self):
+        attr_dict = super().content_tree()
+        attr_dict['content'] = [item.content_tree() for item in self.content]
+        attr_dict['splitlevel'] = self.splitlevel
+        return attr_dict
 
 class Url(Item):
     type = 'url'
