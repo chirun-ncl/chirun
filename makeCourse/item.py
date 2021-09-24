@@ -31,6 +31,7 @@ class Item(object):
     has_topbar = True
     has_pdf = False
     splitlevel = -2
+    is_index = False
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -456,6 +457,7 @@ class Introduction(Part):
     type = 'introduction'
     template_name = 'index.html'
     title = 'index'
+    is_index = True
 
     def __str__(self):
         return 'introduction'
@@ -480,6 +482,7 @@ class Standalone(Chapter):
     out_path = Path('')
     out_file = Path('index.html')
     url = ''
+    is_index = True
 
 item_types = {
     'introduction': Introduction,

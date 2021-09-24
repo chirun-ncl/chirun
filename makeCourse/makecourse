@@ -226,6 +226,11 @@ class MakeCourse:
         logger.debug('Loading course structure')
         self.structure = [load_item(self, obj) for obj in self.config['structure']]
 
+        # Ensure an item exists in the course structure to produce an index page.
+        if not any(item.is_index for item in self.structure):
+            index = {'type': 'introduction'}
+            self.structure.append(load_item(self, index))
+
     def process(self):
         """
             Process the course. 
