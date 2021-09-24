@@ -1,7 +1,7 @@
 {% import "macros.html" as macros %}
 {% if not subitem.hidden %}
     {% if subitem.type == 'url' %}
-        <a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
+        <a target="_blank" href="{{subitem.source|url}}">{{subitem.title}}</a>
     {% else %}
         <a href="{{subitem.url|url}}">{{subitem.title}}</a>
         {% if subitem.has_slides %}

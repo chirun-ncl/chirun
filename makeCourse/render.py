@@ -3,6 +3,7 @@ import datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 from . import mkdir_p
 import asyncio
+import re
 from pyppeteer import launch
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,8 @@ class Renderer(object):
         @contextfilter
         def url_filter(context, url, theme=False):
             self.course.force_theme = theme
-            url = self.course.make_relative_url(context['item'],url)
+            if not re.search(r'^[^:]+:\/\/', url):
+                url = self.course.make_relative_url(context['item'],url)
             self.course.force_theme = False
             return url
         self.env.filters['url'] = url_filter

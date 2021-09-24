@@ -372,12 +372,15 @@ class Document(Item):
 class Url(Item):
     type = 'url'
     title = 'Untitled URL'
-    template_name = 'part.html'
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.source = self.data.get('source', '')
         self.data['html'] = ''
+
+    @property
+    def url(self):
+        return str(self.source)
 
     def get_context(self):
         return {
