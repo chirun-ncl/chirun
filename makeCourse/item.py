@@ -168,6 +168,9 @@ class Item(object):
             elif ext == '.tex':
                 plastex_output = self.course.load_latex_content(self)
                 html = plastex_output['index.html']['html']
+            elif ext == '.html':
+                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
+                    html = f.read()
             else:
                 raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
@@ -200,12 +203,6 @@ class Html(Item):
     @property
     def out_file(self):
         return self.out_path / self.in_file
-
-    def markdown_content(self,*args,**kwargs):
-        return self.data.get('html', '')
-
-    def as_html(self):
-        return self.data.get('html', '')
 
 class Part(Item):
     type = 'part'
