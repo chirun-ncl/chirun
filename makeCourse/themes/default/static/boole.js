@@ -22,23 +22,24 @@ var spinner_opts = {
 }
 var spinner;
 var codeMirrorInstances = {};
-var runnerURL = "https://www.mas.ncl.ac.uk/coderunner";
+var submitURL = "https://mas-codeassess.ncl.ac.uk/submit";
+var fetchURL = "https://mas-codeassess.ncl.ac.uk/fetch";
 
-function waitForSubmission(submissionid,codeBlock){
+function waitForSubmission(job_id, codeBlock){
 	setTimeout(function(){
-		if(submissionid===undefined){
+		if(job_id===undefined){
 			return;
 		}
-		console.log("Checking the status of submission "+submissionid);
-		$.post(runnerURL, {"@action": "check", "submissionid": submissionid}, null, "json")
+		console.log("Checking the status of submission "+job_id);
+		$.get(fetchURL, {"job_id": job_id}, null, "json")
 			.done(function(data){
 				if("status" in data && data['status'] == "waiting"){
-					waitForSubmission(submissionid,codeBlock);
-				}else if(data['result'] == "timeout"){
+					waitForSubmission(job_id, codeBlock);
+				} else if(data['result'] == "timeout"){
 					console.log("Your job took too long to run");
-				}else if(data['result'] == "overflow"){
+				} else if(data['result'] == "overflow"){
 					console.log('Your job used too much RAM');    
-				}else if(data['result'] == "killed"){
+				} else if(data['result'] == "killed"){
 					console.log("Your job was killed");
 				} else {
 					console.log(JSON.stringify(data));
@@ -60,8 +61,10 @@ function waitForSubmission(submissionid,codeBlock){
 
 function recieveRunnerConfirm(codeBlock){
 	return function(msg){ 
-		console.log("Got confirmation of message receipt:"+JSON.stringify(msg));
-		waitForSubmission(msg["submissionid"],codeBlock);
+		console.log("Got confirmation of message receipt:");
+		data = JSON.parse(msg);
+		console.log(data);
+		waitForSubmission(data["job_id"],codeBlock);
 	}
 }
 
@@ -108,13 +111,13 @@ $(window).on('load', function() {
 		spinner_opts.className = "spinner"+codeUUID;
 		spinner = new Spinner(spinner_opts);
 		codeBlock.append(spinner.spin().el)
-		var data = {"@action":"getCodeOutput", "codetype":codeLang+"_getoutput"}
+		var data = {"env":codeLang, "unit_tests": []}
 		if (typeof(Reveal) == "undefined"){
-			data["codeSource"] = codeMirrorInstances[codeUUID].getValue();
+			data["code"] = codeMirrorInstances[codeUUID].getValue();
 		} else {
-			data["codeSource"] = codeBlock.find("code")[0].innerText;
+			data["code"] = codeBlock.find("code")[0].innerText;
 		}
 		console.log("Sending message to Inginious:"+JSON.stringify(data));
-		$.post(runnerURL,data,recieveRunnerConfirm(codeBlock));
+		$.post(submitURL,data,recieveRunnerConfirm(codeBlock));
 	});
 });
