@@ -63,7 +63,7 @@ p code, li code, table code {
 	border: 1px solid #ccc;
 }
 
-.reveal pre code {
+.reveal code {
 	padding: 0;
 }
 
