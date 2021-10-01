@@ -149,6 +149,7 @@ class OutlineProcessor(Treeprocessor):
     def process_nodes(self, node):
         s = []
         pattern = re.compile('^h(\d)')
+        escape_pattern = re.compile('^---+\s*$')
         wrapper_cls = self.wrapper_cls
 
         for child in list(node):
@@ -158,7 +159,8 @@ class OutlineProcessor(Treeprocessor):
                 depth = int(match.group(1))
 
                 section = etree.SubElement(node, self.wrapper_tag)
-                section.append(child)
+                if not escape_pattern.match(child.text):
+                    section.append(child)
 
                 if self.move_attrib:
                     for key, value in list(child.attrib.items()):
