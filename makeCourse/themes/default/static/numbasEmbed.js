@@ -1,40 +1,40 @@
 const numbas_containers = {};
 
 function postToFrames(frames, data, origin) {
-	for (var i=0; i < frames.length; i++) {
-		frames[i].postMessage(data, origin);
-		if(frames[i].frames.length > 0) {
-			postToFrames(frames[i].frames, data, origin)
-		}
-	}
+    for (var i=0; i < frames.length; i++) {
+        frames[i].postMessage(data, origin);
+        if(frames[i].frames.length > 0) {
+            postToFrames(frames[i].frames, data, origin)
+        }
+    }
 }
 
 window.addEventListener('message', function(event) {
     try {
-    	var data = JSON.parse(event.data);
+        var data = JSON.parse(event.data);
     } catch(e) {
         console.log("Unexpected postMessage data:",event.data);
         return;
     }
-	if('message' in data) {
+    if('message' in data) {
         var recvFrameID = data['frame_id'];
         const n = numbas_containers[recvFrameID];
-		switch(data['message']){
-			case 'height_changed':
-				if(n){
+        switch(data['message']){
+            case 'height_changed':
+                if(n){
                     n.heightChanged(data);
-				}
-				break;
-			case 'exam_data':
+                }
+                break;
+            case 'exam_data':
                 if(n) {
                     n.receiveExamData(data);
-				}
-				break;
-			case 'part_answered':
-				if(n){
+                }
+                break;
+            case 'part_answered':
+                if(n){
                     n.receiveExamData(data);
-				}
-				break;
+                }
+                break;
             case 'exam_ready':
                 setTimeout(function(){
                     for(let n of Object.values(numbas_containers)) {
@@ -42,10 +42,10 @@ window.addEventListener('message', function(event) {
                     }
                 },0);
                 break;
-			default:
-				console.log("Unexpected postMessage data:",data);
-		}
-	}
+            default:
+                console.log("Unexpected postMessage data:",data);
+        }
+    }
 });
 
 class NumbasEmbed {
@@ -102,12 +102,12 @@ class NumbasEmbed {
                         var respExamData = JSON.parse(respData['data']);
                     } catch (e){
                         console.log(e);
-                        console.log("No valid CBLTI exam data for frameID: "+frameID);
+                        console.log("No valid CBLTI exam data for frameID: "+this.id);
                     }
                     var examData = localExamData && (!respExamData || localExamData.score >= respExamData.score) ? localExamData : respExamData;
                     this.update(examData);
                 }
-            }
+            }.bind(this);
             xhr.open("GET", CBLTI.api_path+'?'+qs, true);
             xhr.send(null);
         } else if(localExamData) {
@@ -132,7 +132,7 @@ class NumbasEmbed {
             xhr.send(JSON.stringify({
                 'action': 'set',
                 'resource_pk': CBLTI.resource_pk,
-                'key':	this.storageKey,
+                'key':  this.storageKey,
                 'value': JSON.stringify(examData)
             }));
         }
@@ -152,11 +152,21 @@ class NumbasEmbed {
         if(!this.iframe) {
             return;
         }
-        postToFrames(
-            this.iframe.contentWindow.frames,
-            JSON.stringify({"message":"send_id","id":this.id}),
-            "*"
-        );
+        if(!this.iframe.contentWindow){
+            this.iframe.addEventListener("load", function() {
+                postToFrames(
+                    this.iframe.contentWindow.frames,
+                    JSON.stringify({"message":"send_id","id":this.id}),
+                    "*"
+                );
+            }.bind(this));
+        } else {
+            postToFrames(
+                this.iframe.contentWindow.frames,
+                JSON.stringify({"message":"send_id","id":this.id}),
+                "*"
+            );
+        }
     }
 
     heightChanged(data) {
