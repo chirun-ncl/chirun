@@ -159,7 +159,7 @@ class OutlineProcessor(Treeprocessor):
                 depth = int(match.group(1))
 
                 section = etree.SubElement(node, self.wrapper_tag)
-                if not escape_pattern.match(getattr(child, 'text', '')):
+                if not escape_pattern.match(getattr(child, 'text', None) or ''):
                     section.append(child)
 
                 if self.move_attrib:
