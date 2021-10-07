@@ -28,10 +28,12 @@ $("#navbarCustomise #p-space").on("input change", function() {
 
 $("#navbarCustomise #font-scale-reset").click(function() {
 	changeFontSize(100);
+	localStorage.removeItem('css-font-size');
 });
 
 $("#navbarCustomise #p-space-reset").click(function() {
 	changeParagraphSpacing(150);
+	localStorage.removeItem('css-p-space');
 });
 
 function updateThemeBodyTag() {
