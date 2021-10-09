@@ -28,7 +28,7 @@
 	color: #11CC11; 
 }
 .numbas_container div.feedback_bar .incomplete {
-	color: #CC1111; 
+	color: #888888; 
 }
 .numbas_container iframe.numbas_iframe {
 	flex-grow: 1;

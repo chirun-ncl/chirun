@@ -104,8 +104,7 @@ class NumbasEmbed {
                         console.log(e);
                         console.log("No valid CBLTI exam data for frameID: "+this.id);
                     }
-                    var examData = localExamData && (!respExamData || localExamData.score >= respExamData.score) ? localExamData : respExamData;
-                    this.update(examData);
+                    this.update(respExamData);
                 }
             }.bind(this);
             xhr.open("GET", CBLTI.api_path+'?'+qs, true);
@@ -116,7 +115,10 @@ class NumbasEmbed {
         // Nothing to load
     }
 
-    update(examData) {
+    update(newExamData) {
+        // Compare new examdata with localstorage examdata and only apply if the score is better
+        var localExamData = JSON.parse(localStorage.getItem(this.storageKey));
+        var examData = localExamData && (!newExamData || !('score' in newExamData) || localExamData.score >= newExamData.score) ? localExamData : newExamData;
         this.storeScore(examData);
         this.updateFeedbackBarDisplay(examData);
     }
@@ -140,9 +142,6 @@ class NumbasEmbed {
 
     updateFeedbackBarDisplay(examData){
         if(examData.score!==undefined) {
-            const score_display = this.container.querySelector('.feedback_right .score');
-            score_display.innerText = examData.score;
-
             const complete = examData.score >= examData.marks;
             this.container.classList.toggle('complete', complete);
         }
@@ -177,7 +176,6 @@ class NumbasEmbed {
     }
 
     receiveExamData(data) {
-        this.container.querySelector('.feedback_bar .marks').innerText = data.exam.marks;
         this.container.querySelector('.feedback_right').classList.add('shown');
         this.update(data.exam);
     }
