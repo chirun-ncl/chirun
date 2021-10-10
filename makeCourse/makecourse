@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+import logging
+import plasTeX.Logging  # noqa: F401
+logging.setLoggerClass(logging.Logger)
+
 import argparse
 import datetime
 import makeCourse.plastex
@@ -15,7 +19,7 @@ from makeCourse.theme import Theme
 from makeCourse import oembed
 from pathlib import Path
 
-import logging
+
 logger = logging.getLogger('makeCourse')
 
 
@@ -44,7 +48,7 @@ class MakeCourse:
         if args.verbose:
             if args.veryverbose:
                 logger.setLevel(logging.DEBUG)
-                logging.basicConfig(format='%(name)s:%(funcName)s:%(lineno)d: %(levelname)s:\t%(message)s')
+                logging.basicConfig(format='[%(name)s:%(funcName)s:%(lineno)d] %(message)s')
             else:
                 logger.setLevel(logging.INFO)
                 logging.basicConfig(format='%(message)s')

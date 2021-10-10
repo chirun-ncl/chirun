@@ -1,6 +1,6 @@
 import logging
 from . import slugify
-from .render import Renderer, SlidesRenderer
+from .render import Renderer, SlidesRenderer, NotebookRenderer
 from .latex import PDFLatex
 import asyncio
 
@@ -20,6 +20,7 @@ class ItemProcess(object):
         self.course = course
         self.renderer = Renderer(self.course)
         self.slides_renderer = SlidesRenderer(self.course)
+        self.nb_renderer = NotebookRenderer(self.course)
 
     def visit(self, item):
         if item.is_hidden:
@@ -138,6 +139,9 @@ class PDFProcess(ItemProcess):
     def visit_chapter(self, item):
         self.makePDF(item)
 
+    def visit_notebook(self, item):
+        self.makePDF(item)
+
     def visit_exam(self, item):
         self.makePDF(item)
 
@@ -172,5 +176,5 @@ class NotebookProcess(ItemProcess):
         pass
 
     def visit_notebook(self, item):
-        logger.warning('Notebook!')
-        print('Do notebook!')
+        self.course.force_relative_build = False
+        self.nb_renderer.render_item(item)

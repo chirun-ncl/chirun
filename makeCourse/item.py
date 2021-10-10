@@ -4,7 +4,7 @@ import yaml
 from makeCourse.markdownRenderer import MarkdownRenderer
 from pathlib import Path, PurePath
 from . import slugify
-from .filter import burnInExtras
+from .filter import HTMLFilter
 
 logger = logging.getLogger(__name__)
 
@@ -180,7 +180,7 @@ class Item(object):
             else:
                 raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
-        html = burnInExtras(self, html, out_format='html')
+        html = HTMLFilter().apply(self, html, out_format='html')
         return html
 
     def temp_path(self):
@@ -528,6 +528,23 @@ class Standalone(Chapter):
 
 class Notebook(Chapter):
     type = 'notebook'
+    has_nb = True
+
+    def get_context(self):
+        context = super().get_context()
+        context.update({
+            'notebook': self.nb_url,
+            'pdf': self.pdf_url,
+        })
+        return context
+
+    @property
+    def out_nb(self):
+        return self.named_out_file.with_suffix('.ipynb')
+
+    @property
+    def nb_url(self):
+        return str(self.out_nb)
 
 
 item_types = {

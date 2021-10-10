@@ -1,9 +1,13 @@
 import logging
 import datetime
-from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
-from . import mkdir_p
+import makeCourse.filter
 import re
+import nbformat
+from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 from pyppeteer import launch
+from notedown import MarkdownReader
+from makeCourse.markdownRenderer import MarkdownRenderer
+from . import mkdir_p
 
 logger = logging.getLogger(__name__)
 
@@ -135,3 +139,25 @@ class SlidesRenderer(Renderer):
         await page.waitForFunction('Reveal.isReady() && window.mathjax_is_loaded == 1', options={'timeout': 10000})
         await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
         await browser.close()
+
+
+class NotebookRenderer(object):
+    def __init__(self, course):
+        self.course = course
+        self.markdownRenderer = MarkdownRenderer()
+
+    def render_item(self, item):
+        if item.recently_built():
+            return
+        outPath = self.course.get_build_dir() / item.out_nb
+        outDir = outPath.parent
+        mkdir_p(outDir)
+        if not (item.source.name == ''):
+            logger.info("Building Notebook: {item}".format(item=item.source))
+        nb = MarkdownReader().to_notebook(item.markdown_content())
+        for cell in nb.cells:
+            if cell['cell_type'] == 'markdown':
+                html = self.markdownRenderer.render(item, outDir, cell['source'])
+                cell['source'] = makeCourse.filter.CellFilter().apply(item, html, out_format='html')
+        with open(str(outPath), 'w', encoding='utf-8') as f:
+            nbformat.write(nb, f)

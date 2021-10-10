@@ -30,7 +30,7 @@ class MarkdownRenderer(object):
             }
         }
 
-    def render(self, content_item, outdir):
+    def render(self, content_item, outdir, md_string=None):
         struct = content_item.course.structure
         mdx_extensions = [
             ImageProcessorExtension(item_sourcedir=str(content_item.source.parent),
@@ -45,6 +45,6 @@ class MarkdownRenderer(object):
             'pymdownx.extra',
             'pymdownx.superfences'
         ]
-        content = markdown(content_item.markdown_content(), extensions=mdx_extensions,
+        content = markdown(md_string or content_item.markdown_content(), extensions=mdx_extensions,
                            extension_configs=self.extension_configs)
         return content
