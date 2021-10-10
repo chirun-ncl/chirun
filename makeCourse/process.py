@@ -2,8 +2,9 @@ import logging
 import shutil
 import os
 import re
-from . import latex, mkdir_p, slugify
+from . import mkdir_p, slugify
 from .render import Renderer, SlidesRenderer
+from .latex import PDFLatex
 from pathlib import Path
 import asyncio
 
@@ -116,16 +117,22 @@ class PDFProcess(ItemProcess):
 
     name = 'Make PDFs'
     
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.num_runs = self.course.config['num_pdf_runs']
 
-    def visit(self,item):
+    def visit(self, item):
         self.course.force_relative_build = True
         super().visit(item)
 
     def visit_document(self, item):
-        self.makePDF(item)
+        if not item.has_pdf:
+            return
+        ext = item.source.suffix
+        if ext == '.tex':
+            item.toc = PDFLatex(self.course, item).process_split_pdf()
+        elif ext == '.md':
+            raise Exception("PDF output for markdown document item types are not yet supported")
 
     def visit_chapter(self, item):
         self.makePDF(item)
@@ -139,7 +146,7 @@ class PDFProcess(ItemProcess):
     def visit_slides(self, item):
         ext = item.source.suffix
         if ext == '.tex':
-            latex.runPdflatex(self.course, item)
+            PDFLatex(self.course, item).process_pdf()
         elif ext == '.md':
             asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
 
@@ -148,6 +155,6 @@ class PDFProcess(ItemProcess):
             return
         ext = item.source.suffix
         if ext == '.tex':
-            latex.runPdflatex(self.course, item)
+            PDFLatex(self.course, item).process_pdf()
         elif ext == '.md':
             asyncio.get_event_loop().run_until_complete(self.renderer.to_pdf(item))

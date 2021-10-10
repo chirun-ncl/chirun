@@ -2,6 +2,7 @@ import markdown
 from markdown.treeprocessors import Treeprocessor
 from markdown import Extension
 from markdown.util import etree
+import filecmp
 import logging
 import shlex
 import re
@@ -28,7 +29,7 @@ class LinkTreeprocessor(Treeprocessor):
         self._item_sourcedir = Path(item_sourcedir)
         self._item_outdir = Path(item_outdir)
         self._structure = course_structure
-        self.fileID = 0
+        self.file_id = 0
 
     def run(self, root):
         moved_links = set()
@@ -52,12 +53,18 @@ class LinkTreeprocessor(Treeprocessor):
                         continue
                 # otherwise, copy the content to build directory and link
                 if srcFile.exists():
-                    outSrc = Path('files') / (str(self.fileID).zfill(4) + '-' + Path(src).name)
-                    outFile = self._item_outdir / outSrc
-                    mkdir_p(outFile.parent)
-                    copyfile(str(srcFile),str(outFile))
-                    link.attrib["href"] = str(outSrc)
-                    self.fileID = self.fileID + 1
+                    out_href = Path('files') / Path(src).name
+                    out_file = self._item_outdir / out_href
+                    while out_file.exists() and not filecmp.cmp(out_file, srcFile):
+                        new = Path('files') / (str(self.file_id).zfill(4) + '-' + Path(src).name)
+                        logger.debug("Output filename {} already used and the file is different. Trying {}..."
+                                     .format(out_href, new))
+                        out_href = new
+                        out_file = self._item_outdir / out_href
+                        self.file_id = self.file_id + 1
+                    mkdir_p(out_file.parent)
+                    copyfile(str(srcFile), str(out_file))
+                    link.attrib["href"] = str(out_href)
             moved_links.add(link)
 
 class LinkProcessorExtension(Extension):

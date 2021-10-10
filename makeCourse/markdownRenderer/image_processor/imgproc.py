@@ -2,6 +2,8 @@ import markdown
 from markdown.treeprocessors import Treeprocessor
 from markdown import Extension
 from markdown.util import etree
+import filecmp
+import logging
 import subprocess
 import shlex
 from copy import copy
@@ -9,13 +11,15 @@ from shutil import copyfile
 from pathlib import Path, PurePath
 from makeCourse import mkdir_p
 
+logger = logging.getLogger(__name__)
+
 
 class ImageTreeprocessor(Treeprocessor):
     def __init__(self, md, item_sourcedir, item_outdir):
         Treeprocessor.__init__(self, md)
         self._item_sourcedir = Path(item_sourcedir)
         self._item_outdir = Path(item_outdir)
-        self.imageID = 0
+        self.image_id = 0
 
     def pdf2png(self, src, dst):
         subprocess.run(shlex.split('pdftoppm -png -r 150 -singlefile {} {}'.format(src,dst)))
@@ -31,17 +35,24 @@ class ImageTreeprocessor(Treeprocessor):
                 imageFile = self._item_sourcedir / src
                 if imageFile.exists():
                     # Copy relative imagefile to build directory
-                    outSrc = Path('images') / (str(self.imageID).zfill(4) + '-' + Path(src).name)
-                    outFile = self._item_outdir / outSrc
-                    mkdir_p(outFile.parent)
+                    out_src = Path('images') / Path(src).name
+                    out_file = self._item_outdir / out_src
+                    while out_file.exists() and not filecmp.cmp(out_file, imageFile):
+                        new = Path('images') / (str(self.image_id).zfill(4) + '-' + Path(src).name)
+                        logger.debug("Output filename {} already used and the image is different. Trying {}..."
+                                     .format(out_src, new))
+                        out_src = new
+                        out_file = self._item_outdir / out_src
+                        self.image_id = self.image_id + 1
+                    mkdir_p(out_file.parent)
                     if imageFile.suffix == '.pdf':
-                        self.pdf2png(str(imageFile),str(outFile.with_suffix('')))
-                        outSrc = outSrc.with_suffix('.png')
+                        self.pdf2png(str(imageFile), str(out_file.with_suffix('')))
+                        out_src = out_src.with_suffix('.png')
                     else:
-                        copyfile(str(imageFile),str(outFile))
-                    image.attrib["src"] = str(outSrc)
-                    self.imageID = self.imageID + 1
+                        copyfile(str(imageFile), str(out_file))
+                    image.attrib["src"] = str(out_src)
             moved_images.add(image)
+
 
 class ImageProcessorExtension(Extension):
     def __init__(self, **kwargs):

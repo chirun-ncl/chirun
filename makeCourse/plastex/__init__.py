@@ -7,7 +7,6 @@ from makeCourse import mkdir_p
 from makeCourse.plastex.Imagers.pdf2svg import Imager as VectorImager
 from makeCourse.plastex.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
-from subprocess import Popen, PIPE
 from plasTeX import Environment, TeXDocument
 from plasTeX.Tokenizer import EscapeSequence
 from makeCourse.plasTeXRenderer import Renderer
@@ -25,7 +24,8 @@ imagelog = getLogger('imager')
 imagelog.setLevel('INFO')
 
 # Add makecourse's custom plastex packages to the path
-sys.path.insert(0,os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(__file__))
+
 
 def getEmbeddedImages(course, html, item):
 
@@ -51,20 +51,22 @@ def getEmbeddedImages(course, html, item):
         start -= m.start()
         end -= m.start()
         img = m.group(0)
-        return img[:start] + '/' +str(finalURL) + img[end:]
+        return img[:start] + '/' + str(finalURL) + img[end:]
 
     for pattern in patterns:
         html = pattern.sub(fix_image_path, html)
 
     return html
 
+
 def _processIfContent(self, which, debug=False):
     # Since the true content always comes first, we need to set
     # True to case 0 and False to case 1.
-    elsefound = False
     if isinstance(which, bool):
-        if which: which = 0
-        else: which = 1
+        if which:
+            which = 0
+        else:
+            which = 1
     cases = [[]]
     nesting = 0
     correctly_terminated = False
@@ -97,6 +99,7 @@ def _processIfContent(self, which, debug=False):
     cases.append([])
     self.pushTokens(cases[which])
 
+
 class PlastexRunner:
 
     def exception_handler(exception_type, exception, traceback):
@@ -109,16 +112,18 @@ class PlastexRunner:
         self.runPlastex(item)
         plastex_output = {}
 
-        for section,filename in self.renderer.files.items():
+        for section, filename in self.renderer.files.items():
             filepath = item.temp_path() / filename
             if filepath.is_file():
                 with open(filepath, encoding='utf-8') as f:
                     plastex_output[filepath.name] = {
                         # TODO: an abstraction for applying the following as a series of filters
                         'html': getEmbeddedImages(self, f.read(), item),
-                        'title': section.title if isinstance(section.title,str) else section.title.textContent.strip(),
+                        'title': section.title if isinstance(section.title, str) else section.title.textContent.strip(),
                         'source': filepath.name,
-                        'level': section.level
+                        'level': getattr(section, 'level', None),
+                        'counter': getattr(section, 'counter', None),
+                        'ref': section.ref.textContent.strip() if section.ref else None
                     }
         return plastex_output
 
@@ -136,7 +141,7 @@ class PlastexRunner:
 
         plastex_config['files']['filename'] = item.plastex_filename_rules
         plastex_config['files']['split-level'] = item.splitlevel
-        rname = plastex_config['general']['renderer'] = 'makecourse'
+        plastex_config['general']['renderer'] = 'makecourse'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
         plastex_config['images']['imager'] = 'none'
@@ -149,13 +154,13 @@ class PlastexRunner:
         TeX.processIfContent = _processIfContent
         tex = TeX(self.document, myfile=f)
         self.document.userdata['jobname'] = tex.jobname
-        pauxname = os.path.join(self.document.userdata.get('working-dir','.'),
-                            '%s.paux' % self.document.userdata.get('jobname',''))
+        pauxname = os.path.join(self.document.userdata.get('working-dir', '.'),
+                                '%s.paux' % self.document.userdata.get('jobname', ''))
 
         for fname in glob.glob(str(outPaux / '*.paux')):
             if os.path.basename(fname) == pauxname:
                 continue
-            self.document.context.restore(fname,'makecourse')
+            self.document.context.restore(fname, 'makecourse')
 
         sys.excepthook = PlastexRunner.exception_handler
         tex.parse()
@@ -172,8 +177,9 @@ class PlastexRunner:
         os.chdir(wd)
 
         original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
-        collated_paux_path = self.temp_path() / (str(item.out_path).replace('/','-') + '.paux')
+        collated_paux_path = self.temp_path() / (str(item.out_path).replace('/', '-') + '.paux')
         shutil.copyfile(str(original_paux_path), str(collated_paux_path))
+
 
 class NoCharSubEnvironment(Environment):
     """
@@ -184,6 +190,7 @@ class NoCharSubEnvironment(Environment):
     def normalize(self, charsubs=None):
         """ Normalize, but don't allow character substitutions """
         return Environment.normalize(self, charsubs=None)
+
 
 class VerbatimEnvironment(NoCharSubEnvironment):
     """

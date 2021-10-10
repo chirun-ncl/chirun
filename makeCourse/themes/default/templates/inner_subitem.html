@@ -7,7 +7,7 @@
         {% if subitem.has_slides %}
             <a target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}">{{macros.icon('desktop','Slides')}}</a>
         {% endif %}
-        {% if not partitem.has_pdf and subitem.has_pdf %}
+        {% if subitem.has_pdf %}
             <a target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
         {% endif %}
     {% endif %}

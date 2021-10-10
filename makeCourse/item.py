@@ -29,7 +29,6 @@ class Item(object):
     last_built = None
     has_footer = True
     has_topbar = True
-    has_pdf = False
     splitlevel = -2
     is_index = False
 
@@ -44,6 +43,7 @@ class Item(object):
         self.is_hidden = self.data.get('hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.has_footer = self.data.get('footer', self.has_footer)
+        self.has_pdf = self.data.get('build_pdf', False)
         self.thumbnail = self.data.get('thumbnail', None)
         self.content = [load_item(course, obj, self) for obj in self.data.get('content', [])]
         self.markdownRenderer = MarkdownRenderer()
@@ -116,6 +116,8 @@ class Item(object):
 
     @property
     def pdf_url(self):
+        if 'pdf_url' in self.data:
+            return self.data['pdf_url']
         return str(self.named_out_file.with_suffix('.pdf'))
 
     @property
@@ -185,14 +187,21 @@ class Item(object):
         return self.course.temp_path(self.url.replace('/','-'))
 
     def content_tree(self):
-        return {'type': self.type, 'slug': self.slug, 'title': self.title, 'source': str(self.source)}
+        attr_dict = {
+            'type': self.type,
+            'slug': self.slug,
+            'title': self.title,
+            'source': str(self.source),
+            'pdf_url': self.pdf_url,
+            'build_pdf': self.has_pdf,
+        }
+        return attr_dict
 
 class Html(Item):
     type = 'html'
     title = 'Untitled'
     template_name = 'chapter.html'
     has_sidebar = False
-    pdf_url = False
 
     @property
     def out_path(self):
@@ -209,7 +218,6 @@ class Part(Item):
     type = 'part'
     title = 'Untitled part'
     template_name = 'part.html'
-    pdf_url = False
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
@@ -253,6 +261,16 @@ class Document(Item):
         self.splitlevel = self.data.get('splitlevel', self.splitlevel)
         self.has_pdf = self.data.get('build_pdf', self.course.config['build_pdf'])
 
+    def recently_built(self):
+        if self.out_struct_file.exists():
+            logger.debug('Loading document structure from cache file: {}'.format(self.out_struct_file))
+            with open(str(self.out_struct_file), 'r') as f:
+                try:
+                    self.cached_struct = yaml.load(f, Loader=yaml.CLoader)
+                except AttributeError:
+                    self.cached_struct = yaml.load(f, Loader=yaml.Loader)
+        return super().recently_built() and self.cached_struct.get('splitlevel', -2) == self.splitlevel
+
     def generate_chapter_subitems(self):
         ext = self.source.suffix
 
@@ -260,31 +278,44 @@ class Document(Item):
             item.last_built = self.last_built
             item.has_sidebar = self.has_sidebar
             item.has_topbar = self.has_topbar
-            item.has_pdf = self.has_pdf
-            item.pdf_url = self.pdf_url
             item.source_modified = self.source_modified
             item.config_modified = self.config_modified
             for subitem in item.content:
                 copy_attrs(subitem)
 
-        def generate_item(itemdata, parent):
-            if itemdata['type'] == 'part':
-                item = Part(self.course, itemdata, parent)
-                for subitemdata in itemdata.get('content',[]):
-                    subitem = generate_item(subitemdata, item)
-                    copy_attrs(subitem)
-                    item.content.append(subitem)
-                return item
-            elif itemdata['type'] == 'html':
-                return Html(self.course, itemdata, parent)
-            else:
-                raise Exception("Error: unsupported item type '{}' in document structure cache: {}.".format(itemdata.type, self.out_struct_file))
-            return None
+        def setup_pdf_url(item, chapter):
+            replace_words = ["appendix", "bibliography"]
+            item.has_pdf = self.has_pdf
+            if item.has_pdf:
+                item_code = "{}.{}".format(chapter['counter'], chapter['ref'])
+                # Match by TOC code
+                tocitem = next((e for e in self.toc if e.code == item_code), None)
+
+                # Match other close TOC entries
+                for w in replace_words:
+                    if not tocitem:
+                        tocitem = next((e for e in self.toc if e.code == item_code.replace("chapter", w)), None)
+                    if not tocitem:
+                        tocitem = next((e for e in self.toc if e.code == item_code.replace("section", w)), None)
+
+                # Match by title
+                if not tocitem:
+                    tocitem = next((e for e in self.toc if e.title == item.title), None)
+
+                # Match by docstart
+                if not tocitem and not self.content:
+                    tocitem = next((e for e in self.toc), None)
+
+                if tocitem:
+                    item.data['pdf_url'] = str(self.out_path / Path('pdf') / Path(tocitem.slug).with_suffix('.pdf'))
+                else:
+                    item.data.pop('pdf_url', None)
+                    item.has_pdf = False
 
         def run_plastex_for_structure():
             """ Run plastex and use the result to generate a document structure cache"""
             plastex_output = self.course.load_latex_content(self)
-            last_item = {-2:self}
+            last_item = {-2: self}
             for fn, chapter in plastex_output.items():
                 chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
                 if chapter['html'].isspace():
@@ -300,6 +331,7 @@ class Document(Item):
                         i = i + 1
                     item = Part(self.course, chapter, parent)
                     copy_attrs(item)
+                    setup_pdf_url(item, chapter)
                     last_item[chapter['level']] = item
                     parent.content.append(item)
                 elif chapter['level'] == self.splitlevel:
@@ -310,7 +342,9 @@ class Document(Item):
                         i = i + 1
                     item = Html(self.course, chapter, self)
                     copy_attrs(item)
+                    setup_pdf_url(item, chapter)
                     parent.content.append(item)
+            self.has_pdf = False
             self.generated = True
             logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
             with open(self.out_struct_file, 'w') as f:
@@ -324,22 +358,13 @@ class Document(Item):
             """
             if self.generated:
                 return True
-            # Check that the document structure cache exists and is valid
-            if self.out_struct_file.exists() and self.recently_built():
-                logger.debug('Loading document structure from cache file: {}'.format(self.out_struct_file))
-                with open(str(self.out_struct_file), 'r') as f:
-                    try:
-                        struct = yaml.load(f, Loader=yaml.CLoader)
-                    except AttributeError:
-                        struct = yaml.load(f, Loader=yaml.Loader)
-                # Check that the splitlevel for this document has not changed
-                # If it has, we'll need to regenerate the document structure with plastex instead
-                if struct.get('splitlevel', -2) == self.splitlevel:
-                    self.content = [load_item(self.course, obj, self) for obj in struct.get('content', [])]
-                    for item in self.content:
-                           copy_attrs(item)
-                    self.generated = True
-                    return True
+            if self.recently_built():
+                self.content = [load_item(self.course, obj, self) for obj in self.cached_struct.get('content', [])]
+                for item in self.content:
+                    copy_attrs(item)
+                self.has_pdf = False
+                self.generated = True
+                return True
             self.last_built = None
             return False
 
@@ -359,7 +384,7 @@ class Document(Item):
         context.update({
             'part-slug': self.slug,
             'chapters': [item.get_context() for item in self.content if not item.is_hidden],
-            'pdf': '{}.pdf'.format(self.url),
+            'pdf': '{}.pdf'.format(self.url)
         })
         return context
 
