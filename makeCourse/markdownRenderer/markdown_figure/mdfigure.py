@@ -13,7 +13,7 @@ from copy import copy
 
 class FigureTreeprocessor(Treeprocessor):
     """ Figure Treeprocessor """
-    def __init__(self, md, figure_classes=None, img_classes=None ):
+    def __init__(self, md, figure_classes=None, img_classes=None):
         Treeprocessor.__init__(self, md)
         self._figure_classes = figure_classes
         self._img_classes = img_classes
@@ -43,13 +43,13 @@ class FigureTreeprocessor(Treeprocessor):
             figure.set("data-title", alttext)
             figure.tail = copy(image.tail)
             parent.remove(image)
-            if parent.tag=='p':
+            if parent.tag == 'p':
                 grandparent = parent_map[parent]
                 pidx = list(grandparent).index(parent)
-                afters = list(parent)[idx+1:]
-                grandparent.insert(pidx+1,figure)
+                afters = list(parent)[idx + 1:]
+                grandparent.insert(pidx + 1, figure)
                 if len(afters) or figure.tail:
-                    afters_parent = etree.Element('p',parent.attrib)
+                    afters_parent = etree.Element('p', parent.attrib)
                     afters_parent.text = figure.tail
                     figure.tail = None
                     for a in afters:
@@ -57,7 +57,7 @@ class FigureTreeprocessor(Treeprocessor):
                         afters_parent.append(a)
                         parent_map[a] = afters_parent
                         parent_map[afters_parent] = grandparent
-                    grandparent.insert(pidx+2,afters_parent)
+                    grandparent.insert(pidx + 2, afters_parent)
                 if not (len(list(parent)) or parent.text):
                     grandparent.remove(parent)
             else:
@@ -65,6 +65,7 @@ class FigureTreeprocessor(Treeprocessor):
             image.tail = markdown.util.AtomicString("")
             figure.append(image)
             moved_images.add(image)
+
 
 class FigureExtension(Extension):
     """

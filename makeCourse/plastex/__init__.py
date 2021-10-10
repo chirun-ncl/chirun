@@ -131,7 +131,7 @@ class PlastexRunner:
         if not item.course.args.veryverbose:
             plasTeX.Logging.disableLogging()
 
-        logger.debug("PlasTeX: "+str(item.source))
+        logger.debug("PlasTeX: " + str(item.source))
         root_dir = self.get_root_dir()
         outPath = item.temp_path()
         outPaux = self.temp_path().resolve()

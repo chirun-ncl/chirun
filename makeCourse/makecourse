@@ -1,37 +1,34 @@
 #!/usr/bin/env python
-
-import logging
-import plasTeX.Logging
-logging.setLoggerClass(logging.Logger)
-
 import argparse
 import datetime
-import errno
 import makeCourse.plastex
 import makeCourse.latex
 import os
-import re
 import shutil
-import sys
 import yaml
 from distutils.dir_util import copy_tree
-from makeCourse import *
+from makeCourse import mkdir_p
 import makeCourse
 from makeCourse.item import load_item
 from makeCourse import process
-from makeCourse.theme import *
+from makeCourse.theme import Theme
 from makeCourse import oembed
 from pathlib import Path
-from subprocess import Popen, PIPE
-import logging
 
+import logging
 logger = logging.getLogger('makeCourse')
 
 
 class MakeCourse:
 
     mathjax_url = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
-    processor_classes = [process.SlugCollisionProcess, process.LastBuiltProcess, process.PDFProcess, process.RenderProcess]
+    processor_classes = [
+        process.SlugCollisionProcess,
+        process.LastBuiltProcess,
+        process.PDFProcess,
+        process.NotebookProcess,
+        process.RenderProcess
+    ]
 
     def __init__(self, args):
         self.args = args
@@ -52,15 +49,15 @@ class MakeCourse:
                 logger.setLevel(logging.INFO)
                 logging.basicConfig(format='%(message)s')
 
-        TEXINPUTS = [os.path.dirname(os.path.realpath(makeCourse.__file__)),'']
-        TEXINPUTS += [os.environ.get('TEXINPUTS','')]
+        TEXINPUTS = [os.path.dirname(os.path.realpath(makeCourse.__file__)), '']
+        TEXINPUTS += [os.environ.get('TEXINPUTS', '')]
         os.environ['TEXINPUTS'] = ':'.join(TEXINPUTS)
 
         print("Running makecourse for directory {}".format(self.get_root_dir().resolve()))
 
     def get_root_dir(self):
-        """ 
-            The path to the course's source directory 
+        """
+            The path to the course's source directory
         """
         return Path(self.args.dir)
 
@@ -89,11 +86,11 @@ class MakeCourse:
             year = self.config.get('year')
             theme_path = self.force_theme.path if self.force_theme else self.theme.path
             if year:
-                root = self.config.get('root_url','/{base}/{code}/{year}/{theme}/').format(base=base,
-                        code=code, year=year, theme=theme_path)
+                root = (self.config.get('root_url', '/{base}/{code}/{year}/{theme}/')
+                        .format(base=base, code=code, year=year, theme=theme_path))
             else:
-                root = self.config.get('root_url','/{base}/{code}/{theme}/').format(base=base,
-                        code=code, theme=theme_path)
+                root = (self.config.get('root_url', '/{base}/{code}/{theme}/')
+                        .format(base=base, code=code, theme=theme_path))
             return root
 
     def make_relative_url(self, item, url):
@@ -105,19 +102,19 @@ class MakeCourse:
         """
         root = self.get_web_root()
         if self.args.absolute:
-            if url[:len(root)-1]!=root[1:]:
+            if url[:len(root) - 1] != root[1:]:
                 url = root + url
             else:
                 url = '/' + url
             return url
         else:
-            levels = len(item.out_file.parents)-1
-            if url[:len(root)-1]==root[1:]:
-                url = url[len(root)-1:]
+            levels = len(item.out_file.parents) - 1
+            if url[:len(root) - 1] == root[1:]:
+                url = url[len(root) - 1:]
             if self.force_theme:
-                return '/'.join(['..']*(levels+1))+'/'+self.force_theme.path+'/'+url
-            elif levels>0:
-                return '/'.join(['..']*levels)+'/'+url
+                return '/'.join(['..'] * (levels + 1)) + '/' + self.force_theme.path + '/' + url
+            elif levels > 0:
+                return '/'.join(['..'] * levels) + '/' + url
             else:
                 return url
 
@@ -233,17 +230,17 @@ class MakeCourse:
 
     def process(self):
         """
-            Process the course. 
+            Process the course.
             Each process visits all the items in the course structure and builds a different format.
         """
         logger.debug("Starting processing")
 
         processors = [p(self) for p in self.processor_classes]
         for processor in processors:
-            logger.info("Process: "+processor.name)
+            logger.info("Process: " + processor.name)
             for n in range(processor.num_runs):
-                if processor.num_runs>1:
-                    logger.info("Run {}/{}".format(n+1,processor.num_runs))
+                if processor.num_runs > 1:
+                    logger.info("Run {}/{}".format(n + 1, processor.num_runs))
                 for item in self.structure:
                     processor.visit(item)
 
@@ -288,7 +285,6 @@ class MakeCourse:
             'theme': self.theme.get_context(),
             'alt_themes': self.theme.alt_themes_contexts(),
         }
-            
 
     def make_directories(self):
         """
@@ -311,7 +307,7 @@ class MakeCourse:
         del manifest['args']
         del manifest['static_dir']
         with open(manifest_path, 'w') as f:
-            yaml.dump(manifest,f)
+            yaml.dump(manifest, f)
 
     def build_with_theme(self, theme):
         """
@@ -336,9 +332,10 @@ The web root directory is: {web_root}
         self.process()
         self.optimize()
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o','--output', dest='build_path', help='Set a directory to put build files in.\
+    parser.add_argument('-o', '--output', dest='build_path', help='Set a directory to put build files in.\
             Defaults to a directory named \'build\' in the current directory.')
     parser.add_argument('-v', dest='verbose', action='store_true', help='Verbose output.')
     parser.add_argument('-vv', dest='veryverbose', action='store_true', help='Very verbose output.')

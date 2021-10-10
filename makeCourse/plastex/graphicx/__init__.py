@@ -1,28 +1,31 @@
-import os,re
+import os
+import re
 import plasTeX
-from plasTeX import Macro,Token,Command
+from plasTeX import Macro, Token, Command
 from pathlib import Path
-from plasTeX.Packages.graphicx import *
+from plasTeX.Packages.graphicx import *  # noqa: F401, F403
 import plasTeX.Packages.graphicx
+
 
 class UnsupportedFiletypeException(Exception):
     pass
+
 
 class includegraphics(plasTeX.Packages.graphicx.includegraphics):
     altText = None
     tex = None
     args = '* [ options:gfxdict ] file:str'
 
-    def getImageSize(self,img):
+    def getImageSize(self, img):
         imgpath = Path(img)
         imgext = imgpath.suffix
-        PILext = ['.png','.jpg','.jpeg','.gif','.eps','.ps']
+        PILext = ['.png', '.jpg', '.jpeg', '.gif', '.eps', '.ps']
         PDFext = ['.pdf']
 
         if imgext in PILext:
             from PIL import Image
             w, h = Image.open(img).size
-            return (w,h)
+            return (w, h)
         elif imgext in PDFext:
             from PyPDF2 import PdfFileReader
             pdfImage = PdfFileReader(open(img, 'rb'))
@@ -37,17 +40,15 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
         res = Command.invoke(self, tex)
 
         f = self.attributes['file']
-        ext = self.ownerDocument.userdata.getPath(
-                      'packages/%s/extensions' % self.packageName,
-                      ['.png','.jpg','.jpeg','.gif','.pdf','.ps','.eps'])
-        paths = self.ownerDocument.userdata.getPath(
-                        'packages/%s/paths' % self.packageName, ['.'])
+        ext = self.ownerDocument.userdata.getPath('packages/%s/extensions' % self.packageName,
+                                                  ['.png', '.jpg', '.jpeg', '.gif', '.pdf', '.ps', '.eps'])
+        paths = self.ownerDocument.userdata.getPath('packages/%s/paths' % self.packageName, ['.'])
         img = None
 
         # Check for file using graphicspath
         for p in paths:
-            for e in ['']+ext:
-                fname = os.path.join(p,f+e)
+            for e in [''] + ext:
+                fname = os.path.join(p, f + e)
                 if os.path.isfile(fname):
                     img = os.path.abspath(fname)
                     break
@@ -56,9 +57,9 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
 
         # Check for file using kpsewhich
         if img is None:
-            for e in ['']+ext:
+            for e in [''] + ext:
                 try:
-                    img = os.path.abspath(tex.kpsewhich(f+e))
+                    img = os.path.abspath(tex.kpsewhich(f + e))
                     break
                 except (OSError, IOError):
                     pass

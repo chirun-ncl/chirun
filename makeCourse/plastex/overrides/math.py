@@ -1,12 +1,12 @@
-from plasTeX import Command, sourceChildren, sourceArguments, Environment, NewCommand
+from plasTeX import Command, sourceChildren, sourceArguments
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.LaTeX import Math
 from plasTeX.Base.TeX import Primitives
-from plasTeX.Tokenizer import Token, Tokenizer, EscapeSequence, Other
+from plasTeX.Tokenizer import Token
 from plasTeX.Logging import getLogger
-from plasTeX.Context import Context
 
 log = getLogger()
+
 
 # Overrive boxcommands inside MathJaX to avoid extra <script type="math/tex">
 class BoxCommand(Primitives.BoxCommand):
@@ -14,18 +14,33 @@ class BoxCommand(Primitives.BoxCommand):
         @property
         def source(self):
             if self.hasChildNodes():
-                return u'\(%s\)' % sourceChildren(self)
-            return '\('
-class hbox(BoxCommand): pass
-class vbox(BoxCommand): pass
+                return r'\(%s\)' % sourceChildren(self)
+            return r'\('
+
+
+class hbox(BoxCommand):
+    pass
+
+
+class vbox(BoxCommand):
+    pass
+
+
 class text(BoxCommand):
     args = 'self'
+
+
 class tag(BoxCommand):
     args = 'self'
+
+
 class mbox(BoxCommand):
     args = 'self'
+
+
 class TextCommand(BoxCommand):
     pass
+
 
 # Use <script type="math/tex"> to avoid problems with less than symbol in MathJax
 class math(Math.math):
@@ -34,16 +49,23 @@ class math(Math.math):
         if self.hasChildNodes():
             return r'<script type="math/tex">{}</script>'.format(sourceChildren(self))
         return ''
+
+
 Math.math = math
 
+
 class displaymath(Math.displaymath):
-     @property
-     def source(self):
-         return sourceChildren(self).strip()
+    @property
+    def source(self):
+        return sourceChildren(self).strip()
+
+
 Math.displaymath = displaymath
+
 
 class MathEnvironment(Math.Environment):
     mathMode = True
+
     @property
     def source(self):
         if self.ref:
@@ -55,29 +77,34 @@ class MathEnvironment(Math.Environment):
             return u"\\begin{{{0}}}{1}\\end{{{0}}}".format(
                 self.tagName,
                 sourceChildren(self).strip())
+
+
 Math.MathEnvironment = MathEnvironment
+
 
 class equation(MathEnvironment):
     blockType = True
     counter = 'equation'
+
+
 Math.equation = equation
+
 
 class EqnarrayStar(Math.EqnarrayStar):
     class ArrayCell(Math.EqnarrayStar.ArrayCell):
         @property
         def source(self):
             return '\\displaystyle {content}'.format(content=sourceChildren(self, par=False).strip())
+
     class ArrayRow(Array.ArrayRow):
         @property
         def source(self):
-            name = self.parentNode.nodeName or 'array'
-            escape = '\\'
             s = []
             argSource = sourceArguments(self.parentNode)
-            if not argSource: 
+            if not argSource:
                 argSource = ' '
             if self.ref:
-                s.append(r"\tag{%s}"%self.ref)
+                s.append(r"\tag{%s}" % self.ref)
             for cell in self:
                 s.append(sourceChildren(cell, par=not(self.parentNode.mathMode)))
                 if cell.endToken is not None:
@@ -85,7 +112,10 @@ class EqnarrayStar(Math.EqnarrayStar):
             if self.endToken is not None:
                 s.append(self.endToken.source)
             return ''.join(s)
+
+
 Math.EqnarrayStar = EqnarrayStar
+
 
 class eqnarray(EqnarrayStar):
     macroName = None
@@ -94,6 +124,7 @@ class eqnarray(EqnarrayStar):
     class EndRow(Array.EndRow):
         """ End of a row """
         counter = 'equation'
+
         def invoke(self, tex):
             res = Array.EndRow.invoke(self, tex)
             res[1].ref = self.ref
@@ -106,7 +137,10 @@ class eqnarray(EqnarrayStar):
             return res
         res[1].ref = self.ref
         return res
+
+
 Math.eqnarray = eqnarray
+
 
 class MathShift(Command):
     """
@@ -149,4 +183,6 @@ class MathShift(Command):
         self.ownerDocument.context.push(current)
 
         return [current]
+
+
 Primitives.MathShift = MathShift

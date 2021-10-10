@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class LatexSplitter(object):
-    toc_match = re.compile(r'\\contentsline\s*\{(\w+)\}\{(\\numberline\s*\{([\w.-]+)\})*([^\}]+)\}\{(\d+)\}\{([\w*]+\.[\w.-]+)\}')
+    toc_match = re.compile(r'\\contentsline\s*\{(\w+)\}\{(\\numberline\s*\{([\w.-]+)\})*([^\}]+)\}\{(\d+)\}\{([\w*]+\.[\w.-]+)\}')  # noqa: E501
     pdfset_dir = None
 
     class TocEntry:
@@ -35,10 +35,15 @@ class LatexSplitter(object):
             self.level = self.levels[levelname]
 
         def __repr__(self):
+            rep = "<TocEntry: (code: {}, level: {}".format(self.code, self.level)
             if self.pdf_page:
-                return "<TocEntry: (code: {}, level: {}, page: {} [pdf {}], title: {})>".format(self.code, self.level, self.page, self.pdf_page + 1, self.title)
+                rep += ", page: {} [pdf {}]".format(self.page, self.pdf_page + 1)
             else:
-                return "<TocEntry: (code: {}, level: {}, page: {}, title: {})>".format(self.code, self.level, self.page, self.title)
+                rep += ", page: {}".format(self.page)
+            if self.title:
+                rep += ", title: {}".format(self.title)
+            rep += ")>"
+            return rep
 
     class PDFPageLookup:
         def __init__(self, in_path):
@@ -79,11 +84,10 @@ class LatexSplitter(object):
                 if entry.code:
                     entry.pdf_page = self.dests[entry.code]
 
-    def __init__(self, in_path, aux_filename, wd='.'):
+    def __init__(self, in_path, aux_filename):
         self.in_path = in_path
         self.aux_filename = aux_filename.with_suffix('.toc')
         self.toc = []
-        self.wd = wd
 
     def toc_from_aux(self, level):
         if self.toc:
@@ -134,19 +138,25 @@ class LatexSplitter(object):
                     entry.slug = slugify(entry.title or self.in_path.with_suffix('').name, n)
                     pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
                     n = n + 1
-                if idx+1 == len(self.toc):
+                if idx + 1 == len(self.toc):
                     end_pg = reader.getNumPages() - 1
                 else:
-                    end_pg = max(entry.pdf_page, self.toc[idx+1].pdf_page - 1)
+                    end_pg = max(entry.pdf_page, self.toc[idx + 1].pdf_page - 1)
 
                 try:
-                    pdftk_args = [str(self.in_path), "cat", "{}-{}".format(entry.pdf_page+1, end_pg+1), "output", str(pdfset_file)]
-                    PdftkRunner(pdftk_args, self.wd).exec()
+                    pdftk_args = [
+                        str(self.in_path),
+                        "cat", "{}-{}".format(entry.pdf_page + 1, end_pg + 1),
+                        "output",
+                        str(pdfset_file)
+                    ]
+                    PdftkRunner(pdftk_args).exec()
                 except FileNotFoundError as e:
                     logger.warning(e)
                     # Try an alternative implementation with PyPDF2
                     # This seems to choke on certain PDFs, so we use it only as a backup
-                    logger.warning("Warning: It looks like the pdftk command might be missing... Please install pdftk if possible in your environment.")
+                    logger.warning('Warning: It looks like the pdftk command might be missing...'
+                                   'Please install pdftk if possible in your environment.')
                     logger.warning("Trying to continue using PyPDF2 instead...")
                     writer = PyPDF2.PdfFileWriter()
                     for pg in range(entry.pdf_page, end_pg + 1):
@@ -167,7 +177,7 @@ class LatexRunner(object):
     class RunnerException(Exception):
         pass
 
-    def __init__(self, filename, wd='.'):
+    def __init__(self, filename, wd=Path('.')):
         self.wd = wd
         self.filename = filename
         self.args = ['-halt-on-error', '-recorder', str(filename)]
@@ -184,7 +194,8 @@ class LatexRunner(object):
         out, err = proc.communicate()
         if proc.returncode != 0:
             logger.error(err)
-            raise self.RunnerException("Error: Something went wrong running: {}\n\n{}".format(' '.join(cmd), ''.join(stdout_tail)))
+            raise self.RunnerException("Error: Something went wrong running: {}\n\n{}"
+                                       .format(' '.join(cmd), ''.join(stdout_tail)))
 
     def clean_aux(self):
         logger.debug('Cleaning up pdflatex auxiliary files.')
@@ -213,7 +224,7 @@ class BibtexRunner(LatexRunner):
     compiler = 'bibtex'
     args = None
 
-    def __init__(self, filename, wd='.'):
+    def __init__(self, filename, wd=Path('.')):
         self.wd = wd
         self.args = [str(filename.with_suffix(''))]
 
@@ -222,7 +233,7 @@ class PdftkRunner(LatexRunner):
     compiler = 'pdftk'
     args = None
 
-    def __init__(self, args, wd='.'):
+    def __init__(self, args, wd=Path('.')):
         self.wd = wd
         self.args = args
 
@@ -285,7 +296,7 @@ class PDFLatex(object):
                 LatexRunner(self.item.in_file, self.in_dir).clean_aux()
             return None
         self.compile()
-        splitter = LatexSplitter(self.in_path, self.aux_filename, self.in_dir)
+        splitter = LatexSplitter(self.in_path, self.aux_filename)
         splitter.split(self.item.splitlevel)
         self.copy_pdfset(splitter.pdfset_dir)
         logger.debug('Cleanup PDF set output at: {}'.format(splitter.pdfset_dir))

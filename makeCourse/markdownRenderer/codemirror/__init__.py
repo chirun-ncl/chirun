@@ -9,25 +9,28 @@ def codemirror_formatter(source, language, css_class, options, md):
         language = options['lang'].lower()
 
     html = fence_code_format(source, language, 'cm-block', options, md)
-    soup = BeautifulSoup(html,features="lxml")
+    soup = BeautifulSoup(html, features="lxml")
     pretag = soup.find("pre")
 
     if language == 'matlab':
         pretag["data-language"] = 'octave'
     else:
         pretag["data-language"] = language
-    
+
     pretag['data-uuid'] = str(uuid.uuid4())
     return pretag
+
 
 def editable_formatter(source, language, css_class, options, md):
     pretag = codemirror_formatter(source, language, css_class, options, md)
     return str(pretag)
 
+
 def runnable_formatter(source, language, css_class, options, md):
     pretag = codemirror_formatter(source, language, css_class, options, md)
     pretag["data-runnable"] = 'true'
     return str(pretag)
+
 
 def output_formatter(source, language, css_class, options, md):
     if 'class' in options:
@@ -37,6 +40,7 @@ def output_formatter(source, language, css_class, options, md):
     html = fence_code_format(source, language, cls, options, md)
     return html
 
+
 def runnable_validator(language, options):
     """Options validator for runnable codemirror code blocks."""
     okay = True
@@ -44,10 +48,12 @@ def runnable_validator(language, options):
         okay = False
     return okay
 
+
 def editable_validator(language, options):
     """Options validator for codemirror code blocks."""
     okay = True
     return okay
+
 
 def output_validator(language, options):
     """Options validator for codemirror code blocks."""

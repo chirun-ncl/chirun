@@ -1,25 +1,22 @@
 import logging
-import shutil
-import os
-import re
-from . import mkdir_p, slugify
+from . import slugify
 from .render import Renderer, SlidesRenderer
 from .latex import PDFLatex
-from pathlib import Path
 import asyncio
 
 logger = logging.getLogger(__name__)
 
+
 class ItemProcess(object):
-    """ 
-        Performs a process on each item in the course structure. 
+    """
+        Performs a process on each item in the course structure.
         Visits each item in a depth-first search.
     """
 
     name = ''
     num_runs = 1
 
-    def __init__(self,course):
+    def __init__(self, course):
         self.course = course
         self.renderer = Renderer(self.course)
         self.slides_renderer = SlidesRenderer(self.course)
@@ -27,11 +24,11 @@ class ItemProcess(object):
     def visit(self, item):
         if item.is_hidden:
             return
-        fn = getattr(self,'visit_'+item.type)
+        fn = getattr(self, 'visit_' + item.type)
         return fn(item)
 
     def __getattr__(self, name):
-        if name[:6]=='visit_':
+        if name[:6] == 'visit_':
             return self.visit_default
         else:
             raise AttributeError
@@ -44,14 +41,15 @@ class ItemProcess(object):
         for subitem in item.content:
             self.visit(subitem)
 
+
 class SlugCollisionProcess(ItemProcess):
     name = 'Checking for duplicated filenames or paths'
     slugs = {}
 
-    def visit(self,item):
+    def visit(self, item):
         logger.debug("Checking slug: {}".format(item.slug))
 
-        if not self.course.theme.path in self.slugs.keys():
+        if self.course.theme.path not in self.slugs.keys():
             self.slugs[self.course.theme.path] = []
 
         n = 1
@@ -63,6 +61,7 @@ class SlugCollisionProcess(ItemProcess):
 
         self.slugs[self.course.theme.path].append(item.slug)
         super().visit(item)
+
 
 class LastBuiltProcess(ItemProcess):
     name = 'Establish when each item was last built'
@@ -80,13 +79,14 @@ class LastBuiltProcess(ItemProcess):
     def visit_url(self, item):
         item.last_built = None
 
+
 class RenderProcess(ItemProcess):
 
     name = 'Render items to HTML'
     num_runs = 2
 
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def visit_default(self, item):
         self.course.force_relative_build = False
@@ -113,10 +113,11 @@ class RenderProcess(ItemProcess):
             item.has_slides = True
             self.slides_renderer.render_item(item)
 
+
 class PDFProcess(ItemProcess):
 
     name = 'Make PDFs'
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.num_runs = self.course.config['num_pdf_runs']
@@ -158,3 +159,18 @@ class PDFProcess(ItemProcess):
             PDFLatex(self.course, item).process_pdf()
         elif ext == '.md':
             asyncio.get_event_loop().run_until_complete(self.renderer.to_pdf(item))
+
+
+class NotebookProcess(ItemProcess):
+
+    name = 'Render items to Jupyter Notebook'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def visit_default(self, item):
+        pass
+
+    def visit_notebook(self, item):
+        logger.warning('Notebook!')
+        print('Do notebook!')

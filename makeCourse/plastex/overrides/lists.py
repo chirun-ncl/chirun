@@ -1,19 +1,16 @@
-from plasTeX import Command, sourceChildren, sourceArguments, Environment
+from plasTeX import Environment
 from plasTeX import encoding
-from plasTeX.Base.LaTeX import Math, Lists
-from plasTeX.Base.LaTeX.Arrays import Array
-from plasTeX.Base.TeX import Primitives
-from plasTeX.Tokenizer import Token, Tokenizer, EscapeSequence, Other
+from plasTeX.Base.LaTeX import Lists
 from plasTeX.Logging import getLogger
-from plasTeX.Context import Context
 import re
 
 log = getLogger()
 
+
 class List(Lists.List):
     def digest(self, tokens):
         if self.macroMode != Environment.MODE_END:
-        # Drop any whitespace before the first item
+            # Drop any whitespace before the first item
             for tok in tokens:
                 if tok.isElementContentWhitespace:
                     continue
@@ -29,16 +26,22 @@ class List(Lists.List):
                 tokens.push(tok)
                 break
         Environment.digest(self, tokens)
+
+
 Lists.List = List
+
 
 class description(List):
     pass
 
+
 class trivlist(List):
     pass
 
+
 class itemize(List):
     pass
+
 
 class ConfigurableList(List):
     macroName = 'list'
@@ -47,7 +50,7 @@ class ConfigurableList(List):
 
 def numToRoman(x: int) -> str:
     n, number = divmod(x, 1000)
-    roman = "M"*n
+    roman = "M" * n
     if number >= 900:
         roman = roman + "CM"
         number = number - 900
@@ -86,6 +89,7 @@ def numToRoman(x: int) -> str:
         number = number - 1
     return roman
 
+
 class enumerate_(List):
     macroName = 'enumerate'
     args = '[ type:str ]'
@@ -93,11 +97,11 @@ class enumerate_(List):
     def term(self, position):
         alph = encoding.stringletters()[position - 1]
         if self.listType:
-            t = re.sub(r'(?<!{)I(?!})',numToRoman(position), self.listType)
-            t = re.sub(r'(?<!{)i(?!})',numToRoman(position).lower(), t)
-            t = re.sub(r'(?<!{)1(?!})',str(position), t)
-            t = re.sub(r'(?<!{)A(?!})',alph.upper(), t)
-            t = re.sub(r'(?<!{)a(?!})',alph.lower(), t)
+            t = re.sub(r'(?<!{)I(?!})', numToRoman(position), self.listType)
+            t = re.sub(r'(?<!{)i(?!})', numToRoman(position).lower(), t)
+            t = re.sub(r'(?<!{)1(?!})', str(position), t)
+            t = re.sub(r'(?<!{)A(?!})', alph.upper(), t)
+            t = re.sub(r'(?<!{)a(?!})', alph.lower(), t)
         elif self.listDepth == 2:
             t = '({})'.format(alph.lower())
         elif self.listDepth == 3:
@@ -109,7 +113,7 @@ class enumerate_(List):
         return t
 
     def invoke(self, tex):
-        Lists.List.invoke(self,tex)
+        Lists.List.invoke(self, tex)
         self.listType = None
         if 'type' in self.attributes:
             self.listType = self.attributes['type']

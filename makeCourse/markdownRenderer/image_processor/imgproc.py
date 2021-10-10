@@ -1,14 +1,11 @@
-import markdown
 from markdown.treeprocessors import Treeprocessor
 from markdown import Extension
-from markdown.util import etree
 import filecmp
 import logging
 import subprocess
 import shlex
-from copy import copy
 from shutil import copyfile
-from pathlib import Path, PurePath
+from pathlib import Path
 from makeCourse import mkdir_p
 
 logger = logging.getLogger(__name__)
@@ -22,7 +19,7 @@ class ImageTreeprocessor(Treeprocessor):
         self.image_id = 0
 
     def pdf2png(self, src, dst):
-        subprocess.run(shlex.split('pdftoppm -png -r 150 -singlefile {} {}'.format(src,dst)))
+        subprocess.run(shlex.split('pdftoppm -png -r 150 -singlefile {} {}'.format(src, dst)))
 
     def run(self, root):
         moved_images = set()
@@ -31,7 +28,7 @@ class ImageTreeprocessor(Treeprocessor):
             if image in moved_images:
                 continue
             src = image.attrib["src"]
-            if src[0] != '/' and not src.startswith(('http://','https://','ftp://')):
+            if src[0] != '/' and not src.startswith(('http://', 'https://', 'ftp://')):
                 imageFile = self._item_sourcedir / src
                 if imageFile.exists():
                     # Copy relative imagefile to build directory

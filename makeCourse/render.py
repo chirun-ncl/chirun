@@ -2,7 +2,6 @@ import logging
 import datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 from . import mkdir_p
-import asyncio
 import re
 from pyppeteer import launch
 
@@ -13,10 +12,13 @@ async def get_browser():
     browser = None
     attempts = 0
 
-    while browser is None and attempts<20:
+    while browser is None and attempts < 20:
         try:
-            browser = await launch({'headless': True, 'args': ['--no-sandbox', '--disable-setuid-sandbox', '--single-process']})
-        except:
+            browser = await launch({
+                'headless': True,
+                'args': ['--no-sandbox', '--disable-setuid-sandbox', '--single-process']
+            })
+        except Exception:
             logger.info('Warning: Browser failed to start. Trying again...({})'.format(str(attempts)))
             attempts = attempts + 1
 
@@ -25,6 +27,7 @@ async def get_browser():
 
     return browser
 
+
 class Renderer(object):
     def __init__(self, course):
         self.course = course
@@ -32,17 +35,19 @@ class Renderer(object):
             loader=FileSystemLoader(str(self.course.theme.template_path)),
             autoescape=select_autoescape(['html'])
         )
+
         @contextfilter
         def url_filter(context, url, theme=False):
             self.course.force_theme = theme
             if not re.search(r'^[^:]+:\/\/', url):
-                url = self.course.make_relative_url(context['item'],url)
+                url = self.course.make_relative_url(context['item'], url)
             self.course.force_theme = False
             return url
         self.env.filters['url'] = url_filter
+
         @contextfilter
         def static_url(context, url):
-            return url_filter(context, 'static/'+url)
+            return url_filter(context, 'static/' + url)
         self.env.filters['static_url'] = static_url
 
     def render_template(self, template_file, context):
@@ -53,7 +58,6 @@ class Renderer(object):
             raise e
         return template.render(context)
 
-
     def render_item(self, item):
         if item.recently_built():
             return
@@ -63,10 +67,11 @@ class Renderer(object):
         template_file = item.template_name
         if not (item.source.name == ''):
             logger.info("Rendering: {item}".format(item=item.source))
-        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,\
-                rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute else ''))
+        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,
+                     rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
+                     else ''))
         html = self.to_html(item, template_file)
-        with open(str(outPath),'w', encoding='utf-8') as f:
+        with open(str(outPath), 'w', encoding='utf-8') as f:
             f.write(html)
 
     def to_html(self, item, template_file):
@@ -81,8 +86,8 @@ class Renderer(object):
         if item.recently_built():
             return
         self.render_item(item)
-        headerHTML= self.to_html(item, item.template_pdfheader)
-        footerHTML= self.to_html(item, item.template_pdffooter)
+        headerHTML = self.to_html(item, item.template_pdfheader)
+        footerHTML = self.to_html(item, item.template_pdffooter)
 
         logger.info("Printing {} to PDF".format(item))
         absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.out_file
@@ -91,11 +96,12 @@ class Renderer(object):
         browser = await get_browser()
         page = await browser.newPage()
         await page.goto('file://{}'.format(absHTMLPath))
-        await page.waitForFunction('window.mathjax_is_loaded == 1', options = {'timeout':10000});
-        await page.pdf({'path': outPath, 'format': 'A4', 'displayHeaderFooter': True, \
-                'headerTemplate': headerHTML, 'footerTemplate': footerHTML, \
-                'printBackground': True})
+        await page.waitForFunction('window.mathjax_is_loaded == 1', options={'timeout': 10000})
+        await page.pdf({'path': outPath, 'format': 'A4', 'displayHeaderFooter': True,
+                        'headerTemplate': headerHTML, 'footerTemplate': footerHTML,
+                        'printBackground': True})
         await browser.close()
+
 
 class SlidesRenderer(Renderer):
     def __init__(self, course):
@@ -105,10 +111,11 @@ class SlidesRenderer(Renderer):
         super().render_item(item)
         outPath = self.course.get_build_dir() / item.out_slides
         template_file = item.template_slides
-        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,\
-                rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute else ''))
+        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,
+                     rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
+                     else ''))
         html = self.to_html(item, template_file)
-        with open(str(outPath),'w', encoding='utf-8') as f:
+        with open(str(outPath), 'w', encoding='utf-8') as f:
             f.write(html)
 
     async def to_pdf(self, item):
@@ -116,13 +123,15 @@ class SlidesRenderer(Renderer):
             return
         self.render_item(item)
         logger.info("Printing {} as PDF".format(item))
-        absHTMLPath = self.course.get_root_dir().resolve() / self.course.get_build_dir() / item.named_out_file.with_suffix('.slides.html')
+        absHTMLPath = (self.course.get_root_dir().resolve()
+                       / self.course.get_build_dir()
+                       / item.named_out_file.with_suffix('.slides.html'))
         outPath = self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
         logger.debug('    {src} => {dest}'.format(src=item.title, dest=outPath))
         browser = await get_browser()
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
         await page.setViewport({'width': 1366, 'height': 768})
-        await page.waitForFunction('Reveal.isReady() && window.mathjax_is_loaded == 1', options = {'timeout':10000});
+        await page.waitForFunction('Reveal.isReady() && window.mathjax_is_loaded == 1', options={'timeout': 10000})
         await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
         await browser.close()

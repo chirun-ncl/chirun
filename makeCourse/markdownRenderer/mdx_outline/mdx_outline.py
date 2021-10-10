@@ -113,15 +113,16 @@ Copyright
 
 All rights reserved.
 
-This software is released under the modified BSD License. 
+This software is released under the modified BSD License.
 See LICENSE.md for details.
 
 
 Further credits
 ---------------
 
-This is a rewrite of the 
-[mdx_addsection extension](http://git.constantvzw.org/?p=aa.core.git;a=blob;f=aacore/mdx_addsections.py;h=969e520a42b0018a2c4b74889fecc83a7dd7704a;hb=HEAD) 
+This is a rewrite of the
+[mdx_addsection extension](http://git.constantvzw.org/?p=aa.core.git;a=blob;f=aacore/mdx_addsections.py;
+h=969e520a42b0018a2c4b74889fecc83a7dd7704a;hb=HEAD)
 we've written for [active archives](http://activearchives.org). The first
 version had a bug with non hierachical heading structures. This is no longer a
 problem: a couple of weeks ago, Jesse Dhillon pushed to github a similar plugin
@@ -148,8 +149,8 @@ __version__ = "1.3.0"
 class OutlineProcessor(Treeprocessor):
     def process_nodes(self, node):
         s = []
-        pattern = re.compile('^h(\d)')
-        escape_pattern = re.compile('^---+\s*$')
+        pattern = re.compile(r'^h(\d)')
+        escape_pattern = re.compile(r'^---+\s*$')
         wrapper_cls = self.wrapper_cls
 
         for child in list(node):

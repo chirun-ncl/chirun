@@ -8,6 +8,7 @@ from .filter import burnInExtras
 
 logger = logging.getLogger(__name__)
 
+
 def load_item(course, data, parent=None):
     try:
         item_type = data['type']
@@ -20,6 +21,7 @@ def load_item(course, data, parent=None):
         raise Exception("Unknown item type {}".format(data['type']))
 
     return constructor(course, data, parent)
+
 
 class Item(object):
     template_name = 'item.html'
@@ -147,7 +149,8 @@ class Item(object):
                 with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
                     mdContents = f.read()
                 if mdContents[:3] == '---':
-                    logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'.format(self.source))
+                    logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'
+                                .format(self.source))
                     mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
                 body = mdContents
             elif ext == '.tex':
@@ -184,7 +187,7 @@ class Item(object):
         """
             Path to a temporary directory which can store files produced while processing this item
         """
-        return self.course.temp_path(self.url.replace('/','-'))
+        return self.course.temp_path(self.url.replace('/', '-'))
 
     def content_tree(self):
         attr_dict = {
@@ -196,6 +199,7 @@ class Item(object):
             'build_pdf': self.has_pdf,
         }
         return attr_dict
+
 
 class Html(Item):
     type = 'html'
@@ -213,6 +217,7 @@ class Html(Item):
     @property
     def out_file(self):
         return self.out_path / self.in_file
+
 
 class Part(Item):
     type = 'part'
@@ -240,6 +245,7 @@ class Part(Item):
         attr_dict = super().content_tree()
         attr_dict['content'] = [item.content_tree() for item in self.content]
         return attr_dict
+
 
 class Document(Item):
     type = 'document'
@@ -348,7 +354,7 @@ class Document(Item):
             self.generated = True
             logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
             with open(self.out_struct_file, 'w') as f:
-                yaml.dump(self.content_tree(),f)
+                yaml.dump(self.content_tree(), f)
 
         def load_cached_structure():
             """
@@ -372,12 +378,13 @@ class Document(Item):
             if not load_cached_structure():
                 run_plastex_for_structure()
         else:
-            raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}.".format(self.title, self.source))
+            raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}"
+                            .format(self.title, self.source))
 
     @property
     def plastex_filename_rules(self):
         fnstr = self.out_path / '[$id, $title(4), $num(4)]'
-        return '%s %s'%(self.out_file, fnstr)
+        return '{} {}'.format(self.out_file, fnstr)
 
     def get_context(self):
         context = super().get_context()
@@ -393,6 +400,7 @@ class Document(Item):
         attr_dict['content'] = [item.content_tree() for item in self.content]
         attr_dict['splitlevel'] = self.splitlevel
         return attr_dict
+
 
 class Url(Item):
     type = 'url'
@@ -449,11 +457,13 @@ class Chapter(Item):
         else:
             return [item for item in self.course.structure if item.type != 'introduction']
 
+
 class Exam(Chapter):
     type = 'exam'
     title = 'Untitled exam'
     template_name = 'exam.html'
     has_sidebar = False
+
 
 class Slides(Chapter):
     type = 'slides'
@@ -475,11 +485,12 @@ class Slides(Chapter):
 
     @property
     def out_slides(self):
-      return self.named_out_file.with_suffix('.slides.html')
+        return self.named_out_file.with_suffix('.slides.html')
 
     @property
     def slides_url(self):
-      return str(self.out_slides)
+        return str(self.out_slides)
+
 
 class Introduction(Part):
     type = 'introduction'
@@ -496,13 +507,15 @@ class Introduction(Part):
 
     def get_context(self):
         context = super().get_context()
-        context['links'] = [s.get_context() for s in self.course.structure if s.type != 'introduction' and not s.is_hidden]
+        context['links'] = [s.get_context() for s in self.course.structure
+                            if s.type != 'introduction' and not s.is_hidden]
 
         struct = [s for s in self.course.structure if s.type != 'introduction' and not s.is_hidden]
         if len(struct) > 0 and struct[0].type == 'part':
             context['isPart'] = 1
 
         return context
+
 
 class Standalone(Chapter):
     type = 'standalone'
@@ -511,6 +524,11 @@ class Standalone(Chapter):
     out_file = Path('index.html')
     url = ''
     is_index = True
+
+
+class Notebook(Chapter):
+    type = 'notebook'
+
 
 item_types = {
     'introduction': Introduction,
@@ -522,6 +540,5 @@ item_types = {
     'html': Html,
     'slides': Slides,
     'exam': Exam,
+    'notebook': Notebook,
 }
-
-

@@ -1,7 +1,8 @@
-from plasTeX import Command, Environment, sourceChildren
+from plasTeX import sourceChildren
 from plasTeX.Base.LaTeX import Math
 from plasTeX.Base.TeX.Primitives import BoxCommand
 # mhchem package - mostly handled by mathjax
+
 
 # Overrive boxcommands inside MathJaX to avoid extra <script type="math/tex">
 class MHBoxCommand(BoxCommand):
@@ -9,11 +10,13 @@ class MHBoxCommand(BoxCommand):
         @property
         def source(self):
             if self.hasChildNodes():
-                return u'$%s$' % sourceChildren(self)
+                return r'$%s$' % sourceChildren(self)
             return '$'
+
 
 class ce(MHBoxCommand):
     args = 'self'
+
 
 class pu(MHBoxCommand):
     args = 'self'

@@ -1,18 +1,20 @@
-#!/usr/bin/env python
-
-import subprocess, shlex
-import os, shutil, re
+import subprocess
+import shlex
+import os
+import shutil
+import re
 from plasTeX.Renderers.PageTemplate import Renderer as _Renderer
 from plasTeX.Renderers import Renderer as BaseRenderer
 from plasTeX.Logging import getLogger
 
 log = getLogger()
 
+
 class HTML5(_Renderer):
     """ Renderer for HTML5 documents, heavily copied from XHTML renderer """
 
     fileExtension = '.html'
-    imageTypes = ['.svg', '.png','.jpg','.jpeg','.gif']
+    imageTypes = ['.svg', '.png', '.jpg', '.jpeg', '.gif']
     vectorImageTypes = ['.svg']
 
     def loadTemplates(self, document):
@@ -20,16 +22,13 @@ class HTML5(_Renderer):
         want to override some templates and handles extra css and javascript."""
 
         try:
-            import jinja2
+            import jinja2  # noqa: F401
         except ImportError:
             log.error('Jinja2 is not available, hence the HTML5 renderer cannot be used.')
 
         _Renderer.loadTemplates(self, document)
         rendererdata = document.rendererdata['html5'] = dict()
         config = document.config
-
-        rendererDir = os.path.dirname(__file__)
-
         srcDir = document.userdata['working-dir']
         buildDir = os.getcwd()
 
@@ -57,21 +56,18 @@ class HTML5(_Renderer):
             pass
 
         # Start building the js list for use by the layout template
-        if (config['html5']['use-theme-js'] and 
-                config['general']['copy-theme-extras']):
-            rendererdata['js'] = sorted(
-                    os.listdir(os.path.join(self.loadedTheme, 'js')))
+        if (config['html5']['use-theme-js'] and config['general']['copy-theme-extras']):
+            rendererdata['js'] = sorted(os.listdir(os.path.join(self.loadedTheme, 'js')))
         else:
             rendererdata['js'] = []
 
         for resrc in document.packageResources:
             # Next line may load templates or change
             # document.rendererdata['html5'] or copy some files to buildDir
-            resrc.alter(
-                    renderer=self,
-                    rendererName='html5',
-                    document=document,
-                    target=buildDir)
+            resrc.alter(renderer=self,
+                        rendererName='html5',
+                        document=document,
+                        target=buildDir)
 
         # Last loaded files (hence overriding everything else) come from user
         # configuration
@@ -99,10 +95,9 @@ class HTML5(_Renderer):
 
         filters = document.config['html5']['filters']
         for filter_ in filters:
-            proc = subprocess.Popen(
-                    shlex.split(filter_),
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE)
+            proc = subprocess.Popen(shlex.split(filter_),
+                                    stdin=subprocess.PIPE,
+                                    stdout=subprocess.PIPE)
             output, output_err = proc.communicate(s.encode(encoding="utf-8"))
             if not output_err:
                 s = output.decode(encoding="utf-8")

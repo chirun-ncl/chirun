@@ -10,7 +10,7 @@ class Theme(object):
         self.hidden = False
         self.name = name
         self.source = source
-        keys = ('title','path','hidden')
+        keys = ('title', 'path', 'hidden')
         for key in keys:
             if key in theme_data:
                 setattr(self, key, theme_data[key])
@@ -47,4 +47,3 @@ class Theme(object):
             copy_tree(str(srcPath), str(dstPath))
         except Exception:
             logger.warning("Warning: Problem copying the theme's static files")
-

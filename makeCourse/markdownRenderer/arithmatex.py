@@ -19,15 +19,15 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from pymdownx import arithmatex
-from pymdownx import util
 import xml.etree.ElementTree as etree
 from markdown import util as md_util
 
-arithmatex.RE_SMART_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?<!\$)(?=\$)|(?<!\\)(?<!\$)(\$)(?!\s)((?:\\.|[^\\$])+?)(?<!\s)(?<!\$)(?:\$))'
+arithmatex.RE_SMART_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?<!\$)(?=\$)|(?<!\\)(?<!\$)(\$)(?!\s)((?:\\.|[^\\$])+?)(?<!\s)(?<!\$)(?:\$))'  # noqa: E501
 arithmatex.RE_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?<!\$)(?=\$)|(?<!\\)(?<!\$)(\$)((?:\\.|[^\\$])+?)(?<!\$)(?:\$))'
 arithmatex.RE_DOUBLE_DOLLAR_INLINE = r'(?:(?<!\\)((?:\\{2})+)(?=\$\$)|(?<!\\)(\$\$)((?:\\.|[^\\$])+?)(?:\$\$))'
 arithmatex.RE_BRACKET_INLINE_BLOCK = r'(?:(?<!\\)((?:\\{2})+?)(?=\\\[)|(?<!\\)(\\\[)((?:\\[^\]]|[^\\])+?)(?:\\\]))'
 arithmatex.RE_TEX_INLINE_BLOCK = r'(\\begin\{(?P<env>[a-z]+\*?)\}(?:\\.|[^\\])+?\\end\{(?P=env)\})'
+
 
 def _block_mathjax_format(math, preview=False):
     """Block math formatter."""
@@ -41,6 +41,7 @@ def _block_mathjax_format(math, preview=False):
         el = etree.Element('script', {'type': 'math/tex; mode=display'})
         el.text = md_util.AtomicString(math)
     return el
+
 
 class InlineBlockArithmatexPattern(arithmatex.InlineArithmatexPattern):
     def handleMatch(self, m, data):
@@ -64,6 +65,7 @@ class InlineBlockArithmatexPattern(arithmatex.InlineArithmatexPattern):
             return arithmatex.fence_generic_format(math, wrap=self.wrap), m.start(0), m.end(0)
         else:
             return _block_mathjax_format(math, self.preview), m.start(0), m.end(0)
+
 
 class ArithmatexExtension(arithmatex.ArithmatexExtension):
     def extendMarkdown(self, md):

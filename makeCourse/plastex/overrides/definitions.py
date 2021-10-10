@@ -1,12 +1,10 @@
-from plasTeX import Command, sourceChildren, sourceArguments, Environment, NewCommand
-from plasTeX.Base.LaTeX import Math, Lists
-from plasTeX.Base.LaTeX.Arrays import Array
-from plasTeX.Base.TeX import Primitives
-from plasTeX.Tokenizer import Token, Tokenizer, EscapeSequence, Other
+from plasTeX import NewCommand
+from plasTeX.Tokenizer import Tokenizer
 from plasTeX.Logging import getLogger
 from plasTeX.Context import Context
 
 log = getLogger()
+
 
 def newcommand(self, name, nargs=0, definition=None, opt=None):
     if nargs is None:
@@ -19,11 +17,13 @@ def newcommand(self, name, nargs=0, definition=None, opt=None):
     if isinstance(opt, str):
         opt = [x for x in Tokenizer(opt, self)]
 
-    newclass = type(name, (NewCommand,),
-                   {'nargs':nargs, 'opt':opt, 'definition':definition})
+    newclass = type(name, (NewCommand,), {'nargs': nargs, 'opt': opt, 'definition': definition})
 
     self.addGlobal(name, newclass)
+
+
 Context.newcommand = newcommand
+
 
 def newenvironment(self, name, nargs=0, def_before=None, def_after=None, opt=None):
     if nargs is None:
@@ -39,12 +39,12 @@ def newenvironment(self, name, nargs=0, def_before=None, def_after=None, opt=Non
         opt = [x for x in Tokenizer(opt, self)]
 
     # Begin portion
-    newclass = type(name, (NewCommand,),
-                   {'nargs':nargs, 'opt':opt, 'definition':def_before})
+    newclass = type(name, (NewCommand,), {'nargs': nargs, 'opt': opt, 'definition': def_before})
     self.addGlobal(name, newclass)
 
     # End portion
-    newclass = type('end' + name, (NewCommand,),
-                   {'nargs':0, 'opt':None, 'definition':def_after})
+    newclass = type('end' + name, (NewCommand,), {'nargs': 0, 'opt': None, 'definition': def_after})
     self.addGlobal('end' + name, newclass)
+
+
 Context.newenvironment = newenvironment
