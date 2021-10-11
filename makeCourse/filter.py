@@ -71,6 +71,13 @@ def link_numbas(embed, **kwargs):
     return div
 
 
+@replace_tag('youtube-embed')
+def link_youtube(embed, **kwargs):
+    div = (html_fragment('<div><p><a href="{}" target="_blank">{}</a></p></div>'
+           .format(embed['data-id'], "Click to go to Youtube")))
+    return div
+
+
 @replace_tag('oembed')
 def oembed(embed, **kwargs):
     url = embed['data-url']
@@ -133,6 +140,18 @@ def list_fragment(soup, item):
         li['class'] = li.get('class', []) + ['fragment']
 
 
+def mathjax_script_dollar(soup, item):
+    """
+        Rewrite MathJax math/tex scripts to use dollars instead.
+        Useful for notebooks where we have less control over MathJax.
+    """
+    for el in soup.find_all('script'):
+        if 'math/tex' in el.attrs['type']:
+            el.name = 'span'
+            del el.attrs['type']
+            el.string = '${}$'.format(el.string)
+
+
 class HTMLFilter(object):
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
                oembed, fix_local_links, dots_pause]
@@ -145,4 +164,4 @@ class HTMLFilter(object):
 
 
 class CellFilter(HTMLFilter):
-    filters = [link_numbas, embed_vimeo, embed_youtube, oembed, fix_local_links]
+    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links]
