@@ -2,6 +2,8 @@ import logging
 import itertools
 import re
 from bs4 import BeautifulSoup
+from pathlib import Path
+from base64 import b64encode
 from .oembed import get_oembed_html
 from urllib.parse import urlparse
 from .render import Renderer
@@ -152,6 +154,36 @@ def mathjax_script_dollar(soup, item):
             el.string = '${}$'.format(el.string)
 
 
+def links_to_data_uri(soup, item):
+    """
+        Rewrite links into to embedded data-uri streams
+        Useful for jupyter notebooks where'd like things to be self contained
+    """
+    tags = {
+        'a': ['href'],
+        'img': ['src'],
+        'source': ['src'],
+    }
+    filetypes = {
+        '.png': 'data/png',
+        ".jpg": 'data/jpeg',
+        ".jpeg": 'data/jpeg'
+    }
+
+    for tag, attrs in tags.items():
+        for el in soup.find_all(tag):
+            for attr in attrs:
+                url = el.get(attr)
+                if not url.startswith(('http://', 'https://', 'ftp://')):
+                    for ft in filetypes.keys():
+                        if ft in url:
+                            src_path = item.course.get_build_dir() / item.out_path / Path(url)
+                            with open(str(src_path), 'rb') as f:
+                                data = b64encode(f.read()).decode('ascii')
+                                el[attr] = 'data:{};base64,{}'.format(filetypes[ft], data)
+                            break
+
+
 class HTMLFilter(object):
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
                oembed, fix_local_links, dots_pause]
@@ -164,4 +196,4 @@ class HTMLFilter(object):
 
 
 class CellFilter(HTMLFilter):
-    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links]
+    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, links_to_data_uri]
