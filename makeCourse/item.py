@@ -323,7 +323,7 @@ class Document(Item):
             plastex_output = self.course.load_latex_content(self)
             last_item = {-2: self}
             for fn, chapter in plastex_output.items():
-                chapter['html'] = burnInExtras(self, chapter['html'], out_format='html')
+                chapter['html'] = HTMLFilter().apply(self, chapter['html'], out_format='html')
                 if chapter['html'].isspace():
                     chapter['html'] = ''
                 if chapter['level'] < -1:
