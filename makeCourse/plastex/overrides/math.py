@@ -1,4 +1,4 @@
-from plasTeX import Command, sourceChildren, sourceArguments
+from plasTeX import Command, sourceChildren, sourceArguments, Macro, Environment
 from plasTeX.Base.LaTeX.Arrays import Array
 from plasTeX.Base.LaTeX import Math
 from plasTeX.Base.TeX import Primitives
@@ -11,6 +11,9 @@ log = getLogger()
 # Overrive boxcommands inside MathJaX to avoid extra <script type="math/tex">
 class BoxCommand(Primitives.BoxCommand):
     class math(Math.math):
+        def normalize(self, charsubs=None):
+            return Macro.normalize(self, charsubs=None)
+
         @property
         def source(self):
             if self.hasChildNodes():
@@ -44,6 +47,9 @@ class TextCommand(BoxCommand):
 
 # Use <script type="math/tex"> to avoid problems with less than symbol in MathJax
 class math(Math.math):
+    def normalize(self, charsubs=None):
+        return Macro.normalize(self, charsubs=None)
+
     @property
     def source(self):
         if self.hasChildNodes():
@@ -65,6 +71,9 @@ Math.displaymath = displaymath
 
 class MathEnvironment(Math.Environment):
     mathMode = True
+
+    def normalize(self, charsubs=None):
+        return Environment.normalize(self, charsubs=None)
 
     @property
     def source(self):
