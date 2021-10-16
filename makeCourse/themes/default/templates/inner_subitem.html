@@ -5,13 +5,13 @@
     {% else %}
         <a href="{{subitem.url|url}}">{{subitem.title}}</a>
         {% if subitem.has_slides %}
-            <a target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}">{{macros.icon('desktop','Slides')}}</a>
+            <a id="item-slides-link" target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}">{{macros.icon('desktop','Slides')}}</a>
         {% endif %}
         {% if subitem.has_nb %}
-            <a target="_blank" class="float-right ml-2" href="{{subitem.nb_url|url}}">{{macros.icon('book','Notebook')}}</a>
+            <a id="item-notebook-link" download class="float-right ml-2" href="{{subitem.nb_url|url}}">{{macros.icon('book','Notebook')}}</a>
         {% endif %}
         {% if subitem.has_pdf %}
-            <a target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
+            <a id="item-pdf-link" target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
         {% endif %}
     {% endif %}
 {% endif %}

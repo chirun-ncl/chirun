@@ -33,13 +33,13 @@
                 <nav class="mb-3" id="chapterTOC" data-toggle="toc">
                     <ul class="nav navbar-nav">
                         {% if item.has_slides %}
-                        <li><a class="nav-link" href="{{item.slides_url|url}}" target="_blank">{{macros.icon('desktop','View as Slides',True)}}</a></li>
+                        <li><a id="slides-link" class="nav-link" href="{{item.slides_url|url}}" target="_blank">{{macros.icon('desktop','View as Slides',True)}}</a></li>
                         {% endif %}
                         {% if item.has_nb %}
-                        <li><a class="nav-link" href="{{item.nb_url|url}}" target="_blank">{{macros.icon('book','Download Notebook',True)}}</a></li>
+                        <li><a id="notebook-link" class="nav-link" href="{{item.nb_url|url}}" download>{{macros.icon('book','Download Notebook',True)}}</a></li>
                         {% endif %}
                         {% if item.has_pdf %}
-                        <li><a class="nav-link" href="{{item.pdf_url|url}}" target="_blank">{{macros.icon('file-pdf-o','Download as PDF',True)}}</a></li>
+                        <li><a id="pdf-link" class="nav-link" href="{{item.pdf_url|url}}" target="_blank">{{macros.icon('file-pdf-o','Download as PDF',True)}}</a></li>
                         {% endif %}
                     </ul>
                 </nav>
@@ -49,13 +49,13 @@
             <div class="col-md-12">
 			<div class="standalone-nav">
                 {% if item.has_slides %}
-                <a class="standalone-navitem" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a>
+                <a id="standalone-slides-link" class="standalone-navitem" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a>
                 {% endif %}
                 {% if item.has_nb %}
-                <a class="standalone-navitem" href="{{item.nb_url|url}}" target="_blank"><i class="fa fa-book"></i>&nbsp;Download Notebook</a>
+                <a id="standalone-notebook-link" class="standalone-navitem" href="{{item.nb_url|url}}" download><i class="fa fa-book"></i>&nbsp;Download Notebook</a>
                 {% endif %}
 				{% if item.has_pdf %}
-				<a class="standalone-navitem" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download as PDF</a>
+				<a id="standalone-pdf-link" class="standalone-navitem" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download as PDF</a>
 				{% endif %}
 			</div>
             {% endif %}
