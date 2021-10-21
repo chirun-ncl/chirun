@@ -1,7 +1,0 @@
-{% if not subitem.hidden %}
-    {% if subitem.type == 'url' %}
-        <a target="_blank" href="{{subitem.source}}">{{subitem.title}}</a>
-    {% else %}
-        <a href="{{subitem.url|url}}">{{subitem.title}}</a>
-    {% endif %}
-{% endif %}
