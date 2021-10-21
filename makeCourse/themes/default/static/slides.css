@@ -56,3 +56,15 @@ h2{
 .reveal table p {
   margin:0;
 }
+
+.reveal blockquote {
+  margin: 1.5em 0.75em;
+  padding: 0.5em 1.0em;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.reveal blockquote > p {
+  margin: 0 !important;
+}
