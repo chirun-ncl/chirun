@@ -332,6 +332,7 @@ class Document(Item):
                     chapter['html'] = ''
                 if chapter['level'] < -1:
                     self.data['html'] = chapter['html']
+                    setup_pdf_url(self, chapter)
                     last_item[-2] = self
                 elif chapter['level'] < self.splitlevel:
                     i = -2
@@ -354,7 +355,8 @@ class Document(Item):
                     copy_attrs(item)
                     setup_pdf_url(item, chapter)
                     parent.content.append(item)
-            self.has_pdf = False
+            if(len(self.content) > 0):
+                self.has_pdf = False
             self.generated = True
             logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
             with open(self.out_struct_file, 'w') as f:
