@@ -75,9 +75,15 @@ class LatexSplitter(object):
             pdf = PyPDF2.PdfFileReader(str(in_path), "rb")
             root = pdf.trailer['/Root'].getObject()
             self.pages = all_pages(root['/Pages'].getObject())
-            names = root['/Names'].getObject()
-            dests_root = names['/Dests'].getObject()
-            self.dests = all_dests(dests_root)
+            if '/Names' in root:
+                names = root['/Names'].getObject()
+                dests_root = names['/Dests'].getObject()
+                self.dests = all_dests(dests_root)
+            else:
+                logger.warning(
+                    "Warning: LaTeX PDF cannot be split into sections. "
+                    "You might be able to fix this by including the hyperref package."
+                )
 
         def update_toc(self, toc):
             for entry in toc:
@@ -155,7 +161,7 @@ class LatexSplitter(object):
                     logger.warning(e)
                     # Try an alternative implementation with PyPDF2
                     # This seems to choke on certain PDFs, so we use it only as a backup
-                    logger.warning('Warning: It looks like the pdftk command might be missing...'
+                    logger.warning('Warning: It looks like the pdftk command might be missing... '
                                    'Please install pdftk if possible in your environment.')
                     logger.warning("Trying to continue using PyPDF2 instead...")
                     writer = PyPDF2.PdfFileWriter()

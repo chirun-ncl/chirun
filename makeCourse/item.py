@@ -312,6 +312,10 @@ class Document(Item):
                 if not tocitem and not self.content:
                     tocitem = next((e for e in self.toc), None)
 
+                # Match whole document if no real toc info found.
+                if not tocitem and len(self.toc) == 1:
+                    tocitem = next((e for e in self.toc), None)
+
                 if tocitem:
                     item.data['pdf_url'] = str(self.out_path / Path('pdf') / Path(tocitem.slug).with_suffix('.pdf'))
                 else:
