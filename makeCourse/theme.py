@@ -41,7 +41,7 @@ class Theme(object):
         dstPath = self.course.get_build_dir() / 'static'
 
         logger.debug("Copying theme's static directory to the build's static directory...")
-        logger.debug("	{src} => {dest}".format(src=srcPath, dest=dstPath))
+        logger.debug("    {src} => {dest}".format(src=srcPath, dest=dstPath))
 
         try:
             copy_tree(str(srcPath), str(dstPath))

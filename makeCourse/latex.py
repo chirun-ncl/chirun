@@ -213,7 +213,7 @@ class LatexRunner(object):
         extensions = ['.pdf', '.dvi']
         for extension in extensions:
             filename = self.wd / self.filename.with_suffix(extension)
-            logger.debug('  Deleting: {}'.format(filename))
+            logger.debug('    Deleting: {}'.format(filename))
             try:
                 os.remove(filename)
             except OSError:

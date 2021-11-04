@@ -214,7 +214,7 @@ class MakeCourse:
         srcPath = self.get_static_dir()
         dstPath = self.get_build_dir() / 'static'
         if srcPath.is_dir():
-            logger.debug("	{src} => {dest}".format(src=srcPath, dest=dstPath))
+            logger.debug("    {src} => {dest}".format(src=srcPath, dest=dstPath))
             try:
                 copy_tree(str(srcPath), str(dstPath))
             except Exception:
@@ -248,7 +248,7 @@ class MakeCourse:
                 for item in self.structure:
                     processor.visit(item)
 
-        logger.debug('Done processing!')
+        logger.debug('Finished processing course items')
 
     def optimize(self):
         pass
@@ -386,7 +386,7 @@ def main():
 
     oembed.save_cache()
 
-    print("All done! Output written to {}".format(mc.build_dir.resolve()))
+    print("Output written to {}".format(mc.build_dir.resolve()))
 
 
 if __name__ == "__main__":

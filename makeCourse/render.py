@@ -71,7 +71,7 @@ class Renderer(object):
         template_file = item.template_name
         if not (item.source.name == ''):
             logger.info("Rendering: {item}".format(item=item.source))
-        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,
+        logger.debug("Rendering {item} using {template}{rel}".format(item=item, template=template_file,
                      rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
                      else ''))
         html = self.to_html(item, template_file)
@@ -115,7 +115,7 @@ class SlidesRenderer(Renderer):
         super().render_item(item)
         outPath = self.course.get_build_dir() / item.out_slides
         template_file = item.template_slides
-        logger.debug("Rendering {item} using {template}{rel}.".format(item=item, template=template_file,
+        logger.debug("Rendering {item} using {template}{rel}".format(item=item, template=template_file,
                      rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
                      else ''))
         html = self.to_html(item, template_file)
