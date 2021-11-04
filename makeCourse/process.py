@@ -102,6 +102,9 @@ class RenderProcess(ItemProcess):
         self.visit_default(item)
         super().visit_part(item)
 
+    def visit_standalone(self, item):
+        self.visit_document(item)
+
     def visit_url(self, item):
         pass
 
@@ -146,7 +149,7 @@ class PDFProcess(ItemProcess):
         self.makePDF(item)
 
     def visit_standalone(self, item):
-        self.makePDF(item)
+        self.visit_document(item)
 
     def visit_slides(self, item):
         ext = item.source.suffix

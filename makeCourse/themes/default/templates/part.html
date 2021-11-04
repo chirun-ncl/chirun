@@ -2,11 +2,13 @@
 {% import "macros.html" as macros %}
 
 {% block header %}
-{% if not item.as_html() %}
-<div class="container">
-	<h1 class="jumbotron-heading">{{item.title}}</h1>
+<div class="container mt-3">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>{{item.title}}</h1>
+		</div>
+	</div>
 </div>
-{% endif %}
 {% endblock header %}
 
 {% block main %}

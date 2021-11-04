@@ -517,7 +517,7 @@ class Introduction(Part):
         return context
 
 
-class Standalone(Chapter):
+class Standalone(Document):
     type = 'standalone'
     title = 'document'
     out_path = Path('')
