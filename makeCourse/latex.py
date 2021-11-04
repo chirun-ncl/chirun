@@ -86,7 +86,7 @@ class LatexSplitter(object):
 
     def __init__(self, in_path, aux_filename):
         self.in_path = in_path
-        self.aux_filename = aux_filename.with_suffix('.toc')
+        self.aux_filename = aux_filename
         self.toc = []
 
     def toc_from_aux(self, level):
