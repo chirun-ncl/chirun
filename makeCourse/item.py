@@ -250,7 +250,7 @@ class Part(Item):
 class Document(Item):
     type = 'document'
     title = 'Untitled part'
-    template_name = 'part.html'
+    template_name = 'chapter.html'
     splitlevel = 0
     generated = False
     has_sidebar = True
@@ -345,6 +345,7 @@ class Document(Item):
                     setup_pdf_url(item, chapter)
                     last_item[chapter['level']] = item
                     parent.content.append(item)
+                    self.template_name = 'part.html'
                 elif chapter['level'] == self.splitlevel:
                     i = -2
                     while i < chapter['level']:
@@ -355,6 +356,7 @@ class Document(Item):
                     copy_attrs(item)
                     setup_pdf_url(item, chapter)
                     parent.content.append(item)
+                    self.template_name = 'part.html'
             if(len(self.content) > 0):
                 self.has_pdf = False
             self.generated = True
