@@ -4,11 +4,9 @@
 {% block stylesheets %}
     {{ super() }}
     <link rel="stylesheet" id="customiseCodeCSS" href="{{'pygmentize.light.css'|static_url}}">
-    <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
     <link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
     <link rel="stylesheet" href="{{'boole.css'|static_url}}">
     <link rel="stylesheet" href="{{'numbasEmbed.css'|static_url}}">
-    <link rel="stylesheet" href="{{'print.css'|static_url}}">
 {% endblock stylesheets %}
 
 {% block javascript %}
@@ -20,7 +18,6 @@
     <script defer src="{{'codemirror-5.26.0/mode/python/python.js'|static_url}}"></script>
     <script defer src="{{'codemirror-5.26.0/mode/r/r.js'|static_url}}"></script>
     <script defer src="{{'boole.js'|static_url}}"></script>
-    <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
     <script defer src="{{'numbasEmbed.js'|static_url}}"></script>
 {% endblock %}
 

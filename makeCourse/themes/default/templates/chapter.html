@@ -1,6 +1,17 @@
 {% extends "item.html" %}
 {% import "macros.html" as macros %}
 
+{% block stylesheets %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
+    <link rel="stylesheet" href="{{'print.css'|static_url}}">
+{% endblock stylesheets %}
+
+{% block javascript %}
+    {{ super() }}
+    <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
+{% endblock %}
+
 {% block body_attributes %}data-spy="scroll" data-target="#chapterTOC" data-offset="50"{% endblock %}
 
 {% block main %}
