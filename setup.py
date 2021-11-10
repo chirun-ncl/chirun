@@ -6,7 +6,7 @@ except ImportError:
 
 setup(name="makeCourse",
       description="Produce flexible and accessible course notes, in a variety of formats, using LaTeX or Markdown source",
-      version="0.5.0",
+      version="0.6.0",
       author="E-Learning Team, School of Mathematics, Statistics & Physics, Newcastle University",
       author_email="george.stagg@ncl.ac.uk",
       url="https://mas-coursebuild.ncl.ac.uk",
