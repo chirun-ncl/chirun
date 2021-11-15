@@ -15,9 +15,9 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 [Sample course](https://coursebuilder-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/coursebuilder-ncl/sample_course).
 
 ### Prerequisites
-#### Linux (Ubuntu 16.04+)
+#### Linux (Ubuntu 18.10+)
  * Ensure a system TeX distribution is installed, such as TeX Live (`apt install texlive-full`).
- * Install `pdf2svg`, `pdftoppm` and `libyaml` using your standard package manager (`apt install pdf2svg poppler-utils libyaml-dev`).
+ * Install `pdf2svg`, `pdftoppm` and `libyaml` using your standard package manager (`apt install pdf2svg poppler-utils libyaml-dev pdftk-java`).
  * Ensure the `virtualenv` python package is installed (`apt install python3-virtualenv`).
  
 #### MacOS
@@ -26,6 +26,7 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
   - `brew install poppler`
   - `brew install pdf2svg`
   - `brew install libyaml`
+  - `brew install pdftk-java`
 * Install `virtualenv` by running `pip3 install virtualenv`.
 * If you are not using the default Apple-provided build of Python 3 ( e.g. Python is installed under `/Applications/Python 3.X`, where `3.X` is the version),
   ensure that the SSL CA certificates are installed by running:
