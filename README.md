@@ -1,8 +1,8 @@
 <img src="https://mas-coursebuild.ncl.ac.uk/lti/images/chirun_icon_512.png" width="100">
 
-Chirun Builder produces flexible and accessible course notes, in a variety of formats, from LaTeX or Markdown source. It is aimed primarily at notes in the mathematical sciences.
+Chirun produces flexible and accessible course notes, in a variety of formats, from LaTeX or Markdown source. It is aimed primarily at notes in the mathematical sciences.
 
-This repository, `chirun`, is a python package providing the command line interface for building notes with Chirun Builder.
+This repository, `chirun`, is a python package providing the command line interface for building notes with Chirun.
 
 ### How it works
 A set of course notes are provided in either Markdown or LaTeX along with a configuration file `config.yml`. The `chirun` command then builds the requested outputs based on the contents of the configuration file.
@@ -78,9 +78,9 @@ LaTeX is compiled using the plasTeX python package. While it supports a large ar
 
 If your notes are not compiling at all, the first thing to do is to take a look at which LaTeX packages you are using. Try removing one or more, simplifying your notes, until things start working. Complex packages that use PDF special commands are a common problem.
 
-If your notes compile, but the output is broken, you should check indiviual mathematical equations in your notes. Chirun Builder renders mathematics on the web with MathJax, and not all features available in LaTeX work in MathJax out of the box.
+If your notes compile, but the output is broken, you should check indiviual mathematical equations in your notes. Chirun renders mathematics on the web with MathJax, and not all features available in LaTeX work in MathJax out of the box.
 
-In short you should start with short, simple LaTeX documents and slowly build up complexity once they are converting through Chirun Builder cleanly!
+In short you should start with short, simple LaTeX documents and slowly build up complexity once they are converting through Chirun cleanly!
 
 ### Help! I get the error "AttributeError: module 'yaml' has no attribute 'CLoader'"
 
