@@ -6,6 +6,7 @@ window.MathJax = {
       euro: '\\unicode{x20AC}',
       bm: ["\\boldsymbol{ #1 }",1],
       lefteqn: ["\\rlap{ #1 }\\quad",1],
+      qedhere: "\\tag*{$\\blacksquare$}",
       pause: ''
     },
     inlineMath: [['\\(','\\)']],

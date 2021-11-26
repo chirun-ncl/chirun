@@ -1,7 +1,19 @@
 import re
 import os
 import yaml
+import shutil
 
+
+# Workaround for copytree on Python < 3.8
+# https://stackoverflow.com/a/12514470
+def copytree(src, dst, symlinks=False, ignore=None):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, symlinks, ignore)
+        else:
+            shutil.copy2(s, d)
 
 def slugify(value, v=0):
     slug = "".join([c for c in re.sub(r'\s+', '_', value)

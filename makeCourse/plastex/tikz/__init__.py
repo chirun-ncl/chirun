@@ -14,6 +14,10 @@ class tikzpicture(VerbatimEnvironment):
         return gfx
 
 
+class tikzcd(VerbatimEnvironment):
+    pass
+
+
 class usetikzlibrary(Command):
     args = "library"
 

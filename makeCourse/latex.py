@@ -6,7 +6,7 @@ import collections
 import PyPDF2
 from subprocess import Popen, PIPE
 from pathlib import Path
-from makeCourse import mkdir_p, slugify
+from makeCourse import mkdir_p, slugify, copytree
 
 logger = logging.getLogger(__name__)
 
@@ -280,10 +280,10 @@ class PDFLatex(object):
 
     def copy_pdfset(self, pdfset_dir):
         logger.debug('Creating directory for PDF set output: {}'.format(self.out_path.parent))
-        Path.mkdir(self.out_path.parent, parents=True, exist_ok=True)
         pdfset_out_dir = self.out_path.parent / Path('pdf')
+        Path.mkdir(pdfset_out_dir, parents=True, exist_ok=True)
         logger.debug('Moving PDF set output: {} => {}'.format(pdfset_dir, pdfset_out_dir))
-        shutil.copytree(str(pdfset_dir), str(pdfset_out_dir), dirs_exist_ok=True)
+        copytree(str(pdfset_dir), str(pdfset_out_dir))
 
     def process_pdf(self):
         if self.item.recently_built():
