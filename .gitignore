@@ -3,3 +3,5 @@
 *.pyc
 *.swp
 makeCourse.egg-info/
+chirun.egg-info/
+docs/build

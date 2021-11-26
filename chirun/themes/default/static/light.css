@@ -1,0 +1,94 @@
+/* Interactive code */
+button.run-code {
+	color: #fff;
+	background-color: #4CAF50;
+}
+
+button.run-code:hover{
+	color: #111111;
+	background-color: #eeeeee;
+}
+
+pre.output-block {
+	background-color: #FFF;
+}
+
+p code, li code, table code {
+	background-color: rgba(27,31,35,.05);
+	color: #111;
+}
+
+/* bootstrap */
+.jumbotron {
+  background-color: #fff;
+}
+
+.breadcrumb-item > a {
+	color: rgba(0,0,0,.65);
+}
+.breadcrumb-item > a:hover,
+.breadcrumb-item > a:focus {
+	color: rgba(0,0,0,.85);
+}
+.breadcrumb-item.active {
+	color: rgba(0,0,0,.85);
+}
+
+thead {
+  border-bottom: solid #333 1px;
+}
+
+table {
+	border-top: solid #333 2px;
+	border-bottom: solid #333 2px;
+}
+
+/* bootstrap-toc */
+nav[data-toggle='toc'] .nav > li > a {
+  color: rgba(0,0,0,.65);
+}
+nav[data-toggle='toc'] .nav > li > a:hover,
+nav[data-toggle='toc'] .nav > li > a:focus {
+  color: rgba(0,0,0,.85);
+  background-color: transparent;
+  border-left: 1px solid rgba(0,0,0,.85);
+}
+nav[data-toggle='toc'] .nav-link.active,
+nav[data-toggle='toc'] .nav-link.active:hover,
+nav[data-toggle='toc'] .nav-link.active:focus {
+  color: rgba(0, 0, 0, 0.85);
+  background-color: transparent;
+  border-left: 2px solid rgba(0, 0, 0, 0.85);
+}
+
+.standalone-nav > a {
+  color: rgba(0,0,0,.65);
+}
+.standalone-nav > a:hover,
+.standalone-nav > a:focus {
+  color: rgba(0,0,0,.85);
+}
+
+/* chirun */
+.exercise, .exercise.primary {
+  background-color: #F6F6FF;
+}
+.interlude, .exercise.secondary {
+  background-color: #eeffd3;
+}
+.exercise.tertiary {
+  background-color: #ffeeee;
+}
+.exercise.muted {
+  background-color: #F6F6F6;
+}
+
+.tcolorbox {
+  background-color: #EEE;
+  border: 2px solid #555;
+}
+
+blockquote {
+  background-color: #F6F6F6;
+  border-left: 0.75em solid #CCC;
+}

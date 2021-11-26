@@ -1,0 +1,33 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{chirun}[2021/11/26 Chirun Builder Support Package]
+
+\ProcessOptions\relax
+\usepackage{hyperref}
+
+\newif\ifplastex\plastexfalse
+\ifplastex
+		\usepackage{embed}
+\else
+		\usepackage{comment,xr}
+		\ifcsname setbeamerfont\endcsname% Are these beamer slides?
+		\else%
+			\usepackage{a4wide}
+		\fi%
+		\excludecomment{divEnv}
+		\excludecomment{HTML}
+		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
+		\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
+		\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
+		\newcommand{\embed}[1]{\url{#1}}
+		\newcommand{\iframe}[2][]{\url{#2}}
+		\newenvironment{collapseEnv}[3]{\noindent\textbf{#3}\\}{\par}
+		\newcommand{\collapse}[4]{\noindent\textbf{#3}\\{#4}\par}
+		\newcommand{\collapsehint}[1]{\collapse{btn-info}{Give me a hint}{Hint}{#1}}
+		\newcommand{\collapsesolution}[1]{\collapse{btn-primary}{Show Solution}{Solution}{#1}}
+		\makeatletter
+		\newcommand{\g@p}[1]{\vspace*{#1}}
+		\def\html#1{\def\@html##1#1{}\@html}
+		\makeatother
+		\providecommand{\alttext}[1]{}
+\fi
+\endinput

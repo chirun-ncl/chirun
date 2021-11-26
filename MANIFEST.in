@@ -1,4 +1,4 @@
 include README.md
-recursive-include makeCourse/themes *
-recursive-include makeCourse/plasTeXRenderer *
-include makeCourse/makecourse.sty
+recursive-include chirun/themes *
+recursive-include chirun/plasTeXRenderer *
+include chirun/chirun.sty

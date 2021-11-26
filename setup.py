@@ -4,7 +4,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-setup(name="makeCourse",
+setup(name="chirun",
       description="Produce flexible and accessible course notes, in a variety of formats, using LaTeX or Markdown source",
       version="0.6.2",
       author="E-Learning Team, School of Mathematics, Statistics & Physics, Newcastle University",
@@ -12,7 +12,7 @@ setup(name="makeCourse",
       url="https://mas-coursebuild.ncl.ac.uk",
       packages=find_packages(),
       include_package_data=True,
-      scripts=['makeCourse/makecourse'],
+      scripts=['chirun/makecourse', 'chirun/chirun'],
       install_requires = [
          'appdirs>=1.4.3',
          'arrow>=0.10.0',
