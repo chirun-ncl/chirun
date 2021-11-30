@@ -131,6 +131,11 @@ class Chirun:
             'year': datetime.datetime.now().year,
             'format_version': 2,
             'mathjax_url': self.mathjax_url,
+            'themes': [{
+                'title': 'Default',
+                'source': 'default',
+                'path': 'default'
+            }]
         }
         return config
 
