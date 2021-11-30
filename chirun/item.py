@@ -532,6 +532,7 @@ class Standalone(Document):
     out_file = Path('index.html')
     url = ''
     is_index = True
+    splitlevel = -2
 
 
 class Notebook(Chapter):
