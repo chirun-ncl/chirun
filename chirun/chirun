@@ -69,8 +69,9 @@ class Chirun:
         """
             The path the output will be put in
         """
-        theme_path = self.force_theme.path if self.force_theme else self.theme.path
-        return self.build_dir / theme_path
+        if len(self.config['themes']) > 1: 
+            return self.build_dir / (self.force_theme.path if self.force_theme else self.theme.path)
+        return self.build_dir
 
     def get_static_dir(self):
         """
