@@ -61,6 +61,15 @@ The command `chirun` is now available for use. You should now compile the sample
  * `cd chirun`
  * `git pull`
  * `pip install -r requirements.txt`
+
+#### Upgrading from `makecourse`
+The project has recently been renamed from "makecourse" to "chirun". To upgrade, first remove the older `makecourse` package with,
+
+```
+pip uninstall makecourse
+```
+
+Then follow the installation or upgrade instructions above.
  
 ---
 

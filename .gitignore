@@ -5,3 +5,4 @@
 makeCourse.egg-info/
 chirun.egg-info/
 docs/build
+**/.DS_Store
