@@ -1,4 +1,4 @@
-<img src="https://mas-coursebuild.ncl.ac.uk/lti/images/chirun_icon_512.png" width="100">
+<img src="https://mas-coursebuild.ncl.ac.uk/lti/images/chirun_logo_512.png" width="100">
 
 Chirun produces flexible and accessible course notes, in a variety of formats, from LaTeX or Markdown source. It is aimed primarily at notes in the mathematical sciences.
 
