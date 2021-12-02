@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import chirun
+from pathlib import Path
+import os
 
-if __name__ == "__main__":
-    chirun.main()
+dirname = os.path.dirname(os.path.abspath(__file__))
+exec(open(Path(dirname) / Path("chirun")).read())
