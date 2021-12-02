@@ -86,24 +86,19 @@ class Chirun:
         base = self.config.get('base_dir')
         code = self.config.get('code')
         year = self.config.get('year')
-        root_template = '/{base}/'
-        if code:
-            root_template += '{code}/'
-        if year:
-            root_template += '{year}/'
-        if len(self.config['themes']) > 1:
-            root_template += '{theme}/'
+        theme_path = self.force_theme.path if self.force_theme else self.theme.path
 
         if 'root_url' not in self.config.keys():
-            self.config['root_url'] = root_template
+            self.config['root_url'] = '/{base}/'
+            if code:
+                self.config['root_url'] += '{code}/'
+            if len(self.config['themes']) > 1:
+                self.config['root_url'] += '{theme}/'
 
         if not self.args.absolute or self.force_relative_build:
             return str(self.get_build_dir().resolve()) + '/'
         else:
-            theme_path = self.force_theme.path if self.force_theme else self.theme.path
-            root = (self.config.get('root_url').format(base=base, code=code, year=year, theme=theme_path))
-
-            return root
+            return self.config.get('root_url').format(base=base, code=code, year=year, theme=theme_path)
 
     def make_relative_url(self, item, url):
         """
