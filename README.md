@@ -2,7 +2,14 @@
 
 Chirun produces flexible and accessible course notes, in a variety of formats, from LaTeX or Markdown source. It is aimed primarily at notes in the mathematical sciences.
 
-This repository, `chirun`, is a python package providing the command line interface for building notes with Chirun.
+This repository, `chirun`, is the source code of the Chirun Python package, providing the command line interface for building content.
+
+
+## Documentation
+
+The Chirun documentation, including infromation about the [Chirun Public Content Builder](https://mas-coursebuild.ncl.ac.uk/public/) and
+Chirun LTI Provider tool can be found at https://chirun.readthedocs.io/en/latest/
+
 
 ### How it works
 A set of course notes are provided in either Markdown or LaTeX along with a configuration file `config.yml`. The `chirun` command then builds the requested outputs based on the contents of the configuration file.
@@ -10,9 +17,7 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 * Markdown parsing is provided by [Python Markdown](https://github.com/Python-Markdown/markdown).
 * LaTeX parsing is provided by [plasTeX](https://github.com/plastex/plastex).
 
-### Demo
-
-[Sample course](https://chirun-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/chirun-ncl/sample_course).
+---
 
 ### Prerequisites
 #### Linux (Ubuntu 18.10+)
@@ -73,6 +78,10 @@ Then follow the installation or upgrade instructions above.
  
 ---
 
+### Demo
+
+[Sample course](https://chirun-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/chirun-ncl/sample_course).
+
 ### Compile the Sample Course
  * Install the `chirun` package using the instructions above
  * Clone the sample course: `git clone https://github.com/chirun-ncl/sample_course.git`
@@ -80,21 +89,3 @@ Then follow the installation or upgrade instructions above.
  * The finished website output will be in `./sample_course/build`
 
 ---
- 
-### Help! My LaTeX notes won't compile!
-
-LaTeX is compiled using the plasTeX python package. While it supports a large array of TeX and LaTeX features, not all packages are compatible. Complex packages must be implemented in python independently.
-
-If your notes are not compiling at all, the first thing to do is to take a look at which LaTeX packages you are using. Try removing one or more, simplifying your notes, until things start working. Complex packages that use PDF special commands are a common problem.
-
-If your notes compile, but the output is broken, you should check indiviual mathematical equations in your notes. Chirun renders mathematics on the web with MathJax, and not all features available in LaTeX work in MathJax out of the box.
-
-In short you should start with short, simple LaTeX documents and slowly build up complexity once they are converting through Chirun cleanly!
-
-### Help! I get the error "AttributeError: module 'yaml' has no attribute 'CLoader'"
-
-Reinstall pyyaml, ensuring that it is linked to the system `libyaml` by issuing the command: `pip --no-cache-dir install --verbose --force-reinstall -I pyyaml`
-
-### Help! Running chirun throws an error related to certificate validation on macOS
-
-Run `sudo /Applications/Python\ 3.X/Install\ Certificates.command` (where `3.X` is your version of Python) to install the appropriate SSL CA certificates. This allows the headless version of Chromium to successfully download.
