@@ -2,3 +2,4 @@ include README.md
 recursive-include chirun/themes *
 recursive-include chirun/plasTeXRenderer *
 include chirun/chirun.sty
+include chirun/makecourse.sty
