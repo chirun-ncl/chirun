@@ -183,6 +183,9 @@ def links_to_data_uri(soup, item):
                                 el[attr] = 'data:{};base64,{}'.format(filetypes[ft], data)
                             break
 
+def remove_output_cells(nb, item):
+    nb.cells = list(filter(lambda cell: cell.get('cell_type','') != 'code' or
+                       'output' not in cell.get('metadata', {}).get('attributes', {}).get('classes',[]), nb.cells))
 
 class HTMLFilter(object):
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
@@ -194,6 +197,13 @@ class HTMLFilter(object):
             f(soup, item=item)
         return str(soup)
 
-
-class CellFilter(HTMLFilter):
+class CellHTMLFilter(HTMLFilter):
     filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, links_to_data_uri]
+
+class CellFilter(object):
+    filters = [remove_output_cells]
+
+    def apply(self, item, nb):
+        for f in self.filters:
+            f(nb, item=item)
+        return nb

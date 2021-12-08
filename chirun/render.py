@@ -155,9 +155,10 @@ class NotebookRenderer(object):
         if not (item.source.name == ''):
             logger.info("Building Notebook: {item}".format(item=item.source))
         nb = MarkdownReader().to_notebook(item.markdown_content())
+        chirun.filter.CellFilter().apply(item, nb)
         for cell in nb.cells:
             if cell['cell_type'] == 'markdown':
                 html = self.markdownRenderer.render(item, outDir, cell['source'])
-                cell['source'] = chirun.filter.CellFilter().apply(item, html, out_format='html')
+                cell['source'] = chirun.filter.CellHTMLFilter().apply(item, html, out_format='html')
         with open(str(outPath), 'w', encoding='utf-8') as f:
             nbformat.write(nb, f)
