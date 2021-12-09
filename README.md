@@ -82,7 +82,7 @@ Then follow the installation or upgrade instructions above.
 
 ### Demo
 
-[Sample course](https://chirun-ncl.github.io/sample_course/SAM0000/2020/default/), and its [source code](https://github.com/chirun-ncl/sample_course).
+[Sample course](https://chirun-ncl.github.io/sample_course/), and its [source code](https://github.com/chirun-ncl/sample_course).
 
 ### Compile the Sample Course
  * Install the `chirun` package using the instructions above
