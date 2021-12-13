@@ -3,7 +3,7 @@ name: figure figure*
   {{ obj }}
 </figure>
 
-name: subfigure
+name: subfigure subtable
 <div class="subfigure" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: caption

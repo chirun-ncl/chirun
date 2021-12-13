@@ -8,7 +8,7 @@ def ProcessOptions(options, document):
     context = document.context
     tpl = PackageTemplateDir(renderers='html5', package='subcaption')
     context.newcounter('subfigure', resetby='figure', format='${thefigure}${subfigure.alph}')
-    context.newcounter('subtable', resetby='table', format='${thefigure}${subtable.alph}')
+    context.newcounter('subtable', resetby='table', format='${thetable}${subtable.alph}')
     document.addPackageResource([tpl])
 
 
@@ -59,15 +59,22 @@ class subtable(minipage):
 
 class _table(table):
     macroName = "table"
+    counter = 'table'
 
-    class subcaption(Caption):
+    class caption(Caption):
+        counter = 'table'
+
+        def preParse(self, tex):
+            doc = self.ownerDocument
+            c = doc.context
+            c.counters[self.counter].setcounter(c.counters[self.counter].value-1)
+
+    class subcaption(_subcaption):
         counter = 'subtable'
-        templateName = 'subcaption'
 
-    class subtable(subfigure):
-        class caption(Caption):
+    class subtable(subtable):
+        class caption(_subcaption):
             counter = 'subtable'
-            templateName = 'subcaption'
 
 
 class captionsetup(Command):
