@@ -372,3 +372,7 @@ blockquote {
 blockquote > p {
   margin: 0 !important;
 }
+
+.subfigure {
+  display: inline-block;
+}

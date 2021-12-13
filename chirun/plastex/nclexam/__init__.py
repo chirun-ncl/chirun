@@ -1,4 +1,4 @@
-from plasTeX import (PackageTemplateDir)
+from plasTeX.PackageResource import (PackageTemplateDir)
 from plasTeX import Command, Environment
 from plasTeX.Base.LaTeX.Lists import List
 

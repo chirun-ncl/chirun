@@ -1,0 +1,30 @@
+name: figure figure*
+<figure {% if obj.title %}id="{{ obj.title.id }}"{% else %}{{ obj.id }}{% endif %}>
+  {{ obj }}
+</figure>
+
+name: subfigure
+<div class="subfigure" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
+
+name: caption
+<figcaption id="{{ obj.id }}">
+  <span class="caption_title">{{ obj.title }}</span>
+  <span class="caption_ref">{{ obj.ref }}</span>
+  <span class="caption_text">{{ obj }}</span> 
+</figcaption>
+
+name: subcaption
+<figcaption id="{{ obj.id }}">
+  <span class="caption_ref">({{ obj.subref }})</span>
+  <span class="caption_text">{{ obj }}</span> 
+</figcaption>
+
+name: subref
+<a class="subref" href="{{here.idref.label.url}}">{{here.idref.label.subref}}</a>
+
+name: ref
+{% if here.idref.label.figref %}
+  <a class="ref" href="{{here.idref.label.url}}">{{here.idref.label.figref}}</a>
+{% else %}
+  <a class="ref" href="{{here.idref.label.url}}">{{here.idref.label.ref}}</a>
+{% endif %}
