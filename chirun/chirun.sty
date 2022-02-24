@@ -9,10 +9,6 @@
 		\usepackage{embed}
 \else
 		\usepackage{comment,xr}
-		\ifcsname setbeamerfont\endcsname% Are these beamer slides?
-		\else%
-			\usepackage{a4wide}
-		\fi%
 		\excludecomment{divEnv}
 		\excludecomment{HTML}
 		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
