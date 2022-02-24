@@ -58,11 +58,17 @@ Quick Installation
 ------------------
 
 Follow these instructions to install the Chirun Python package. If you plan to modify Chirun or
-perform development work, follow the instructions in the next section instead.
+perform development work, follow the instructions in the :ref:`Development Installation` section instead.
 
- * Ensure you have installed the prerequisites shown in the previous section.
+First, ensure you have installed the prerequisites shown in the previous section.
 
- * Create a Python3 virtualenv and activate it::
+Next, create an environment for Chirun to be installed in, using either the virtualenv
+or Conda instructions below.
+
+Virtualenv
+^^^^^^^^^^
+
+ * Create a Python3 virtualenv environment and activate it::
 
     virtualenv -p python3 chirun_env
     source ./chirun_env/bin/activate
@@ -71,20 +77,43 @@ perform development work, follow the instructions in the next section instead.
 
     pip install git+https://github.com/chirun-ncl/chirun.git
 
-The command ``chirun`` is now available for use whenever the virtualenv is active. You should
-now continue to the next section and compile the sample course to ensure everything works.
+Conda
+^^^^^
+
+If you are using Anaconda or the Conda Environment Manager, run the following commands to create a
+new environment and install Chirun.
+
+ * Create a Conda environment and activate it::
+
+    conda create --name chirun
+    conda activate chirun
+
+ * Install ``pdf2svg`` in the environment::
+
+    conda install pdf2svg
+
+ * Install the Chirun Python package::
+
+    pip install git+https://github.com/chirun-ncl/chirun.git --upgrade-strategy only-if-needed
+
+The command ``chirun`` is now available for use whenever the new environment is active. You should
+now continue to :ref:`compile the sample course<The Sample Course>` to ensure everything works.
 
 Upgrade Instructions
 ^^^^^^^^^^^^^^^^^^^^
 
-Run the following command with the virtualenv active to upgrade the installed version of Chirun::
+Run the following command with the Chirun environment active to upgrade the installed version of Chirun::
 
     pip install --upgrade git+https://github.com/chirun-ncl/chirun.git
 
-.. note:: 
+.. note::
 
     You may need to run the above command with an extra ``--force-reinstall`` argument if the version
     number has not been changed between updates.
+
+.. note::
+
+    Run the above command with an extra ``--upgrade-strategy only-if-needed`` argument if you are using Conda.
 
 Development Installation
 ------------------------

@@ -21,53 +21,11 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 
 ---
 
-### Prerequisites
-#### Linux (Ubuntu 18.10+)
- * Ensure a system TeX distribution is installed, such as TeX Live (`apt install texlive-full`).
- * Install `pdf2svg`, `pdftoppm`, `pdftk` and `libyaml` using your standard package manager (`apt install pdf2svg poppler-utils libyaml-dev pdftk-java`).
- * Ensure the `virtualenv` python package is installed (`apt install python3-virtualenv`).
- 
-#### MacOS
-* Install a system TeX distribution, such as MacTeX from https://tug.org/mactex/.
-* Install Homebrew by following the instructions at https://brew.sh and once installed use the `brew` command to install `pdf2svg`, `pdftoppm`, `pdftk` and `libyaml`:
-  - `brew install poppler`
-  - `brew install pdf2svg`
-  - `brew install libyaml`
-  - `brew install pdftk-java`
-* Install `virtualenv` by running `pip3 install virtualenv`.
-* If you are not using the default Apple-provided build of Python 3 ( e.g. Python is installed under `/Applications/Python 3.X`, where `3.X` is the version),
-  ensure that the SSL CA certificates are installed by running:
-    - `sudo /Applications/Python\ 3.X/Install\ Certificates.command`
+### Installation
 
----
+Installation instructions for Linux and macOS can be found [in the Chirun documentation](https://chirun.readthedocs.io/en/latest/getting_started/cli/install.html#installation-instructions).
 
-### Quick Installation
- * Create a Python3 virtualenv: `virtualenv -p python3 chirun_env` and activate it: `source ./chirun_env/bin/activate`
- * Install chirun: `pip install git+https://github.com/chirun-ncl/chirun.git`
-
-The command `chirun` is now available for use. You should now compile the sample course and ensure everything works.
-
-#### Upgrade Instructions
- * Run the following command with the virtualenv active to upgrade the installed version of `chirun`:
- * `pip install --upgrade git+https://github.com/chirun-ncl/chirun.git`
- * You may need to run the above command with an extra `--force-reinstall` argument if the version number has not been changed between updates.
-
----
-
-### Development installation
- * Create a Python3 virtualenv: `virtualenv -p python3 chirun_env` and activate it: `source ./chirun_env/bin/activate`
- * Clone the repository: `git clone https://github.com/chirun-ncl/chirun.git`
- * `cd chirun`
- * Install all the requirements: `pip install -r requirements.txt`
- * Install the chirun tool into your environment: `pip install -e .`
-
-The command `chirun` is now available for use. You should now compile the sample course and ensure everything works.
-
-#### Development Upgrade Instructions
- * To upgrade the development installation pull the latest changes from this git repository and install any new requirements, e.g.
- * `cd chirun`
- * `git pull`
- * `pip install -r requirements.txt`
+Windows can be used via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) and following the Linux installation instructions.
 
 #### Upgrading from `makecourse`
 The project has recently been renamed from "makecourse" to "chirun". To upgrade, first remove the older `makecourse` package with,
