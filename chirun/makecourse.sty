@@ -1,14 +1,17 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{chirun}[2021/11/26 Chirun Support Package]
 
-\ProcessOptions\relax
-\usepackage{hyperref}
+\RequirePackage{kvoptions}
+\DeclareStringOption[{}]{hyperref}
+\ProcessKeyvalOptions*
 
 \newif\ifplastex\plastexfalse
 \ifplastex
 		\usepackage{embed}
 \else
-		\usepackage{comment,xr}
+		\RequirePackage[\makecourse@hyperref]{hyperref}
+		\RequirePackage{comment}
+		\RequirePackage{xr}
 		\excludecomment{divEnv}
 		\excludecomment{HTML}
 		\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
