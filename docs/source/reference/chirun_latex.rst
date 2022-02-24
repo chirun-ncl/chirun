@@ -12,6 +12,31 @@ Use the ``chirun`` LaTeX package in your documents by adding the following line 
 
     \usepackage{chirun}
 
+Interaction with the Hyperref Package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Chirun requires and loads the ``hyperref`` package automatically. If the ``hyperref`` package is loaded for a
+second time it can lead to an error of the form,
+
+.. code-block::
+
+    ! LaTeX Error: Option clash for package hyperref.
+
+One solution is to ensure that the ``hyperref`` package is loaded first:
+
+.. code-block:: latex
+
+    \usepackage[colorlinks,linkcolor={blue}]{hyperref}
+    \usepackage{chirun}
+
+An alternative solution is to load only the ``chirun`` package and pass any required options for ``hyperref``
+via the ``chirun`` package options:
+
+.. code-block:: latex
+
+    \usepackage[hyperref={colorlinks,linkcolor={blue}}]{chirun}
+
+
 Features
 --------
 
