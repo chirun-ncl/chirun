@@ -51,7 +51,7 @@ Item Properties
 
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
  * LaTeX with :ref:`Chirun LaTeX Package`
  * Markdown with :ref:`Chirun Markdown Extensions`
 
@@ -192,7 +192,7 @@ Split Levels
 
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
  * LaTeX with :ref:`Chirun LaTeX Package`
 
 Outputs
@@ -265,7 +265,7 @@ Item Properties
 
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
  * LaTeX with :ref:`Chirun LaTeX Package`
  * Markdown with :ref:`Chirun Markdown Extensions`
 
@@ -318,7 +318,7 @@ Item Properties
      - ``[]``
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 LaTeX with the Beamer Package
 *****************************
@@ -416,7 +416,7 @@ Item Properties
 
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
  * Markdown with :ref:`Chirun Markdown Extensions`
 
 Outputs
@@ -535,7 +535,7 @@ Item Properties
      - ``[]``
 
 Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
  * HTML
 
 Outputs

@@ -33,6 +33,23 @@ Save the above example in a file named ``config.yml``. Then, in the same directo
 be included as part of the output produced Chirun. Finally, update the document titles and source filenames in
 ``config.yml`` to match your documents and the course package is ready to be built using Chirun. 
 
+.. warning::
+
+   When building a course package consisting of multiple source files Chirun uses the creation and modification
+   dates of the input and output files to decide whether to (re-)compile a certain item. When compiling a course
+   that has already been compiled before, only items where the source file was modified after the previous run
+   of ``chirun`` will be compiled.
+
+   This can cause issues when editing indirectly included files, such as images not directly listed as the source
+   in ``config.yml``, or when editing source filenames to point to files with older modification dates. Such problems
+   can usually be solved by modifying the named source file in some way, so that the modification date is later.
+
+   On Linux and macOS, this can be done with a single command that updates the modification date without changing
+   the content of the file::
+
+        touch example_item.tex
+
+
 The Sample Course
 -----------------
 
