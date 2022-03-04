@@ -10,6 +10,11 @@ from chirun.markdownRenderer.arithmatex import ArithmatexExtension
 class MarkdownRenderer(object):
     def __init__(self):
         self.extension_configs = {
+            "pymdownx.striphtml": {
+                'strip_comments': True,
+                'strip_js_on_attributes': False,
+                'strip_attributes': []
+            },
             "pymdownx.superfences": {
                 "custom_fences": [{
                     'name': 'runnable',
@@ -43,7 +48,8 @@ class MarkdownRenderer(object):
             OutlineExtension(),
             'pymdownx.highlight',
             'pymdownx.extra',
-            'pymdownx.superfences'
+            'pymdownx.superfences',
+            'pymdownx.striphtml',
         ]
         content = markdown(md_string or content_item.markdown_content(), extensions=mdx_extensions,
                            extension_configs=self.extension_configs)
