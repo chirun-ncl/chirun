@@ -1,6 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{chirun}[2021/11/26 Chirun Support Package]
 
+\newif\ifplastex\plastexfalse
+
 \RequirePackage{kvoptions}
 \DeclareStringOption[{}]{hyperref}
 \ProcessKeyvalOptions*
