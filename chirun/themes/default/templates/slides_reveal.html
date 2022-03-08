@@ -99,9 +99,9 @@
 			});
 			Reveal.on( 'ready', event => {
 				try {
-					MathJax.typeset();
+					MathJax.startup.defaultPageReady();
 				} catch(err) {
-					console.log('Problem running MathJax.typeset()');
+					console.log('Problem running MathJax.startup.defaultPageReady()');
 				}
 				mp4ImageFallback();
 				updateThemeBodyTag();
