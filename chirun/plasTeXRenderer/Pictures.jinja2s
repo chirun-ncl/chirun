@@ -1,10 +1,16 @@
 name: picture
-<div class="picture">
-{% if obj.renderer.vectorImager.enabled %}
-<object type="image/svg+xml" data="{{ obj.vectorImage.url }}" style="width: {{ obj.vectorImage.width.em }}; height: {{ obj.vectorImage.height.em }};">
-{% endif %}
-<img src="{{ obj.image.url }}" alt="{{ obj.source }}" style="width: {{ obj.image.width.px }}; height: {{obj.image.height.px }}" class="picture gen" />
-{% if obj.renderer.vectorImager.enabled %}
-</object>
-{% endif %}
+<div class="picture" id="{{ obj.id }}">
+  {% if obj.renderer.vectorImager.enabled %}
+	{% if obj.altText %}
+		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.altText.textContent|e }}"/>
+	{% else %}
+		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.source|e }}" />
+	{% endif %}
+  {% else %}
+	{% if obj.altText %}
+		<img src="{{ obj.image.url }}" alt="{{ obj.altText.textContent|e }}" />
+	{% else %}
+		<img src="{{ obj.image.url }}" alt="{{ obj.source|e }}" />
+	{% endif %}
+  {% endif %}
 </div>

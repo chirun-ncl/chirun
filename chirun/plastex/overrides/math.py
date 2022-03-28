@@ -1,6 +1,6 @@
 from plasTeX import Command, sourceChildren, sourceArguments, Macro, Environment
 from plasTeX.Base.LaTeX.Arrays import Array
-from plasTeX.Base.LaTeX import Math
+from plasTeX.Base.LaTeX import Math, Pictures
 from plasTeX.Base.TeX import Primitives
 from plasTeX.Tokenizer import Token
 from plasTeX.Logging import getLogger
@@ -43,6 +43,18 @@ class mbox(BoxCommand):
 
 class TextCommand(BoxCommand):
     pass
+
+# Overrive math mode in picture env to avoid extra <script type="math/tex">
+class picture(Pictures.picture):
+    class math(Math.math):
+        def normalize(self, charsubs=None):
+            return Macro.normalize(self, charsubs=None)
+
+        @property
+        def source(self):
+            if self.hasChildNodes():
+                return r'\(%s\)' % sourceChildren(self)
+            return r'\('
 
 
 # Use <script type="math/tex"> to avoid problems with less than symbol in MathJax
