@@ -157,7 +157,7 @@ def mathjax_script_dollar(soup, item):
 def links_to_data_uri(soup, item):
     """
         Rewrite links into to embedded data-uri streams
-        Useful for jupyter notebooks where'd like things to be self contained
+        Useful for jupyter notebooks where we'd like things to be self contained
     """
     tags = {
         'a': ['href'],
