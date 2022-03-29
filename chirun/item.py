@@ -146,7 +146,7 @@ class Item(object):
         if 'source' in self.data:
             ext = self.source.suffix
             if ext == '.md':
-                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
+                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
                     mdContents = f.read()
                 if mdContents[:3] == '---':
                     logger.info('    Note: Markdown file {} contains a YAML header. It will be merged in...'
@@ -175,7 +175,7 @@ class Item(object):
                 plastex_output = self.course.load_latex_content(self)
                 html = plastex_output['index.html']['html']
             elif ext == '.html':
-                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8') as f:
+                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
                     html = f.read()
             else:
                 raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))

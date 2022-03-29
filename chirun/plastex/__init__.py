@@ -115,7 +115,7 @@ class PlastexRunner:
         for section, filename in self.renderer.files.items():
             filepath = item.temp_path() / filename
             if filepath.is_file():
-                with open(filepath, encoding='utf-8') as f:
+                with open(filepath, encoding='utf-8-sig') as f:
                     plastex_output[filepath.name] = {
                         # TODO: an abstraction for applying the following as a series of filters
                         'html': getEmbeddedImages(self, f.read(), item),
