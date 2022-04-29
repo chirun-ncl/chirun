@@ -137,7 +137,7 @@ class PDFProcess(ItemProcess):
         if ext == '.tex':
             item.toc = PDFLatex(self.course, item).process_split_pdf()
         elif ext == '.md':
-            raise Exception("PDF output for markdown document item types are not yet supported")
+            self.makePDF(item)
 
     def visit_chapter(self, item):
         self.makePDF(item)

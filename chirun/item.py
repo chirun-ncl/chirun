@@ -251,6 +251,8 @@ class Document(Item):
     type = 'document'
     title = 'Untitled part'
     template_name = 'chapter.html'
+    template_pdfheader = 'print_header.html'
+    template_pdffooter = 'print_footer.html'
     splitlevel = 0
     generated = False
     has_sidebar = True
@@ -364,6 +366,13 @@ class Document(Item):
             with open(self.out_struct_file, 'w') as f:
                 yaml.dump(self.content_tree(), f)
 
+        def markdown_structure():
+            """ Generate a document structure cache for markdown documents"""
+            self.generated = True
+            logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
+            with open(self.out_struct_file, 'w') as f:
+                yaml.dump(self.content_tree(), f)
+
         def load_cached_structure():
             """
             Load the cached document structure if one exists and is current
@@ -386,8 +395,10 @@ class Document(Item):
             if not load_cached_structure():
                 run_plastex_for_structure()
         else:
-            raise Exception("Error: Unrecognised source type used for LaTeX Document item {}: {}"
-                            .format(self.title, self.source))
+            if not load_cached_structure():
+                markdown_structure()
+                logger.warning("Warning: Document splitting is currently unsupported for markdown "
+                               "source items ({})".format(self.source))
 
     @property
     def plastex_filename_rules(self):
