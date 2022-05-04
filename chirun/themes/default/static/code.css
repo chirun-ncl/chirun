@@ -54,6 +54,12 @@ p code, li code, table code {
 	padding: 5px 0px 5px 0px;
 }
 
+.reveal button.run-code {
+	padding: 5px 10px 8px 10px;
+	font-size: 0.7em;
+	margin: 0;
+}
+
 .reveal button.run-code:focus, .reveal code:focus {
     outline: none !important;
 }

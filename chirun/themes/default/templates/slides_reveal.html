@@ -16,7 +16,7 @@
 		<link id="customiseCSS" rel="stylesheet" href="{{'reveal.js/dist/theme/light.css'|static_url}}">
 		<link rel="stylesheet" href="{{'slides.css'|static_url}}">
 		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
-		<link rel="stylesheet" href="{{'boole.css'|static_url}}">
+		<link rel="stylesheet" href="{{'code.css'|static_url}}">
 		{% for css in course.config.css %}
 			<link rel="stylesheet" href="{{css|static_url}}">
 		{% endfor %}
@@ -26,6 +26,9 @@
 		{% endblock stylesheets %}
 
 		{% block javascript %}
+		<script>
+			var chirun_static_url="{{'.'|static_url}}";
+		</script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
 		<script defer src="{{'mathjax_config.js'|static_url}}"></script>
 		<script type="text/javascript" id="MathJax-script" defer src="{{course.config.mathjax_url}}"></script>
@@ -33,7 +36,7 @@
 		<script defer src="{{'spin.min.js'|static_url}}"></script>
 		<script src="{{'customisation.js'|static_url}}"></script>
 		<script defer src="{{'mp4.js'|static_url}}"></script>
-		<script src="{{'boole.js'|static_url}}"></script>
+		<script src="{{'code.js'|static_url}}"></script>
 		<script>
 			if( window.location.search.match( /print-pdf/gi )){
 				var link = document.createElement( 'link' );
