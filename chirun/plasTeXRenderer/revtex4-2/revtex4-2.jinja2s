@@ -1,0 +1,81 @@
+name: affiliation abstract altaffiliation preprint email collaboration homepage bibfield bibinfo spacefactor
+
+name: LaTeXe
+L<sup style="font-variant:small-caps; margin-left:-0.3em">a</sup>T<sub style="text-transform:uppercase; margin-left:-0.2em">e</sub>X<span style="margin-left:0.3em">2</span><sub style="margin-left:-0.1em">ε</sub>
+
+name: maketitle
+{% set metadata=obj.ownerDocument.userdata %}
+<div class="titlepage text-center">
+    <h1>
+        {{ metadata.title }}
+        {% if metadata.thanks %}
+            <a class="footnote" href="#{{ metadata.thanks.id }}">
+                <sup class="footnotemark">{{ metadata.thanks.mark.attributes.num }}</sup>
+            </a>
+        {% endif %}
+    </h1>
+    {% if metadata.affiliations %}
+        {%for affiliation in metadata.affiliations %}
+            {% if affiliation.authors|length > 0 %}
+            <div class="revtex-authors mt-3">
+                {%for author in affiliation.authors %}
+                    <span class="author">{{ author }}</span>
+                    {%for altaffiliation in metadata.altaffiliations %}
+                        {% if altaffiliation.author == author %}
+                            <a class="footnote" href="#{{ altaffiliation.id }}">
+                                <sup class="footnotemark">{{ altaffiliation.mark.attributes.num }}</sup>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="revtex-affiliation">{{ affiliation }}</div>
+            {% for collaboration in metadata.collaborations %}
+                {% if collaboration.author in affiliation.authors %}
+                    <div class="revtex-collaboration">({{ collaboration }})</div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% elif metadata.author %}
+        <div class="authors">
+            {%for author in metadata.author %}
+                <span class="author">{{ author }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if metadata.date %}
+        <p class="date">(Dated: {{ metadata.date }})</p>
+    {% endif %}
+    {% if metadata.abstract %}
+        <p class="abstract">{{ metadata.abstract }}</p>
+    {% endif %}
+</div>
+
+name: acknowledgments
+<h2 style="text-transform:uppercase" id="{{ obj.id }}">Acknowledgments</h2>
+{{ obj }}
+
+name: section
+<h2 style="text-transform:uppercase" id="{{ obj.id }}">{{ obj.fullTitle }}</h2>
+{{ obj }}
+
+name: subsubsection
+<h3 class="font-italic font-weight-normal" id="{{ obj.id }}">{{ obj.fullTitle }}</h3>
+{{ obj }}
+
+name: paragraph
+<h4 class="font-italic font-weight-normal" id="{{ obj.id }}"><small>{{ obj.fullTitle }}</small></h4>
+{{ obj }}
+
+name: onlinecite 
+type: xml
+<span class="cite">
+{% for item in obj.citation() %}
+	{% if item.idref and item.idref.bibitem.url %}
+	    <a href="{{ item.idref.bibitem.url }}" >{{ item }}</a>
+	{% else %}
+	    {{ item }}
+	{% endif %}
+{% endfor %}
+</span>
