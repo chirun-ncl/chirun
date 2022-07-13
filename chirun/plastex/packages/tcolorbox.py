@@ -1,7 +1,7 @@
 from plasTeX.PackageResource import (PackageTemplateDir)
 from plasTeX import Environment
 
-from chirun.plastex.color import latex2htmlcolor
+from chirun.plastex.packages.color import latex2htmlcolor
 
 
 def ProcessOptions(options, document):

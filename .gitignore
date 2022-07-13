@@ -1,8 +1,6 @@
-.makecourse_venv/
 *.paux
 *.pyc
 *.swp
-makeCourse.egg-info/
 chirun.egg-info/
 docs/build
 **/.DS_Store

@@ -1,4 +1,6 @@
 from plasTeX import Command, Environment
+from plasTeX.DOM import Text
+from plasTeX.Base.LaTeX.Verbatim import verbatim
 
 
 class numbas(Command):
@@ -16,6 +18,15 @@ class youtube(Command):
 class embed(Command):
     args = 'content:str'
 
+class HTML(verbatim):
+    captionable = True
+    blockType = False
+    
+    def digest(self, tokens):
+        verbatim.digest(self, tokens)
+        self.str = Text(''.join(self))
+        self.str.isMarkup = True
+        return []
 
 class cssclass(Command):
     args = '[ classes:str ] content:str'

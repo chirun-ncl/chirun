@@ -4,8 +4,8 @@ import os
 import shutil
 import sys
 from chirun import mkdir_p
-from chirun.plastex.Imagers.pdf2svg import Imager as VectorImager
-from chirun.plastex.Imagers.pdftoppm import Imager as Imager
+from plasTeX.Imagers.pdf2svg import Imager as VectorImager
+from plasTeX.Imagers.pdftoppm import Imager as PPMImager
 from pathlib import Path
 from plasTeX import Environment, TeXDocument
 from plasTeX.Tokenizer import EscapeSequence
@@ -13,11 +13,12 @@ from chirun.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
 import plasTeX.Logging
-from plasTeX.Config import config as plastex_config
-import chirun.plasTeXRenderer.Config as html_config
+import plasTeX.Config
+from chirun.plasTeXRenderer.Config import add_html_config
 from chirun.plastex import overrides
 
-plastex_config += html_config.config
+plastex_config = plasTeX.Config.defaultConfig()
+add_html_config(plastex_config)
 
 logger = getLogger()
 imagelog = getLogger('imager')
@@ -139,20 +140,22 @@ class PlastexRunner:
 
         wd = os.getcwd()
 
-        plastex_config['files']['filename'] = item.plastex_filename_rules
+        plastex_config['files']['filename'] = str(item.plastex_filename_rules)
         plastex_config['files']['split-level'] = item.splitlevel
         plastex_config['general']['renderer'] = 'chirun'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
         plastex_config['images']['imager'] = 'none'
+        plastex_config['general']['packages-dirs'] += [str(Path(__file__).parent / 'packages')]
         self.document = TeXDocument(config=plastex_config)
         self.document.userdata['working-dir'] = '.'
 
         self.document.context.importMacros(vars(overrides))
+        self.document.context.packages['chirun'] = {}
 
         f = open(str(Path(wd) / inPath))
         TeX.processIfContent = _processIfContent
-        tex = TeX(self.document, myfile=f)
+        tex = TeX(self.document, file=f)
         self.document.userdata['jobname'] = tex.jobname
         pauxname = os.path.join(self.document.userdata.get('working-dir', '.'),
                                 '%s.paux' % self.document.userdata.get('jobname', ''))
@@ -171,7 +174,7 @@ class PlastexRunner:
         self.renderer.loadTemplates(self.document)
         self.renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
         self.renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
-        self.renderer.imager = Imager(self.document, self.renderer.imageTypes)
+        self.renderer.imager = PPMImager(self.document, self.renderer.imageTypes)
         self.renderer.render(self.document)
 
         os.chdir(wd)

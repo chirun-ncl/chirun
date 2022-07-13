@@ -3,7 +3,7 @@ import datetime
 import chirun.filter
 import re
 import nbformat
-from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
+from jinja2 import Environment, FileSystemLoader, select_autoescape, pass_context, TemplateNotFound
 from pyppeteer import launch
 from notedown import MarkdownReader
 from chirun.markdownRenderer import MarkdownRenderer
@@ -40,7 +40,7 @@ class Renderer(object):
             autoescape=select_autoescape(['html'])
         )
 
-        @contextfilter
+        @pass_context
         def url_filter(context, url, theme=False):
             self.course.force_theme = theme
             if not re.search(r'^[^:]+:\/\/', url):
@@ -49,7 +49,7 @@ class Renderer(object):
             return url
         self.env.filters['url'] = url_filter
 
-        @contextfilter
+        @pass_context
         def static_url(context, url):
             return url_filter(context, 'static/' + url)
         self.env.filters['static_url'] = static_url

@@ -4,7 +4,7 @@ from plasTeX.Packages.beamer import *  # noqa: F401, F403
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
 from plasTeX.Packages.hyperref import *  # noqa: F401, F403
-from chirun.plastex.graphicx import *  # noqa: F401, F403
+from chirun.plastex.packages.graphicx import *  # noqa: F401, F403
 from chirun.plastex.overrides.lists import *  # noqa: F401, F403
 
 from plasTeX.PackageResource import (PackageTemplateDir)

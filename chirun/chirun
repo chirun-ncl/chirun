@@ -10,7 +10,6 @@ import chirun.latex
 import os
 import shutil
 import yaml
-from distutils.dir_util import copy_tree
 import chirun
 from chirun import mkdir_p
 from chirun.item import load_item
@@ -224,7 +223,7 @@ class Chirun:
         if srcPath.is_dir():
             logger.debug("    {src} => {dest}".format(src=srcPath, dest=dstPath))
             try:
-                copy_tree(str(srcPath), str(dstPath))
+                shutil.copytree(srcPath, dstPath)
             except Exception:
                 logger.warning("Warning: Problem copying Course's static directory!")
 

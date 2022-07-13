@@ -30,4 +30,4 @@ name: g@p
 <div class="gap" style="margin-bottom: {{ obj.attributes.size }}">&nbsp;</div>
 
 name: HTML XHTML html xhtml
-{{ obj }}
+{{ obj|safe }}
