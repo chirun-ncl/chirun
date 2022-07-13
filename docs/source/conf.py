@@ -7,7 +7,7 @@ copyright = 'E-Learning Unit, Newcastle University'
 author = 'E-Learning Unit, Newcastle University'
 
 release = '0.7'
-version = '0.7.0'
+version = '0.7.1'
 
 # -- General configuration
 
