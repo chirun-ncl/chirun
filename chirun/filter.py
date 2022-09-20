@@ -192,7 +192,8 @@ class HTMLFilter(object):
                oembed, fix_local_links, dots_pause]
 
     def apply(self, item, html, out_format):
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup('<!-- -->'+html, 'html.parser') # An empty comment at the start is added to avoid bs4's MarkupResemblesLocatorWarning
+        next(soup.children).extract()                        # and removed immediately, once the HTML is parsed.
         for f in self.filters:
             f(soup, item=item)
         return str(soup)
