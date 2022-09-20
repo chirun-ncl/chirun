@@ -1,5 +1,5 @@
 import logging
-from distutils.dir_util import copy_tree
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +44,6 @@ class Theme(object):
         logger.debug("    {src} => {dest}".format(src=srcPath, dest=dstPath))
 
         try:
-            copy_tree(str(srcPath), str(dstPath))
+            shutil.copytree(str(srcPath), str(dstPath), dirs_exist_ok=True)
         except Exception:
             logger.warning("Warning: Problem copying the theme's static files")
