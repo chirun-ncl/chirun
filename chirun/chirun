@@ -157,20 +157,46 @@ class Chirun:
 
             Extend the default config with the config loaded from the filesystem
         """
+
+        self.config = self.default_config()
+
         config_file = self.get_config_file()
 
         logger.debug("Reading config file {}".format(config_file))
 
-        with open(str(config_file), 'r') as f:
-            try:
-                config = self.loaded_config = yaml.load(f, Loader=yaml.CLoader)
-            except AttributeError:
-                config = self.loaded_config = yaml.load(f, Loader=yaml.Loader)
+        if config_file.exists():
+            with open(str(config_file), 'r') as f:
+                try:
+                    config = self.loaded_config = yaml.load(f, Loader=yaml.CLoader)
+                except AttributeError:
+                    config = self.loaded_config = yaml.load(f, Loader=yaml.Loader)
+            self.config.update(self.loaded_config)
 
-        config['args'] = self.args
+        else:
+            if self.args.single_file is None:
+                raise Exception("The config file {config_file} does not exist.")
 
-        self.config = self.default_config()
-        self.config.update(self.loaded_config)
+
+        if self.args.single_file:
+            self.config.update({
+                'structure': [
+                    {
+                        'type': 'standalone',
+                        'sidebar': False,
+                        'topbar': False,
+                        'footer': True,
+                        'source': self.args.single_file
+                    }
+                ]
+            })
+
+        self.config['args'] = self.args
+
+    def get_main_file(self):
+        if self.args.single_file:
+            return Path(self.args.single_file)
+        else:
+            return self.get_config_file()
 
     def theme_directories(self):
         """
@@ -361,6 +387,7 @@ def parse_args():
             This option will be removed in a future version.')
     parser.add_argument('dir', help='Path to a chirun compatible source directory.\
             Defaults to the current directory.', default='.', nargs='?')
+    parser.add_argument('-f', dest='single_file', help='The path to a single file to build')
     parser.set_defaults(build_pdf=None)
     args = parser.parse_args()
 

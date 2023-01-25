@@ -277,6 +277,8 @@ class Document(Item):
                     self.cached_struct = yaml.load(f, Loader=yaml.CLoader)
                 except AttributeError:
                     self.cached_struct = yaml.load(f, Loader=yaml.Loader)
+        else:
+            self.cached_struct = {}
         return super().recently_built() and self.cached_struct.get('splitlevel', -2) == self.splitlevel
 
     def generate_chapter_subitems(self):
