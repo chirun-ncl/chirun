@@ -195,9 +195,13 @@ class Item(object):
             'slug': self.slug,
             'title': self.title,
             'source': str(self.source),
-            'pdf_url': self.pdf_url,
+            'url': self.url,
             'build_pdf': self.has_pdf,
         }
+
+        if self.has_pdf:
+            attr_dict['pdf_url'] = self.pdf_url
+
         return attr_dict
 
 
@@ -504,6 +508,11 @@ class Slides(Chapter):
         })
         return context
 
+    def content_tree(self):
+        tree = super().content_tree()
+        tree['slides_url'] = self.slides_url
+        return tree
+
     @property
     def out_slides(self):
         return self.named_out_file.with_suffix('.slides.html')
@@ -516,7 +525,7 @@ class Slides(Chapter):
 class Introduction(Part):
     type = 'introduction'
     template_name = 'index.html'
-    title = 'index'
+    title = 'Introduction'
     is_index = True
 
     def __str__(self):
@@ -524,7 +533,7 @@ class Introduction(Part):
 
     out_path = Path('')
     out_file = Path('index.html')
-    url = ''
+    url = 'index.html'
 
     def get_context(self):
         context = super().get_context()
@@ -543,7 +552,7 @@ class Standalone(Document):
     title = 'document'
     out_path = Path('')
     out_file = Path('index.html')
-    url = ''
+    url = 'index.html'
     is_index = True
     splitlevel = -2
 
