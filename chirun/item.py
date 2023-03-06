@@ -38,8 +38,7 @@ class Item(object):
         self.course = course
         self.parent = parent
         self.data = data
-        self.title = self.data.get('title', self.title)
-        self.slug = slugify(self.title)
+        self.set_title(self.data.get('title', self.title))
         self.author = self.data.get('author', self.parent.author if self.parent else self.course.config.get('author'))
         self.source = Path(self.data.get('source', ''))
         self.is_hidden = self.data.get('hidden', False)
@@ -52,6 +51,10 @@ class Item(object):
 
     def __str__(self):
         return '{} "{}"'.format(self.type, self.title)
+
+    def set_title(self, title):
+        self.title = title
+        self.slug = slugify(title)
 
     def get_context(self):
         context = {
@@ -222,6 +225,12 @@ class Html(Item):
     def out_file(self):
         return self.out_path / self.in_file
 
+class ExtractedSection(Html):
+    """
+        A section extracted from a Document item.
+        The content is always HTML, but this subclass is used so extracted items can be distinguished from source HTML items in the manifest.
+    """
+    type = 'extractedsection'
 
 class Part(Item):
     type = 'part'
@@ -252,8 +261,11 @@ class Part(Item):
 
 
 class Document(Item):
+    """
+        A single document which will produce several items - an HTML item for each section at the given splitlevel, with a Part structure for higher levels.
+    """
     type = 'document'
-    title = 'Untitled part'
+    title = 'Untitled document'
     template_name = 'chapter.html'
     template_pdfheader = 'print_header.html'
     template_pdffooter = 'print_footer.html'
@@ -286,8 +298,6 @@ class Document(Item):
         return super().recently_built() and self.cached_struct.get('splitlevel', -2) == self.splitlevel
 
     def generate_chapter_subitems(self):
-        ext = self.source.suffix
-
         def copy_attrs(item):
             item.last_built = self.last_built
             item.has_sidebar = self.has_sidebar
@@ -334,7 +344,12 @@ class Document(Item):
             """ Run plastex and use the result to generate a document structure cache"""
             plastex_output = self.course.load_latex_content(self)
             last_item = {-2: self}
-            for fn, chapter in plastex_output.items():
+
+            if self.title == self.__class__.title and 'index.html' in plastex_output:
+                index = plastex_output['index.html']
+                self.set_title(index.get('title', self.title))
+
+            for chapter in plastex_output.values():
                 chapter['html'] = HTMLFilter().apply(self, chapter['html'], out_format='html')
                 if chapter['html'].isspace():
                     chapter['html'] = ''
@@ -360,7 +375,7 @@ class Document(Item):
                         if i in last_item:
                             parent = last_item[i]
                         i = i + 1
-                    item = Html(self.course, chapter, self)
+                    item = ExtractedSection(self.course, chapter, self)
                     copy_attrs(item)
                     setup_pdf_url(item, chapter)
                     parent.content.append(item)
@@ -396,6 +411,8 @@ class Document(Item):
                 return True
             self.last_built = None
             return False
+
+        ext = self.source.suffix
 
         if ext == '.tex':
             if not load_cached_structure():
@@ -586,6 +603,7 @@ item_types = {
     'standalone': Standalone,
     'url': Url,
     'html': Html,
+    'extractedsection': ExtractedSection,
     'slides': Slides,
     'exam': Exam,
     'notebook': Notebook,

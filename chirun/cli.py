@@ -51,8 +51,6 @@ class Chirun:
         TEXINPUTS += [os.environ.get('TEXINPUTS', '')]
         os.environ['TEXINPUTS'] = ':'.join(TEXINPUTS)
 
-        print("Running chirun for directory {}".format(self.get_root_dir().resolve()))
-
     def get_root_dir(self):
         """
             The path to the course's source directory
@@ -363,16 +361,19 @@ The web root directory is: {web_root}
         self.make_directories()
         theme.copy_static_files()
         self.copy_static_files()
-        self.load_structure()
         self.process()
         self.optimize()
 
     def build(self):
+        print("Running chirun for directory {}".format(self.get_root_dir().resolve()))
+
         oembed.load_cache()
 
         self.load_config()
 
         self.load_themes()
+
+        self.load_structure()
 
         for theme in self.themes:
             self.build_with_theme(theme)
