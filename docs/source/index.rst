@@ -63,7 +63,6 @@ to work with the VLE by your local IT system administrators.
 
    extending/index
    themes
-   api
 
 .. toctree::
    :caption: Information for Administrators
