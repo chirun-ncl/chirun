@@ -7,6 +7,7 @@ from chirun import mkdir_p
 from chirun.plastex.Imagers.pdf2svg import Imager as VectorImager
 from chirun.plastex.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
+import plasTeX
 from plasTeX import Environment, TeXDocument
 from plasTeX.Tokenizer import EscapeSequence
 from chirun.plasTeXRenderer import Renderer
@@ -16,6 +17,20 @@ import plasTeX.Logging
 from plasTeX.Config import config as plastex_config
 import chirun.plasTeXRenderer.Config as html_config
 from chirun.plastex import overrides
+
+def reset_idgen():
+    """
+        Reset plasTeX's ID generator, so it produces the same IDs each time it is run on the same document.
+    """
+
+    def idgen():
+        """ Generate a unique ID """
+        i = 1
+        while 1:
+            yield 'a%.10d' % i
+            i += 1
+
+    plasTeX.idgen = idgen()
 
 plastex_config += html_config.config
 
@@ -138,6 +153,8 @@ class PlastexRunner:
         inPath = root_dir / item.source
 
         wd = os.getcwd()
+
+        reset_idgen()
 
         plastex_config['files']['filename'] = item.plastex_filename_rules
         plastex_config['files']['split-level'] = item.splitlevel
