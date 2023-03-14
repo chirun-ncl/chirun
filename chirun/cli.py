@@ -61,9 +61,7 @@ class Chirun:
         """
             The path the output will be put in
         """
-        if len(self.config['themes']) > 1: 
-            return self.build_dir / (self.force_theme.path if self.force_theme else self.theme.path)
-        return self.build_dir
+        return self.build_dir / (self.force_theme.path if self.force_theme else self.theme.path)
 
     def get_static_dir(self):
         """
@@ -108,8 +106,10 @@ class Chirun:
             return url
         else:
             levels = len(item.out_file.parents) - 1
+
             if url[:len(root) - 1] == root[1:]:
                 url = url[len(root) - 1:]
+
             if self.force_theme:
                 return '/'.join(['..'] * (levels + 1)) + '/' + self.force_theme.path + '/' + url
             elif levels > 0:
@@ -129,7 +129,7 @@ class Chirun:
             'themes': [{
                 'title': 'Default',
                 'source': 'default',
-                'path': 'default'
+                'path': '.'
             }]
         }
         return config
