@@ -164,33 +164,55 @@ class Item(object):
 
         return body
 
-    def as_html(self):
+    def build_html(self):
         if 'html' in self.data:
-            return self.data['html']
+            html = self.data['html']
+        else:
+            html = ''
+            if 'source' in self.data:
+                ext = self.source.suffix
+                if ext == '.md':
+                    outPath = (self.course.get_build_dir() / self.out_file).parent
+                    html = self.markdownRenderer.render(self, outPath)
+                elif ext == '.tex':
+                    plastex_output = self.course.load_latex_content(self)
+                    html = plastex_output['index.html']['html']
+                elif ext == '.html':
+                    with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
+                        html = f.read()
+                else:
+                    raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
-        html = ''
-        if 'source' in self.data:
-            ext = self.source.suffix
-            if ext == '.md':
-                outPath = (self.course.get_build_dir() / self.out_file).parent
-                html = self.markdownRenderer.render(self, outPath)
-            elif ext == '.tex':
-                plastex_output = self.course.load_latex_content(self)
-                html = plastex_output['index.html']['html']
-            elif ext == '.html':
-                with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
-                    html = f.read()
-            else:
-                raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
+        html, headers = HTMLFilter().apply(self, html, out_format='html')
 
-        html = HTMLFilter().apply(self, html, out_format='html')
-        return html
+        self.html = html
+        self.headers = headers
+
+    def as_html(self):
+        self.build_html()
+
+        return self.html
+
+    def get_headers(self):
+        self.build_html()
+
+        return self.headers
 
     def temp_path(self):
         """
             Path to a temporary directory which can store files produced while processing this item
         """
         return self.course.temp_path(self.url.replace('/', '-'))
+
+    def alternative_formats(self):
+        """
+            A generator giving formats other than the standard HTML format for this item.
+
+            Each item is a dict with keys ``'name'``, ``'url'`` and ``'download'``.
+        """
+
+        if self.has_pdf:
+            yield {'name': 'PDF', 'url': self.pdf_url, 'download': True}
 
     def content_tree(self):
         attr_dict = {
@@ -350,7 +372,6 @@ class Document(Item):
                 self.set_title(index.get('title', self.title))
 
             for chapter in plastex_output.values():
-                chapter['html'] = HTMLFilter().apply(self, chapter['html'], out_format='html')
                 if chapter['html'].isspace():
                     chapter['html'] = ''
                 if chapter['level'] < -1:
@@ -538,6 +559,9 @@ class Slides(Chapter):
     def slides_url(self):
         return str(self.out_slides)
 
+    def alternative_formats(self):
+        yield {'name': 'Slides', 'url': self.slides_url}
+        yield from super().alternative_formats()
 
 class Introduction(Part):
     type = 'introduction'
@@ -594,6 +618,9 @@ class Notebook(Chapter):
     def nb_url(self):
         return str(self.out_nb)
 
+    def alternative_formats(self):
+        yield from super().alternative_formats()
+        yield {'name': 'Notebook', 'url': self.nb_url, 'download': True}
 
 item_types = {
     'introduction': Introduction,
