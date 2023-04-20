@@ -202,7 +202,11 @@ class HTMLFilter(object):
             try:
                 return element['id']
             except KeyError:
-                slug = slugify(element.text)
+                text = element.text
+                n = 0
+                while soup.find(id=slugify(element.text, n)) is not None:
+                    n += 1
+                slug = slugify(element.text, n)
                 element['id'] = slug
                 return slug
 

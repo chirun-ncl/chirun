@@ -19,11 +19,11 @@ def copytree(src, dst, symlinks=False, ignore=None):
 
 def slugify(value, v=0):
     slug = "".join([c for c in re.sub(r'\s+', '_', value)
-                    if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()[:20]
+                    if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()
     if(v == 0):
         return slug
     else:
-        return '{}_{}'.format(slug, str(v))
+        return f'{slug}_{v}'
 
 
 def gen_dict_extract(key, var):
