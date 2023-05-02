@@ -1,0 +1,23 @@
+{% extends "item.html" %}
+{% import "macros.html" as macros %}
+
+{% block body_class %}{{super()}} structure{% endblock %}
+
+{% block header %}
+    <h1>{{item.title}}</h1>
+{% endblock header %}
+
+{% block main %}
+    <article class="item-content">
+        <section class="leading-text">
+            <p>{{ item.leading_text }}</p>
+        </section>
+        <section>
+            {{item.as_html()|safe}}
+        </section>
+    </article>
+
+    {% with structure=item.content %}
+        {% include "structure.html" %}
+    {% endwith %}
+{% endblock main %}

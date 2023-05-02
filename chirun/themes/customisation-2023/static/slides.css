@@ -1,0 +1,70 @@
+.slides-smaller{font-size:50% !important;}
+.slides-small{font-size:70% !important;}
+.slides-bold{font-weight:800 !important;}
+.slides-large{font-size: 100% !important;}
+.slides-larger{font-size: 125% !important;}
+
+.reveal section figure img {
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.reveal .header-l {
+    position: absolute;
+    color: #333;
+    max-width: 50%;
+    top: 1em;
+    left: 1em;
+    font-size: 0.7em;
+}
+
+.reveal .header-r {
+    position: absolute;
+    color: #333;
+    max-width: 50%;
+    top: 1em;
+    right: 1em;
+    font-size: 0.7em;
+    text-align: right;
+}
+
+h2{
+  text-transform: none !important;
+}
+
+.reveal p.author {
+	text-align: center;
+}
+.reveal p {
+	text-align: left;
+}
+.reveal ul {
+  display: block;
+}
+.reveal ol {
+  display: block;
+}
+
+.tabular{
+  width:100%;
+}
+
+.reveal {
+  font-size: 30px !important;
+}
+
+.reveal table p {
+  margin:0;
+}
+
+.reveal blockquote {
+  margin: 1.5em 0.75em;
+  padding: 0.5em 1.0em;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.reveal blockquote > p {
+  margin: 0 !important;
+}

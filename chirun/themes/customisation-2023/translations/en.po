@@ -1,0 +1,203 @@
+# Translations template for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-04-27 15:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: static/code.mjs:88
+msgid "Unrecognised job id ${job_id}"
+msgstr ""
+
+#: static/code.mjs:99
+msgid "run_code should be implemented."
+msgstr ""
+
+#: static/code.mjs:106
+msgid "This code runner can't be interrupted."
+msgstr ""
+
+#: static/code.mjs:286
+msgid "Error running R code"
+msgstr ""
+
+#: static/code.mjs:393
+msgid "An error occured running code: ${error}"
+msgstr ""
+
+#: static/embed_numbas.mjs:135
+msgid "Unexpected postMessage data:"
+msgstr ""
+
+#: templates/base.html:57
+msgid "Test Yourself"
+msgstr ""
+
+#: templates/base.html:59
+msgid "Complete"
+msgstr ""
+
+#: templates/base.html:60
+msgid "Incomplete"
+msgstr ""
+
+#: templates/base.html:63
+msgid "Score:"
+msgstr ""
+
+#: templates/base.html:72
+msgid "Skip to content"
+msgstr ""
+
+#: templates/base.html:79
+msgid "Display options"
+msgstr ""
+
+#: templates/chapter.html:21
+#, python-format
+msgid "Download as %(format)s"
+msgstr ""
+
+#: templates/chapter.html:21
+#, python-format
+msgid "View as %(format)s"
+msgstr ""
+
+#: templates/exam.html:14
+msgid "Download as PDF"
+msgstr ""
+
+#: templates/footer.html:5
+msgid "Back to top"
+msgstr ""
+
+#: templates/footer.html:9
+#, python-format
+msgid ""
+"Generated using <a target=\"_blank\" href=\"%(url)s\">Chirun</a>, written"
+" by the E-Learning Unit, School of Mathematics &amp; Statistics, "
+"Newcastle University"
+msgstr ""
+
+#: templates/footer.html:10
+#, python-format
+msgid "This page last generated: %(date)s"
+msgstr ""
+
+#: templates/structure.html:11
+#, python-format
+msgid "Thumbnail image for part %(title)s"
+msgstr ""
+
+#: templates/theme_customise.html:3
+msgid "Reset to defaults"
+msgstr ""
+
+#: templates/theme_customise.html:6
+msgid "Close"
+msgstr ""
+
+#: templates/theme_customise.html:13
+msgid "Text size"
+msgstr ""
+
+#: templates/theme_customise.html:21
+msgid "Spacing"
+msgstr ""
+
+#: templates/theme_customise.html:29
+msgid "Text font"
+msgstr ""
+
+#: templates/theme_customise.html:32
+msgid "Sans-serif"
+msgstr ""
+
+#: templates/theme_customise.html:33
+msgid "Serif"
+msgstr ""
+
+#: templates/theme_customise.html:34
+msgid "Atkinson Hyperlegible"
+msgstr ""
+
+#: templates/theme_customise.html:35
+msgid "Comic Sans"
+msgstr ""
+
+#: templates/theme_customise.html:41
+msgid "Colour scheme"
+msgstr ""
+
+#: templates/theme_customise.html:44
+msgid "Automatic (default)"
+msgstr ""
+
+#: templates/theme_customise.html:45
+msgid "Black text on white"
+msgstr ""
+
+#: templates/theme_customise.html:46
+msgid "White text on black"
+msgstr ""
+
+#: templates/theme_customise.html:47
+msgid "Custom"
+msgstr ""
+
+#: templates/theme_customise.html:54
+msgid "Text colour"
+msgstr ""
+
+#: templates/theme_customise.html:61
+msgid "Link colour"
+msgstr ""
+
+#: templates/theme_customise.html:68
+msgid "Background colour"
+msgstr ""
+
+#: templates/theme_customise.html:75
+msgid "Muted background colour"
+msgstr ""
+
+#: templates/theme_customise.html:82
+msgid "Accent colour 1"
+msgstr ""
+
+#: templates/theme_customise.html:89
+msgid "Accent colour 2"
+msgstr ""
+
+#: templates/theme_customise.html:96
+msgid "Accent colour 3"
+msgstr ""
+
+#: templates/theme_customise.html:103
+msgid "Accent colour 4"
+msgstr ""
+
+#: templates/theme_customise.html:112
+msgid "Sepia filter"
+msgstr ""
+
+#: templates/theme_customise.html:120
+msgid "Rotate hues"
+msgstr ""
+
+#: templates/theme_customise.html:128
+msgid "Invert images in dark mode"
+msgstr ""
+

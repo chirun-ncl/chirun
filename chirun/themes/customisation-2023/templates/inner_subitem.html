@@ -1,0 +1,14 @@
+{% import "macros.html" as macros %}
+{% if not subitem.hidden %}
+    {% if subitem.type == 'url' %}
+        <a class="undecorated" target="_blank" href="{{subitem.source|url}}">{{subitem.title}}</a>
+    {% else %}
+        <a class="undecorated" href="{{subitem.url|url}}">{{subitem.title}}</a>
+
+        <ul class="alternative-formats">
+            {% for format in subitem.alternative_formats() %}
+            <li><a class="undecorated" href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{format.name}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}

@@ -25,6 +25,10 @@ class Theme(object):
     def template_path(self):
         return self.source / 'templates'
 
+    @property
+    def translations_path(self):
+        return (self.source / 'translations' / self.course.config['locale']).with_suffix('.mo')
+
     def alt_themes_contexts(self):
         return [t.get_context() for t in self.course.themes if not (t.hidden or t == self)]
 
@@ -47,3 +51,7 @@ class Theme(object):
             shutil.copytree(str(srcPath), str(dstPath), dirs_exist_ok=True)
         except Exception:
             logger.warning("Warning: Problem copying the theme's static files")
+
+        js_translation = (self.source / 'translations' / self.course.config['locale']).with_suffix('.mjs')
+        if js_translation.exists():
+            shutil.copyfile(js_translation, dstPath / 'translations.mjs')

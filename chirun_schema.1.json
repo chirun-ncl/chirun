@@ -1,0 +1,298 @@
+{
+    "$id": "https://www.chirun.org/chirun_schema.1.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "title": "Chirun package configuration",
+    "properties": {
+        "base_dir": {
+            "type": "string",
+            "title": "Base directory of the output"
+        },
+        "locale": {
+            "type": "string",
+            "title": "ISO 639 language code for localisation"
+        },
+        "author": {
+            "type": "string",
+            "title": "Name of the author"
+        },
+        "institution": {
+            "type": "string",
+            "title": "Author's institution"
+        },
+        "static_dir": {
+            "type": "string",
+            "title": "Path to the static files source directory"
+        },
+        "code": {
+            "type": "string",
+            "title": "Course code"
+        },
+        "year": {
+            "type": "string",
+            "title": "Year"
+        },
+        "root_url": {
+            "type": "string",
+            "title": "Root URL of the output"
+        },
+        "build_pdf": {
+            "type": "boolean",
+            "title": "Build PDF files?",
+            "default": true
+        },
+        "num_pdf_runs": {
+            "type": "number",
+            "title": "Number of runs for building PDFs",
+            "default": 1
+        },
+        "format_version": {
+            "type": "number",
+            "title": "Version number of the config format used",
+            "default": 2
+        },
+        "mathjax_url": {
+            "type": "string",
+            "title": "URL to load MathJax from"
+        },
+        "structure": {
+            "type": "array",
+            "title": "Structure",
+            "items": {
+                "$ref": "https://www.chirun.org/chirun_schema.1.json#$defs/structure"
+            }
+        },
+        "themes_dir": {
+            "type": "string",
+            "title": "Path of the themes directory"
+        },
+        "themes": {
+            "type": "array",
+            "title": "Themes to use",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string",
+                        "title": "Path to the theme"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "path": {
+                        "type": "string",
+                        "title": "Path to the theme's source"
+                    },
+                    "hidden": {
+                        "type": "boolean",
+                        "title": "Hidden?",
+                        "default": false
+                    }
+                }
+            }
+        }
+    },
+
+    "$defs": {
+        "structure": {
+            "title": "Structure item",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "title": "Type",
+                    "enum": [
+                        "introduction",
+                        "part",
+                        "document",
+                        "chapter",
+                        "standalone",
+                        "url",
+                        "html",
+                        "extractedsection",
+                        "slides",
+                        "exam",
+                        "notebook"
+                    ]
+                },
+                "title": {
+                    "type": "string",
+                    "title": "Title"
+                },
+                "slug": {
+                    "type": "string",
+                    "title": "URL slug"
+                },
+                "author": {
+                    "type": "string",
+                    "title": "Name of the author"
+                },
+                "source": {
+                    "type": "string",
+                    "title": "Path of the item's source file."
+                },
+                "is_hidden": {
+                    "type": "boolean",
+                    "title": "Is this item hidden?",
+                    "default": false
+                },
+                "build_pdf": {
+                    "type": "boolean",
+                    "title": "Build a PDF version?"
+                },
+                "pdf_url": {
+                    "type": "string",
+                    "title": "Output path of the PDF file"
+                },
+                "html": {
+                    "type": "string",
+                    "title": "HTML content"
+                },
+                "extractedsection": {
+                    "type": "string",
+                    "title": "A section extracted from a document"
+                },
+                "thumbnail": {
+                    "type": "string",
+                    "title": "Path of thumbnail image"
+                },
+                "content": {
+                    "type": "array",
+                    "title": "Sub-items",
+                    "items": {
+                        "$ref": "https://www.chirun.org/chirun_schema.1.json#$defs/structure"
+                    }
+                },
+
+                "sidebar": {
+                    "type": "boolean",
+                    "title": "Show the sidebar?"
+                },
+                "topbar": {
+                    "type": "boolean",
+                    "title": "Show the top navigation bar?"
+                },
+                "footer": {
+                    "type": "boolean",
+                    "title": "Show the page footer?"
+                }
+            },
+            "anyOf": [
+                {
+                    "title": "Introduction",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "introduction"
+                        }
+                    }
+                },
+                {
+                    "title": "Part",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "part"
+                        },
+                        "leading_text": {
+                            "type": "string",
+                            "title": "Leading text"
+                        },
+                        "location": {
+                            "type": "string",
+                            "title": "Location",
+                            "enum": [
+                                "below",
+                                "above"
+                            ],
+                            "default": "below"
+                        }
+                    }
+                },
+                {
+                    "title": "Document",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "document"
+                        },
+                        "splitlevel": {
+                            "type": "number",
+                            "title": "Structure splitting level",
+                            "default": 0
+                        }
+                    }
+                },
+                {
+                    "title": "Chapter",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "chapter"
+                        }
+                    }
+                },
+                {
+                    "title": "Standalone",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "standalone"
+                        }
+                    }
+                },
+                {
+                    "title": "URL",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "url"
+                        }
+                    }
+                },
+                {
+                    "title": "HTML file",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "html"
+                        }
+                    }
+                },
+                {
+                    "title": "Slides",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "slides"
+                        },
+                        "title_slide": {
+                            "type": "boolean",
+                            "title": "Include a title slide?",
+                            "default": true
+                        }
+                    }
+                },
+                {
+                    "title": "Numbas Exam",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "exam"
+                        }
+                    }
+                },
+                {
+                    "title": "Jupyter Notebook",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "const": "notebook"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -3,6 +3,7 @@ import datetime
 import chirun.filter
 import re
 import nbformat
+from babel.support import Translations
 from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 from pyppeteer import launch
 from notedown import MarkdownReader
@@ -36,9 +37,15 @@ class Renderer(object):
     def __init__(self, course):
         self.course = course
         self.env = Environment(
-            loader=FileSystemLoader(str(self.course.theme.template_path)),
-            autoescape=select_autoescape(['html'])
+            loader = FileSystemLoader(str(self.course.theme.template_path)),
+            autoescape = select_autoescape(['html']),
+            extensions = ['jinja2.ext.i18n',]
         )
+        try:
+            with open(self.course.theme.translations_path, 'rb') as translations_file:
+                self.env.install_gettext_translations(Translations(translations_file), newstyle=True)
+        except FileNotFoundError:
+            self.env.install_null_translations(newstyle=True)
 
         @contextfilter
         def url_filter(context, url, theme=False):
@@ -159,6 +166,6 @@ class NotebookRenderer(object):
         for cell in nb.cells:
             if cell['cell_type'] == 'markdown':
                 html = self.markdownRenderer.render(item, outDir, cell['source'])
-                cell['source'] = chirun.filter.CellHTMLFilter().apply(item, html, out_format='html')
+                cell['source'], _ = chirun.filter.CellHTMLFilter().apply(item, html, out_format='html')
         with open(str(outPath), 'w', encoding='utf-8') as f:
             nbformat.write(nb, f)

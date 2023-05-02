@@ -120,6 +120,7 @@ class Chirun:
     def default_config(self):
         root_dir = self.get_root_dir()
         config = {
+            'locale': 'en',
             'static_dir': root_dir / 'static',
             'build_pdf': True,
             'num_pdf_runs': 1,
@@ -302,19 +303,6 @@ class Chirun:
             shutil.rmtree('tmp')
         except OSError:
             pass
-
-    def get_context(self):
-        """
-            A dictionary of context information about the course, for templates to use
-        """
-        return {
-            'author': self.config.get('author'),
-            'institution': self.config.get('institution'),
-            'code': self.config.get('code'),
-            'year': self.config.get('year'),
-            'theme': self.theme.get_context(),
-            'alt_themes': self.theme.alt_themes_contexts(),
-        }
 
     def make_directories(self):
         """

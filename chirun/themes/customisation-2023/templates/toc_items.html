@@ -1,0 +1,12 @@
+{% for header in headers %}
+    <li>
+        <a href="#{{header.id}}">{{header.text|safe}}</a>
+        {% if header.children %}
+        <ol>
+            {% with headers=header.children %}
+            {% include "toc_items.html" %}
+            {% endwith %}
+        </ol>
+        {% endif %}
+    </li>
+{% endfor %}
