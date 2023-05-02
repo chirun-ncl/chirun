@@ -1,7 +1,7 @@
 import logging
 import itertools
 import re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from pathlib import Path
 from base64 import b64encode
 from .oembed import get_oembed_html
@@ -228,7 +228,9 @@ class HTMLFilter(object):
                     i += 1
 
                 children = make_hierarchy(items[start:i])
-                out.append({'text': e.text, 'id': id_for(e), 'children': children})
+                text = e.decode_contents()
+
+                out.append({'text': text, 'id': id_for(e), 'children': children})
 
             return out
 
