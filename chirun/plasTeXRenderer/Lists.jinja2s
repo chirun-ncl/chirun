@@ -2,11 +2,8 @@ name: itemize
 <ul id="{{ obj.id }}" class="itemize">
 {% for item in obj %}
 	{% if item.attributes.term %}
-		<li style="list-style: none;" id="{{ item.id }}">
-		<span style="transform: translateX(-100%);padding-right: 10px;position: absolute;">
-			{{ item.attributes.term }}
-		</span>
-		{{ item }}
+		<li style="list-style: symbols(cyclic '{{item.attributes.term}}');" id="{{ item.id }}">
+            {{ item }}
 		</li>
 	{% else %}
 		<li id="{{ item.id }}"> {{ item }} </li>
@@ -17,14 +14,7 @@ name: itemize
 name: enumerate
 <ol id="{{ obj.id }}" style="list-style: none" class="enumerate">
 {% for item in obj %}
-	<li id="{{ item.id }}" value="{{ item.position }}">
-	<span style="transform: translateX(-100%);padding-right: 10px;position: absolute;">
-	{% if item.attributes.term %}
-		{{ item.attributes.term }}
-	{% else %}
-		{{ obj.term(item.position) }}
-	{% endif %}
-	</span>
+    <li style="list-style: symbols(cyclic '{% if item.attributes.term %}{{ item.attributes.term }}{% else %}{{ obj.term(item.position) }}{% endif %}');" id="{{ item.id }}" value="{{ item.position }}">
 	{{ item }}
 	</li>
 {% endfor %}
