@@ -1,39 +1,31 @@
 name: collapse
-<p>
-<button class="btn {{ obj.attributes.btnClass }}" data-toggle="collapse" data-target="#{{ obj.id }}">
-{{ obj.attributes.btnText }}
-</button>
-</p>
-<div id="{{ obj.id }}" class="collapse collapse-content">
-{{ obj.attributes.hintText }}
-</div>
+<details class="{{ obj.attributes.btnClass }}">
+    <summary>{{obj.attributes.btnText}}</summary>
+    <div id="{{ obj.id }}" class="collapse collapse-content">
+        {{ obj.attributes.hintText }}
+    </div>
+</details>
 
 name: collapseEnv
-<p>
-<button class="btn {{ obj.attributes.btnClass }}" data-toggle="collapse" data-target="#{{ obj.id }}">
-{{ obj.attributes.btnText }}
-</button>
-</p>
-<div id="{{ obj.id }}" class="collapse collapse-content">
-{{ obj }}
-</div>
+<details class="{{ obj.attributes.btnClass }}">
+    <summary>{{obj.attributes.btnText}}</summary>
+    <div id="{{ obj.id }}" class="collapse collapse-content">
+    {{ obj }}
+    </div>
+</details>
 
 name: collapsehint
-<p>
-<button class="btn btn-info" data-toggle="collapse" data-target="#{{ obj.id }}">
-Show me a hint
-</button>
-</p>
-<div id="{{ obj.id }}" class="collapse collapse-content">
-{{ obj.attributes.hintText }}
-</div>
+<details class="hint {{ obj.attributes.btnClass }}">
+    <summary>Show me a hint</summary>
+    <div id="{{ obj.id }}" class="collapse collapse-content">
+        {{ obj.attributes.hintText }}
+    </div>
+</details>
 
 name: collapsesolution
-<p>
-<button class="btn btn-primary" data-toggle="collapse" data-target="#{{ obj.id }}">
-Show Solution
-</button>
-</p>
-<div id="{{ obj.id }}" class="collapse collapse-content">
-{{ obj.attributes.hintText }}
-</div>
+<details class="solution {{ obj.attributes.btnClass }}">
+    <summary>Show the solution</summary>
+    <div id="{{ obj.id }}" class="collapse collapse-content">
+        {{ obj.attributes.hintText }}
+    </div>
+</details>
