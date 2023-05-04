@@ -110,13 +110,7 @@ class RenderProcess(ItemProcess):
 
     def visit_slides(self, item):
         ext = item.source.suffix
-        if ext == '.tex':
-            item.has_slides = False
-            self.renderer.render_item(item)
-        elif ext == '.md':
-            item.has_slides = True
-            self.slides_renderer.render_item(item)
-
+        self.slides_renderer.render_item(item)
 
 class PDFProcess(ItemProcess):
 

@@ -111,9 +111,11 @@ class Item(object):
     def named_out_file(self):
         return self.out_path / PurePath(self.slug)
 
-    @property
-    def plastex_filename_rules(self):
-        return self.out_file
+    def plastex_filename_rules(self, out_file = None):
+        if out_file is None:
+            return self.out_file
+        else:
+            return out_file
 
     @property
     def url(self):
@@ -164,7 +166,7 @@ class Item(object):
 
         return body
 
-    def build_html(self):
+    def build_html(self, out_file = None):
         if 'html' in self.data:
             html = self.data['html']
         else:
@@ -175,8 +177,9 @@ class Item(object):
                     outPath = (self.course.get_build_dir() / self.out_file).parent
                     html = self.markdownRenderer.render(self, outPath)
                 elif ext == '.tex':
-                    plastex_output = self.course.load_latex_content(self)
-                    html = plastex_output['index.html']['html']
+                    plastex_output = self.course.load_latex_content(self, out_file = out_file)
+                    rendered_filename = str(out_file.name) if out_file is not None else 'index.html'
+                    html = plastex_output[rendered_filename]['html']
                 elif ext == '.html':
                     with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
                         html = f.read()
@@ -188,8 +191,8 @@ class Item(object):
         self.html = html
         self.headers = headers
 
-    def as_html(self):
-        self.build_html()
+    def as_html(self, out_file = None):
+        self.build_html(out_file = out_file)
 
         return self.html
 
@@ -444,9 +447,10 @@ class Document(Item):
                 logger.warning("Warning: Document splitting is currently unsupported for markdown "
                                "source items ({})".format(self.source))
 
-    @property
-    def plastex_filename_rules(self):
-        fnstr = self.out_path / '[$id, $title(4), $num(4)]'
+    def plastex_filename_rules(self, out_file = None):
+        if out_file is None:
+            out_file = self.out_path
+        fnstr = Path(out_file) / '[$id, $title(4), $num(4)]'
         return '{} {}'.format(self.out_file, fnstr)
 
     def get_context(self):
@@ -533,6 +537,7 @@ class Slides(Chapter):
     title = 'Untitled Slides'
     template_name = 'slides.html'
     template_slides = 'slides_reveal.html'
+    has_slides = True
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)

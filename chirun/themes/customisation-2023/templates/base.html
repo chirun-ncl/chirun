@@ -25,17 +25,23 @@
 			<script>
 				var chirun_static_url="{{'.'|static_url}}";
 			</script>
-            <script defer src="{{'mathjax_config.js'|static_url}}"></script>
-            <script type="text/javascript" id="MathJax-script" defer src="{{course.config.mathjax_url}}"></script>
+
+            {% block math_javascript %}
+                <script defer src="{{'mathjax_config.js'|static_url}}"></script>
+                <script type="text/javascript" id="MathJax-script" defer src="{{course.config.mathjax_url}}"></script>
+            {% endblock math_javascript %}
+
             <script type="module" src="{{'localisation.mjs'|static_url}}"></script>
+
             <script defer src="{{'customisation.js'|static_url}}"></script>
+
             {% for js in course.config.js %}
 				<script defer src="{{js|static_url}}"></script>
             {% endfor %}
+
             {% for js in item.data.js %}
 				<script defer src="{{js|static_url}}"></script>
             {% endfor %}
-			</script>
         {% endblock %}
 
         <template id="runnable-code-template">
@@ -69,6 +75,8 @@
         </template>
     </head>
     <body class="{% block body_class %}{% endblock %}" {% block body_attributes %}{% endblock %}>
+        {% block body %}
+
         <a class="skip-to-content-link" href="#main-content">{% trans %}Skip to content{% endtrans %}</a>
         {% block customisation %}
             {% include "theme_customise.html" %}
@@ -94,6 +102,8 @@
 		{% if item.has_footer %}
 		{% include "footer.html" %}
 		{% endif %}
+
+        {% endblock body %}
     </body>
 </html>
 

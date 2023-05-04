@@ -120,11 +120,11 @@ class PlastexRunner:
     def exception_handler(exception_type, exception, traceback):
         print("%s: %s" % (exception_type.__name__, exception))
 
-    def load_latex_content(self, item):
+    def load_latex_content(self, item, out_file = None):
         """
             Convert a LaTeX file to HTML, and do some processing with its images
         """
-        self.runPlastex(item)
+        self.runPlastex(item, out_file)
         plastex_output = {}
 
         for section, filename in self.renderer.files.items():
@@ -142,7 +142,7 @@ class PlastexRunner:
                     }
         return plastex_output
 
-    def runPlastex(self, item):
+    def runPlastex(self, item, out_file = None):
         if not item.course.args.veryverbose:
             plasTeX.Logging.disableLogging()
 
@@ -156,7 +156,7 @@ class PlastexRunner:
 
         reset_idgen()
 
-        plastex_config['files']['filename'] = item.plastex_filename_rules
+        plastex_config['files']['filename'] = item.plastex_filename_rules(out_file)
         plastex_config['files']['split-level'] = item.splitlevel
         plastex_config['general']['renderer'] = 'chirun'
         plastex_config['document']['base-url'] = self.get_web_root()

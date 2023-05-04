@@ -1,13 +1,14 @@
-import logging
-import datetime
+from   babel.support import Translations
 import chirun.filter
-import re
+from   chirun.markdownRenderer import MarkdownRenderer
+import datetime
+from   jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
+import logging
 import nbformat
-from babel.support import Translations
-from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
-from pyppeteer import launch
-from notedown import MarkdownReader
-from chirun.markdownRenderer import MarkdownRenderer
+from   notedown import MarkdownReader
+from   pyppeteer import launch
+import re
+from   urllib.parse import urlparse
 from . import mkdir_p
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,7 @@ class Renderer(object):
         @contextfilter
         def static_url(context, url):
             return url_filter(context, 'static/' + url)
+
         self.env.filters['static_url'] = static_url
 
     def render_template(self, template_file, context):
@@ -72,24 +74,34 @@ class Renderer(object):
     def render_item(self, item):
         if item.recently_built():
             return
+
         outPath = self.course.get_build_dir() / item.out_file
         outDir = outPath.parent
+
         mkdir_p(outDir)
+
         template_file = item.template_name
+
         if not (item.source.name == ''):
             logger.info("Rendering: {item}".format(item=item.source))
+
         logger.debug("Rendering {item} using {template}{rel}".format(item=item, template=template_file,
                      rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
                      else ''))
-        html = self.to_html(item, template_file)
+
+        html = self.to_html(item, template_file, item.out_file)
+
         with open(str(outPath), 'w', encoding='utf-8') as f:
             f.write(html)
 
-    def to_html(self, item, template_file):
+    def to_html(self, item, template_file, out_file=None):
         context = {
             'course': self.course,
             'item': item,
             'date': datetime.date.today(),
+            'CHIRUN_HOME_URL': 'https://chirun.org.uk',
+            'ACCESSIBILITY_STATEMENT_URL': 'https://chirun.org.uk/accessibility-statement/material',
+            'out_file': out_file,
         }
         return self.render_template(template_file, context)
 
@@ -120,12 +132,16 @@ class SlidesRenderer(Renderer):
 
     def render_item(self, item):
         super().render_item(item)
+
         outPath = self.course.get_build_dir() / item.out_slides
         template_file = item.template_slides
+
         logger.debug("Rendering {item} using {template}{rel}".format(item=item, template=template_file,
                      rel=' using relative paths' if self.course.force_relative_build or not self.course.args.absolute
                      else ''))
-        html = self.to_html(item, template_file)
+
+        html = self.to_html(item, template_file, item.out_slides)
+
         with open(str(outPath), 'w', encoding='utf-8') as f:
             f.write(html)
 
@@ -143,7 +159,7 @@ class SlidesRenderer(Renderer):
         page = await browser.newPage()
         await page.goto('file://{}?print-pdf'.format(absHTMLPath))
         await page.setViewport({'width': 1366, 'height': 768})
-        await page.waitForFunction('Reveal.isReady() && window.mathjax_is_loaded == 1', options={'timeout': 10000})
+#        await page.waitForFunction('window.mathjax_is_loaded == 1', options={'timeout': 10000})
         await page.pdf({'path': outPath, 'width': 1366, 'height': 768})
         await browser.close()
 
