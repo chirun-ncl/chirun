@@ -1,34 +1,58 @@
-.slides-smaller{font-size:50% !important;}
-.slides-small{font-size:70% !important;}
-.slides-bold{font-weight:800 !important;}
-.slides-large{font-size: 100% !important;}
-.slides-larger{font-size: 125% !important;}
+body {
+  --r-background-color: var(--bg-colour);
+  --r-main-font: var(--font-family);
+  --r-main-font-size: calc(30px * var(--font-scale) / 100);
+  --r-main-color: var(--text-colour);
+  --r-block-margin: var(--spacing);
+  --r-heading-margin: var(--spacing);
+  --r-heading-font: var(--font-family);
+  --r-heading-color: var(--text-colour);
+  --r-heading-line-height: var(--line-height);
+  --r-heading-letter-spacing: normal;
+  --r-heading-text-transform: none;
+  --r-heading-text-shadow: none;
+  --r-heading1-text-shadow: none;
+  --r-code-font: monospace;
+  --r-link-color: var(--link-colour);
+  --r-selection-background-color: var(--text-colour);
+  --r-selection-color: var(--bg-colour);
+}
+
+body > main {
+  display: block !important;
+}
 
 .reveal section figure img {
 	border: none !important;
 	box-shadow: none !important;
 }
 
-.reveal .header-l {
-    position: absolute;
-    color: #333;
-    max-width: 50%;
-    top: 1em;
-    left: 1em;
-    font-size: 0.7em;
+
+
+body > .reveal > header {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: calc(0.5 * var(--spacing));
+  display: flex;
+  opacity: 0.8;
+  justify-content: space-between;
+  grid-gap: var(--spacing);
 }
 
-.reveal .header-r {
-    position: absolute;
-    color: #333;
-    max-width: 50%;
-    top: 1em;
-    right: 1em;
-    font-size: 0.7em;
-    text-align: right;
+body > .reveal #title-slide > button[aria-controls="display-options"] {
+    margin: 0 0 calc(4 * var(--spacing)) 0;
 }
 
-h2{
+@media print {
+	body > #display-options, button[aria-controls="display-options"] {
+		display: none;
+	}
+}
+
+h2 {
   text-transform: none !important;
 }
 
@@ -38,33 +62,220 @@ h2{
 .reveal p {
 	text-align: left;
 }
-.reveal ul {
-  display: block;
-}
-.reveal ol {
-  display: block;
-}
 
-.tabular{
-  width:100%;
-}
-
-.reveal {
-  font-size: 30px !important;
+.tabular {
+  width: 100%;
 }
 
 .reveal table p {
-  margin:0;
+  margin: 0;
+}
+
+.reveal-viewport {
+  background-color: var(--r-background-color);
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  font-weight: normal;
+  color: var(--r-main-color);
+}
+
+.reveal ::selection {
+  color: var(--r-selection-color);
+  background: var(--r-selection-background-color);
+  text-shadow: none;
+}
+
+.reveal ::-moz-selection {
+  color: var(--r-selection-color);
+  background: var(--r-selection-background-color);
+  text-shadow: none;
+}
+
+.reveal .slides section,
+.reveal .slides section > section {
+  line-height: var(--line-height);
+  font-weight: inherit;
+}
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: var(--r-heading-margin);
+  color: var(--r-heading-color);
+  font-family: var(--r-heading-font);
+  font-weight: var(--r-heading-font-weight);
+  line-height: var(--r-heading-line-height);
+  letter-spacing: var(--r-heading-letter-spacing);
+  text-transform: var(--r-heading-text-transform);
+  text-shadow: var(--r-heading-text-shadow);
+  word-wrap: break-word;
+}
+
+.reveal h1 {
+  text-shadow: var(--r-heading1-text-shadow);
+}
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: var(--r-block-margin) 0;
+}
+
+/* Remove trailing margins after titles */
+.reveal :is(h1,h2,h3,h4,h5,h6):last-child {
+  margin-bottom: 0;
+}
+
+/* Ensure certain elements are never larger than the slide itself */
+.reveal :is(img, video, iframe) {
+  max-width: 95%;
+  max-height: 95%;
+}
+
+.reveal :is(ol, dl, ul) {
+  display: block;
+  text-align: left;
+  margin: 0 0 0 var(--r-block-margin);
 }
 
 .reveal blockquote {
-  margin: 1.5em 0.75em;
-  padding: 0.5em 1.0em;
-  border-top: none;
-  border-right: none;
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: var(--r-block-margin) auto;
+  padding: var(--spacing);
+  font-style: italic;
+}
+
+.reveal blockquote p:is(:first-child, :last-child) {
+  display: inline-block;
+}
+
+.reveal q {
+  font-style: italic;
+}
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: var(--r-block-margin) auto;
+  text-align: left;
+  font-family: var(--r-code-font);
+  word-wrap: break-word;
+}
+
+.reveal code {
+  font-family: var(--r-code-font);
+  text-transform: none;
+  tab-size: 2;
+}
+
+.reveal pre code {
+  display: block;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+}
+
+.reveal .code-wrapper {
+  white-space: normal;
+}
+
+.reveal .code-wrapper code {
+  white-space: pre;
+}
+
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal table th {
+  font-weight: bold;
+}
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: calc(0.2 * var(--spacing)) calc(0.5 * var(--spacing));
+  border-bottom: 1px solid var(--r-main-colour);
+}
+
+.reveal table th[align=center],
+.reveal table td[align=center] {
+  text-align: center;
+}
+
+.reveal table th[align=right],
+.reveal table td[align=right] {
+  text-align: right;
+}
+
+.reveal table tbody tr:last-child th,
+.reveal table tbody tr:last-child td {
   border-bottom: none;
 }
 
-.reveal blockquote > p {
-  margin: 0 !important;
+.reveal sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.reveal sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.reveal img {
+  margin: var(--r-block-margin) 0;
+}
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: var(--r-link-color);
+}
+
+/*********************************************
+ * Frame helper
+ *********************************************/
+.reveal .r-frame {
+  border: 4px solid var(--r-main-color);
+}
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls {
+  color: var(--r-link-color);
+}
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--r-link-color);
+}
+
+/*********************************************
+ * PRINT BACKGROUND
+ *********************************************/
+@media print {
+  .backgrounds {
+    background-color: var(--r-background-color);
+  }
 }

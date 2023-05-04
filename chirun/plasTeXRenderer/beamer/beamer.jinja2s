@@ -1,35 +1,34 @@
 name: titlepage
 {% set metadata=obj.ownerDocument.userdata %}
-<div class="breamer-titlepage">
-<h1>{{ metadata.title }}</h1>
-{% if metadata.author %}
-<p class="beamer-authors">
-{%for author in metadata.author %}
-<span class="author">{{ author }}</span>
-{% endfor %}
-</p>
-{% endif %}
-{% if metadata.date %}
-<p class="beamer-date">{{ metadata.date }}</p>
-{% endif %}
-{% if metadata.thanks %}
-<p class="beamer-thanks">{{ metadata.thanks }}</p>
-{% endif %}
-</div>
+<section class="beamer-titlepage">
+    <h1>{{ metadata.title }}</h1>
+    {% if metadata.author %}
+    <p class="beamer-authors">
+    {%for author in metadata.author %}
+    <span class="author">{{ author }}</span>
+    {% endfor %}
+    </p>
+    {% endif %}
+    {% if metadata.date %}
+    <p class="beamer-date">{{ metadata.date }}</p>
+    {% endif %}
+    {% if metadata.thanks %}
+    <p class="beamer-thanks">{{ metadata.thanks }}</p>
+    {% endif %}
+</section>
 
 name: frameenv
-<div class="beamer-frame">
+<section class="beamer-frame">
 {% if obj.title %}
 <header>
-<p class="beamer-frame-title">{{ obj.title }}</p>
+<h2 class="beamer-frame-title">{{ obj.title }}</h2>
 {% if obj.subtitle %}
 <p class="beamer-frame-subtitle">{{ obj.subtitle }}</p>
 {% endif %}
 </header>
 {% endif %}
 {{ obj }}
-</div>
-<hr/>
+</section>
 
 name: framesubtitle frametitle pause
 
@@ -44,17 +43,17 @@ name: columnenv
 </div>
 
 name: insertsectionhead
-<p class="beamer-section-title">{{ obj.currentSection.links.section.title }}</p>
+<h2 class="beamer-section-title">{{ obj.currentSection.links.section.title }}</h2>
 
 name: insertsubsectionhead
-<p class="beamer-subsection-title">{{ obj.currentSection.links.subsection.title }}</p>
+<h3 class="beamer-subsection-title">{{ obj.currentSection.links.subsection.title }}</h3>
 
 name: insertsubsubsectionhead
-<p class="beamer-subsubsection-title">{{ obj.currentSection.links.subsubsection.title }}</p>
+<h4 class="beamer-subsubsection-title">{{ obj.currentSection.links.subsubsection.title }}</h4>
 
 name: section
-<section class="beamer-section">
-<h2 aria-hidden="true" class="beamer-section-heading" id="{{ obj.id }}">{{ obj.title }}</h2>
+<section class="beamer-section" id="{{ obj.id }}">
+<h2 aria-hidden="true" class="beamer-section-heading">{{ obj.title }}</h2>
 {{ obj }}
 </section>
 
@@ -84,7 +83,7 @@ name: tableofcontents
 {% if section.level == 1 %}
 <li><a href="{{ section.url }}" >{{ section.fullTocEntry }}</a>
   {% for subsection in section.subsections %}
-    <ul><a href="{{ subsection.url }}" >{{ subsection.fullTocEntry }}</ul>
+    <ul>{{type(subsection)}}<a href="{{ subsection.url }}" >{{ subsection.fullTocEntry }}</ul>
   {% endfor %}
 {% endif %}
 {% endfor %}

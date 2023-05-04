@@ -3,7 +3,7 @@
 :root {
     --font-scale: 100;
     --spacing-factor: 100;
-    --font-family: "Roboto";
+    --font-family: sans-serif;
 
     --readable-width: 50rem;
     font-size: calc(calc(var(--font-scale) / 100) * 16px);
@@ -81,7 +81,8 @@ body[data-colour-scheme="dark"][data-invert-images="true"] {
 
 body {
     color: var(--text-colour);
-    --spacing: calc(calc(var(--spacing-factor) / 100) * 1rem);
+    --spacing: calc(1rem * var(--spacing-factor) / 100);
+    --line-height: calc(1.25 * var(--spacing-factor) / 100);
     font-family: var(--font-family);
 }
 
@@ -100,6 +101,8 @@ body > #display-options {
     padding: var(--spacing);
     border-bottom: 0.2em solid black;
     margin-bottom: var(--spacing);
+    max-height: 70vh;
+    overflow-y: auto;
 }
 body > #display-options .inputs {
     display: flex;
@@ -272,6 +275,7 @@ body > main {
     grid-template-columns: [sidebar-start full-start] 25em [sidebar-end content-start] 1fr [content-end full-end];
     grid-gap: var(--spacing);
     width: 100%;
+    line-height: var(--line-height);
 }
 body > main > #sidebar {
     max-height: 100vh;

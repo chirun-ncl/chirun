@@ -138,8 +138,6 @@ class ExponentialPercentageSetting extends PercentageSetting {
 }
 
 class Customiser {
-    localStorage_key = 'chirun-theme-customization';
-
     add_setting(name, kind, default_value) {
         const kinds = {
             'exponentialpercentage': ExponentialPercentageSetting,
@@ -154,6 +152,8 @@ class Customiser {
 
     constructor() {
         this.settings = {};
+        this.localStorage_key = 'chirun-theme-customization';
+
         this.add_setting('font-scale', 'exponentialpercentage', 100);
         this.add_setting('spacing-factor', 'exponentialpercentage', 100);
         this.add_setting('font-family', 'text', 'sans-serif');
