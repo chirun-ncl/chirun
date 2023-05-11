@@ -1,320 +1,154 @@
 :root {
-    --base-font-size: 24px;
+}
+
+* {
+    box-sizing: border-box;
+    word-break: break-word;
+}
+
+aside { 
+    display: none;
+}
+
+html {
+    font-size: 4vmin;
+    font-family: sans-serif;
 }
 
 body {
-  --r-background-color: var(--bg-colour);
-  --r-main-font: var(--font-family);
-  --r-main-font-size: 1rem;
-  --r-main-color: var(--text-colour);
-  --r-block-margin: var(--spacing);
-  --r-heading-margin: var(--spacing);
-  --r-heading-font: var(--font-family);
-  --r-heading-font-weight: bold;
-  --r-heading-color: var(--text-colour);
-  --r-heading-line-height: var(--line-height);
-  --r-heading-letter-spacing: normal;
-  --r-heading-text-transform: none;
-  --r-heading-text-shadow: none;
-  --r-heading1-text-shadow: none;
-  --r-code-font: monospace;
-  --r-link-color: var(--link-colour);
-  --r-selection-background-color: var(--text-colour);
-  --r-selection-color: var(--bg-colour);
+    margin: 0;
+}
+h1,h2,h3,h4,h5,h6 {
+    margin: 0;
+}
+h2 {
+    margin: 0;
+    font-size: 1.1em;
 }
 
 body > main {
-  display: block !important;
-}
-
-.reveal section figure img {
-	border: none !important;
-	box-shadow: none !important;
-}
-
-body > button[aria-controls="display-options"] {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-
-
-body > .reveal > header {
-  position: absolute;
-  z-index: 2;
-  width: 100%;
-  top: 0;
-  left: 0;
-  padding: calc(0.5 * var(--spacing));
-  display: flex;
-  opacity: 0.8;
-  justify-content: space-between;
-  grid-gap: var(--spacing);
-}
-
-body > .reveal #title-slide > button[aria-controls="display-options"] {
-    margin: 0 0 calc(4 * var(--spacing)) 0;
-}
-
-@media print {
-	body > #display-options, button[aria-controls="display-options"] {
-		display: none;
-	}
-}
-
-h2 {
-  text-transform: none !important;
-}
-
-.reveal p.author, .reveal .beamer-authors {
-	text-align: center;
-}
-.reveal p {
-	text-align: left;
-}
-
-.reveal .beamer-columns {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.reveal .beamer-frame > header {
-    margin-bottom: 1.0rem;
-}
-.reveal .beamer-frame-title {
-    font-size: 1.5rem;
-}
-.reveal .beamer-frame-subtitle {
-    font-size: 1.3rem;
-}
-.reveal .beamer-section-heading {
+    display: block;
     overflow: hidden;
-    height: 0;
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+
+body > main > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    grid-gap: 1em;
+    margin: var(--spacing) 0;
+    scroll-snap-align: start;
+}
+
+main > section {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    padding: 0px 1em;
+    scroll-snap-align: center;
+    grid-auto-rows: max-content;
+    align-content: center;
+    overflow-y: hidden;
+    /*! grid-template-rows: auto; */
+}
+
+@media (orientation: portrait) {
+    main > section {
+        height: auto;
+        scroll-snap-align: none;
+    }
+    main > section + section {
+        margin-top: 5em;
+        padding-top: 5em;
+        border-top: 0.5vh dashed white;
+    }
+}
+
+main > section:focus {
+    outline: none;
+}
+main > section > p {
+    line-height: 1.5em;
+}
+main > section > h1,
+main > section > h2
+{
+    align-self: start;
+}
+main > section > ul {
+    text-align: left;
+}
+main > section > ul > li ~ li {
+    margin-top: 0.5em;
+}
+
+main > section img,
+main > section svg,
+main > section video
+{
+    max-width: 100%;
+    max-height: 60vh;
+    width: 100vw;
+    object-fit: contain;
+    margin: 1rem 0;
+    border-radius: 0.3em;
+}
+
+main > section figure,
+main > section p {
     margin: 0;
 }
-.reveal .beamer-section-title {
-    font-size: 2rem;
-}
-.reveal .beamer-subsection-title {
-    font-size: 1.5rem;
-}
-.reveal .beamer-subsubsection-title {
-    font-size: 1.3rem;
+
+main > section p + p {
+    margin-top: 1em;
 }
 
-.tabular {
-  width: 100%;
+main > section img {
 }
 
-.reveal table p {
-  margin: 0;
+main > section .full-height {
+    max-height: 90vh;
 }
 
-.reveal-viewport {
-  background-color: var(--r-background-color);
+main > section blockquote {
+    max-width: 20em;
+    line-height: 1.8em;
+}
+main > section > iframe {
+  width: 80%;
+  height: 75vh;
+  border: none;
+  border-radius: 1em;
 }
 
-.reveal {
-  font-family: var(--r-main-font);
-  font-size: var(--r-main-font-size);
-  font-weight: normal;
-  color: var(--r-main-color);
+footer {
+    position: absolute;
+    bottom: 0.5em;
+    font-size: 0.6em;
+    text-align: center;
+    left: 0.5em;
 }
 
-.reveal ::selection {
-  color: var(--r-selection-color);
-  background: var(--r-selection-background-color);
-  text-shadow: none;
+footer #url {
+    color: #333;
+    text-decoration: none;
 }
 
-.reveal ::-moz-selection {
-  color: var(--r-selection-color);
-  background: var(--r-selection-background-color);
-  text-shadow: none;
-}
-
-.reveal .slides section,
-.reveal .slides section > section {
-  line-height: var(--line-height);
-  font-weight: inherit;
-}
-
-/*********************************************
- * HEADERS
- *********************************************/
-.reveal h1,
-.reveal h2,
-.reveal h3,
-.reveal h4,
-.reveal h5,
-.reveal h6 {
-  margin: var(--r-heading-margin);
-  color: var(--r-heading-color);
-  font-family: var(--r-heading-font);
-  font-weight: var(--r-heading-font-weight);
-  line-height: var(--r-heading-line-height);
-  letter-spacing: var(--r-heading-letter-spacing);
-  text-transform: var(--r-heading-text-transform);
-  text-shadow: var(--r-heading-text-shadow);
-  word-wrap: break-word;
-}
-
-.reveal h1 {
-  text-shadow: var(--r-heading1-text-shadow);
-}
-
-/*********************************************
- * OTHER
- *********************************************/
-.reveal p {
-  margin: var(--r-block-margin) 0;
-}
-
-/* Remove trailing margins after titles */
-.reveal :is(h1,h2,h3,h4,h5,h6):last-child {
-  margin-bottom: 0;
-}
-
-/* Ensure certain elements are never larger than the slide itself */
-.reveal :is(img, video, iframe) {
-  max-width: 95%;
-  max-height: 95%;
-}
-
-.reveal :is(ol, dl, ul) {
-  display: block;
+dl {
   text-align: left;
-  margin: 0 0 0 var(--r-block-margin);
 }
 
-.reveal blockquote {
-  display: block;
-  position: relative;
-  width: 70%;
-  margin: var(--r-block-margin) auto;
-  padding: var(--spacing);
-  font-style: italic;
-}
-
-.reveal blockquote p:is(:first-child, :last-child) {
-  display: inline-block;
-}
-
-.reveal q {
-  font-style: italic;
-}
-
-.reveal pre {
-  display: block;
-  position: relative;
-  width: 90%;
-  margin: var(--r-block-margin) auto;
-  text-align: left;
-  font-family: var(--r-code-font);
-  word-wrap: break-word;
-}
-
-.reveal code {
-  font-family: var(--r-code-font);
-  text-transform: none;
-  tab-size: 2;
-}
-
-.reveal pre code {
-  display: block;
-  overflow: auto;
-  max-height: 400px;
-  word-wrap: normal;
-}
-
-.reveal .code-wrapper {
-  white-space: normal;
-}
-
-.reveal .code-wrapper code {
-  white-space: pre;
-}
-
-.reveal table {
-  margin: auto;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-.reveal table th {
+dt {
   font-weight: bold;
 }
 
-.reveal table th,
-.reveal table td {
-  text-align: left;
-  padding: calc(0.2 * var(--spacing)) calc(0.5 * var(--spacing));
-  border-bottom: 1px solid var(--r-main-colour);
-}
-
-.reveal table th[align=center],
-.reveal table td[align=center] {
-  text-align: center;
-}
-
-.reveal table th[align=right],
-.reveal table td[align=right] {
-  text-align: right;
-}
-
-.reveal table tbody tr:last-child th,
-.reveal table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.reveal sup {
-  vertical-align: super;
-  font-size: smaller;
-}
-
-.reveal sub {
-  vertical-align: sub;
-  font-size: smaller;
-}
-
-.reveal img {
-  margin: var(--r-block-margin) 0;
-}
-
-/*********************************************
- * LINKS
- *********************************************/
-.reveal a {
-  color: var(--r-link-color);
-}
-
-/*********************************************
- * Frame helper
- *********************************************/
-.reveal .r-frame {
-  border: 4px solid var(--r-main-color);
-}
-
-/*********************************************
- * NAVIGATION CONTROLS
- *********************************************/
-.reveal .controls {
-  color: var(--r-link-color);
-}
-
-/*********************************************
- * PROGRESS BAR
- *********************************************/
-.reveal .progress {
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--r-link-color);
-}
-
-/*********************************************
- * PRINT BACKGROUND
- *********************************************/
-@media print {
-  .backgrounds {
-    background-color: var(--r-background-color);
-  }
+dl > * ~ dt {
+  margin-top: 1em;
 }
