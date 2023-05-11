@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
+    --base-font-size: 16px;
     --font-scale: 100;
     --spacing-factor: 100;
     --font-family: sans-serif;
 
     --readable-width: 50rem;
-    font-size: calc(calc(var(--font-scale) / 100) * 16px);
+    font-size: calc(calc(var(--font-scale) / 100) * var(--base-font-size));
 
     --text-colour: #000000;
     --link-colour: #0000ee;
@@ -604,35 +605,6 @@ figure + em, .reveal figure + em {
 .bibliography .bibcite {
     display: inline-block;
     margin-right: 0.5em;
-}
-
-.beamer-columns {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.beamer-frame > header {
-    margin-bottom: 1.0rem;
-}
-.beamer-frame-title {
-    font-size: 1.5rem;
-}
-.beamer-frame-subtitle {
-    font-size: 1.3rem;
-}
-.beamer-section-heading {
-    overflow: hidden;
-    height: 0;
-    margin: 0;
-}
-.beamer-section-title {
-    font-size: 2rem;
-}
-.beamer-subsection-title {
-    font-size: 1.5rem;
-}
-.beamer-subsubsection-title {
-    font-size: 1.3rem;
 }
 
 .tcolorbox {

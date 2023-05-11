@@ -3,10 +3,10 @@
 {% block title %}{{item.title}} - {{course.config.title}}{% endblock %}
 
 {% block stylesheets %}
+    {{ super() }}
+
     <link rel="stylesheet" href="{{'reveal.js/dist/reveal.css'|static_url}}">
     <link rel="stylesheet" href="{{'slides.css'|static_url}}">
-
-    {{ super() }}
 {% endblock stylesheets %}
 
 {# MathJax is provided by reveal.js #}

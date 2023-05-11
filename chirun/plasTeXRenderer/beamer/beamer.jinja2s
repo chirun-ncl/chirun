@@ -38,7 +38,7 @@ name: columns
 </div>
 
 name: columnenv
-<div {% if obj.attributes.width %}style="width:{{ obj.attributes.width }}"{% endif %} class="beamer-column">
+<div class="beamer-column">
 {{ obj }}
 </div>
 

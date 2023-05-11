@@ -1,11 +1,16 @@
+:root {
+    --base-font-size: 24px;
+}
+
 body {
   --r-background-color: var(--bg-colour);
   --r-main-font: var(--font-family);
-  --r-main-font-size: calc(30px * var(--font-scale) / 100);
+  --r-main-font-size: 1rem;
   --r-main-color: var(--text-colour);
   --r-block-margin: var(--spacing);
   --r-heading-margin: var(--spacing);
   --r-heading-font: var(--font-family);
+  --r-heading-font-weight: bold;
   --r-heading-color: var(--text-colour);
   --r-heading-line-height: var(--line-height);
   --r-heading-letter-spacing: normal;
@@ -56,11 +61,40 @@ h2 {
   text-transform: none !important;
 }
 
-.reveal p.author {
+.reveal p.author, .reveal .beamer-authors {
 	text-align: center;
 }
 .reveal p {
 	text-align: left;
+}
+
+.reveal .beamer-columns {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.reveal .beamer-frame > header {
+    margin-bottom: 1.0rem;
+}
+.reveal .beamer-frame-title {
+    font-size: 1.5rem;
+}
+.reveal .beamer-frame-subtitle {
+    font-size: 1.3rem;
+}
+.reveal .beamer-section-heading {
+    overflow: hidden;
+    height: 0;
+    margin: 0;
+}
+.reveal .beamer-section-title {
+    font-size: 2rem;
+}
+.reveal .beamer-subsection-title {
+    font-size: 1.5rem;
+}
+.reveal .beamer-subsubsection-title {
+    font-size: 1.3rem;
 }
 
 .tabular {
