@@ -1,80 +1,60 @@
-pre.ran {
-	border-top: 1px solid #ccc;
-	padding: 5px;
+.runnable-code-wrapper {
+	display: grid;
+	grid-template:
+		"code code code" "run output ." / auto 1fr;
+	grid-gap: 0 var(--spacing);
+	margin: var(--spacing) 0;
 }
 
-button.run-code {
-	display: block;
-	padding: 5px 10px 5px 10px;
-	border: none;
+@media (max-width: 40rem) {
+    .runnable-code-wrapper {
+	   grid-template:
+		   "code"
+		   "run"
+		   "output"
+	   ;
+	}
 }
 
-pre.cm-block {
-	border: 1px solid #ccc;
+.runnable-code-wrapper button.run-code {
+	align-self: start;
+	grid-area: run;
+	padding: calc(0.5 * var(--spacing));
+	font-size: inherit;
+	/*! border: none; */
 }
 
-div.highlight > pre {
-	border: 1px solid #ccc;
-	padding: 5px;
+.runnable-code-wrapper .code {
+	grid-area: code;
+	border: 1px solid var(--text-colour);
+	padding: var(--spacing);
+	color: black;
+	background: white;
 }
 
-pre.output-block {
-	border: 1px solid #ccc;
+.runnable-code-wrapper .output {
+	grid-area: output;
+	padding: var(--spacing);
+	border: 1px solid var(--text-colour);
 	border-top: none;
-	padding: 5px;
-	margin-top: -1rem;
-}
-
-p code, li code, table code {
-	border-radius: 3px;
 	margin: 0;
-	padding: .2em .4em;
+	max-height: 20em;
+	overflow-y: auto;
 }
 
-.CodeMirror {
-	height: auto;
-	min-height: 3rem;
+.runnable-code-wrapper:not([data-state="ran"]) .output {
+	background: var(--bg-colour-accent-4);
+	color: var(--text-colour-accent-4);
+	font-style: italic;
 }
 
-.CodeMirror-scroll{
-	min-height: 3rem;
+.runnable-code-wrapper[data-state="fresh"] .output {
+	display: none;
 }
 
-.reveal pre {
-	width:100%;
-	margin: 0 0 10px 0;
-	box-shadow: none;
-	border: 1px solid #ccc;
-	font-size: 0.85em;
-}
 
-.reveal pre.ran {
-	margin: -10px 0 10px 0;
-	border-top: none;
-	padding: 5px 0px 5px 0px;
-}
-
-.reveal button.run-code {
-	padding: 5px 10px 8px 10px;
-	font-size: 0.7em;
-	margin: 0;
-}
-
-.reveal button.run-code:focus, .reveal code:focus {
-    outline: none !important;
-}
-
-.reveal pre.output-block {
-	margin-top: -0.4em;
-	border: 1px solid #ccc;
-}
-
-.reveal code {
-	padding: 0;
-}
-
-.reveal pre.cm-block code {
-	min-height: 1.5rem;
-	white-space: pre;
-	padding: 10px;
+@media print {
+	.runnable-code-wrapper button.run-code {
+		display: none;
+	}
 }

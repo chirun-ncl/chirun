@@ -3,53 +3,27 @@
 
 {% block stylesheets %}
     {{ super() }}
-    <link rel="stylesheet" href="{{'bootstrap-toc.css?v=3'|static_url}}">
     <link rel="stylesheet" href="{{'print.css'|static_url}}">
 {% endblock stylesheets %}
 
-{% block javascript %}
-    {{ super() }}
-    <script defer src="{{'bootstrap-toc.js'|static_url}}"></script>
-{% endblock %}
-
-{% block body_attributes %}data-spy="scroll" data-target="#chapterTOC" data-offset="50"{% endblock %}
-
 {% block main %}
-    <div class="container mt-3">
-        <div class="row">
-            {% if item.has_sidebar %}
-            <div id="sidebar" class="col-md-3">
-                <nav class="mb-3" id="chapterTOC" data-toggle="toc">
-                    <ul class="nav navbar-nav">
-                        {% if item.has_slides %}
-                        <li><a id="slides-link" class="nav-link" href="{{item.slides_url|url}}" target="_blank">{{macros.icon('desktop','View as Slides',True)}}</a></li>
-                        {% endif %}
-                        {% if item.has_nb %}
-                        <li><a id="notebook-link" class="nav-link" href="{{item.nb_url|url}}" download>{{macros.icon('book','Download Notebook',True)}}</a></li>
-                        {% endif %}
-                        {% if item.has_pdf %}
-                        <li><a id="pdf-link" class="nav-link" href="{{item.pdf_url|url}}" target="_blank">{{macros.icon('file-pdf-o','Download as PDF',True)}}</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-            <div id="content" class="col-md-9"> 
-            {% else %}
-            <div class="col-md-12">
-			<div class="standalone-nav">
-                {% if item.has_slides %}
-                <a id="standalone-slides-link" class="standalone-navitem" href="{{item.slides_url|url}}" target="_blank"><i class="fa fa-desktop"></i>&nbsp;View as Slides</a>
-                {% endif %}
-                {% if item.has_nb %}
-                <a id="standalone-notebook-link" class="standalone-navitem" href="{{item.nb_url|url}}" download><i class="fa fa-book"></i>&nbsp;Download Notebook</a>
-                {% endif %}
-				{% if item.has_pdf %}
-				<a id="standalone-pdf-link" class="standalone-navitem" href="{{item.pdf_url|url}}" target="_blank"><i class="fa fa-file-pdf-o"></i>&nbsp;Download as PDF</a>
-				{% endif %}
-			</div>
-            {% endif %}
-            {{item.as_html()|safe}}
-            </div>
-        </div>
-    </div>
+    <nav id="sidebar">
+        {% if item.has_sidebar %}
+            <ol class="table-of-contents">
+                {% with headers=item.get_headers() %}
+                    {% include "toc_items.html" %}
+                {% endwith %}
+            </ol>
+        {% endif %}
+
+        <ul class="alternative-formats">
+            {% for format in item.alternative_formats() %}
+            <li><a href="{{format.url|url}}"{% if format.download %}download{% endif %}>{% if format.download %}{% trans format=format.name %}Download as {{format}}{% endtrans %}{% else %}{% trans format=format.name%}View as {{format}}{% endtrans %}{% endif %}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <article class="item-content">
+        {{item.as_html()|safe}}
+    </article>
 {% endblock main %}

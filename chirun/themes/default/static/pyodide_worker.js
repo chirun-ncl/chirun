@@ -61,7 +61,7 @@ self.onmessage = async (event) => {
                 }
                 namespace.set('_',result);
                 self.postMessage({
-                    result,
+                    result: result?.toString(),
                     job_id,
                     stdout: self.stdout.join('\n'),
                     stderr: self.stderr.join('\n')

@@ -1,50 +1,23 @@
 {% extends "item.html" %}
 {% import "macros.html" as macros %}
 
+{% block body_class %}{{super()}} structure{% endblock %}
+
 {% block header %}
-<div class="container mt-3">
-	<div class="row">
-		<div class="col-md-12">
-			<h1>{{item.title}}</h1>
-		</div>
-	</div>
-</div>
+    <h1>{{item.title}}</h1>
 {% endblock header %}
 
 {% block main %}
-<div class="container">
-	<p>{{ item.leading_text }}</p>
-</div>
-<div class="container mt-3">
-	<div class="row">
-		<div class="col-md-12">
-			{{item.as_html()|safe}}
-		</div>
-	</div>
-</div>
-<div class="album py-5 bg-light">
-	<div class="container">
-		<div class="row">
-			{% for partitem in item.content %}
-				{% if partitem.content %}
-					{% include "subitem.html" %}
-				{% else %}
-					<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
-						<div class="card mb-4 h-100 box-shadow">
-							{% if partitem.thumbnail %}
-								<img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
-							{% endif %}
-							<div class="card-body">
-								<div class="card-text">
-									{% set subitem = partitem %}
-									{% include "inner_subitem.html" %}
-								</div>
-							</div>
-						</div>
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div>
-</div>
+    <article class="item-content">
+        <section class="leading-text">
+            <p>{{ item.leading_text }}</p>
+        </section>
+        <section>
+            {{item.as_html()|safe}}
+        </section>
+    </article>
+
+    {% with structure=item.content %}
+        {% include "structure.html" %}
+    {% endwith %}
 {% endblock main %}

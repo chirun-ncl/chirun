@@ -1,14 +1,1 @@
-<div class="numbas_container" data-numbas-id="{{id}}" data-numbas-url="{{url}}">
-    <div class="feedback_bar">
-        <button class="btn btn-danger" data-target="#{{id}}_collapse" data-toggle="collapse">
-            {{ cta or 'Test Yourself' }}
-        </button>
-        <div class="feedback_right">
-            <span class="complete">✔</span>
-            <span class="incomplete">✔</span>
-        </div>
-    </div>
-    <div class="collapse-content collapse embed" id="{{id}}_collapse">
-        <iframe class="numbas_iframe" src="{{url}}"></iframe>
-    </div>
-</div>
+<embed-numbas id="{{id}}" url="{{url}}"></embed-numbas>

@@ -1,27 +1,20 @@
 {% import "macros.html" as macros %}
-<div class="card-container col-md-6 col-lg-4 pb-4 mx-auto lti-hint-part">
-	<div class="card mb-4 h-100 box-shadow">
-		<div class="card-header text-center">
-			<h2 class="my-0 font-weight-normal">
-				<a href="{{partitem.url|url}}">{{partitem.title}}</a>
-				{% if partitem.has_pdf %}
-					<a target="_blank" class="float-right ml-2" href="{{partitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
-				{% endif %}
-			</h2>
-		</div>
-		{% if partitem.thumbnail %}
-		<img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
-		{% endif %}
-		<div class="card-body">
-			<div class="card-text">
-				<ul class="list-unstyled">
-					{% for subitem in partitem.content %}
-					<li class="mb-3 lti-hint-item">
-						{% include "inner_subitem.html" %}
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<header>
+    <h2>
+        <a class="undecorated" href="{{partitem.url|url}}">{{partitem.title}}</a>
+        {% if partitem.has_pdf %}
+            <a target="_blank" class="float-right ml-2" href="{{partitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
+        {% endif %}
+    </h2>
+    {% if partitem.thumbnail %}
+    <img class="thumbnail" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
+    {% endif %}
+</header>
+
+<ul class="contents">
+    {% for subitem in partitem.content %}
+    <li>
+        {% include "inner_subitem.html" %}
+    </li>
+    {% endfor %}
+</ul>

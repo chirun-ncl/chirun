@@ -1,7 +1,0 @@
-<li class="nav-item{% if sibling == item %}active{% endif %}">
-    {% if sibling.type == 'url' %}
-        <a target="_blank" class="nav-link pl-3 pr-3" href="{{sibling.source|url}}">{{sibling.title}}</a>
-    {% else %}
-        <a class="nav-link pl-3 pr-3" href="{{sibling.url|url}}">{{sibling.title}}</a>
-    {% endif %}
-</li>

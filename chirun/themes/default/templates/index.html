@@ -1,76 +1,35 @@
 {% extends 'base.html' %}
 {% import "macros.html" as macros %}
 
-{% block nav %}
-{% include "theme_customise.html" %}
-<div class="pull-right mr-3 mt-2">			
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleCustomise" aria-controls="navbarToggleCustomise" aria-expanded="false" aria-label="Toggle customisations panel">
-        {{macros.icon('cog','Toggle customisations panel')}}
-	</button>
-</div>
-{% endblock nav %}
+{% block body_class %}{{super()}} structure{% endblock %}
 
 {% block header %}
-{% if item.has_topbar %}
-<div class="container intro-container">
-	<div class="row justify-content-center">
-		<div class="col-md-11">
-			<h1 class="intro-header">{{course.config.title}}</h1>
-			<div class="intro-header intro-author">{{course.config.author}}</div>
-			{% if course.config.year %}
-			<div class="intro-header intro-year">{{course.config.year}}</div>
-			{% endif %}
-			<p>{{ item.leading_text }}</p>
-		</div>
-	</div>
-</div>
-{% endif %}
-{% if item.location == 'above' %}
-<section>
-	<div class="container lti-hint-introduction">
-		<div class="intro-content">
-			{{ item.as_html()|safe }}
-		</div>
-	</div>
-</section>
-{% endif %}
+    {% if item.has_topbar %}
+        <div id="topbar">
+            <h1 class="title">{{course.config.title}}</h1>
+            <p class="author">{{course.config.author}}</p>
+            {% if course.config.year %}
+            <p class="year">{{course.config.year}}</p>
+            {% endif %}
+            <p class="leading-text">{{ item.leading_text }}</p>
+        </div>
+    {% endif %}
+
+    {% if item.location == 'above' %}
+        <section class="intro-content">
+            {{ item.as_html()|safe }}
+        </section>
+    {% endif %}
 {% endblock header %}
 
 {% block main %}
-<div class="album py-5 bg-light mb-3">
-	<div class="container">
-		<div class="row">
-			{% for partitem in course.structure %}
-				{% if partitem.content %}
-					{% include "subitem.html" %}
-				{% else %}
-					{% if partitem.type != 'introduction' %}
-						<div class="card-container col-md-6 col-lg-4 pb-4 lti-hint-item">
-							<div class="card mb-4 h-100 box-shadow">
-								{% if partitem.thumbnail %}
-									<img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
-								{% endif %}
-								<div class="card-body">
-									<div class="card-text">
-										{% set subitem = partitem %}
-										{% include "inner_subitem.html" %}
-									</div>
-								</div>
-							</div>
-						</div>
-					{% endif %}
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div>
-</div>
-{% if item.location == 'below' %}
-<section>
-	<div class="container lti-hint-introduction">
-		<div class="intro-content">
-			{{ item.as_html()|safe }}
-		</div>
-	</div>
-</section>
-{% endif %}
+    {% with structure=course.structure %}
+        {% include "structure.html" %}
+    {% endwith %}
+
+    {% if item.location == 'below' %}
+    <section class="intro-content">
+        {{ item.as_html()|safe }}
+    </section>
+    {% endif %}
 {% endblock main %}

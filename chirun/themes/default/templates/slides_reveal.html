@@ -1,114 +1,91 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		{% block meta %}
-		<meta charset="utf-8">
-		<meta name="robots" content="noindex">
-		<meta name="author" content="{{item.author}}" />
-		<meta name="date" content="{{date}}" />
-		{% endblock meta %}
+{% extends "base.html" %}
 
-		<title>{% block title %}{{item.title}}{% endblock %}</title>
+{% block title %}{{item.title}} - {{course.config.title}}{% endblock %}
 
-		{% block stylesheets %}
-		<link rel="stylesheet" id="customiseCodeCSS" href="{{'pygmentize.light.css'|static_url}}">
-		<link rel="stylesheet" href="{{'reveal.js/dist/reveal.css'|static_url}}">
-		<link id="customiseCSS" rel="stylesheet" href="{{'reveal.js/dist/theme/light.css'|static_url}}">
-		<link rel="stylesheet" href="{{'slides.css'|static_url}}">
-		<link rel="stylesheet" href="{{'codemirror-5.26.0/lib/codemirror.css'|static_url}}">
-		<link rel="stylesheet" href="{{'code.css'|static_url}}">
-		{% for css in course.config.css %}
-			<link rel="stylesheet" href="{{css|static_url}}">
-		{% endfor %}
-		{% for css in item.data.css %}
-			<link rel="stylesheet" href="{{css|static_url}}">
-		{% endfor %}
-		{% endblock stylesheets %}
+{% block stylesheets %}
+    {{ super() }}
 
-		{% block javascript %}
-		<script>
-			var chirun_static_url="{{'.'|static_url}}";
-		</script>
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-		<script defer src="{{'mathjax_config.js'|static_url}}"></script>
-		<script type="text/javascript" id="MathJax-script" defer src="{{course.config.mathjax_url}}"></script>
-		<script defer src="{{'jquery.flexibleArea.js'|static_url}}"></script>
-		<script defer src="{{'spin.min.js'|static_url}}"></script>
-		<script src="{{'customisation.js'|static_url}}"></script>
-		<script defer src="{{'mp4.js'|static_url}}"></script>
-		<script src="{{'code.js'|static_url}}"></script>
-		<script>
-			if( window.location.search.match( /print-pdf/gi )){
-				var link = document.createElement( 'link' );
-				link.rel = 'stylesheet';
-				link.type = 'text/css';
-				link.href = "{{'reveal.js/css/print/pdf.css'|static_url}}";
-				document.getElementsByTagName( 'head' )[0].appendChild( link );
-				var link = document.createElement( 'link' );
-				link.rel = 'stylesheet';
-				link.type = 'text/css';
-				link.href = "{{'slides_print.css'|static_url}}";
-				document.getElementsByTagName( 'head' )[0].appendChild( link );
-			}
-		</script>
-		{% for js in course.config.js %}
-			<script defer src="{{js|static_url}}"></script>
-		{% endfor %}
-		{% for js in item.data.js %}
-			<script defer src="{{js|static_url}}"></script>
-		{% endfor %}
-		{% endblock %}
+    <link rel="stylesheet" href="{{'reveal.js/dist/reveal.css'|static_url}}">
+    <link rel="stylesheet" href="{{'slides.css'|static_url}}">
+{% endblock stylesheets %}
 
-	</head>
-	<body {% block body_attributes %}{% endblock %}>
-		<div class="reveal">
+{# MathJax is provided by reveal.js #}
+{% block math_javascript %}
+    <script defer src="{{'mathjax_config.js'|static_url}}"></script>
+{% endblock %}
 
-			{% block header_slides %}
-			<div class="header-l">{{item.title}}</div>
-			<div class="header-r">{{item.author}}</div>
-			{% endblock %}
+{% block body %}
+    {% block customisation %}
+        {% include "theme_customise.html" %}
+    {% endblock customisation %}
 
-			<div class="slides">
-				{% block title_slide %}
-					{% if item.title_slide %}
-					<section id="title-slide">
-						<h1 class="title">{{item.title}}</h1>
-						<p class="author">{{item.author}}</p>
-					</section>
-					{% endif %}
-				{% endblock %}
+    <main class="reveal">
+        {% block slides_main %}
 
-				{% block main_slides %}
-				<section data-splitter data-separator="<hr/?>" data-separator-notes="^Data-Note:">
-					<textarea data-template>
-						{{item.as_html()|safe}}
-					</textarea>
-				</section>
-				{% endblock %}
+        {% block header_slides %}
+        <header>
+            <div id="slides-title">{{item.title}}</div>
+            <div id="slides-author">{{item.author}}</div>
+        </header>
+        {% endblock header_slides %}
 
-			</div>
+        <div class="slides">
+            {% block title_slide %}
+                {% if item.title_slide %}
+                <section id="title-slide">
+                    <h1 class="title">{{item.title}}</h1>
+                    <p class="author">{{item.author}}</p>
+                </section>
+                {% endif %}
+            {% endblock %}
 
-		</div>
-		<script src="{{'reveal.js/dist/reveal.js'|static_url}}"></script>
-		<script>
-			Reveal.initialize({
-				hash: true,
-				history: true,
-				dependencies: [
-					{ src: "{{'reveal.js/plugin/splitter/splitter.js'|static_url}}" },
-					{ src: "{{'reveal.js/plugin/notes/notes.js'|static_url}}", async: true },
-					{ src: "{{'reveal.js/plugin/highlight/highlight.js'|static_url}}", async: true }
-				]
-			});
-			Reveal.on( 'ready', event => {
-				try {
-					MathJax.startup.defaultPageReady();
-				} catch(err) {
-					console.log('Problem running MathJax.startup.defaultPageReady()');
-				}
-				mp4ImageFallback();
-				updateThemeBodyTag();
-			});
-		</script>
-	</body>
-</html>
+            {% block main_slides %}
+                {% if item.source.suffix == '.md' %}
+                    <section data-splitter data-separator="<hr/?>" data-separator-notes="^Data-Note:">
+                        <textarea data-template>
+                            {{item.as_html(item.out_slides)|safe}}
+                        </textarea>
+                    </section>
+                {% else %}
+                    {{item.as_html(item.out_slides)|safe}}
+                {% endif %}
+            {% endblock %}
+        </div>
+
+        {% endblock slides_main %}
+    </main>
+
+    <button type="button" aria-controls="display-options" aria-expanded="false">
+        {% trans %}Display options{% endtrans %}
+    </button>
+
+    {% block footer_slides %}
+    <script type="module">
+        import Reveal from '{{'reveal.js/dist/reveal.esm.js'|static_url}}';
+        import Markdown from '{{'reveal.js/plugin/markdown/markdown.esm.js'|static_url}}';
+        import Notes from '{{'./reveal.js/plugin/notes/notes.esm.js'|static_url}}';
+        import Highlight from '{{'./reveal.js/plugin/highlight/highlight.esm.js'|static_url}}';
+        import RevealMath from '{{'./reveal.js/plugin/math/math.esm.js'|static_url}}';
+        Reveal.initialize({
+            jumpToSlide: false,
+
+            hash: true,
+            plugins: [ Markdown, Highlight, Notes, RevealMath.MathJax3 ],
+            history: true,
+
+            embedded: window.parent != window,
+
+            autoAnimate: false,
+
+            transition: 'none',
+
+            backgroundTransition: 'none',
+
+            mathjax3: window.MathJax {# Use the MathJax config loaded from mathjax_config.js #}
+        });
+
+        window.Reveal = Reveal;
+
+    </script>
+    {% endblock footer_slides %}
+{% endblock body %}

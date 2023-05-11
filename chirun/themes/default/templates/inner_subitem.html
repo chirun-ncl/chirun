@@ -1,17 +1,14 @@
 {% import "macros.html" as macros %}
 {% if not subitem.hidden %}
     {% if subitem.type == 'url' %}
-        <a target="_blank" href="{{subitem.source|url}}">{{subitem.title}}</a>
+        <a class="undecorated" target="_blank" href="{{subitem.source|url}}">{{subitem.title}}</a>
     {% else %}
-        <a href="{{subitem.url|url}}">{{subitem.title}}</a>
-        {% if subitem.has_slides %}
-            <a id="item-slides-link" target="_blank" class="float-right ml-2" href="{{subitem.slides_url|url}}">{{macros.icon('desktop','Slides')}}</a>
-        {% endif %}
-        {% if subitem.has_nb %}
-            <a id="item-notebook-link" download class="float-right ml-2" href="{{subitem.nb_url|url}}">{{macros.icon('book','Notebook')}}</a>
-        {% endif %}
-        {% if subitem.has_pdf %}
-            <a id="item-pdf-link" target="_blank" class="float-right ml-2" href="{{subitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
-        {% endif %}
+        <a class="undecorated" href="{{subitem.url|url}}">{{subitem.title}}</a>
+
+        <ul class="alternative-formats">
+            {% for format in subitem.alternative_formats() %}
+            <li><a class="undecorated" href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{format.name}}</a></li>
+            {% endfor %}
+        </ul>
     {% endif %}
 {% endif %}
