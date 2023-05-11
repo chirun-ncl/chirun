@@ -289,7 +289,7 @@ body > main > #sidebar {
     position: sticky;
     top: 0;
 }
-@media (max-width: 60em) {
+@media (max-width: 60em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
     }

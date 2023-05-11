@@ -1,9 +1,5 @@
 :root {
-}
-
-* {
-    box-sizing: border-box;
-    word-break: break-word;
+    --base-font-size: max(2.6vmin, 16px);
 }
 
 aside { 
@@ -19,11 +15,16 @@ body {
     margin: 0;
 }
 h1,h2,h3,h4,h5,h6 {
-    margin: 0;
+    margin: 0 0 var(--spacing) 0;
+    justify-self: center;
 }
 h2 {
     margin: 0;
     font-size: 1.1em;
+}
+
+p {
+    max-width: var(--readable-width);
 }
 
 body > main {
@@ -49,14 +50,12 @@ main > section {
     height: 100vh;
     display: grid;
     align-items: center;
-    justify-items: center;
-    text-align: center;
-    padding: 0px 1em;
+    justify-content: center;
+    padding: 0px var(--spacing);
     scroll-snap-align: center;
     grid-auto-rows: max-content;
     align-content: center;
     overflow-y: hidden;
-    /*! grid-template-rows: auto; */
 }
 
 @media (orientation: portrait) {
@@ -65,9 +64,9 @@ main > section {
         scroll-snap-align: none;
     }
     main > section + section {
-        margin-top: 5em;
-        padding-top: 5em;
-        border-top: 0.5vh dashed white;
+        margin-top: calc(2 * var(--spacing));
+        padding-top: calc(2 * var(--spacing));
+        border-top: 0.5vh dashed var(--text-colour);
     }
 }
 
@@ -75,50 +74,37 @@ main > section:focus {
     outline: none;
 }
 main > section > p {
-    line-height: 1.5em;
+    line-height: var(--line-height);
 }
-main > section > h1,
-main > section > h2
-{
+main > section > :is(h1, h2) {
     align-self: start;
 }
 main > section > ul {
     text-align: left;
 }
 main > section > ul > li ~ li {
-    margin-top: 0.5em;
+    margin-top: calc(0.5 * var(--spacing));
 }
 
-main > section img,
-main > section svg,
-main > section video
-{
+main > section :is(img, svg, video) {
     max-width: 100%;
     max-height: 60vh;
-    width: 100vw;
     object-fit: contain;
-    margin: 1rem 0;
+    margin: var(--spacing) 0;
     border-radius: 0.3em;
 }
 
-main > section figure,
-main > section p {
+main > section figure {
     margin: 0;
 }
 
-main > section p + p {
-    margin-top: 1em;
-}
-
-main > section img {
-}
 
 main > section .full-height {
     max-height: 90vh;
 }
 
 main > section blockquote {
-    max-width: 20em;
+    max-width: calc(0.5 * var(--readable-width));
     line-height: 1.8em;
 }
 main > section > iframe {
@@ -128,27 +114,23 @@ main > section > iframe {
   border-radius: 1em;
 }
 
-footer {
-    position: absolute;
-    bottom: 0.5em;
-    font-size: 0.6em;
-    text-align: center;
-    left: 0.5em;
-}
-
-footer #url {
-    color: #333;
-    text-decoration: none;
-}
-
-dl {
-  text-align: left;
-}
-
-dt {
-  font-weight: bold;
-}
-
-dl > * ~ dt {
-  margin-top: 1em;
+@media print {
+    button[aria-controls="display-options"] {
+        display: none;
+    }
+    main > section {
+        page-break-after: always;
+        page-break-inside: always;
+    }
+    
+    body > main {
+        height: auto;
+        overflow: none;
+    }
+    
+    body > main > header {
+        position: absolute;
+        top: 0;
+        width: 100vw;
+    }
 }
