@@ -22,33 +22,18 @@
     <main class="reveal">
         {% block slides_main %}
 
-        {% block header_slides %}
-        <header>
-            <div id="slides-title">{{item.title}}</div>
-            <div id="slides-author">{{item.author}}</div>
-        </header>
-        {% endblock header_slides %}
-
         <div class="slides">
             {% block title_slide %}
                 {% if item.title_slide %}
                 <section id="title-slide">
-                    <h1 class="title">{{item.title}}</h1>
-                    <p class="author">{{item.author}}</p>
+                    {% if item.title %}<h1 class="title">{{item.title}}</h1>{% endif %}
+                    {% if item.author %}<p class="author">{{item.author}}</p>{% endif %}
                 </section>
                 {% endif %}
             {% endblock %}
 
             {% block main_slides %}
-                {% if item.source.suffix == '.md' %}
-                    <section data-splitter data-separator="<hr/?>" data-separator-notes="^Data-Note:">
-                        <textarea data-template>
-                            {{item.as_html(item.out_slides)|safe}}
-                        </textarea>
-                    </section>
-                {% else %}
-                    {{item.as_html(item.out_slides)|safe}}
-                {% endif %}
+                {{item.as_html(item.out_slides)|safe}}
             {% endblock %}
         </div>
 

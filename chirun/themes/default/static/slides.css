@@ -32,6 +32,11 @@ body > main {
 	box-shadow: none !important;
 }
 
+body > button[aria-controls="display-options"] {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
 
 
 body > .reveal > header {

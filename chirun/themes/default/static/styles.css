@@ -190,6 +190,11 @@ h5 {
     font-size: 1.15em;
 }
 
+hr {
+    border: 1px solid var(--text-colour);
+    margin: calc(2 * var(--spacing));
+}
+
 details {
     background: var(--bg-colour-off);
     padding: var(--spacing);

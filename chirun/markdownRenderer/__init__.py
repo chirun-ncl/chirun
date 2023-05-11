@@ -1,10 +1,10 @@
-from markdown import markdown
+from   chirun.markdownRenderer.arithmatex import ArithmatexExtension
 import chirun.markdownRenderer.codemirror
-from .markdown_figure.mdfigure import FigureExtension
-from .image_processor.imgproc import ImageProcessorExtension
-from .link_processor.linkproc import LinkProcessorExtension
-from .mdx_outline.mdx_outline import OutlineExtension
-from chirun.markdownRenderer.arithmatex import ArithmatexExtension
+from   markdown import markdown
+import re
+from   .image_processor.imgproc import ImageProcessorExtension
+from   .link_processor.linkproc import LinkProcessorExtension
+from   .markdown_figure.mdfigure import FigureExtension
 
 
 class MarkdownRenderer(object):
@@ -45,12 +45,21 @@ class MarkdownRenderer(object):
                                    course_structure=struct),
             FigureExtension(),
             ArithmatexExtension(preview=False),
-            OutlineExtension(),
             'pymdownx.highlight',
             'pymdownx.extra',
             'pymdownx.superfences',
             'pymdownx.striphtml',
         ]
-        content = markdown(md_string or content_item.markdown_content(), extensions=mdx_extensions,
+
+        if md_string is None:
+            md_string = content_item.markdown_content()
+
+        sections = re.split(r'$\n\n---+\n\n', md_string, flags=re.M)
+
+        output = ''
+        for section_md in sections:
+            content = markdown(section_md, extensions=mdx_extensions,
                            extension_configs=self.extension_configs)
-        return content
+            output += f'<section>\n{content}\n</section>\n'
+
+        return output
