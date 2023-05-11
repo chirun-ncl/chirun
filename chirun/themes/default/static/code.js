@@ -4,7 +4,7 @@
  * https://github.com/numbas/numbas-extension-programming
  * License: Apache License 2.0
  */
-import codemirror_editor from "./runnable_code.mjs";
+import codemirror_editor from "./runnable_code.js";
 
 var codeMirrorInstances = {};
 var webR_url = 'https://cdn.jsdelivr.net/gh/georgestagg/webR@452ae1637dfdd65c9a5f462fff439022d833f8f9/dist/';

@@ -54,4 +54,4 @@ class Theme(object):
 
         js_translation = (self.source / 'translations' / self.course.config['locale']).with_suffix('.mjs')
         if js_translation.exists():
-            shutil.copyfile(js_translation, dstPath / 'translations.mjs')
+            shutil.copyfile(js_translation, dstPath / 'translations.js')
