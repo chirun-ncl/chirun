@@ -16,7 +16,7 @@ Pillow==9.2.0
 plasTeX==2.1
 py==1.11.0
 Pygments==2.11.0
-pymdown-extensions==6.0
+pymdown-extensions==10.0
 pyoembed==0.1.2
 pyparsing==3.0.9
 PyPDF2==2.5.0
