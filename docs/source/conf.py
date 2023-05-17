@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'Chirun'
-copyright = 'E-Learning Unit, Newcastle University'
-author = 'E-Learning Unit, Newcastle University'
+copyright = 'Digital Learning Unit, Newcastle University'
+author = 'Digital Learning Unit, Newcastle University'
 
-release = '0.7'
-version = '0.7.1'
+release = '0.8.0'
+version = '0.8.0'
 
 # -- General configuration
 
@@ -25,11 +25,27 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ['std']
 
+def setup(app):
+    app.add_css_file('chirun-style.css')
+
 templates_path = ['_templates']
 
 # -- Options for HTML output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_book_theme'
+
+html_static_path = ['_static']
+
+html_theme_options = {
+    'use_fullscreen_button': False,
+    'use_issues_button': False,
+    'repository_url': 'https://github.com/numbas/editor',
+    'repository_branch': 'master',
+    'use_repository_button': True,
+    'use_edit_page_button': True,
+    'path_to_docs': 'docs/source/',
+}
+
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'

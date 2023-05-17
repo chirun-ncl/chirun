@@ -59,7 +59,8 @@ class ImageProcessorExtension(Extension):
         }
         super(ImageProcessorExtension, self).__init__(**kwargs)
 
-    def extendMarkdown(self, md, md_globals):
-        images = ImageTreeprocessor(md, self.getConfig('item_sourcedir'), self.getConfig('item_outdir'))
-        md.treeprocessors.add("imageprocessor", images, "_end")
+    def extendMarkdown(self, md):
         md.registerExtension(self)
+
+        images = ImageTreeprocessor(md, self.getConfig('item_sourcedir'), self.getConfig('item_outdir'))
+        md.treeprocessors.register(images, "imageprocessor", 5)

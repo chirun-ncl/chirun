@@ -2,7 +2,7 @@ from   babel.support import Translations
 import chirun.filter
 from   chirun.markdownRenderer import MarkdownRenderer
 import datetime
-from   jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
+from   jinja2 import Environment, FileSystemLoader, select_autoescape, pass_context, TemplateNotFound
 import logging
 import nbformat
 from   notedown import MarkdownReader
@@ -48,7 +48,7 @@ class Renderer(object):
         except FileNotFoundError:
             self.env.install_null_translations(newstyle=True)
 
-        @contextfilter
+        @pass_context
         def url_filter(context, url, theme=False):
             self.course.force_theme = theme
             if not re.search(r'^[^:]+:\/\/', url):
@@ -57,7 +57,7 @@ class Renderer(object):
             return url
         self.env.filters['url'] = url_filter
 
-        @contextfilter
+        @pass_context
         def static_url(context, url):
             return url_filter(context, 'static/' + url)
 

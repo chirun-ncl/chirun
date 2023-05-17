@@ -24,8 +24,7 @@ Current Issues:
 
 from plasTeX import Command, Environment, sourceChildren, Node
 from enum import Enum, auto
-from typing import Optional, Union, Dict, List
-from typing_extensions import TypedDict
+from typing import Optional, Union, Dict, List, TypedDict
 from re import Scanner  # type: ignore
 import math
 

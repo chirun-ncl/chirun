@@ -3,12 +3,14 @@ Extension for markbox to make all images lightbox
 
 copyright @2015 Alicia Schep <aschep@gmail.com>
 
+Changes made by Christian Lawson-Perfect for Newcastle University, 2023.
+
 """
 import markdown
 from markdown.treeprocessors import Treeprocessor
 from markdown import Extension
-from markdown.util import etree
 from copy import copy
+import xml.etree.ElementTree as etree
 
 
 class FigureTreeprocessor(Treeprocessor):
@@ -79,9 +81,9 @@ class FigureExtension(Extension):
         }
         super(FigureExtension, self).__init__(**kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         figures = FigureTreeprocessor(md,
                                       self.getConfig('figure_classes'),
                                       self.getConfig('img_classes'))
-        md.treeprocessors.add("figure", figures, "_end")
+        md.treeprocessors.register(figures, "figure", 5)
         md.registerExtension(self)

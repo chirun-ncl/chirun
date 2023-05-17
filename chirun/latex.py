@@ -49,35 +49,35 @@ class LatexSplitter(object):
         def __init__(self, in_path):
             def all_pages(pages, p=[]):
                 if '/Kids' in pages:
-                    kids = pages['/Kids'].getObject()
+                    kids = pages['/Kids'].get_object()
                     for k in kids:
-                        all_pages(k.getObject(), p)
+                        all_pages(k.get_object(), p)
                 else:
                     p.append(pages)
                 return p
 
             def all_dests(dests, d={}):
                 if '/Kids' in dests:
-                    kids = dests['/Kids'].getObject()
+                    kids = dests['/Kids'].get_object()
                     for k in kids:
-                        d.update(all_dests(k.getObject(), d))
+                        d.update(all_dests(k.get_object(), d))
                 if '/Names' in dests:
-                    n = dests['/Names'].getObject()
+                    n = dests['/Names'].get_object()
                     for k, v in zip(n[::2], n[1::2]):
-                        v = v.getObject()
+                        v = v.get_object()
                         dest = v
                         if '/D' in v:
-                            dest = v['/D'].getObject()
-                        page_obj = dest[0].getObject()
+                            dest = v['/D'].get_object()
+                        page_obj = dest[0].get_object()
                         d[k] = self.pages.index(page_obj)
                 return d
 
-            pdf = PyPDF2.PdfFileReader(str(in_path), "rb")
-            root = pdf.trailer['/Root'].getObject()
-            self.pages = all_pages(root['/Pages'].getObject())
+            pdf = PyPDF2.PdfReader(str(in_path), "rb")
+            root = pdf.trailer['/Root'].get_object()
+            self.pages = all_pages(root['/Pages'].get_object())
             if '/Names' in root:
-                names = root['/Names'].getObject()
-                dests_root = names['/Dests'].getObject()
+                names = root['/Names'].get_object()
+                dests_root = names['/Dests'].get_object()
                 self.dests = all_dests(dests_root)
             else:
                 logger.warning(
@@ -135,7 +135,7 @@ class LatexSplitter(object):
 
         # Split PDF on the toc entries
         try:
-            reader = PyPDF2.PdfFileReader(open(str(self.in_path), 'rb'))
+            reader = PyPDF2.PdfReader(open(str(self.in_path), 'rb'))
             for idx, entry in enumerate(self.toc):
                 entry.slug = slugify(entry.title or self.in_path.with_suffix('').name)
                 pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
@@ -145,7 +145,7 @@ class LatexSplitter(object):
                     pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
                     n = n + 1
                 if idx + 1 == len(self.toc):
-                    end_pg = reader.getNumPages() - 1
+                    end_pg = len(reader.pages) - 1
                 else:
                     end_pg = max(entry.pdf_page, self.toc[idx + 1].pdf_page - 1)
 
