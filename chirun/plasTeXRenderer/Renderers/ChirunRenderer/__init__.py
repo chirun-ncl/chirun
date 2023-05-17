@@ -1,6 +1,6 @@
 from babel.support import Translations
 import collections.abc
-from jinja2 import Environment, contextfunction
+from jinja2 import Environment
 from pathlib import Path
 import pdb
 from plasTeX.DOM import Node
@@ -11,7 +11,6 @@ from plasTeX.Logging import getLogger
 log = getLogger()
 
 
-@contextfunction
 def debug(context):
     pdb.set_trace()
 

@@ -2,7 +2,7 @@ from plasTeX import Base, Command, Environment
 from plasTeX.Base.TeX import Primitives
 
 class ifpdflatex(Primitives.iffalse):
-    """ An \if command whose "true" case is only applied when rendering the content in pdflatex.
+    r""" An \if command whose "true" case is only applied when rendering the content in pdflatex.
         The "else" command is used when rendering HTML with plasTeX.
 
         Equivalent to \ifplastex with the cases swapped.
@@ -120,6 +120,8 @@ class alttext(Command):
         if gfx is not None:
             gfx.altText = self.attributes['text']
         else:
-            raise RuntimeError('Cannot find a graphics item to attach \\alttext{} to. Ensure \
-the graphicx or tikz package is loaded and a graphics item is defined \
-before invoking \\alttext{}.')
+            raise RuntimeError(
+                'Cannot find a graphics item to attach \\alttext{} to. Ensure'
+                'the graphicx or tikz package is loaded and a graphics item is defined'
+                'before invoking \\alttext{}.'
+            )

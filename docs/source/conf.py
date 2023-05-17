@@ -29,6 +29,9 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ['std']
 
+def setup(app):
+    app.add_css_file('chirun-style.css')
+
 templates_path = ['_templates']
 
 # -- Options for HTML output

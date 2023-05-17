@@ -73,8 +73,8 @@ class LinkProcessorExtension(Extension):
         }
         super(LinkProcessorExtension, self).__init__(**kwargs)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         links = LinkTreeprocessor(md, self.getConfig('item_sourcedir'),
                                   self.getConfig('item_outdir'), self.getConfig('course_structure'))
-        md.treeprocessors.add("linkprocessor", links, "_end")
+        md.treeprocessors.register(links, "linkprocessor", 5)
         md.registerExtension(self)

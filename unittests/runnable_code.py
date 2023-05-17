@@ -18,8 +18,8 @@ if False:
     print(3**3**3**3**3)
 '''.strip())
 
-    def test_latex_runnable_code(self):
-        """ Checks that the ``runnable`` annotation for code blocks is defined in LaTeX and produces a <runnable-code> element in HTML.
+    def test_markdown_runnable_code(self):
+        """ Checks that the ``runnable`` annotation for code blocks is defined in markdown and produces a <runnable-code> element in HTML.
         """
         soup = self.get_soup('markdown_runnable_co/index.html')
 

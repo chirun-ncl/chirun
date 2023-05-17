@@ -20,7 +20,8 @@ class FigureTreeprocessor(Treeprocessor):
         return
 
 class FigureExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
-        figures = FigureTreeprocessor(md)
-        md.treeprocessors.add("figure", figures, "_end")
+    def extendMarkdown(self, md):
         md.registerExtension(self)
+
+        figures = FigureTreeprocessor(md)
+        md.treeprocessors.register(figures, "figure", 5)

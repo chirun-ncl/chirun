@@ -85,22 +85,20 @@ class MarkdownRenderer(object):
                 'strip_attributes': []
             },
             "pymdownx.superfences": {
-                "custom_fences": [{
-                    'name': 'runnable',
-                    'class': 'runnable',
-                    'format': chirun.markdownRenderer.codemirror.runnable_formatter,
-                    'validator': chirun.markdownRenderer.codemirror.runnable_validator
-                }, {
-                    'name': 'editable',
-                    'class': 'editable',
-                    'format': chirun.markdownRenderer.codemirror.editable_formatter,
-                    'validator': chirun.markdownRenderer.codemirror.editable_validator
-                }, {
-                    'name': 'output',
-                    'class': 'output',
-                    'format': chirun.markdownRenderer.codemirror.output_formatter,
-                    'validator': chirun.markdownRenderer.codemirror.output_validator
-                }]
+                "custom_fences": [
+                    {
+                        'name': 'runnable',
+                        'class': 'runnable',
+                        'format': chirun.markdownRenderer.codemirror.runnable_formatter,
+                        'validator': chirun.markdownRenderer.codemirror.runnable_validator
+                    }, 
+                    {
+                        'name': 'output',
+                        'class': 'output',
+                        'format': chirun.markdownRenderer.codemirror.output_formatter,
+                        'validator': chirun.markdownRenderer.codemirror.output_validator
+                    }
+                ]
             }
         }
 

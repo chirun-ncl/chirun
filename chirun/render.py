@@ -4,7 +4,7 @@ from chirun.markdownRenderer import MarkdownRenderer
 import contextlib
 import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
+from jinja2 import Environment, FileSystemLoader, select_autoescape, pass_context, TemplateNotFound
 import logging
 import nbformat
 from notedown import MarkdownReader
@@ -104,7 +104,7 @@ class BaseRenderer(object):
         except FileNotFoundError:
             self.env.install_null_translations(newstyle=True)
 
-        @contextfilter
+        @pass_context
         def url_filter(context, url):
             item = context.get('item')
             if item is not None and not re.search(r'^[^:]+:\/\/', url):
@@ -113,8 +113,7 @@ class BaseRenderer(object):
         self.env.filters['url'] = url_filter
 
         timestamp = datetime.datetime.now().timestamp()
-
-        @contextfilter
+        @pass_context
         def static_url(context, url):
             return url_filter(context, 'static/' + url) + f'?build_time={timestamp}'
 
