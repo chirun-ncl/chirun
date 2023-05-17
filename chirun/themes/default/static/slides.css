@@ -59,6 +59,9 @@ main > section {
 }
 
 @media (orientation: portrait) {
+    body > main {
+        height: auto;
+    }
     main > section {
         height: auto;
         scroll-snap-align: none;
