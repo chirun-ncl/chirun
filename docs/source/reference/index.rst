@@ -2,9 +2,10 @@ Reference
 =========
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   chirun_command_arguments
-   config_yml
-   chirun_markdown
-   chirun_latex
+    package_structure
+    global_settings
+    content_items
+    chirun_markdown
+    chirun_latex

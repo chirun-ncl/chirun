@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'Chirun'
-copyright = 'E-Learning Unit, Newcastle University'
-author = 'E-Learning Unit, Newcastle University'
+copyright = 'Digital Learning Unit, Newcastle University'
+author = 'Digital Learning Unit, Newcastle University'
 
-release = '0.7'
-version = '0.7.1'
+release = '0.8.0'
+version = '0.8.0'
 
 # -- General configuration
 
@@ -29,7 +29,15 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 
-html_theme = 'sphinx_rtd_theme'
+#html_theme = 'sphinx_rtd_theme'
+
+html_theme_options = {
+    'logo': 'images/chirun_logo.png',
+    'github_button': True,
+    'github_user': 'chirun-ncl',
+    'github_repo': 'chirun',
+    'show_powered_by': False,
+}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'

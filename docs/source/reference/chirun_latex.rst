@@ -1,7 +1,7 @@
 Chirun LaTeX Package
 =======================
 
-When compiling LaTeX documents in Chirun, a LaTeX package is provided to provide some supporting functionality.
+When compiling LaTeX documents in Chirun, the ``chirun`` LaTeX package provides some supporting functionality.
 
 Using Chirun LaTeX Package
 --------------------------
@@ -54,14 +54,16 @@ Embed HTML
 
 The raw HTML will not appear in the LaTeX PDF output.
 
-Embed Numbas Test
+Embed a Numbas Test
 ~~~~~~~~~~~~~~~~~
 
 .. code-block:: latex
 
     \numbas[Test Yourself:]{https://numbas.mathcentre.ac.uk/[...]}
 
-The Numbas test will appear embedded in the HTML web page. In the LaTeX PDF output, a link will be shown to the content.
+The Numbas test will appear embedded in the HTML web page.
+
+In the LaTeX PDF output, a link to the content will be shown.
 
 Embed Youtube/Vimeo
 ~~~~~~~~~~~~~~~~~
@@ -71,10 +73,15 @@ Embed Youtube/Vimeo
     \youtube[YouTube:]{EdyociU35u8}
     \vimeo[Vimeo:]{8169375}
 
-The video will appear embedded in the HTML web page. In the LaTeX PDF output, a link will be shown to the content.
+The video will appear embedded in the HTML web page.
+In the LaTeX PDF output, a link to the content will be shown.
 
 Image Alt Text
 ~~~~~~~~~~~~~~
+
+All images should have accompanying alt text, describing the content of the image for users who can't see it.
+
+Use the ``\alttext`` command inside a ``figure`` block to add alt text:
 
 .. code-block:: latex
 
@@ -86,5 +93,5 @@ Image Alt Text
                 a value of approximately 70.}
     \end{figure}
 
-The content of the ``\altext{}`` command will be attached to the figure image as alt text in the HTML web page. The
-LaTeX PDF output is unaffected.
+The content of the ``\altext{}`` command will be attached to the figure image as alt text in the HTML web page.
+The  to the contentLaTeX PDF output is unaffected.

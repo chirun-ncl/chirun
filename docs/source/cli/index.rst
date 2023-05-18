@@ -7,3 +7,4 @@ Chirun Python Package
    install
    standalone
    course
+   chirun_command_arguments

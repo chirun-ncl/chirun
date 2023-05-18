@@ -27,10 +27,11 @@ The output content produced by Chirun uses the following third party projects:
 Chirun LTI Provider
 -------------------
 
-The Chirun LTI Provider is licenced used the GNU General Public License v3.0.
+The Chirun LTI Provider is licenced used the Apache License, Version 2.0.
 
-In addition to the above, the Chirun LTI provider makes use of the following third party projects:
+In addition to the above, the Chirun LTI provider uses the following third-party projects:
 
- * `Docker & Docker Compose <https://github.com/docker/compose>`_
- * `Twig <https://twig.symfony.com>`_
- * `Confd <https://github.com/kelseyhightower/confd>`_
+ * `Docker & Docker Compose <https://docs.docker.com/compose/>`_
+ * `Django <https://djangoproject.com>`_
+ * `Huey <https://huey.readthedocs.io/en/latest/index.html>`_
+ * `Django Channels <https://channels.readthedocs.io/en/stable/>`_
