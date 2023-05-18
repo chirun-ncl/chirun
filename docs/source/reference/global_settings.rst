@@ -1,3 +1,5 @@
+.. _global-settings:
+
 Package-level settings
 ======================
 
