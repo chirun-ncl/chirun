@@ -33,7 +33,7 @@
     display: none;
 }
 
-#wrapper:not(.loaded) #score-feedback {
+#wrapper:not(.loaded) #score-feedback, #score-feedback:not(.show) {
 	visibility: hidden;
 }
 
