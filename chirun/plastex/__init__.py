@@ -46,7 +46,7 @@ def getEmbeddedImages(course, html, item):
 
     # TODO: make this extensible
     patterns = [
-        re.compile(r'<img.*? src="(?P<url>[^"]*)".*?>(?s)'),
+        re.compile(r'<img.*? src="(?P<url>[^"]*)".*?>', re.DOTALL),
     ]
 
     def fix_image_path(m):
