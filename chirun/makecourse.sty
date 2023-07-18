@@ -12,6 +12,8 @@
 \RequirePackage{xr}
 \excludecomment{divEnv}
 \excludecomment{HTML}
+\RequirePackage{listings}
+\lstnewenvironment{runnableCode}[1]{\lstset{language=#1}}{}
 \newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
 \newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
 \newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}

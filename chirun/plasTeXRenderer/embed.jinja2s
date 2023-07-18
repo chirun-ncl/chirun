@@ -31,3 +31,6 @@ name: g@p
 
 name: HTML XHTML html xhtml
 {{ obj }}
+
+name: runnableCode
+<runnable-code language="{{obj.attributes.language}}">{{obj|trim}}</div>

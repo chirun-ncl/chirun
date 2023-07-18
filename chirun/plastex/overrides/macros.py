@@ -1,4 +1,4 @@
-from plasTeX import Command, Environment
+from plasTeX import Base, Command, Environment
 
 
 class numbas(Command):
@@ -29,6 +29,8 @@ class divEnv(Environment):
     args = '[ classes:str ] [ style:str ]'
     blockType = True
 
+class runnableCode(Base.verbatim):
+    args = 'language:str'
 
 class _gap(Command):
     args = 'size:dim'
