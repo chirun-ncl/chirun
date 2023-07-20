@@ -252,12 +252,12 @@ class Chirun:
             Load all the items defined in the config
         """
         logger.debug('Loading course structure')
-        self.structure = [load_item(self, obj) for obj in self.config['structure']]
+        self.structure = [load_item(self, obj) for obj in self.config.get('structure',[])]
 
         # Ensure an item exists in the course structure to produce an index page.
         if not any(item.is_index for item in self.structure):
             index = {'type': 'introduction'}
-            self.structure.append(load_item(self, index))
+            self.structure.insert(0, load_item(self, index))
 
     def process(self):
         """
