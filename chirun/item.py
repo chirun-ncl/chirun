@@ -225,6 +225,7 @@ class Item(object):
             'source': str(self.source),
             'url': self.url,
             'build_pdf': self.has_pdf,
+            'formats': self.formats_manifest(),
         }
 
         if self.has_pdf:
@@ -232,6 +233,18 @@ class Item(object):
 
         return attr_dict
 
+    def formats_manifest(self):
+        """
+            A list of formats that this item has been rendered to.
+        """
+        formats = [
+            {'format': 'default', 'filetype': 'html', 'url': self.url,}
+        ]
+
+        if self.has_pdf:
+            formats.append({'format': 'default', 'filetype': 'pdf', 'url': self.pdf_url,})
+
+        return formats
 
 class Html(Item):
     type = 'html'
@@ -555,6 +568,13 @@ class Slides(Chapter):
         tree = super().content_tree()
         tree['slides_url'] = self.slides_url
         return tree
+
+    def formats_manifest(self):
+        formats = super().formats_manifest()
+
+        formats.append({'format': 'slides', 'filetype': 'html', 'url': self.slides_url,})
+
+        return formats
 
     @property
     def out_slides(self):
