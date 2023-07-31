@@ -50,10 +50,14 @@ be included as part of the output produced Chirun. Finally, update the document 
         touch example_item.tex
 
 
+
+
+.. _sample-course:
+
 The Sample Course
 -----------------
 
-A full sample course is provided as a demonstration of how to build a Chirun course package and populate the
+A full sample course is provided as a demonstration of how to build a Chirun course package and fill the
 ``config.yml`` file with items of various types. The following instructions describe how to obtain and build the sample course.
 
  * Use git to obtain a copy of the sample course package::

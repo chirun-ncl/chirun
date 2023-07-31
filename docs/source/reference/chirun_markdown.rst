@@ -1,3 +1,5 @@
+.. _chirun-markdown-extensions:
+
 Chirun Markdown Extensions
 ==========================
 
@@ -21,7 +23,7 @@ Chirun will detect images included in this way and will copy them to the output 
 Markdown Slides
 ---------------
 
-Slides can be written in Markdown and converted to a continuous HTML page, HTML slides and printable PDF by creating a :ref:`Slides` item type.
+Slides can be written in Markdown and converted to a continuous HTML page, HTML slides and printable PDF by creating a :ref:`Slides <item-type-slides>` item type.
 
 `An example of Markdown slides for Chirun can be found in the sample course <https://chirun-ncl.github.io/sample_course/markdown_slides/>`__.
 

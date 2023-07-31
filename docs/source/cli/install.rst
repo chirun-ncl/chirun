@@ -58,7 +58,7 @@ Quick Installation
 ------------------
 
 Follow these instructions to install the Chirun Python package. If you plan to modify Chirun or
-perform development work, follow the instructions in the :ref:`Development Installation` section instead.
+perform development work, follow the instructions in the :ref:`Development Installation <development-installation>` section instead.
 
 First, ensure you have installed the prerequisites shown in the previous section.
 
@@ -97,7 +97,7 @@ new environment and install Chirun.
     pip install git+https://github.com/chirun-ncl/chirun.git --upgrade-strategy only-if-needed
 
 The command ``chirun`` is now available for use whenever the new environment is active. You should
-now continue to :ref:`compile the sample course<The Sample Course>` to ensure everything works.
+now continue to :ref:`compile the sample course <sample-course>` to ensure everything works.
 
 Upgrade Instructions
 ^^^^^^^^^^^^^^^^^^^^
@@ -114,6 +114,10 @@ Run the following command with the Chirun environment active to upgrade the inst
 .. note::
 
     Run the above command with an extra ``--upgrade-strategy only-if-needed`` argument if you are using Conda.
+
+
+
+.. _development-installation:
 
 Development Installation
 ------------------------

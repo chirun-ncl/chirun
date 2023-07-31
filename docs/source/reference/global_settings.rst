@@ -27,7 +27,7 @@ Language (``locale``)
     **Default value**: ``en`` (English)
 
 Content (``content``)
-    A list of :ref:`content items <Content Item Types>` forming the content of the package.
+    A list of :ref:`content items <content-item-types>` forming the content of the package.
 
 Base directory (``base_dir``)
     The base directory of the output.

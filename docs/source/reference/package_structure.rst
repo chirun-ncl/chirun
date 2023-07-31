@@ -16,7 +16,7 @@ Both processors can handle inclusion of other files, so you can split a LaTeX do
 
 The core of a Chirun package is a hierarchy of :dfn:`content items`.
 A content item is a chapter of text, a slides presentation, a code notebook, a static file or a link to an external resource.
-See the documentation on :ref:`content item types` for more information on what's possible.
+See the documentation on :ref:`content item types <content-item-types>` for more information on what's possible.
 
 There is a schema for the :file:`config.yml` file at `chirun.org.uk/schema <https://www.chirun.org.uk/schema>`_.
 

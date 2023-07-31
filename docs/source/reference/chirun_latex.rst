@@ -1,3 +1,5 @@
+.. _chirun-latex-package:
+
 Chirun LaTeX Package
 =======================
 
@@ -13,10 +15,10 @@ Use the ``chirun`` LaTeX package in your documents by adding the following line 
     \usepackage{chirun}
 
 Interaction with the Hyperref Package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Chirun requires and loads the ``hyperref`` package automatically. If the ``hyperref`` package is loaded for a
-second time it can lead to an error of the form,
+Chirun requires and loads the ``hyperref`` package automatically.
+If the ``hyperref`` package is loaded for a second time it can lead to an error of the form,
 
 .. code-block::
 
@@ -55,7 +57,7 @@ Embed HTML
 The raw HTML will not appear in the LaTeX PDF output.
 
 Embed a Numbas Test
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: latex
 
@@ -66,7 +68,7 @@ The Numbas test will appear embedded in the HTML web page.
 In the LaTeX PDF output, a link to the content will be shown.
 
 Embed Youtube/Vimeo
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: latex
 
