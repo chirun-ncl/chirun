@@ -1,5 +1,6 @@
+###############
 Troubleshooting
-===============
+###############
 
 The Chirun project makes use of `GitHub Issues <https://github.com/chirun-ncl/chirun/issues>`_ for bug reports and discussing issues.
 You can use the search function on the Chirun issues page to see if your problem has been seen before.

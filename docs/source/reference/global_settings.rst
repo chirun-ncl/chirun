@@ -1,7 +1,8 @@
 .. _global-settings:
 
+######################
 Package-level settings
-======================
+######################
 
 There are several package-level settings, giving metadata about the package, its contents, and some options controlling the build process.
 
@@ -21,7 +22,7 @@ Year (``year``)
     The year or date that the material is delivered.
 
 Language (``locale``)
-    Thte `ISO 639-1 <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`__ code for the primary language that the material is presented in.
+    The `ISO 639-1 <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`__ code for the primary language that the material is presented in.
     Once Chirun has been translated to other languages, this will determine the language used for text in the interface.
 
     **Default value**: ``en`` (English)

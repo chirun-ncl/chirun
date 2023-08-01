@@ -1,9 +1,5 @@
-Markdown Extensions
-===================
+###################
+Markdown extensions
+###################
 
-Documentation to be added in the near future.
-
-Filters
-=======
-
-Documentation to be added in the near future.
+This documentation hasn't been written yet.

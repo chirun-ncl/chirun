@@ -1,5 +1,6 @@
-Extending Chirun's Features
-===========================
+###########################
+Extending Chirun's features
+###########################
 
 .. toctree::
    :maxdepth: 2

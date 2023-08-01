@@ -1,5 +1,6 @@
-Compile a Chirun Course Package
-===============================
+###############################
+Compile a Chirun course package
+###############################
 
 Chirun supports compiling multiple documents (forming a Chirun "course package") 
 into a single output website. The source files are compiled into separate HTML pages
@@ -8,8 +9,9 @@ and hyperlinked together.
 Compiling a course package is very similar to the building a stanalone item. The file ``config.yml``
 controls the structure and appearance of the Chirun course items.
 
+*****************************************
 Create ``config.yml`` with multiple items
----------------------------------------------
+*****************************************
 
 Extra documents can be included by populating the ``structure`` section of the ``config.yml`` file.
 
@@ -54,8 +56,9 @@ be included as part of the output produced Chirun. Finally, update the document 
 
 .. _sample-course:
 
+*****************
 The Sample Course
------------------
+*****************
 
 A full sample course is provided as a demonstration of how to build a Chirun course package and fill the
 ``config.yml`` file with items of various types. The following instructions describe how to obtain and build the sample course.

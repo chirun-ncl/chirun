@@ -1,7 +1,8 @@
 .. _content-item-types:
 
-Content Item Types
-==================
+##################
+Content item types
+##################
 
 The Chirun configuration file ``config.yml`` contains a list of items to be compiled.
 The top level array property ``structure`` holds the information, and each item in the list has an associated ``type`` (and other properties), described below.
@@ -13,8 +14,9 @@ With the major exceptions of the ``title``, ``source`` and ``content`` propertie
 
 .. _generic-item-properties:
 
+***********************
 Generic item properties
------------------------
+***********************
 
 .. list-table::
     :header-rows: 1
@@ -73,7 +75,7 @@ Generic item properties
 .. _item-type-introduction:
 
 Introduction
-------------
+============
 
 An ``introduction`` item produces the index page for the course.
 The index page shows some basic information about the course, such as the author, course title, year and code course properties set in the ``config.yml`` file.
@@ -85,12 +87,12 @@ Alternatively, text content can be set as properties on the introduction item di
 If no introduction or standalone item is included in the course structure, a basic introduction item is automatically generated.
 
 Outputs
-~~~~~~~
+-------
 
  * HTML web page
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -109,7 +111,7 @@ Example
 .. _item-type-part:
 
 Part
-----
+====
 
 A ``part`` item allows you to group items into a collection.
 The items contained in the part are built as normal, but are grouped together in the output hierarchy.
@@ -120,8 +122,8 @@ An example use of the part type could be to combine several :ref:`Chapter <item-
 Another use could be to organise several items of content into weekly blocks.
 
 
-Item Properties
-~~~~~~~~~~~~~~~
+Item properties
+---------------
 
 .. list-table::
     :header-rows: 1
@@ -153,12 +155,12 @@ Item Properties
 
 
 Outputs
-~~~~~~~
+-------
 
  * HTML web page
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -179,25 +181,25 @@ Example
 .. _item-type-chapter:
 
 Chapter
-----------
+=======
 
 A ``chapter`` item should be used when including a short simple document, or when including a single chapter of a longer document.
 The entire document is presented as single web page as part of the Chirun output.
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
  * LaTeX with :ref:`Chirun LaTeX Package <chirun-latex-package>`
  * Markdown with :ref:`Chirun Markdown Extensions <chirun-markdown-extensions>`
 
 Outputs
-~~~~~~~
+-------
 
  * HTML web page
  * PDF document
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -211,7 +213,7 @@ Example
 .. _item-type-document:
 
 Document
---------
+========
 
 A `document` item is similar to a :ref:`Chapter <item-type-chapter>` item, but intended for longer documents or books.
 
@@ -223,8 +225,8 @@ Both the HTML and PDF outputs are split as part of this process.
     Currently, the document item type only works with LaTeX source documents.
     For longer Markdown documents, it's a good idea to split your content into multiple files and build the structure manually using :ref:`part <item-type-part>` and :ref:`chapter <item-type-chapter>` item types.
 
-Item Properties
-~~~~~~~~~~~~~~~
+Item properties
+---------------
 
 .. list-table::
     :header-rows: 1
@@ -239,8 +241,8 @@ Item Properties
 
 .. _document-split-levels:
 
-Split Levels
-~~~~~~~~~~~~~
+Split levels
+------------
 
 .. list-table:: 
     :header-rows: 1
@@ -265,19 +267,19 @@ Split Levels
 
 
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
  * LaTeX with :ref:`Chirun LaTeX Package <chirun-latex-package>`
 
 Outputs
-~~~~~~~
+-------
 
  * HTML web page
  * PDF document
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -292,14 +294,14 @@ Example
 .. _item-type-standalone:
 
 Standalone
-----------
+==========
 
 A ``standalone`` item type is the same as a :ref:`Chapter <item-type-chapter>` item type, but intended for when there is only a single piece of content in the whole package.
 
 Content built with the standalone item type becomes the index page for the course, and no introduction page is generated.
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -308,8 +310,8 @@ Example
         title: Some LaTeX Notes
         source: latex_notes.tex
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
  * LaTeX with :ref:`Chirun LaTeX Package <chirun-latex-package>`
  * Markdown with :ref:`Chirun Markdown Extensions <chirun-markdown-extensions>`
@@ -319,15 +321,15 @@ Supported Source Formats
 .. _item-type-slides:
 
 Slides
-------
+======
 
 The ``slides`` item type is intended to be used for content primarily presented as a presentation and/or set of slides.
 A slides item is built as a :ref:`Chapter <item-type-chapter>`-style HTML web page, a slides pack for presentation, and a printable PDF output.
 
 The precise output format for a slides item depends on the source format.
 
-Item Properties
-~~~~~~~~~~~~~~~
+Item properties
+---------------
 
 .. list-table::
     :header-rows: 1
@@ -342,11 +344,11 @@ Item Properties
         Beamer slides usually already contain a title slide, so this is most useful for slides written in markdown.
       - ``False``
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
 LaTeX with the Beamer Package
-*****************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 LaTeX documents can be converted as a slides item type when using the LaTeX package Beamer.
 Two output formats are produced,
@@ -359,9 +361,9 @@ Two output formats are produced,
 Both the web-based slides and PDF download are provided as links in the sidebar of the HTML page.
 
 Markdown with Chirun Markdown Extensions
-***********************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Slides written in Markdown using the :ref:`Chirun Markdown Extensions <chirun-markdown-extensions>` produces three output formats,
+Slides written in Markdown using the :ref:`Chirun markdown extensions <chirun-markdown-extensions>` produce three output formats:
 
  * An HTML web page, in the style of a :ref:`Chapter <item-type-chapter>` item.
  * Web-based slides.
@@ -376,7 +378,7 @@ Both the web-based slides and PDF download are provided as links in the sidebar 
     https://raw.githubusercontent.com/chirun-ncl/sample_course/master/markdown/lecture.md
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -393,26 +395,30 @@ Example
 .. _item-type-notebook:
 
 Notebook
---------
+========
 
 A `notebook` item is similar to a :ref:`Chapter <item-type-chapter>` item, but intended for documents with many code blocks and authored in a style that would fit well as a `Jupyer notebook <https://jupyter.org>`_.
 
 The content is built in the style of a :ref:`Chapter <item-type-chapter>` item, but with an additional download link provided to a Jupyter notebook version of the same content.
 Code blocks become runnable cells in the notebook, while other content becomes information-only cells.
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
  * Markdown with :ref:`Chirun Markdown Extensions <chirun-markdown-extensions>`
 
 Outputs
-~~~~~~~
+-------
+
+.. todo::
+
+    Does this also produce a PDF?
 
  * HTML web page
  * Jupyter notebook
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -435,7 +441,7 @@ Both the Jupyter notebook and PDF download are provided as links in the sidebar 
 .. _item-type-url:
 
 URL
----
+===
 
 A ``url`` item type is used to link to external URLs or static documents.
 For example, data file could be distributed verbatim by using the URL item type.
@@ -448,7 +454,7 @@ The contents of this directory will be automatically copied into the output dire
 Files in :file:`static` can then be referenced relatively for URL items.
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 
@@ -466,7 +472,7 @@ Example
 .. _item-type-html:
 
 HTML
-----
+====
 
 A `html` item is similar to a :ref:`Chapter <item-type-chapter>` item, but intended for including raw HTML as part of the Chirun output in style consistent with the rest of the output pages.
 
@@ -479,18 +485,18 @@ Rendering is performed in the same way as for a chapter item, but rather than co
      To include a ``.html`` file verbatim with no modifications, create an internal static
      :ref:`URL <item-type-url>` item instead.
 
-Supported Source Formats
-~~~~~~~~~~~~~~~~~~~~~~~~
+Supported source formats
+------------------------
 
  * HTML
 
 Outputs
-~~~~~~~
+-------
 
  * HTML web page
 
 Example
-~~~~~~~
+-------
 
 .. code-block:: yaml
 

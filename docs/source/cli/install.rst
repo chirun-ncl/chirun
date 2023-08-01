@@ -1,13 +1,18 @@
-Installation Instructions
-=========================
+.. _install-chirun-python-package:
 
+#########################
+Installation Instructions
+#########################
+
+*************
 Prerequisites
--------------
+*************
 
 First, prepare the environment by installing prerequisites required for Chirun to function.
 
+
 Linux (Ubuntu 18.10+)
-^^^^^^^^^^^^^^^^^^^^^
+=====================
 
 These instructions are written with Ubuntu in mind, but other Linux system package managers should be
 able to be used, albeit with different package names.
@@ -25,7 +30,7 @@ able to be used, albeit with different package names.
        apt install pdf2svg poppler-utils libyaml-dev pdftk-java
 
 MacOS
-^^^^^
+=====
 
 * Install a system TeX distribution, such as MacTeX from https://tug.org/mactex/
 
@@ -48,14 +53,15 @@ MacOS
     sudo /Applications/Python\ 3.X/Install\ Certificates.command
 
 Windows
-^^^^^^^
+=======
 
 Chirun can be used by following the Linux instructions in `WSL <https://docs.microsoft.com/en-us/windows/wsl/install>`_.
 
 Further Windows documentation will be added in future.
 
+******************
 Quick Installation
-------------------
+******************
 
 Follow these instructions to install the Chirun Python package. If you plan to modify Chirun or
 perform development work, follow the instructions in the :ref:`Development Installation <development-installation>` section instead.
@@ -66,7 +72,7 @@ Next, create an environment for Chirun to be installed in, using either the virt
 or Conda instructions below.
 
 Virtualenv
-^^^^^^^^^^
+==========
 
  * Create a Python3 virtualenv environment and activate it::
 
@@ -78,7 +84,7 @@ Virtualenv
     pip install git+https://github.com/chirun-ncl/chirun.git
 
 Conda
-^^^^^
+=====
 
 If you are using Anaconda or the Conda Environment Manager, run the following commands to create a
 new environment and install Chirun.
@@ -99,8 +105,9 @@ new environment and install Chirun.
 The command ``chirun`` is now available for use whenever the new environment is active. You should
 now continue to :ref:`compile the sample course <sample-course>` to ensure everything works.
 
+********************
 Upgrade Instructions
-^^^^^^^^^^^^^^^^^^^^
+********************
 
 Run the following command with the Chirun environment active to upgrade the installed version of Chirun::
 
@@ -119,8 +126,9 @@ Run the following command with the Chirun environment active to upgrade the inst
 
 .. _development-installation:
 
-Development Installation
-------------------------
+************************
+Development installation
+************************
 
 You should only follow these instructions if you plan to modify Chirun or perform development work.
 
@@ -133,7 +141,10 @@ You should only follow these instructions if you plan to modify Chirun or perfor
 
     git clone https://github.com/chirun-ncl/chirun.git
 
- * Enter the chirun package directory, ``cd chirun``
+ * Enter the chirun package directory::
+
+    cd chirun
+
  * Install all the requirements::
 
     pip install -r requirements.txt
@@ -145,9 +156,11 @@ You should only follow these instructions if you plan to modify Chirun or perfor
 The command ``chirun`` is now available for use. You should now compile the sample course and ensure everything works.
 
 Development Upgrade Instructions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================
+
 To upgrade the development installation pull the latest changes from this git repository and install any new requirements::
 
+    source ./chirun_env/bin/activate
     cd chirun
     git pull
     pip install -r requirements.txt

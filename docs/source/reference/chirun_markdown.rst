@@ -1,15 +1,17 @@
 .. _chirun-markdown-extensions:
 
+##########################
 Chirun Markdown Extensions
-==========================
+##########################
 
 The flavour of Markdown used in Chirun is `Python Markdown <https://python-markdown.github.io>`_ with `PyMdown Extensions <https://facelessuser.github.io/pymdown-extensions/>`_ and some further Chirun Extensions.
 
 Chirun-specific extensions are described below.
 
 
-Including Images
-----------------
+****************
+Including images
+****************
 
 Include images by using the filename path relative to the source document.
 Chirun will detect images included in this way and will copy them to the output directory automatically.
@@ -20,31 +22,29 @@ Chirun will detect images included in this way and will copy them to the output 
    ![A plot of y=sin(x)](images/lecture_sine2.png){width="70%"}
 
 
-Markdown Slides
----------------
+***************
+Markdown slides
+***************
 
 Slides can be written in Markdown and converted to a continuous HTML page, HTML slides and printable PDF by creating a :ref:`Slides <item-type-slides>` item type.
+
+Individual slides should be separated by a line containing three dash characters, ``---``, and surrounded by at least one blank line on each side.
 
 `An example of Markdown slides for Chirun can be found in the sample course <https://chirun-ncl.github.io/sample_course/markdown_slides/>`__.
 
 The source document for the above Markdown slides can be found on GitHub at
 https://raw.githubusercontent.com/chirun-ncl/sample_course/master/markdown/lecture.md
 
-Slide Separator
-~~~~~~~~~~~~~~~
+***********************
+Embedding other content
+***********************
 
-Separate slides in Chirun Markdown by inserting a line containing nothing but (at least) 3 dashes, surrounded by a
-blank line above and below::
- 
-    ---
+.. todo::
+    Is this up to date?
 
-The slide separator renders as a horizontal rule in the HTML web page version of the content.
-
-Embedding Other Content
------------------------
 
 Numbas
-~~~~~~
+======
 
 A Numbas exam can be embedded into a document with the ``<embed-numbas>`` tag:
 
@@ -53,9 +53,9 @@ A Numbas exam can be embedded into a document with the ``<embed-numbas>`` tag:
    <embed-numbas data-url="https://numbas.mathcentre.ac.uk/exam/1973/numbas-website-demo/embed/"></embed-numbas>
 
 YouTube
-~~~~~~~
+=======
 
-A YouTube video be embedded into a document with,
+A YouTube video be embedded into a document with the ``<youtube-embed>`` tag:
 
 .. code-block:: markdown
 
@@ -70,7 +70,7 @@ A YouTube video be embedded into a document with,
      - The YouTube video ID
 
 Vimeo
-~~~~~~~
+=====
 
 A Vimeo video be embedded into a document with,
 
@@ -87,7 +87,7 @@ A Vimeo video be embedded into a document with,
      - The Vimeo video ID
 
 oEmbed
-~~~~~~~
+======
 
 Chirun supports embedding content with providers that support `oEmbed <https://oembed.com>`_.
 
@@ -104,14 +104,18 @@ Chirun supports embedding content with providers that support `oEmbed <https://o
      - The URL of the oEmbed compatible content to be embedded
 
 
-Code Blocks
------------
+***********
+Code blocks
+***********
 
 Code blocks with syntax highlighting can be included using `SuperFences <https://facelessuser.github.io/pymdown-extensions/extensions/superfences/>`_.
 
 This example shows two different ways to include code blocks.
 The first is a code block set to use Python syntax highlighting.
 The second code block also displays Python code, but also includes a button that can be clicked to show the output from running the code.
+
+.. todo::
+    Is this up to date?
 
 .. code-block::
 

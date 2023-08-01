@@ -1,12 +1,14 @@
 .. _chirun-latex-package:
 
-Chirun LaTeX Package
-=======================
+####################
+Chirun LaTeX package
+####################
 
 When compiling LaTeX documents in Chirun, the ``chirun`` LaTeX package provides some supporting functionality.
 
-Using Chirun LaTeX Package
---------------------------
+******************************
+Using the Chirun LaTeX package
+******************************
 
 Use the ``chirun`` LaTeX package in your documents by adding the following line to you preamble:
 
@@ -14,72 +16,36 @@ Use the ``chirun`` LaTeX package in your documents by adding the following line 
 
     \usepackage{chirun}
 
-Interaction with the Hyperref Package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. warning::
 
-Chirun requires and loads the ``hyperref`` package automatically.
-If the ``hyperref`` package is loaded for a second time it can lead to an error of the form,
+    Chirun requires and loads the ``hyperref`` package automatically.
+    If the ``hyperref`` package is loaded for a second time it can lead to an error of the form,
 
-.. code-block::
+    .. code-block::
 
-    ! LaTeX Error: Option clash for package hyperref.
+        ! LaTeX Error: Option clash for package hyperref.
 
-One solution is to ensure that the ``hyperref`` package is loaded first:
+    One solution is to ensure that the ``hyperref`` package is loaded first:
 
-.. code-block:: latex
+    .. code-block:: latex
 
-    \usepackage[colorlinks,linkcolor={blue}]{hyperref}
-    \usepackage{chirun}
+        \usepackage[colorlinks,linkcolor={blue}]{hyperref}
+        \usepackage{chirun}
 
-An alternative solution is to load only the ``chirun`` package and pass any required options for ``hyperref``
-via the ``chirun`` package options:
+    An alternative solution is to load only the ``chirun`` package and pass any required options for ``hyperref``
+    via the ``chirun`` package options:
 
-.. code-block:: latex
+    .. code-block:: latex
 
-    \usepackage[hyperref={colorlinks,linkcolor={blue}}]{chirun}
+        \usepackage[hyperref={colorlinks,linkcolor={blue}}]{chirun}
 
 
+********
 Features
---------
+********
 
-
-Embed HTML
-~~~~~~~~~~
-
-.. code-block:: latex
-
-    \begin{HTML}
-        <div>
-            <p>This raw HTML will be produced in the output directly</p>
-        </div>
-    \end{HTML}
-
-The raw HTML will not appear in the LaTeX PDF output.
-
-Embed a Numbas Test
-~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: latex
-
-    \numbas[Test Yourself:]{https://numbas.mathcentre.ac.uk/[...]}
-
-The Numbas test will appear embedded in the HTML web page.
-
-In the LaTeX PDF output, a link to the content will be shown.
-
-Embed Youtube/Vimeo
-~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: latex
-
-    \youtube[YouTube:]{EdyociU35u8}
-    \vimeo[Vimeo:]{8169375}
-
-The video will appear embedded in the HTML web page.
-In the LaTeX PDF output, a link to the content will be shown.
-
-Image Alt Text
-~~~~~~~~~~~~~~
+Image alt text
+==============
 
 All images should have accompanying alt text, describing the content of the image for users who can't see it.
 
@@ -95,5 +61,42 @@ Use the ``\alttext`` command inside a ``figure`` block to add alt text:
                 a value of approximately 70.}
     \end{figure}
 
-The content of the ``\altext{}`` command will be attached to the figure image as alt text in the HTML web page.
+The content of the ``\alttext{}`` command will be attached to the figure image as alt text in the HTML web page.
 The  to the contentLaTeX PDF output is unaffected.
+
+Embed HTML
+==========
+
+.. code-block:: latex
+
+    \begin{HTML}
+        <div>
+            <p>This raw HTML will be produced in the output directly</p>
+        </div>
+    \end{HTML}
+
+The raw HTML will not appear in the LaTeX PDF output.
+
+Embed a Numbas test
+===================
+
+.. code-block:: latex
+
+    \numbas[Test Yourself:]{https://numbas.mathcentre.ac.uk/[...]}
+
+The Numbas test will appear embedded in the HTML web page.
+
+In the LaTeX PDF output, a link to the test will be shown.
+
+Embed Youtube/Vimeo
+===================
+
+.. code-block:: latex
+
+    \youtube[YouTube:]{EdyociU35u8}
+    \vimeo[Vimeo:]{8169375}
+
+The video will appear embedded in the HTML web page.
+
+In the LaTeX PDF output, a link to the content will be shown.
+

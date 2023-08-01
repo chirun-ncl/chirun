@@ -1,5 +1,6 @@
+#################################
 The structure of a Chirun package
-=================================
+#################################
 
 A Chirun package's source code contains at the very least a file called :file:`config.yml` defining the package's structure and specifying global settings.
 This file can be created by the web frontend, or you can write it yourself.

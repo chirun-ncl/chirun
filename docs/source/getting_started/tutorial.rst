@@ -1,5 +1,8 @@
+.. _tutorial:
+
+########
 Tutorial
-========
+########
 
 This tutorial will guide you through the process of creating a new Chirun package, and processing it with the web frontend.
 
