@@ -6,7 +6,7 @@ Managing packages
 
 The management page for a package shows links to configure or edit the package; links to view the output; and a log of times the package has been built.
 
-The :guilabel:`Configure` link takes you to the course configuration editor.
+The :guilabel:`Configure` link takes you to :ref:`the course configuration editor <package-config-editor>`.
 Use this to change :ref:`package-level settings <global-settings>` and edit the structure of the package.
 After you save the configuration, the package is automatically rebuilt.
 
@@ -16,16 +16,30 @@ The course is not automatically rebuilt after you make changes to source files: 
 
 Click :guilabel:`Download the generated content as a .zip file` to get a copy of the output that you can upload to your own web space.
 
+.. _package-management-url:
+
+******************
+The management URL
+******************
+
+Access to the package is granted only by knowing the address of its management page, so make sure to bookmark it.
+
+The URL is shown at the top of the management page under the heading :guilabel:`Manage this package` so that you can copy it.
+
 .. _package-config-editor:
 
 *********
 Configure
 *********
 
+Click :guilabel:`Configure` link to open the package configuration editor.
+
 See the reference for :ref:`content item types <content-item-types>`.
 The configuration editor shows the structure of the package, as defined in the file :file:`config.yml`.
 
 On the left is a tree with the :ref:`package-level settings <global-settings>` at the top, and content items underneath.
+
+You can reorder items by clicking the :guilabel:`Move this item` buttons after selecting an item, or using the keyboard by focusing the item in the structure tree and pressing :kbd:`Shift` and an arrow key.
 
 The editor does not save automatically; once you have made changes you must click the :guilabel:`Save` button.
 This will overwrite the package's :file:`config.yml` and the package will automatically be rebuilt.

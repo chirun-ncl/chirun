@@ -18,5 +18,3 @@ Click on :guilabel:`View the generated content` to go to the package's :ref:`man
 
 Access to the package is granted only by knowing the address of this page, so make sure to bookmark it.
 The URL is shown at the top of the management page so you can copy it.
-
-
