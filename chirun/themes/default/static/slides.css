@@ -1,5 +1,5 @@
 :root {
-    --base-font-size: max(2.6vmin, 16px);
+    --base-font-size: max(4vmin, 24px);
 }
 
 aside { 
@@ -19,7 +19,6 @@ h1,h2,h3,h4,h5,h6 {
     justify-self: center;
 }
 h2 {
-    margin: 0;
     font-size: 1.1em;
 }
 
