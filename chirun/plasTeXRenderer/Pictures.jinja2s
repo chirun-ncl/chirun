@@ -1,16 +1,4 @@
 name: picture
 <div class="picture" id="{{ obj.id }}">
-  {% if obj.renderer.vectorImager.enabled %}
-	{% if obj.altText %}
-		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.altText.textContent|e }}"/>
-	{% else %}
-		<img src="{{ obj.vectorImage.url }}" alt="{{ obj.source|e }}" />
-	{% endif %}
-  {% else %}
-	{% if obj.altText %}
-		<img src="{{ obj.image.url }}" alt="{{ obj.altText.textContent|e }}" />
-	{% else %}
-		<img src="{{ obj.image.url }}" alt="{{ obj.source|e }}" />
-	{% endif %}
-  {% endif %}
+    <img src="{% if obj.renderer.vectorImager.enabled %}{{ obj.vectorImage.url }}{% else %}{{ obj.image.url }}{% endif %}" alt="{% if obj.altText %}{{ obj.altText.textContent|e }}{% else %}{{ obj.source|e }}{% endif %}" {% if obj.style.inline %}style="{{ obj.style.inline }}"{% endif %}/>
 </div>

@@ -3,7 +3,7 @@
 import os
 import subprocess
 import binascii
-from plasTeX.Imagers import VectorImager
+from plasTeX.Imagers import VectorImager, Image
 from pathlib import Path
 
 
@@ -14,6 +14,32 @@ class PDFSVG(VectorImager):
     compiler = 'pdflatex'
     imagesFilename = 'tmp-images-uc.pdf'
     croppedImagesFilename = 'tmp-images.pdf'
+
+    def getImage(self, node):
+        name = getattr(node, 'imageoverride', None)
+
+        if name in self.staticimages:
+            return self.staticimages[name]
+
+        if name is not None and Path(name).suffix.lower() == '.pdf':
+            return self.single_pdf_to_svg(name)
+
+        return super().getImage(node)
+
+    def single_pdf_to_svg(self, name):
+        """
+            Convert a single PDF file to an SVG file.
+
+            Returns:
+                plasTeX.Imagers.Image
+        """
+        path = self.newFilename()
+        Path(path).parent.mkdir(exist_ok=True,parents=True)
+        cmd = ['pdf2svg', name, path]
+        r = subprocess.run(cmd)
+        img = Image(path, self.ownerDocument.config['images'])
+        self.staticimages[name] = img
+        return img
 
     def executeConverter(self, output):
         while Path(self.imagesFilename).exists():
