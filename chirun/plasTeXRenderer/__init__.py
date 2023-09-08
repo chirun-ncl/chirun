@@ -3,19 +3,35 @@ import shlex
 import os
 import shutil
 import re
+from pathlib import Path
+from plasTeX.DOM import Node
 from plasTeX.Renderers.PageTemplate import Renderer as _Renderer
-from plasTeX.Renderers import Renderer as BaseRenderer
+from plasTeX.Renderers import Renderer as BaseRenderer, Renderable as BaseRenderable
 from plasTeX.Logging import getLogger
 
 log = getLogger()
 
+
+class Renderable(BaseRenderable):
+    @property
+    def vectorImage(self):
+        name = getattr(self, 'imageoverride', None)
+        if name is not None:
+            r = Node.renderer
+            if Path(name).suffix not in r.vectorImageTypes:
+                return Node.renderer.imager.getImage(self)
+
+        image = Node.renderer.vectorImager.getImage(self)
+        return image
 
 class HTML5(_Renderer):
     """ Renderer for HTML5 documents, heavily copied from XHTML renderer """
 
     fileExtension = '.html'
     imageTypes = ['.svg', '.png', '.jpg', '.jpeg', '.gif']
-    vectorImageTypes = ['.svg']
+    vectorImageTypes = ['.svg', '.pdf']
+
+    renderableClass = Renderable
 
     def loadTemplates(self, document):
         """Load templates as in PageTemplate but also look for packages that
