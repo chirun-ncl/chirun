@@ -18,7 +18,9 @@
             {% block header_slides %}
             <header>
                 <div id="slides-title">{{item.title}}</div>
+                {% if item.author %}
                 <div id="slides-author">{{item.author}}</div>
+                {% endif %}
 
                 <button type="button" aria-controls="display-options" aria-expanded="false">
                     {% trans %}Display options{% endtrans %}
@@ -31,7 +33,9 @@
                 {% if item.title_slide %}
                 <section id="title-slide">
                     <h1 class="title">{{item.title}}</h1>
+                    {% if item.author %}
                     <p class="author">{{item.author}}</p>
+                    {% endif %}
                 </section>
                 {% endif %}
             {% endblock %}
