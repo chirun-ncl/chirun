@@ -44,6 +44,31 @@ Use the ``chirun`` LaTeX package in your documents by adding the following line 
 Features
 ********
 
+Different behaviour when rendering HTML
+=======================================
+
+Chirun uses plasTeX to render LaTeX documents in HTML format.
+
+There are cases when you would like different behaviour depending on whether the document is being rendered with ``pdflatex`` or with plasTeX: there might be LaTeX code that only works in PDF output, or you might want to write raw HTML code for HTML output.
+You can use the ``\ifplastex`` command to specify a block of code that should be used in plasTeX, and another block that should be used in ``pdflatex``.
+
+Here's an example: in HTML, the ``\mylesson`` command just starts a new chapter; in PDF, it manipulates the section and chapter counters and specifies a different font and spacing for the lesson's header.
+
+.. code-block:: latex
+
+    \ifplastex
+        \newcommand{\mylesson}[2]{
+            \chapter{#1}
+        }
+    \else
+        \newcommand{\mylesson}[2]{
+        \refstepcounter{chapter}
+         {\huge\sffamily\bfseries Lesson \thechapter\autodot~#1\strut}
+        \vspace*{5cm}
+        \setcounter{section}{0}
+        }
+    \fi
+
 Image alt text
 ==============
 
@@ -66,6 +91,8 @@ The  to the contentLaTeX PDF output is unaffected.
 
 Embed HTML
 ==========
+
+You can produce a block of HTML with the ``HTML`` environment:
 
 .. code-block:: latex
 
