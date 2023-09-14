@@ -42,6 +42,10 @@
 	overflow-y: auto;
 }
 
+.runnable-code-wrapper .output .images :is(canvas,img) {
+    max-width: 100%;
+}
+
 .runnable-code-wrapper:not([data-state="ran"]) .output {
 	background: var(--bg-colour-accent-4);
 	color: var(--text-colour-accent-4);

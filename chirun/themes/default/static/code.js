@@ -6,8 +6,9 @@
  */
 import codemirror_editor from "./runnable_code.js";
 
+const webR_URL = 'https://webr.r-wasm.org/v0.2.1/webr.mjs';
+
 var codeMirrorInstances = {};
-var webR_url = 'https://cdn.jsdelivr.net/gh/georgestagg/webR@452ae1637dfdd65c9a5f462fff439022d833f8f9/dist/';
 
 /** Objects to run code in different languages.
  * @enum {CodeRunner}
@@ -132,8 +133,7 @@ class CodeRunner {
                 results.push(error);
             }
         }
-
-        return results;
+        return {results, session};
     }
 }
 
@@ -149,7 +149,7 @@ class CodeSession {
 
     async run_code(code) {
         try {
-            const job = await this.runner.run_code(code, this.namespace_id);
+            const job = await this.runner.run_code(code, this);
             const result = await job.promise;
             return Object.assign({success: true}, result);
         } catch(err) {
@@ -176,7 +176,8 @@ class PyodideRunner extends CodeRunner {
             }
         }
     }
-    run_code(code, namespace_id) {
+    run_code(code, session) {
+        const {namespace_id} = session;
         const job = this.new_job();
         this.worker.postMessage({
             command: 'runPython',
@@ -215,65 +216,29 @@ class WebRRunner extends CodeRunner {
         return `webr_namespace${namespace_id}`;
     }
 
-    /** Clear the STDOUT and STDERR buffers.
-     */
-    clear_buffers() {
-        this.buffers = {
-            stdout: [],
-            stderr: []
-        };
-    }
-
     /** Start loading webR.
      * @returns {Promise} - Resolves to the `webR` object once it has loaded.
      */
     load_webR() {
         if(!this.webRPromise) {
-
-            var script = document.createElement('script');
-            script.setAttribute('src',webR_url + 'webR.js');
-            document.head.appendChild(script);
-
-            this.webRPromise = new Promise((resolve, reject) => {
-                var checkInterval = setInterval(async () => {
-                    if(window.loadWebR) {
-                        clearInterval(checkInterval);
-                        const webR = await loadWebR({
-                            WEBR_URL: webR_url,
-                            loadPackages: [],
-                            stdout: (s) => { 
-                                this.buffers.stdout.push(s); 
-                            }, 
-                            stderr: (s) => { 
-                                this.buffers.stderr.push(s); 
-                            }
-                        });
-                        resolve(webR);
-                    }
-                }, 50);
+            this.webRPromise = new Promise(async (resolve, reject) => {
+                const { WebR, ChannelType } = await import(webR_URL);
+                const webR = new WebR({
+                  channelType: ChannelType.PostMessage,
+                    loadPackages: []
+                });
+                await webR.init();
+                await webR.evalRVoid(`options(device=webr::canvas)`);
+                await webR.flush();
+                resolve(webR);
             });
         }
         return this.webRPromise;
     }
 
-    /** Get the contents of the last line of STDOUT, or '' if STDOUT is empty.
-     * @returns {string}
-     */
-    last_stdout_line() {
-        return this.buffers.stdout.length == 0 ? '' : this.buffers.stdout[this.buffers.stdout.length-1];
-    }
-
-    get stdout() {
-        return this.buffers.stdout.join('\n');
-    }
-
-    get stderr() {
-        return this.buffers.stderr.join('\n');
-    }
-
-    run_code(code, namespace_id) {
+    run_code(code, session) {
+        const {namespace_id} = session || {};
         const job = this.new_job();
-        this.clear_buffers();
 
         if(namespace_id !== undefined) {
             code = `with(${this.namespace_name(namespace_id)}, {\n${code}\n})`;
@@ -281,27 +246,90 @@ class WebRRunner extends CodeRunner {
 
         this.load_webR().then(async (webR) => {
             try {
-                const result = await webR.runRAsync(code);
-                if(result===-1) {
-                    throw(new Error(_("Error running R code")));
-                } else {
-                    job.resolve({
-                        result: this.last_stdout_line() === "[1] TRUE",
-                        stdout: this.stdout,
-                        stderr: this.stderr,
-                    });
+                const shelter = await new webR.Shelter();
+
+                const msg = await shelter.captureR(code);
+                const {result, output} = msg;
+
+                const webR_type_to_json = {
+                    'complex': ({re,im}) => `${re} + ${im}i`,
+                    'null': v => 'null',
+                };
+
+                const webR_to_json = function(r) {
+                    switch(r.type) {
+                        case 'null':
+                            return 'NULL';
+                        case 'list':
+                        case 'object':
+                            const values = r.values.map(webR_to_json);
+                            if(r.names) {
+                                return '{'+r.names.map((n,i) => `${JSON.stringify(n)}: ${values[i]}`).join(', ')+'}';
+                            } else {
+                                return values.join(' ');
+                            }
+                        default:
+                            const fn = webR_type_to_json[r.type] || (v => JSON.stringify(v));
+                            return r.values.map(fn).join(' ');
+                    }
                 }
+
+                let result_js;
+                try {
+                    const js = (await result.toJs());
+                    result_js = webR_to_json(js);
+                } catch(e) {
+                }
+
+                const [stdout,stderr] = ['stdout','stderr'].map(buffer => output.filter(x => x.type==buffer).map(x => x.data).join('\n'));
+
+                shelter.purge();
+
+                job.resolve({
+                    result: result_js,
+                    stdout: stdout,
+                    stderr: stderr
+                });
             } catch(err) {
-                this.buffers.stderr.push(err);
                 job.reject({
                     error: err.message,
-                    stdout: this.stdout,
-                    stderr: this.stderr
+                    stdout: '',
+                    stderr: err
                 });
             }; 
         });
 
         return job;
+    }
+
+    async run_code_blocks(codes) {
+        const {results, session} = await super.run_code_blocks(codes);
+        const webR = await this.load_webR();
+        const messages = await webR.flush();
+        const image_events = messages.filter(x => x.type=='canvas').map(x => x.data);
+        const images = [];
+        let canvas, ctx;
+        image_events.forEach(data => {
+            switch(data.event) {
+                case 'canvasNewPage':
+                    canvas = document.createElement('canvas');
+                    images.push(canvas);
+                    ctx = canvas.getContext('2d');
+                    break;
+                case 'canvasImage':
+                    if(!ctx) {
+                        break;
+                    }
+                    if(data.image.width > canvas.width || data.image.height > canvas.height) {
+                        canvas.width = Math.max(data.image.width, canvas.width);
+                        canvas.height = Math.max(data.image.height, canvas.height);
+                    }
+                    ctx.drawImage(data.image,0,0);
+                    break;
+            }
+        });
+
+        return {results, session, images};
     }
 }
 register_language_runner('webr', WebRRunner);
@@ -383,14 +411,27 @@ class RunnableCodeElement extends HTMLElement {
         const code = this.codeMirror.state.doc.toString();
 
         try {
-            const result = (await run_code(this.language,[code]))[0];
+            const {results, images} = await run_code(this.language,[code]);
+            const [result] = results;
+
             let output = result.stdout+result.stderr;
+
             this.output_display.querySelector('.stdout').textContent = output;
             this.output_display.classList.toggle('has-result', result.result);
+
             const result_string = result.result ?? '';
             this.output_display.querySelector('.result').textContent = result_string;
+
+            const image_display = this.output_display.querySelector('.images');
+            image_display.innerHTML = '';
+            if(images) {
+                for(let canvas of images) {
+                    image_display.appendChild(canvas);
+                }
+            }
         } catch(error) {
-            console.error(_`An error occured running code: ${error}`);
+            console.error(_`An error occured running code.`);
+            console.log(error);
         } finally {
             switch(this.state) {
                 case 'running-changed':
