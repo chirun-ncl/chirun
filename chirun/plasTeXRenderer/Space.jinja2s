@@ -1,17 +1,15 @@
-name: -hspace
-<span class="hspace" style="margin-right: {{ obj.attributes.len }}">&nbsp;</span>
-
-name: -vspace
-<div class="vspace" style="margin-bottom: {{ obj.attributes.len }}">&nbsp;</div>
+name: hspace
+<span class="hspace" style="width: {{ obj.attributes.len }}"></span>
 
 name: vspace
+<span class="vspace" style="height: {{ obj.attributes.len }}"/>
 
-name: -bigskip
-<div class="bigskip"></div>
+name: bigskip
+<span class="vspace bigskip"/>
 
-name: -medskip
-<div class="medskip"></div>
+name: medskip
+<span class="vspace medskip"/>
 
-name: -smallskip
-<div class="medskip"></div>
+name: smallskip
+<span class="vspace smallskip"/>
 

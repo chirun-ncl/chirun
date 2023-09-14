@@ -653,3 +653,22 @@ figure + em, .reveal figure + em {
 .revtex-affiliation {
     font-style: italic; 
 }
+
+.hspace {
+    display: inline-block;
+}
+.vspace {
+    display: block;
+}
+
+.vspace.bigskip {
+    height: 2em;
+}
+
+.vspace.medskip {
+    height: 1em;
+}
+
+.vspace.smallskip {
+    height: 0.5em;
+}
