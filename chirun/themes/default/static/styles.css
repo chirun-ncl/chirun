@@ -28,8 +28,10 @@
     --border: 1px solid var(--text-colour);
 }
 
-html {
-    filter: sepia(var(--filter-sepia)) hue-rotate(var(--filter-hue-rotate));
+@media screen {
+    html {
+        filter: sepia(var(--filter-sepia)) hue-rotate(var(--filter-hue-rotate));
+    }
 }
 
 body[data-colour-scheme="auto"], body[data-colour-scheme="light"] {
