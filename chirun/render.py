@@ -1,3 +1,4 @@
+import asyncio
 from   babel.support import Translations
 import chirun.filter
 from   chirun.markdownRenderer import MarkdownRenderer
@@ -121,7 +122,7 @@ class Renderer(object):
         await page.goto('file://{}'.format(absHTMLPath))
         await page.waitForFunction('window.mathjax_is_loaded == 1', options={'timeout': 10000})
         await page.evaluate(r'''(function() { MathJax.typesetPromise().then(() => window.mathjax_has_run = true)})''')
-        await page.waitForFunction('window.mathjax_has_run', options={'timeout': 10000})
+        await page.waitForFunction('window.mathjax_has_run && document.fonts.ready', options={'timeout': 10000})
         await page.pdf({'path': outPath, 'format': 'A4', 'displayHeaderFooter': True,
                         'headerTemplate': headerHTML, 'footerTemplate': footerHTML,
                         'printBackground': True})
