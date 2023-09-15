@@ -13,12 +13,14 @@
 \excludecomment{divEnv}
 \excludecomment{HTML}
 \RequirePackage{listings}
+\RequirePackage{qrcode}
 \lstnewenvironment{runnableCode}[1]{\lstset{language=#1}}{}
-\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\bigskip\noindent\textbf{Test Yourself} \textrm{#1}\\\expandafter\url{#2}\par}
-\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://player.vimeo.com/video/#2}\par}
-\newcommand{\youtube}[2][Visit the URL below to view a video:]{\bigskip\noindent\textbf{Video} \textrm{#1}\\\expandafter\url{https://www.youtube.com/embed/#2}\par}
-\newcommand{\embed}[1]{\url{#1}}
-\newcommand{\iframe}[2][]{\url{#2}}
+\newcommand{\embedsubstitute}[3]{\bigskip\noindent\textbf{#1} \textrm{#2} \\ \expandafter\url{#3} \expandafter\qrcode[link,height=2cm]{#3}\par\bigskip}
+\newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\embedsubstitute{Test Yourself}{#1}{#2}}
+\newcommand{\vimeo}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://player.vimeo.com/video/#2}}
+\newcommand{\youtube}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://www.youtube.com/embed/#2}}
+\newcommand{\embed}[1]{\url{#1} \qrcode[link,height=2cm]{#1}}
+\newcommand{\iframe}[2][]{\url{#2} \qrcode[link,height=2cm]{#2}}
 \newenvironment{collapseEnv}[3]{\noindent\textbf{#3}\\}{\par}
 \newcommand{\collapse}[4]{\noindent\textbf{#3}\\{#4}\par}
 \newcommand{\collapsehint}[1]{\collapse{btn-info}{Give me a hint}{Hint}{#1}}

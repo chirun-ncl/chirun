@@ -564,6 +564,10 @@ tr, img {
     display: block;
 }
 
+qr-code {
+    display: inline-block;
+}
+
 .exercise {
     padding: var(--spacing);
     margin: calc(2 * var(--spacing)) 0;

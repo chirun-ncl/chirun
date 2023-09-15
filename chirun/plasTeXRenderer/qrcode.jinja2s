@@ -1,0 +1,2 @@
+name: qrcode
+    <qr-code {% if obj.link %}link{% endif %} {% if obj.height %}style="height: {{obj.height.em}}em; width: {{obj.height.em}}em"{% endif %} text="{{obj.text}}"></qr-code>
