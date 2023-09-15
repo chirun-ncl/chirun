@@ -1,5 +1,5 @@
-name: center centering centerline
-<div class="centered">{{ obj }}</div>
+name: center centering centerline hfil
+<span class="hfil"></span>
 
 name: flushleft raggedright leftline
 <div class="flushleft">{{ obj }}</div>

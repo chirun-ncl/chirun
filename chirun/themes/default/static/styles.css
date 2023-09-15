@@ -677,3 +677,15 @@ figure + em, .reveal figure + em {
 .vspace.smallskip {
     height: 0.5em;
 }
+
+*:has(>.hfil) {
+    display: flex !important;
+}
+*:has(>.hfil)::after {
+    content: '';
+    flex-grow: 1;
+}
+
+.hfil {
+    flex-grow: 1;
+}
