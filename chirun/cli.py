@@ -352,6 +352,17 @@ The web root directory is: {web_root}
         self.process()
         self.optimize()
 
+    def build_theme_redirect(self):
+        """
+            When the output HTML files aren't at the top of the output directory, because there's more than one theme, make an index.html redirecting to the first theme.
+        """
+
+        with open(self.build_dir / 'index.html', 'w') as f:
+            f.write(f'''<!doctype html><html><head><meta http-equiv="refresh" content="0; url={self.themes[0].path}/index.html"></head><body><ul>''')
+            for theme in self.themes:
+                f.write(f'''<li><a href="{theme.path}/index.html">{theme.title}</a></li>''')
+            f.write('''</ul></body></html>''')
+
     def build(self):
         print("Running chirun for directory {}".format(self.get_root_dir().resolve()))
 
@@ -365,6 +376,9 @@ The web root directory is: {web_root}
 
         for theme in self.themes:
             self.build_with_theme(theme)
+
+        if len(self.themes)>1:
+            self.build_theme_redirect()
 
         self.save_manifest()
 
