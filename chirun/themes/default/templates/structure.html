@@ -2,15 +2,15 @@
 {% for partitem in structure %}
     {% if partitem.type != 'introduction' %}
     <li>
-        <article class="item">
+        <article class="item{% if partitem.content %} has-content{% endif %}">
             {% if partitem.content %}
                 {% include "subitem.html" %}
             {% else %}
+                {% if partitem.thumbnail %}
                 <header>
-                    {% if partitem.thumbnail %}
                     <img class="card-img-top" src="{{partitem.thumbnail|static_url}}" alt="{% trans title=partitem.title %}Thumbnail image for part {{title}}{% endtrans %}">
-                    {% endif %}
                 </header>
+                {% endif %}
 
                 {% with subitem=partitem %}
                 {% include "inner_subitem.html" %}

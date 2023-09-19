@@ -139,6 +139,7 @@ body > #display-options output {
 body > #display-options .buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 body:not([data-colour-scheme="custom"]) > #display-options #custom-colour-scheme-options {
@@ -293,7 +294,16 @@ body > main > #sidebar {
     overflow-y: auto;
     position: sticky;
     top: 0;
+    background: linear-gradient(to right, var(--bg-colour), var(--bg-colour-accent-2));
+    padding: 0 var(--spacing);
+    align-self: start;
 }
+
+body > header > nav {
+    background: linear-gradient(to left, var(--bg-colour), var(--bg-colour-accent-1));
+    padding: 0 var(--spacing);
+}
+
 @media (max-width: 60em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
@@ -331,6 +341,21 @@ body.structure > main > .chirun-structure {
 }
 body.structure > main > .chirun-structure > li ~ li {
     margin-top: 0; 
+}
+
+body.structure > main > .chirun-structure .item.has-content {
+    border: calc(0.2 * var(--spacing)) solid var(--bg-colour-off);
+}
+body.structure > main > .chirun-structure .item:not(.has-content) {
+    padding: 0 var(--spacing);
+}
+body.structure > main > .chirun-structure .item > header {
+    background: var(--bg-colour-off);
+    padding: 0 var(--spacing);
+}
+
+body.structure > main > .chirun-structure .item > header > h2 {
+    font-size: 1.5em;
 }
 
 body.structure > main > .chirun-structure .contents {
@@ -374,7 +399,9 @@ body > footer {
 
 body > footer > hr {
     grid-column: nav / text;
-    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 body > footer > p {
