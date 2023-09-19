@@ -684,3 +684,10 @@ footer#footnotes {
 footer#footnotes > ol > li::marker {
     font-size: 0.9em;
 }
+
+a.footnote {
+    text-decoration: none;
+}
+a.footnote sup {
+    text-decoration: underline;
+}
