@@ -1,5 +1,8 @@
+[jinja2: **/**.jinja2]
+encoding = utf-8
+
 [jinja2: **/templates/**.html]
 encoding = utf-8
 
-[javascript: static/*.*js]
+[javascript: static/**.js]
 extract_messages = _
