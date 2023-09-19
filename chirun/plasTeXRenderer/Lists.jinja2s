@@ -1,8 +1,15 @@
 name: itemize
-<ul id="{{ obj.id }}" class="itemize">
+<style>
+@counter-style {{obj.id}}-symbols {
+    system: fixed;
+    symbols: {% for item in obj %} '{% if item.attributes.term %}{{ item.attributes.term }}{% else %}{{ item.position }}.{% endif %}'{% endfor %};
+    suffix: ' ';
+}
+</style>
+<ul id="{{ obj.id }}" class="itemize" style="list-style: {{obj.id}}-symbols;">
 {% for item in obj %}
 	{% if item.attributes.term %}
-		<li style="list-style: symbols(cyclic '{{item.attributes.term}}');" id="{{ item.id }}">
+		<li id="{{ item.id }}">
             {{ item }}
 		</li>
 	{% else %}
@@ -12,9 +19,16 @@ name: itemize
 </ul>
 
 name: enumerate
-<ol id="{{ obj.id }}" style="list-style: none" class="enumerate">
+<style>
+@counter-style {{obj.id}}-symbols {
+    system: fixed;
+    symbols: {% for item in obj %} '{% if item.attributes.term %}{{ item.attributes.term }}{% else %}{{ obj.term(item.position) }}{% endif %}'{% endfor %};
+    suffix: ' ';
+}
+</style>
+<ol id="{{ obj.id }}" style="list-style: {{obj.id}}-symbols;" class="enumerate">
 {% for item in obj %}
-    <li style="list-style: symbols(cyclic '{% if item.attributes.term %}{{ item.attributes.term }}{% else %}{{ obj.term(item.position) }}{% endif %}');" id="{{ item.id }}" value="{{ item.position }}">
+    <li id="{{ item.id }}" value="{{ item.position }}">
 	{{ item }}
 	</li>
 {% endfor %}
