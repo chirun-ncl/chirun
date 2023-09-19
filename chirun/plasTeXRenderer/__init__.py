@@ -1,16 +1,42 @@
-import subprocess
-import shlex
+from   babel.support import Translations
+from   jinja2 import Environment, contextfunction
 import os
-import shutil
+from   pathlib import Path
+from   plasTeX.DOM import Node
+from   plasTeX.Renderers.PageTemplate import Renderer as _Renderer
+from   plasTeX.Renderers import Renderer as BaseRenderer, Renderable as BaseRenderable
+from   plasTeX.Logging import getLogger
 import re
-from pathlib import Path
-from plasTeX.DOM import Node
-from plasTeX.Renderers.PageTemplate import Renderer as _Renderer
-from plasTeX.Renderers import Renderer as BaseRenderer, Renderable as BaseRenderable
-from plasTeX.Logging import getLogger
+import shlex
+import shutil
+import subprocess
 
 log = getLogger()
 
+@contextfunction
+def debug(context):
+    pdb.set_trace()
+
+jinja_env = Environment(
+    trim_blocks=True,
+    lstrip_blocks=True,
+    extensions = ['jinja2.ext.i18n',]
+)
+jinja_env.globals['debug'] = debug
+
+def jinja2template(s, encoding='utf8'):
+    def renderjinja2(obj, s=s):
+        tvars = {'here':obj, 
+                 'obj':obj,
+                 'container':obj.parentNode,
+                 'config':obj.ownerDocument.config,
+                 'context':obj.ownerDocument.context,
+                 'templates':obj.renderer}
+
+        tpl = jinja_env.from_string(s)
+        return tpl.render(tvars) 
+
+    return renderjinja2
 
 class Renderable(BaseRenderable):
     @property
@@ -33,6 +59,13 @@ class HTML5(_Renderer):
 
     renderableClass = Renderable
 
+    def __init__(self, *args, **kwargs):
+        BaseRenderer.__init__(self, *args, **kwargs)
+        self.loadedTheme = None
+        self.engines = {}
+        htmlexts = ['.html','.htm','.xhtml','.xhtm','.zpt','.pt']
+        self.registerEngine('jinja2', None, '.jinja2', jinja2template)
+
     def loadTemplates(self, document):
         """Load templates as in PageTemplate but also look for packages that
         want to override some templates and handles extra css and javascript."""
@@ -47,6 +80,12 @@ class HTML5(_Renderer):
         config = document.config
         srcDir = document.userdata['working-dir']
         buildDir = os.getcwd()
+
+        try:
+            with open(document.userdata['translations_path'], 'rb') as translations_file:
+                jinja_env.install_gettext_translations(Translations(translations_file), newstyle=True)
+        except FileNotFoundError:
+            jinja_env.install_null_translations(newstyle=True)
 
         # Theme css has already been copied by PageTemplate.loadTemplates,
         # provided config['general']['copy-theme-extras'] is true

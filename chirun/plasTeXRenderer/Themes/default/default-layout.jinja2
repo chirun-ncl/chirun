@@ -1,9 +1,11 @@
 {{ obj }}
 {% if obj.footnotes %}
-<hr>
-<ol>
-{% for footnote in obj.footnotes %}
-  <li id="{{ footnote.id }}">{{ footnote }}</li>
-{% endfor %}
-</ol>
+<footer id="footnotes">
+    <h2>{% trans %}Footnotes{% endtrans %}</h2>
+    <ol>
+    {% for footnote in obj.footnotes %}
+      <li id="{{ footnote.id }}"><a class="footnote-jump" href="#{{ footnote.id }}-reference" aria-label="{% trans %}Jump to reference{% endtrans %}">^</a> {{ footnote }}</li>
+    {% endfor %}
+    </ol>
+</footer>
 {% endif %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-04-27 15:52+0100\n"
+"POT-Creation-Date: 2023-09-19 11:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,51 +17,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: static/code.mjs:88
+#: static/code.js:89
 msgid "Unrecognised job id ${job_id}"
 msgstr ""
 
-#: static/code.mjs:99
+#: static/code.js:100
 msgid "run_code should be implemented."
 msgstr ""
 
-#: static/code.mjs:106
+#: static/code.js:107
 msgid "This code runner can't be interrupted."
 msgstr ""
 
-#: static/code.mjs:286
-msgid "Error running R code"
+#: static/code.js:433
+msgid "An error occured running code."
 msgstr ""
 
-#: static/code.mjs:393
-msgid "An error occured running code: ${error}"
-msgstr ""
-
-#: static/embed_numbas.mjs:135
+#: static/embed_numbas.js:135
 msgid "Unexpected postMessage data:"
 msgstr ""
 
-#: templates/base.html:57
+#: templates/base.html:64
 msgid "Test Yourself"
 msgstr ""
 
-#: templates/base.html:59
+#: templates/base.html:66
 msgid "Complete"
 msgstr ""
 
-#: templates/base.html:60
+#: templates/base.html:67
 msgid "Incomplete"
 msgstr ""
 
-#: templates/base.html:63
+#: templates/base.html:70
 msgid "Score:"
 msgstr ""
 
-#: templates/base.html:72
+#: templates/base.html:81
 msgid "Skip to content"
 msgstr ""
 
-#: templates/base.html:79
+#: templates/base.html:88 templates/slides_reveal.html:26
 msgid "Display options"
 msgstr ""
 
@@ -87,7 +83,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Generated using <a target=\"_blank\" href=\"%(url)s\">Chirun</a>, written"
-" by the E-Learning Unit, School of Mathematics &amp; Statistics, "
+" by the Digital Learning Unit, School of Mathematics &amp; Statistics, "
 "Newcastle University"
 msgstr ""
 
@@ -105,99 +101,111 @@ msgstr ""
 msgid "Reset to defaults"
 msgstr ""
 
-#: templates/theme_customise.html:6
+#: templates/theme_customise.html:5
+msgid "Accessibility statement"
+msgstr ""
+
+#: templates/theme_customise.html:8
 msgid "Close"
 msgstr ""
 
-#: templates/theme_customise.html:13
+#: templates/theme_customise.html:15
 msgid "Text size"
 msgstr ""
 
-#: templates/theme_customise.html:21
+#: templates/theme_customise.html:23
 msgid "Spacing"
 msgstr ""
 
-#: templates/theme_customise.html:29
+#: templates/theme_customise.html:31
 msgid "Text font"
 msgstr ""
 
-#: templates/theme_customise.html:32
+#: templates/theme_customise.html:34
 msgid "Sans-serif"
 msgstr ""
 
-#: templates/theme_customise.html:33
+#: templates/theme_customise.html:35
 msgid "Serif"
 msgstr ""
 
-#: templates/theme_customise.html:34
+#: templates/theme_customise.html:36
 msgid "Atkinson Hyperlegible"
 msgstr ""
 
-#: templates/theme_customise.html:35
+#: templates/theme_customise.html:37
 msgid "Comic Sans"
 msgstr ""
 
-#: templates/theme_customise.html:41
+#: templates/theme_customise.html:43
 msgid "Colour scheme"
 msgstr ""
 
-#: templates/theme_customise.html:44
+#: templates/theme_customise.html:46
 msgid "Automatic (default)"
 msgstr ""
 
-#: templates/theme_customise.html:45
+#: templates/theme_customise.html:47
 msgid "Black text on white"
 msgstr ""
 
-#: templates/theme_customise.html:46
+#: templates/theme_customise.html:48
 msgid "White text on black"
 msgstr ""
 
-#: templates/theme_customise.html:47
+#: templates/theme_customise.html:49
 msgid "Custom"
 msgstr ""
 
-#: templates/theme_customise.html:54
+#: templates/theme_customise.html:56
 msgid "Text colour"
 msgstr ""
 
-#: templates/theme_customise.html:61
+#: templates/theme_customise.html:63
 msgid "Link colour"
 msgstr ""
 
-#: templates/theme_customise.html:68
+#: templates/theme_customise.html:70
 msgid "Background colour"
 msgstr ""
 
-#: templates/theme_customise.html:75
+#: templates/theme_customise.html:77
 msgid "Muted background colour"
 msgstr ""
 
-#: templates/theme_customise.html:82
+#: templates/theme_customise.html:84
 msgid "Accent colour 1"
 msgstr ""
 
-#: templates/theme_customise.html:89
+#: templates/theme_customise.html:91
 msgid "Accent colour 2"
 msgstr ""
 
-#: templates/theme_customise.html:96
+#: templates/theme_customise.html:98
 msgid "Accent colour 3"
 msgstr ""
 
-#: templates/theme_customise.html:103
+#: templates/theme_customise.html:105
 msgid "Accent colour 4"
 msgstr ""
 
-#: templates/theme_customise.html:112
+#: templates/theme_customise.html:114
 msgid "Sepia filter"
 msgstr ""
 
-#: templates/theme_customise.html:120
+#: templates/theme_customise.html:122
 msgid "Rotate hues"
 msgstr ""
 
-#: templates/theme_customise.html:128
+#: templates/theme_customise.html:130
 msgid "Invert images in dark mode"
+msgstr ""
+
+#: ../../plasTeXRenderer/Themes/default/default-layout.jinja2:4
+msgid "Footnotes"
+msgstr ""
+
+#: ../../plasTeXRenderer/Themes/default/default-layout.jinja2:7
+msgid "Jump to reference"
 msgstr ""
 

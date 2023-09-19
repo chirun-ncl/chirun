@@ -171,6 +171,7 @@ class PlastexRunner:
         TeX.processIfContent = _processIfContent
         tex = TeX(self.document, myfile=f)
         self.document.userdata['jobname'] = tex.jobname
+        self.document.userdata['translations_path'] = item.course.theme.translations_path
         pauxname = os.path.join(self.document.userdata.get('working-dir', '.'),
                                 '%s.paux' % self.document.userdata.get('jobname', ''))
 

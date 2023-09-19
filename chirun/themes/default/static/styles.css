@@ -462,9 +462,6 @@ blockquote {
     grid-gap: var(--spacing);
 }
 
-
-/* 2023-03-09 OLD STYLE BELOW */
-
 .tikzpicture {
     width: 100%;
     display: inline;
@@ -678,4 +675,12 @@ figure + em, .reveal figure + em {
 
 .vspace.smallskip {
     height: 0.5em;
+}
+
+footer#footnotes {
+    margin-top: calc(4 * var(--spacing));
+}
+
+footer#footnotes > ol > li::marker {
+    font-size: 0.9em;
 }
