@@ -156,7 +156,7 @@ class Customiser {
 
         this.add_setting('font-scale', 'exponentialpercentage', 100);
         this.add_setting('spacing-factor', 'exponentialpercentage', 100);
-        this.add_setting('font-family', 'text', 'sans-serif');
+        this.add_setting('font-family', 'text', 'var(--sans-serif-font)');
         this.add_setting('colour-scheme', 'text', 'auto');
 
         this.add_setting('text-colour', 'colour', '#000000');
