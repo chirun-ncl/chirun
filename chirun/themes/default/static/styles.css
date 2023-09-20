@@ -370,9 +370,7 @@ body.structure > main > .chirun-structure > li ~ li {
 body.structure > main > .chirun-structure .item.has-content {
     border: calc(0.2 * var(--spacing)) solid var(--bg-colour-off);
 }
-body.structure > main > .chirun-structure .item:not(.has-content) {
-    padding: 0 var(--spacing);
-}
+
 body.structure > main > .chirun-structure .item > header {
     background: var(--bg-colour-off);
     padding: 0 var(--spacing);
@@ -385,7 +383,14 @@ body.structure > main > .chirun-structure .item > header > h2 {
 body.structure > main > .chirun-structure .contents {
     list-style: none;
     padding-left: var(--spacing);
+    padding-right: var(--spacing);
 }
+body.structure > main > .chirun-structure .contents > li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dotted var(--text-colour);
+}
+
 
 body.structure > main > .chirun-structure .alternative-formats {
     display: inline-flex;

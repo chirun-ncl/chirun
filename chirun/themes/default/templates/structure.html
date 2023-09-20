@@ -12,9 +12,13 @@
                 </header>
                 {% endif %}
 
-                {% with subitem=partitem %}
-                {% include "inner_subitem.html" %}
-                {% endwith %}
+                <ul class="contents">
+                    <li>
+                        {% with subitem=partitem %}
+                        {% include "inner_subitem.html" %}
+                        {% endwith %}
+                    </li>
+                </ul>
             {% endif %}
         </article>
     </li>
