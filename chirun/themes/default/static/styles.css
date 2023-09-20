@@ -294,13 +294,12 @@ body > main > #sidebar {
     overflow-y: auto;
     position: sticky;
     top: 0;
-    background: linear-gradient(to right, var(--bg-colour), var(--bg-colour-accent-2));
+    background: linear-gradient(to right, var(--bg-colour) 80%, var(--bg-colour-accent-2));
     padding: 0 var(--spacing);
-    align-self: start;
 }
 
 body > header > nav {
-    background: linear-gradient(to left, var(--bg-colour), var(--bg-colour-accent-1));
+    background: linear-gradient(to left, var(--bg-colour), var(--bg-colour-accent-2));
     padding: 0 var(--spacing);
 }
 
