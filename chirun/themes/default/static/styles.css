@@ -260,6 +260,12 @@ body > header {
     align-items: center;
     margin-top: var(--spacing);
 }
+
+body > header > nav {
+    background: linear-gradient(to left, var(--bg-colour), var(--bg-colour-accent-2));
+    padding: 0 var(--spacing);
+}
+
 @media (max-width: 50em) {
     body > header {
         grid-template:
@@ -268,6 +274,10 @@ body > header {
         /
         1fr;
         justify-items: center;
+    }
+    body > header > nav {
+        justify-self: normal;
+        background: var(--bg-colour-accent-2);
     }
 }
 
@@ -284,31 +294,46 @@ body > header .author {
 
 body > main {
     display: grid;
-    grid-template-columns: [sidebar-start full-start] minmax(auto,25em) [sidebar-end content-start] 1fr [content-end full-end];
+    grid-template-columns: [content-start full-start] 1fr [content-end sidebar-start] minmax(auto,25em) [sidebar-end full-end];
+    grid-template-areas: "content sidebar";
     grid-gap: var(--spacing);
     width: 100%;
     line-height: var(--line-height);
 }
 body > main > #sidebar {
+    grid-area: sidebar;
     max-height: 100vh;
     overflow-y: auto;
     position: sticky;
     top: 0;
-    background: linear-gradient(to right, var(--bg-colour) 80%, var(--bg-colour-accent-2));
-    padding: 0 var(--spacing);
+    background: var(--bg-colour-accent-2);
+    padding: var(--spacing);
 }
 
-body > header > nav {
-    background: linear-gradient(to left, var(--bg-colour), var(--bg-colour-accent-2));
-    padding: 0 var(--spacing);
+body > main > #sidebar > h1 {
+    font-size: 1.3em;
+}
+
+body > main > #sidebar .jump-to-item-content {
+    display: none;
 }
 
 @media (max-width: 78em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
+        grid-template-areas: "sidebar" "content";
     }
     body > main > #sidebar {
         position: initial;
+        background: var(--bg-colour-accent-2);
+        margin-bottom: var(--spacing);
+        display: grid;
+        justify-content: center;
+        max-height: none;
+    }
+
+    body > main > #sidebar .jump-to-item-content {
+        display: inline;
     }
 }
 

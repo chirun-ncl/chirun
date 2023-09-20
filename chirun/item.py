@@ -217,6 +217,13 @@ class Item(object):
         if self.has_pdf:
             yield {'name': 'PDF', 'url': self.pdf_url, 'download': True}
 
+    def has_alternative_formats(self):
+        try:
+            next(self.alternative_formats())
+            return True
+        except StopIteration:
+            return False
+
     def content_tree(self):
         attr_dict = {
             'type': self.type,
