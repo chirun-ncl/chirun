@@ -284,7 +284,7 @@ body > header .author {
 
 body > main {
     display: grid;
-    grid-template-columns: [sidebar-start full-start] 25em [sidebar-end content-start] 1fr [content-end full-end];
+    grid-template-columns: [sidebar-start full-start] minmax(auto,25em) [sidebar-end content-start] 1fr [content-end full-end];
     grid-gap: var(--spacing);
     width: 100%;
     line-height: var(--line-height);
@@ -304,7 +304,7 @@ body > header > nav {
     padding: 0 var(--spacing);
 }
 
-@media (max-width: 60em), print {
+@media (max-width: 78em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
     }
