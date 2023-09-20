@@ -25,6 +25,10 @@
 	justify-self: start;
 }
 
+#wrapper[data-completion-status="unknown"] #completion-status {
+    display: none;
+}
+
 #wrapper[data-completion-status="incomplete"] #completion-status :not(.incomplete) {
     display: none;
 }

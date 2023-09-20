@@ -88,7 +88,8 @@ class EmbedNumbasElement extends HTMLElement {
         const score = this.exam_data?.score || 0;
         const max_marks = this.exam_data?.marks;
         const complete = max_marks !== undefined && score !== undefined && score >= max_marks;
-        this.shadowRoot.querySelector('#wrapper').dataset.completionStatus = complete ? 'complete' : 'incomplete';
+        const completionStatus = max_marks === undefined ? 'unknown' : complete ? 'complete' : 'incomplete';
+        this.shadowRoot.querySelector('#wrapper').dataset.completionStatus = completionStatus;
 
         if(max_marks !== undefined && score !== undefined) {
             const score_feedback = this.shadowRoot.querySelector('#score-feedback progress');
