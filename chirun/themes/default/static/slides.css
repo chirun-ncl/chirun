@@ -26,6 +26,10 @@ p {
     max-width: var(--readable-width);
 }
 
+button.icon-button svg.icon {
+  height: 1em;
+}
+
 body > main {
     display: block;
     overflow: hidden;

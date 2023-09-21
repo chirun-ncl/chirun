@@ -260,9 +260,6 @@ button.icon-button {
   margin: var(--spacing);
   line-height: 1em;
 }
-button.icon-button svg.icon {
-  height: 1em;
-}
 
 body > header {
     margin-bottom: calc(3 * var(--spacing));
