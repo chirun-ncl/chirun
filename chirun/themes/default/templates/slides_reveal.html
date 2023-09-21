@@ -22,9 +22,7 @@
                 <div id="slides-author">{{item.author}}</div>
                 {% endif %}
 
-                <button type="button" aria-controls="display-options" aria-expanded="false">
-                    {% trans %}Display options{% endtrans %}
-                </button>
+                {% include "display_options_button.html" %}
 
             </header>
             {% endblock header_slides %}
