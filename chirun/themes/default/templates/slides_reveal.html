@@ -7,6 +7,8 @@
 
 {% endblock stylesheets %}
 
+{% block body_attributes %}data-format="slides"{% endblock %}
+
 {% block body %}
     {% block customisation %}
         {% include "theme_customise.html" %}

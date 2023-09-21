@@ -372,6 +372,7 @@ class RunnableCodeElement extends HTMLElement {
         this.wrapper = shadowRoot.querySelector('.runnable-code-wrapper');
         this.output_display = shadowRoot.querySelector('.output');
         this.set_state('fresh');
+        this.wrapper.dataset.format = document.body.dataset.format;
 
         this.init_editor();
 
