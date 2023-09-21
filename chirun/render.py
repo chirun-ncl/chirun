@@ -52,7 +52,8 @@ class Renderer(object):
         @contextfilter
         def url_filter(context, url, theme=False):
             self.course.force_theme = theme
-            if not re.search(r'^[^:]+:\/\/', url):
+            item = context.get('item')
+            if item is not None and not re.search(r'^[^:]+:\/\/', url):
                 url = self.course.make_relative_url(context['item'], url)
             self.course.force_theme = False
             return url

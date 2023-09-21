@@ -1,3 +1,5 @@
-{% macro icon(cls,label,show_label=False) -%}
-<i class="fa fa-{{cls}}" aria-hidden="true" title="{{label}}"></i>{% if show_label %}&nbsp;{{label}}{% else %} <span class="sr-only">{{label}}</span>{% endif %}
+{% macro icon(icon,label) -%}
+<svg class="icon" alt="{{label}}" viewBox="0 0 180 180">
+    <use href="#{{icon}}"/>
+</svg>
 {%- endmacro %}

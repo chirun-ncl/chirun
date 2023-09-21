@@ -250,7 +250,19 @@ a.undecorated {
     text-decoration: none;
 }
 
+svg.icon {
+    height: 2em;
+}
 
+
+button.icon-button {
+  padding: 0;
+  margin: var(--spacing);
+  line-height: 1em;
+}
+button.icon-button svg.icon {
+  height: 1em;
+}
 
 body > header {
     margin-bottom: calc(3 * var(--spacing));
@@ -385,12 +397,14 @@ body.structure > main > .chirun-structure .contents {
     padding-left: var(--spacing);
     padding-right: var(--spacing);
 }
+
 body.structure > main > .chirun-structure .contents > li {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px dotted var(--text-colour);
+    align-items: center;
+    gap: var(--spacing);
 }
-
 
 body.structure > main > .chirun-structure .alternative-formats {
     display: inline-flex;
@@ -398,18 +412,12 @@ body.structure > main > .chirun-structure .alternative-formats {
     list-style: none;
     margin-top: 0;
     margin-bottom: 0;
+    flex-shrink: 0;
+    padding: 0;
 }
+
 body.structure > main > .chirun-structure .alternative-formats li ~ li {
     margin: 0;
-}
-body.structure > main > .chirun-structure .alternative-formats > li:first-child::before {
-    content: '(';
-}
-body.structure > main > .chirun-structure .alternative-formats > li:not(:last-child)::after {
-    content: ',';
-}
-body.structure > main > .chirun-structure .alternative-formats > li:last-child::after {
-    content: ')';
 }
 
 body > footer {

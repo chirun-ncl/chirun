@@ -7,7 +7,7 @@
 
         <ul class="alternative-formats">
             {% for format in subitem.alternative_formats() %}
-            <li><a class="undecorated" href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{format.name}}</a></li>
+            <li><a class="undecorated" href="{{format.url|url}}"{% if format.download %} download{% endif %} title="{{format.name}}">{{macros.icon(format.name|lower, format.name)}}</a></li>
             {% endfor %}
         </ul>
     {% endif %}

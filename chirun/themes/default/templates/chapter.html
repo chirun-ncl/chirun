@@ -21,7 +21,7 @@
         {% if item.has_alternative_formats() %}
         <ul class="alternative-formats">
             {% for format in item.alternative_formats() %}
-            <li><a href="{{format.url|url}}"{% if format.download %}download{% endif %}>{% if format.download %}{% trans format=format.name %}Download as {{format}}{% endtrans %}{% else %}{% trans format=format.name%}View as {{format}}{% endtrans %}{% endif %}</a></li>
+            <li><a href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{macros.icon(format.name|lower, format.name)}} {% if format.download %}{% trans format=format.name %}Download as {{format}}{% endtrans %}{% else %}{% trans format=format.name%}View as {{format}}{% endtrans %}{% endif %}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
