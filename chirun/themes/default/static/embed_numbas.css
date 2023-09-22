@@ -10,6 +10,7 @@
 	align-items: center;
 	justify-items: center;
 	grid-template-columns: auto auto 1fr auto;
+    cursor: pointer;
 }
 #wrapper[open] > summary {
 	margin-bottom: var(--spacing);
