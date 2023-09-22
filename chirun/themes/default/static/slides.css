@@ -36,6 +36,7 @@ body > main {
     height: 100vh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
+    padding: 0 2rem;
 }
 
 
@@ -110,7 +111,6 @@ main > section .full-height {
 }
 
 main > section blockquote {
-    max-width: calc(0.5 * var(--readable-width));
     line-height: 1.8em;
 }
 main > section > iframe {

@@ -168,8 +168,12 @@ img, svg {
     filter: var(--image-filter);
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p {
     margin: 0 0 var(--spacing) 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: calc(3 * var(--spacing)) 0 var(--spacing) 0;
 }
 
 button {
@@ -226,6 +230,15 @@ pre {
     font-size: 1.1em;
     overflow-x: auto;
     padding: var(--spacing);
+    border: 1px solid var(--text-colour);
+    margin: var(--spacing) 0;
+}
+
+.highlight + .output-block {
+  border-top: none;
+  margin-top: calc(-1 * var(--spacing));
+  margin-left: var(--spacing);
+  margin-right: var(--spacing);
 }
 
 iframe {
