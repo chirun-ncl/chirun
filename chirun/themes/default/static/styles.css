@@ -685,6 +685,10 @@ figure + em, .reveal figure + em {
     font-family: monospace;
 }
 
+.itemize > li.default-marker {
+    list-style-type: disc;
+}
+
 :is(.bibliography, .itemize, .enumerate) > li > p:first-of-type {
     display: inline;
 }

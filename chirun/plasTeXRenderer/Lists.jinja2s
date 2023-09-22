@@ -2,19 +2,15 @@ name: itemize
 <style>
 @counter-style {{obj.id}}-symbols {
     system: fixed;
-    symbols: {% for item in obj %} '{% if item.attributes.term %}{{ item.attributes.term }}{% else %}{{ item.position }}.{% endif %}'{% endfor %};
-    suffix: ' ';
+    symbols: {% for item in obj %} '{% if item.attributes.term %}{{ item.attributes.term }}{% endif %}'{% endfor %};
+    suffix: '\2002';
 }
 </style>
 <ul id="{{ obj.id }}" class="itemize" style="list-style: {{obj.id}}-symbols;">
 {% for item in obj %}
-	{% if item.attributes.term %}
-		<li id="{{ item.id }}">
-            {{ item }}
-		</li>
-	{% else %}
-		<li id="{{ item.id }}"> {{ item }} </li>
-	{% endif %}
+    <li id="{{ item.id }}" {% if not item.attributes.term %}class="default-marker"{% endif %}>
+        {{ item }}
+    </li>
 {% endfor %}
 </ul>
 
