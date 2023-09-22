@@ -155,6 +155,10 @@ body > :is(main, header, footer) {
     padding: 0 1rem;
 }
 
+body > #icon-defs {
+    display: none;
+}
+
 ul, ol {
     margin-top: var(--spacing);
     margin-bottom: var(--spacing);
