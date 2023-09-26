@@ -10,7 +10,7 @@ This repository, `chirun`, is the source code of the Chirun Python package, prov
 The Chirun documentation, including information about the [Chirun Public Content Builder](https://mas-coursebuild.ncl.ac.uk/public/) and
 [Chirun LTI Provider](https://github.com/chirun-ncl/chirun-lti/) can be found at,
 
-https://chirun.readthedocs.io/en/latest/
+https://www.chirun.org.uk/docs
 
 
 ### How it works
@@ -23,29 +23,18 @@ A set of course notes are provided in either Markdown or LaTeX along with a conf
 
 ### Installation
 
-Installation instructions for Linux and macOS can be found [in the Chirun documentation](https://chirun.readthedocs.io/en/latest/getting_started/cli/install.html#installation-instructions).
+Installation instructions for Linux and macOS can be found [in the Chirun documentation](https://www.chirun.org.uk/docs/en/latest/cli/install.html).
 
-Windows can be used via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) and following the Linux installation instructions.
+Chirun can be used on Windows via [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) and following the Linux installation instructions.
 
-#### Upgrading from `makecourse`
-The project has recently been renamed from "makecourse" to "chirun". To upgrade, first remove the older `makecourse` package with,
-
-```
-pip uninstall makecourse
-```
-
-Then follow the installation or upgrade instructions above.
- 
 ---
 
 ### Demo
 
-[Sample course](https://chirun-ncl.github.io/sample_course/), and its [source code](https://github.com/chirun-ncl/sample_course).
+[Sample course](https://www.chirun.org.uk/docs/en/latest/cli/install.html), and its [source code](https://github.com/chirun-ncl/sample_course).
 
 ### Compile the Sample Course
  * Install the `chirun` package using the instructions above
  * Clone the sample course: `git clone https://github.com/chirun-ncl/sample_course.git`
  * Change into the directory you just cloned to and run `make` to build and view a local version of the sample course.
  * The finished website output will be in `./sample_course/build`
-
----
