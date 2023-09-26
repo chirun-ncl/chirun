@@ -1,6 +1,11 @@
 :root {
     --base-font-size: max(4vmin, 24px);
     --slide-padding: 2rem;
+    --code-font-size: 0.9rem;
+}
+
+.highlight pre {
+    font-size: var(--code-font-size);
 }
 
 aside { 

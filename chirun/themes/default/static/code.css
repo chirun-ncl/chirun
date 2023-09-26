@@ -21,7 +21,7 @@ button.icon-button {
 		"code output" 10rem "run ." / 3fr 2fr;
 	grid-gap: 0;
 	width: calc(100vw - 2 * var(--slide-padding));
-	font-size: 0.7rem;
+	font-size: var(--code-font-size);
 }
 
 @media (max-width: 40rem) {
