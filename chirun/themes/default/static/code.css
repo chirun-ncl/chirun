@@ -1,3 +1,14 @@
+svg.icon {
+    height: 2em;
+}
+
+button.icon-button {
+  padding: 0;
+  line-height: 1em;
+}
+
+
+
 .runnable-code-wrapper {
 	display: grid;
 	grid-template:
@@ -23,9 +34,12 @@
 	}
 }
 
-.runnable-code-wrapper button.run-code {
+.runnable-code-wrapper .buttons {
 	align-self: start;
 	grid-area: run;
+}
+
+.runnable-code-wrapper .buttons > button {
 	padding: calc(0.5 * var(--spacing));
 	font-size: inherit;
 	justify-self: start;
@@ -37,7 +51,10 @@
 	padding: calc(0.5 * var(--spacing));
 	color: black;
 	background: white;
+}
+.runnable-code-wrapper #code {
 	overflow: auto;
+	max-height: 100%;
 }
 
 .runnable-code-wrapper .output {
@@ -46,7 +63,11 @@
 	border: 1px solid var(--text-colour);
 	border-top: none;
 	margin: 0;
+  background: var(--bg-colour);
 	max-height: 20em;
+}
+.runnable-code-wrapper #output {
+	max-height: 100%;
 	overflow: auto;
 }
 
@@ -72,9 +93,19 @@
 	display: none;
 }
 
+.runnable-code-wrapper .fullscreenable {
+	position: relative;
+}
+
+.runnable-code-wrapper .fullscreenable > button.fullscreen {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
 
 @media print {
-	.runnable-code-wrapper button.run-code {
+	.runnable-code-wrapper .buttons,
+    .runnable-code-wrapper button.fullscreen {
 		display: none;
 	}
 }

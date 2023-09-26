@@ -1,5 +1,6 @@
 :root {
     --base-font-size: max(4vmin, 24px);
+    --slide-padding: 2rem;
 }
 
 aside { 
@@ -37,7 +38,7 @@ body > main {
     height: 100vh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
-    padding: 0 2rem;
+    padding: 0 var(--slide-padding);
 }
 
 

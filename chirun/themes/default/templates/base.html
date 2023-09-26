@@ -48,13 +48,22 @@
         <template id="runnable-code-template">
             <link rel="stylesheet" href="{{'code.css'|static_url}}">
             <div class="runnable-code-wrapper">
-                <div class="code"></div>
-                <button type="button" class="run-code">Run code</button>
-                <div class="output" aria-live="polite">
-                    <pre class="stdout"></pre>
-                    <pre class="result"></pre>
-                    <div class="images"></div>
+                <section class="fullscreenable code">
+                    <div id="code"></div>
+                    <button class="fullscreen icon-button" title="{% trans %}Fullscreen code{% endtrans %}">{{ macros.icon('fullscreen', _('Fullscreen code')) }}</button>
+                </section>
+                <section class="fullscreenable output">
+                    <div id="output" aria-live="polite">
+                        <pre class="stdout"></pre>
+                        <pre class="result"></pre>
+                        <div class="images"></div>
+                    </div>
+                    <button class="fullscreen icon-button" title="{% trans %}Fullscreen output{% endtrans %}">{{ macros.icon('fullscreen', _('Fullscreen output')) }}</button>
+                </section>
+                <div class="buttons">
+                    <button type="button" class="run-code">Run code</button>
                 </div>
+                {% include "icons.svg" %}
             </div>
         </template>
 

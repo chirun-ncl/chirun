@@ -370,7 +370,8 @@ class RunnableCodeElement extends HTMLElement {
         shadowRoot.appendChild(templateContent.cloneNode(true));
 
         this.wrapper = shadowRoot.querySelector('.runnable-code-wrapper');
-        this.output_display = shadowRoot.querySelector('.output');
+        this.output_display = shadowRoot.querySelector('#output');
+        this.code_tag = this.shadowRoot.querySelector('#code');
         this.set_state('fresh');
         this.wrapper.dataset.format = document.body.dataset.format;
 
@@ -378,17 +379,28 @@ class RunnableCodeElement extends HTMLElement {
 
         const run_button = this.run_button = shadowRoot.querySelector('.run-code');
         run_button.addEventListener('click', () => this.run());
+
+        Array.from(shadowRoot.querySelectorAll('.fullscreenable')).forEach(container => {
+            container.querySelector('button.fullscreen').addEventListener('click', () => {
+                if(shadowRoot.fullscreenElement == container) {
+                    document.exitFullscreen();
+                } else {
+                    container.requestFullscreen();
+                }
+            });
+            container.addEventListener('fullscreenchange', () => setTimeout(() => container.scrollIntoView(), 1));
+        });
     }
 
     init_editor() {
         const code = this.textContent;
-        const codeTag = this.shadowRoot.querySelector('.code');
+        const code_tag = this.shadowRoot.querySelector('#code');
 
         this.codeMirror = codemirror_editor(
             this.language,
             {
                 doc: code,
-                parent: codeTag,
+                parent: code_tag,
                 root: this.shadowRoot,
                 onChange: update => this.onChange(update)
             }
