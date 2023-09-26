@@ -406,6 +406,7 @@ body.structure > main > .chirun-structure .item > header {
 
 body.structure > main > .chirun-structure .item > header > h2 {
     font-size: 1.5em;
+    margin: 0;
 }
 
 body.structure > main > .chirun-structure .contents {
