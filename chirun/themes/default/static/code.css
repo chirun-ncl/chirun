@@ -7,21 +7,19 @@ button.icon-button {
   line-height: 1em;
 }
 
-
-
 .runnable-code-wrapper {
 	display: grid;
 	grid-template:
 		"code code code" "run output ." / auto 1fr;
 	grid-gap: 0 var(--spacing);
 	margin: var(--spacing) 0;
+	font-size: var(--code-font-size);
 }
 .runnable-code-wrapper[data-format="slides"] {
 	grid-template:
 		"code output" 10rem "run ." / 3fr 2fr;
 	grid-gap: 0;
 	width: calc(100vw - 2 * var(--slide-padding));
-	font-size: var(--code-font-size);
 }
 
 @media (max-width: 40rem) {

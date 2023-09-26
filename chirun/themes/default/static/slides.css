@@ -4,10 +4,6 @@
     --code-font-size: 0.9rem;
 }
 
-.highlight pre {
-    font-size: var(--code-font-size);
-}
-
 aside { 
     display: none;
 }
