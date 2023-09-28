@@ -19,7 +19,7 @@ button.icon-button {
 	grid-template:
 		"code output" 10rem "run ." / 3fr 2fr;
 	grid-gap: 0;
-	width: calc(100vw - 2 * var(--slide-padding));
+	width: var(--slide-width);
 }
 
 @media (max-width: 40rem) {

@@ -1,6 +1,7 @@
 :root {
-    --base-font-size: max(4vmin, 24px);
+    --base-font-size: min(3vw, 4vh);
     --slide-padding: 2rem;
+    --slide-width: calc(100vw - 2 * var(--slide-padding));
     --code-font-size: 0.9rem;
 }
 
@@ -18,7 +19,7 @@ body {
     overflow: hidden;
 }
 h1,h2,h3,h4,h5,h6 {
-    margin: 0 0 var(--spacing) 0;
+    margin: 0 0 calc(0.5 * var(--spacing)) 0;
     justify-self: center;
 }
 h2 {
@@ -93,6 +94,7 @@ main > section:focus {
 }
 main > section > p {
     line-height: var(--line-height);
+    margin: calc(0.5 * var(--spacing)) 0;
 }
 main > section > :is(h1, h2) {
     align-self: start;
@@ -129,6 +131,11 @@ main > section > iframe {
   height: 75vh;
   border: none;
   border-radius: 1em;
+}
+
+main > section mjx-container {
+    max-width: var(--slide-width);
+    margin: calc(0.25 * var(--spacing)) 0 !important;
 }
 
 @media print {
