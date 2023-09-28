@@ -8,9 +8,7 @@ This repository, `chirun`, is the source code of the Chirun Python package, prov
 ## Documentation
 
 The Chirun documentation, including information about the [Chirun Public Content Builder](https://mas-coursebuild.ncl.ac.uk/public/) and
-[Chirun LTI Provider](https://github.com/chirun-ncl/chirun-lti/) can be found at,
-
-https://www.chirun.org.uk/docs
+[Chirun LTI Provider](https://github.com/chirun-ncl/chirun-lti/) can be found at https://www.chirun.org.uk/docs.
 
 
 ### How it works
