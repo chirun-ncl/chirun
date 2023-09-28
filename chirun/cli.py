@@ -1,3 +1,4 @@
+from . import chirun_version
 from . import mkdir_p
 from .item import load_item
 from . import process
@@ -19,6 +20,8 @@ logger = logging.getLogger('chirun')
 
 
 class Chirun:
+
+    VERSION = chirun_version.VERSION
 
     mathjax_url = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
     processor_classes = [

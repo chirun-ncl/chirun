@@ -153,6 +153,7 @@ class BaseRenderer(object):
             'item': item,
             'date': datetime.date.today(),
             'CHIRUN_HOME_URL': 'https://chirun.org.uk',
+            'CHIRUN_VERSION': self.course.VERSION,
             'ACCESSIBILITY_STATEMENT_URL': 'https://chirun.org.uk/accessibility-statement/material',
             'out_file': out_file,
         }

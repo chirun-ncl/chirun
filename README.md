@@ -31,7 +31,7 @@ Chirun can be used on Windows via [WSL](https://docs.microsoft.com/en-us/windows
 
 ### Demo
 
-[Sample course](https://www.chirun.org.uk/docs/en/latest/cli/install.html), and its [source code](https://github.com/chirun-ncl/sample_course).
+[Sample course](https://www.chirun.org.uk/demo), and its [source code](https://github.com/chirun-ncl/sample_course).
 
 ### Compile the Sample Course
  * Install the `chirun` package using the instructions above

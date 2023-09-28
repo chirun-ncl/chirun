@@ -1,4 +1,4 @@
-## E-Learning Unit, Newcastle University
+## Digital Learning Unit, Newcastle University
 
 * Christian Lawson-Perfect
 * Chris Graham
