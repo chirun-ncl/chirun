@@ -23,8 +23,6 @@ class ItemProcess(object):
         self.nb_renderer = NotebookRenderer(self.course)
 
     def visit(self, item):
-        if item.is_hidden:
-            return
         fn = getattr(self, 'visit_' + item.type)
         return fn(item)
 
@@ -41,7 +39,6 @@ class ItemProcess(object):
     def visit_part(self, item):
         for subitem in item.content:
             self.visit(subitem)
-
 
 class SlugCollisionProcess(ItemProcess):
     name = 'Checking for duplicated filenames or paths'

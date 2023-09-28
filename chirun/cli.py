@@ -6,6 +6,7 @@ from . import oembed
 import argparse
 import chirun
 import datetime
+import hashlib
 import json
 import logging
 import os
@@ -184,6 +185,23 @@ class Chirun:
             })
 
         self.config['args'] = self.args
+
+    def get_hash_salt(self):
+        """
+            Get a salt string to use when hashing strings.
+            The salt should be the same each time the course is built, so that output URLs are consistent.
+        """
+        if self.args.hash_salt:
+            return self.args.hash_salt
+        else:
+            return self.config.get('hash_salt','')
+
+    def hash_string(self, text):
+        """
+            Hash a string, using the course's salt.
+        """
+
+        return hashlib.sha256((text + self.get_hash_salt()).encode('utf-8')).hexdigest()
 
     def get_main_file(self):
         if self.args.single_file:
@@ -404,5 +422,6 @@ def arg_parser():
             Defaults to the current directory.', default='.', nargs='?')
     parser.add_argument('-f', dest='single_file', help='The path to a single file to build')
     parser.add_argument('--no-pdf',dest='build_pdf', action='store_false', help='Don\'t build PDF files')
+    parser.add_argument('--hash-salt',dest='hash_salt', default='', help='Salt string for hashing paths to hidden items')
     parser.set_defaults(build_pdf=None)
     return parser

@@ -1,6 +1,6 @@
 <ul class="chirun-structure">
 {% for partitem in structure %}
-    {% if partitem.type != 'introduction' %}
+    {% if not partitem.is_hidden and partitem.type != 'introduction' %}
     <li>
         <article class="item{% if partitem.content %} has-content{% endif %}">
             {% if partitem.content %}

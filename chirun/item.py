@@ -41,7 +41,7 @@ class Item(object):
         self.set_title(self.data.get('title', self.title))
         self.author = self.data.get('author', self.parent.author if self.parent else self.course.config.get('author'))
         self.source = Path(self.data.get('source', ''))
-        self.is_hidden = self.data.get('hidden', False)
+        self.is_hidden = self.data.get('is_hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.has_footer = self.data.get('footer', self.has_footer)
         self.has_pdf = self.data.get('build_pdf', False)
@@ -98,7 +98,10 @@ class Item(object):
 
     @property
     def out_path(self):
-        path = PurePath(self.slug)
+        slug = self.slug
+        if self.is_hidden:
+            slug += '-'+self.course.hash_string(self.slug)[:8]
+        path = PurePath(slug)
         if self.parent:
             path = self.parent.out_path / path
         return path
@@ -233,6 +236,7 @@ class Item(object):
             'url': self.url,
             'build_pdf': self.has_pdf,
             'formats': self.formats_manifest(),
+            'is_hidden': self.is_hidden,
         }
 
         if self.has_pdf:
@@ -290,14 +294,6 @@ class Part(Item):
     def recently_built(self):
         config_stable = self.last_built is not None and self.last_built > self.config_modified
         return super().recently_built() and config_stable
-
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'part-slug': self.slug,
-            'chapters': [item.get_context() for item in self.content if not item.is_hidden],
-        })
-        return context
 
     def content_tree(self):
         attr_dict = super().content_tree()
@@ -473,15 +469,6 @@ class Document(Item):
         fnstr = Path(out_file) / '[$id, $title(4), $num(4)]'
         return '{} {}'.format(self.out_file, fnstr)
 
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'part-slug': self.slug,
-            'chapters': [item.get_context() for item in self.content if not item.is_hidden],
-            'pdf': '{}.pdf'.format(self.url)
-        })
-        return context
-
     def content_tree(self):
         attr_dict = super().content_tree()
         attr_dict['content'] = [item.content_tree() for item in self.content]
@@ -524,20 +511,6 @@ class Chapter(Item):
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
         self.has_pdf = self.data.get('build_pdf', self.course.config['build_pdf'])
 
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'build_pdf': self.has_pdf,
-            'file': '{}.html'.format(self.url),
-            'pdf': '{}.pdf'.format(self.url),
-        })
-
-        if self.parent:
-            context['part'] = self.parent.title
-            context['part-slug'] = self.parent.slug
-
-        return context
-
     def siblings(self):
         if self.parent:
             return self.parent.content
@@ -562,14 +535,6 @@ class Slides(Chapter):
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.title_slide = self.data.get('title_slide', True)
-
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'slides': '{}.slides.html'.format(self.url),
-            'pdf': '{}.pdf'.format(self.url),
-        })
-        return context
 
     def content_tree(self):
         tree = super().content_tree()
@@ -608,17 +573,6 @@ class Introduction(Part):
     out_file = Path('index.html')
     url = 'index.html'
 
-    def get_context(self):
-        context = super().get_context()
-        context['links'] = [s.get_context() for s in self.course.structure
-                            if s.type != 'introduction' and not s.is_hidden]
-
-        struct = [s for s in self.course.structure if s.type != 'introduction' and not s.is_hidden]
-        if len(struct) > 0 and struct[0].type == 'part':
-            context['isPart'] = 1
-
-        return context
-
 
 class Standalone(Document):
     type = 'standalone'
@@ -633,14 +587,6 @@ class Standalone(Document):
 class Notebook(Chapter):
     type = 'notebook'
     has_nb = True
-
-    def get_context(self):
-        context = super().get_context()
-        context.update({
-            'notebook': self.nb_url,
-            'pdf': self.pdf_url,
-        })
-        return context
 
     @property
     def out_nb(self):
