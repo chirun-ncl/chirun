@@ -24,7 +24,7 @@
 
         {% block javascript %}
 			<script>
-				var chirun_static_url="{{'.'|static_url}}";
+				var chirun_static_url = new URL('{{'.'|static_url}}', location.href);
 			</script>
 
             {% block math_javascript %}

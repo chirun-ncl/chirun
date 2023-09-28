@@ -164,7 +164,9 @@ class CodeSession {
 class PyodideRunner extends CodeRunner {
     constructor() {
         super();
-        var worker = this.worker = new Worker(chirun_static_url + '/pyodide_worker.js');
+        const worker_url = new URL(chirun_static_url.href);
+        worker_url.pathname += '/pyodide_worker.js';
+        var worker = this.worker = new Worker(worker_url);
 
         worker.onmessage = (event) => {
             const job_id = event.data.job_id;
