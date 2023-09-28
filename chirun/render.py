@@ -108,9 +108,11 @@ class BaseRenderer(object):
             return url
         self.env.filters['url'] = url_filter
 
+        timestamp = datetime.datetime.now().timestamp()
+
         @contextfilter
         def static_url(context, url):
-            return url_filter(context, 'static/' + url)
+            return url_filter(context, 'static/' + url) + f'?build_time={timestamp}'
 
         self.env.filters['static_url'] = static_url
 
