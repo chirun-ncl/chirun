@@ -779,3 +779,22 @@ a.footnote {
 a.footnote sup {
     text-decoration: underline;
 }
+
+
+.framed {
+    padding: var(--spacing);
+    margin: calc(2 * var(--spacing)) 0;
+}
+
+.framed-box {
+    border: 1px solid var(--text-colour);  
+}
+
+.framed-shaded {
+    background: var(--bg-colour-accent-1);
+}
+
+.framed-leftbar {
+    border-left: 0.25em solid var(--text-colour);
+    padding: 0 0 0 var(--spacing);
+}
