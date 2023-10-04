@@ -51,11 +51,15 @@ class SlugCollisionProcess(ItemProcess):
             self.slugs[self.course.theme.path] = []
 
         n = 1
+        oldslug = item.slug
+        newslug = None
         while item.slug in self.slugs[self.course.theme.path]:
             newslug = slugify(item.title, n)
-            logger.info("Slug {} already used. Trying {}...".format(item.slug, newslug))
             item.slug = newslug
             n = n + 1
+
+        if newslug is not None:
+            logger.info(f"Slug changed from {oldslug} to {item.slug}")
 
         self.slugs[self.course.theme.path].append(item.slug)
         super().visit(item)

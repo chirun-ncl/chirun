@@ -18,12 +18,16 @@ def copytree(src, dst, symlinks=False, ignore=None):
             shutil.copy2(s, d)
 
 def slugify(value, v=0):
-    slug = "".join([c for c in re.sub(r'\s+', '_', value)
-                    if c.isalpha() or c.isdigit() or c == '_']).rstrip().lower()
-    if(v == 0):
-        return slug
-    else:
-        return f'{slug}_{v}'
+    slug = re.sub(r'[\W_]+','_', value).lower()[:20]
+
+    if(v > 0):
+        suffix = f'_{v}'
+        slug = slug[:-len(suffix)]
+        if slug.endswith('_'):
+            slug = slug[:-1]
+        slug = slug + suffix
+
+    return slug
 
 
 def gen_dict_extract(key, var):
