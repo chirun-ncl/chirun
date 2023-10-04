@@ -322,7 +322,7 @@ body > header .author {
 
 body > main {
     display: grid;
-    grid-template-columns: [content-start full-start] 1fr [content-end sidebar-start] minmax(auto,25em) [sidebar-end full-end];
+    grid-template-columns: [content-start full-start] 1fr [content-end sidebar-start] fit-content(30%) [sidebar-end full-end];
     grid-template-areas: "content sidebar";
     grid-gap: var(--spacing);
     width: 100%;
@@ -346,7 +346,7 @@ body > main > #sidebar .jump-to-item-content {
     display: none;
 }
 
-@media (max-width: 78em), print {
+@media (max-width: 55em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
         grid-template-areas: "sidebar" "content";
