@@ -525,11 +525,11 @@ class ColorParser:
         step in parsing a given expression string.
         """
         scanner = Scanner([
-            (r', \s*', lambda s, t: {'element': ColorParser.Elements.comma}),
+            (r',\s*', lambda s, t: {'element': ColorParser.Elements.comma}),
             (r'RGB|rgb|cmyk|cmy|HSB|hsb|Gray|gray|HTML|Hsb|tHsb|wave',
                 lambda s, t: {'element': ColorParser.Elements.model, 'model': ColorModel[t]}),
             (r'named', lambda s, t: {'element': ColorParser.Elements.named, 'model': ColorModel.natural}),
-            (r'[0-9A-F]{6}', lambda s, t: {'element': ColorParser.Elements.int, 'value': int(t, 16)}),
+            (r'[0-9A-Fa-f]{6}', lambda s, t: {'element': ColorParser.Elements.int, 'value': int(t, 16)}),
             (r'[-+]?(\d*\.\d+)|(\d+\.\d*)',
                 lambda s, t: {'element': ColorParser.Elements.dec, 'value': float(t)}),
             (r'[-+]?\d+', lambda s, t: {'element': ColorParser.Elements.int, 'value': int(t)}),
