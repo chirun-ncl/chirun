@@ -1988,7 +1988,7 @@ class definecolorset(ColorCommand):
         a = self.attributes
         self.parser.current_color = self.current_color
         for s in a['set_spec'].split(';'):
-            s = s.split(', ')
+            s = s.split(',')
             name = a['head'] + s[0] + a['tail']
             if self.replace or name not in self.parser.colors:
                 self.parser.colors[name] = self.parser.parseColor(', '.join(s[1:]), a['model'])
