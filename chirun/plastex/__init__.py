@@ -18,6 +18,7 @@ from plasTeX.Config import config as plastex_config
 import chirun.plasTeXRenderer.Config as html_config
 from chirun.plastex import overrides
 
+
 def reset_idgen():
     """
         Reset plasTeX's ID generator, so it produces the same IDs each time it is run on the same document.
@@ -31,6 +32,7 @@ def reset_idgen():
             i += 1
 
     plasTeX.idgen = idgen()
+
 
 plastex_config += html_config.config
 
@@ -101,10 +103,10 @@ def _processIfContent(self, which, debug=False):
                 break
             cases[-1].append(t)
             nesting -= 1
-        elif not(nesting) and name == 'else':
+        elif not (nesting) and name == 'else':
             cases.append([])
             continue
-        elif not(nesting) and name == 'or':
+        elif not (nesting) and name == 'or':
             cases.append([])
             continue
         else:
@@ -120,7 +122,7 @@ class PlastexRunner:
     def exception_handler(exception_type, exception, traceback):
         print("%s: %s" % (exception_type.__name__, exception))
 
-    def load_latex_content(self, item, out_file = None):
+    def load_latex_content(self, item, out_file=None):
         """
             Convert a LaTeX file to HTML, and do some processing with its images
         """
@@ -142,7 +144,7 @@ class PlastexRunner:
                     }
         return plastex_output
 
-    def runPlastex(self, item, out_file = None):
+    def runPlastex(self, item, out_file=None):
         if not item.course.args.veryverbose:
             plasTeX.Logging.disableLogging()
 

@@ -43,7 +43,7 @@ class _figure(figure):
         def preParse(self, tex):
             doc = self.ownerDocument
             c = doc.context
-            c.counters[self.counter].setcounter(c.counters[self.counter].value-1)
+            c.counters[self.counter].setcounter(c.counters[self.counter].value - 1)
 
     class subcaption(_subcaption):
         counter = 'subfigure'
@@ -67,7 +67,7 @@ class _table(table):
         def preParse(self, tex):
             doc = self.ownerDocument
             c = doc.context
-            c.counters[self.counter].setcounter(c.counters[self.counter].value-1)
+            c.counters[self.counter].setcounter(c.counters[self.counter].value - 1)
 
     class subcaption(_subcaption):
         counter = 'subtable'

@@ -11,7 +11,7 @@ import hashlib
 import json
 import logging
 import os
-from   pathlib import Path
+from pathlib import Path
 import shutil
 import yaml
 
@@ -164,15 +164,14 @@ class Chirun:
         if config_file.exists():
             with open(str(config_file), 'r') as f:
                 try:
-                    config = self.loaded_config = yaml.load(f, Loader=yaml.CLoader)
+                    loaded_config = self.loaded_config = yaml.load(f, Loader=yaml.CLoader)
                 except AttributeError:
-                    config = self.loaded_config = yaml.load(f, Loader=yaml.Loader)
-            self.config.update(self.loaded_config)
+                    loaded_config = self.loaded_config = yaml.load(f, Loader=yaml.Loader)
+            self.config.update(loaded_config)
 
         else:
             if self.args.single_file is None:
                 raise Exception(f"The config file {config_file} does not exist.")
-
 
         if self.args.single_file:
             self.config.update({
@@ -197,7 +196,7 @@ class Chirun:
         if self.args.hash_salt:
             return self.args.hash_salt
         else:
-            return self.config.get('hash_salt','')
+            return self.config.get('hash_salt', '')
 
     def hash_string(self, text):
         """
@@ -273,7 +272,7 @@ class Chirun:
             Load all the items defined in the config
         """
         logger.debug('Loading course structure')
-        self.structure = [load_item(self, obj) for obj in self.config.get('structure',[])]
+        self.structure = [load_item(self, obj) for obj in self.config.get('structure', [])]
 
         # Ensure an item exists in the course structure to produce an index page.
         if not any(item.is_index for item in self.structure):
@@ -375,11 +374,20 @@ The web root directory is: {web_root}
 
     def build_theme_redirect(self):
         """
-            When the output HTML files aren't at the top of the output directory, because there's more than one theme, make an index.html redirecting to the first theme.
+            When the output HTML files aren't at the top of the output directory,
+            because there's more than one theme, make an index.html
+            redirecting to the first theme.
         """
 
         with open(self.build_dir / 'index.html', 'w') as f:
-            f.write(f'''<!doctype html><html><head><meta http-equiv="refresh" content="0; url={self.themes[0].path}/index.html"></head><body><ul>''')
+            f.write(
+                f'''<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="refresh" content="0; url={self.themes[0].path}/index.html">
+    </head>
+    <body>
+        <ul>''')
             for theme in self.themes:
                 f.write(f'''<li><a href="{theme.path}/index.html">{theme.title}</a></li>''')
             f.write('''</ul></body></html>''')
@@ -398,7 +406,7 @@ The web root directory is: {web_root}
         for theme in self.themes:
             self.build_with_theme(theme)
 
-        if len(self.themes)>1:
+        if len(self.themes) > 1:
             self.build_theme_redirect()
 
         self.save_manifest()
@@ -407,6 +415,7 @@ The web root directory is: {web_root}
 
         oembed.save_cache()
 
+
 def arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output', dest='build_path', help='Set a directory to put build files in.\
@@ -414,7 +423,7 @@ def arg_parser():
     parser.add_argument('-v', dest='verbose', action='store_true', help='Verbose output.')
     parser.add_argument('-vv', dest='veryverbose', action='store_true', help='Very verbose output.')
     parser.add_argument('-d', dest='cleanup_all', action='store_true', help='Delete auxiliary files.')
-    parser.add_argument('-a', dest='absolute', action='store_true', help='Output using absolute file paths,\
+    parser.add_argument('-a', dest='absolute', action='store_true', help='Output using absolute file paths, \
             relative to the configured root_url.')
     parser.add_argument('--config', dest='config_file', help='Path to a config file. Defaults to \'config.yml\'.')
     parser.add_argument('-l', dest='local-deprecated', action='store_true', help='Deprecated and has no effect.\
@@ -424,7 +433,8 @@ def arg_parser():
     parser.add_argument('dir', help='Path to a chirun compatible source directory.\
             Defaults to the current directory.', default='.', nargs='?')
     parser.add_argument('-f', dest='single_file', help='The path to a single file to build')
-    parser.add_argument('--no-pdf',dest='build_pdf', action='store_false', help='Don\'t build PDF files')
-    parser.add_argument('--hash-salt',dest='hash_salt', default='', help='Salt string for hashing paths to hidden items')
+    parser.add_argument('--no-pdf', dest='build_pdf', action='store_false', help='Don\'t build PDF files')
+    parser.add_argument('--hash-salt', dest='hash_salt', default='',
+                        help='Salt string for hashing paths to hidden items')
     parser.set_defaults(build_pdf=None)
     return parser

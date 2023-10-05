@@ -45,6 +45,8 @@ class TextCommand(BoxCommand):
     pass
 
 # Overrive math mode in picture env to avoid extra <script type="math/tex">
+
+
 class picture(Pictures.picture):
     class math(Math.math):
         def normalize(self, charsubs=None):
@@ -127,7 +129,7 @@ class EqnarrayStar(Math.EqnarrayStar):
             if self.ref:
                 s.append(r"\tag{%s}" % self.ref)
             for cell in self:
-                s.append(sourceChildren(cell, par=not(self.parentNode.mathMode)))
+                s.append(sourceChildren(cell, par=not (self.parentNode.mathMode)))
                 if cell.endToken is not None:
                     s.append(cell.endToken.source)
             if self.endToken is not None:

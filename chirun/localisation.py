@@ -1,7 +1,8 @@
-from   babel.messages.mofile import write_mo
-from   babel.messages.pofile import read_po
+from babel.messages.mofile import write_mo
+from babel.messages.pofile import read_po
 import json
-from   pathlib import Path
+from pathlib import Path
+
 
 def compile_for_theme(theme_path):
     print(theme_path)
@@ -15,10 +16,11 @@ def compile_for_theme(theme_path):
         with open(po.with_suffix('.mo'), 'wb') as f:
             write_mo(f, catalog)
 
-        js_entries = [m for m in catalog if any(Path(n).suffix in ('.js', '.mjs') for n,_ in m.locations)]
+        js_entries = [m for m in catalog if any(Path(n).suffix in ('.js', '.mjs') for n, _ in m.locations)]
         js_map = {m.id: m.string for m in js_entries}
         with open(po.with_suffix('.mjs'), 'w') as f:
             f.write(f'export default {json.dumps(js_map)}')
+
 
 if __name__ == '__main__':
     themes = Path('themes')

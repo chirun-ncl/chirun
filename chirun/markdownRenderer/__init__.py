@@ -1,10 +1,10 @@
-from   chirun.markdownRenderer.arithmatex import ArithmatexExtension
+from chirun.markdownRenderer.arithmatex import ArithmatexExtension
 import chirun.markdownRenderer.codemirror
-from   markdown import markdown
+from markdown import markdown
 import re
-from   .image_processor.imgproc import ImageProcessorExtension
-from   .link_processor.linkproc import LinkProcessorExtension
-from   .markdown_figure.mdfigure import FigureExtension
+from .image_processor.imgproc import ImageProcessorExtension
+from .link_processor.linkproc import LinkProcessorExtension
+from .markdown_figure.mdfigure import FigureExtension
 
 
 class MarkdownRenderer(object):
@@ -59,7 +59,7 @@ class MarkdownRenderer(object):
         output = ''
         for section_md in sections:
             content = markdown(section_md, extensions=mdx_extensions,
-                           extension_configs=self.extension_configs)
+                               extension_configs=self.extension_configs)
             output += f'<section>\n{content}\n</section>\n'
 
         return output

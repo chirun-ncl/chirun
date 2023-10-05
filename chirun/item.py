@@ -100,7 +100,7 @@ class Item(object):
     def out_path(self):
         slug = self.slug
         if self.is_hidden:
-            slug += '-'+self.course.hash_string(self.slug)[:8]
+            slug += '-' + self.course.hash_string(self.slug)[:8]
         path = PurePath(slug)
         if self.parent:
             path = self.parent.out_path / path
@@ -114,7 +114,7 @@ class Item(object):
     def named_out_file(self):
         return self.out_path / PurePath(self.slug)
 
-    def plastex_filename_rules(self, out_file = None):
+    def plastex_filename_rules(self, out_file=None):
         if out_file is None:
             return self.out_file
         else:
@@ -169,7 +169,7 @@ class Item(object):
 
         return body
 
-    def build_html(self, out_file = None):
+    def build_html(self, out_file=None):
         if 'html' in self.data:
             html = self.data['html']
         else:
@@ -180,7 +180,7 @@ class Item(object):
                     outPath = (self.course.get_build_dir() / self.out_file).parent
                     html = self.markdownRenderer.render(self, outPath)
                 elif ext == '.tex':
-                    plastex_output = self.course.load_latex_content(self, out_file = out_file)
+                    plastex_output = self.course.load_latex_content(self, out_file=out_file)
                     rendered_filename = str(out_file.name) if out_file is not None else 'index.html'
                     html = plastex_output[rendered_filename]['html']
                 elif ext == '.html':
@@ -194,8 +194,8 @@ class Item(object):
         self.html = html
         self.headers = headers
 
-    def as_html(self, out_file = None):
-        self.build_html(out_file = out_file)
+    def as_html(self, out_file=None):
+        self.build_html(out_file=out_file)
 
         return self.html
 
@@ -249,13 +249,14 @@ class Item(object):
             A list of formats that this item has been rendered to.
         """
         formats = [
-            {'format': 'default', 'filetype': 'html', 'url': self.url,}
+            {'format': 'default', 'filetype': 'html', 'url': self.url, }
         ]
 
         if self.has_pdf:
-            formats.append({'format': 'default', 'filetype': 'pdf', 'url': self.pdf_url,})
+            formats.append({'format': 'default', 'filetype': 'pdf', 'url': self.pdf_url, })
 
         return formats
+
 
 class Html(Item):
     type = 'html'
@@ -274,12 +275,15 @@ class Html(Item):
     def out_file(self):
         return self.out_path / self.in_file
 
+
 class ExtractedSection(Html):
     """
         A section extracted from a Document item.
-        The content is always HTML, but this subclass is used so extracted items can be distinguished from source HTML items in the manifest.
+        The content is always HTML, but this subclass is used so extracted items
+        can be distinguished from source HTML items in the manifest.
     """
     type = 'extractedsection'
+
 
 class Part(Item):
     type = 'part'
@@ -303,7 +307,8 @@ class Part(Item):
 
 class Document(Item):
     """
-        A single document which will produce several items - an HTML item for each section at the given splitlevel, with a Part structure for higher levels.
+        A single document which will produce several items - an HTML item for each
+        section at the given splitlevel, with a Part structure for higher levels.
     """
     type = 'document'
     title = 'Untitled document'
@@ -420,7 +425,7 @@ class Document(Item):
                     setup_pdf_url(item, chapter)
                     parent.content.append(item)
                     self.template_name = 'part.html'
-            if(len(self.content) > 0):
+            if (len(self.content) > 0):
                 self.has_pdf = False
             self.generated = True
             logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
@@ -463,7 +468,7 @@ class Document(Item):
                 logger.warning("Warning: Document splitting is currently unsupported for markdown "
                                "source items ({})".format(self.source))
 
-    def plastex_filename_rules(self, out_file = None):
+    def plastex_filename_rules(self, out_file=None):
         if out_file is None:
             out_file = self.out_path
         fnstr = Path(out_file) / '[$id, $title(4), $num(4)]'
@@ -544,7 +549,7 @@ class Slides(Chapter):
     def formats_manifest(self):
         formats = super().formats_manifest()
 
-        formats.append({'format': 'slides', 'filetype': 'html', 'url': self.slides_url,})
+        formats.append({'format': 'slides', 'filetype': 'html', 'url': self.slides_url, })
 
         return formats
 
@@ -559,6 +564,7 @@ class Slides(Chapter):
     def alternative_formats(self):
         yield {'name': 'Slides', 'url': self.slides_url}
         yield from super().alternative_formats()
+
 
 class Introduction(Part):
     type = 'introduction'
@@ -599,6 +605,7 @@ class Notebook(Chapter):
     def alternative_formats(self):
         yield from super().alternative_formats()
         yield {'name': 'Notebook', 'url': self.nb_url, 'download': True}
+
 
 item_types = {
     'introduction': Introduction,

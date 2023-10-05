@@ -17,10 +17,11 @@ def copytree(src, dst, symlinks=False, ignore=None):
         else:
             shutil.copy2(s, d)
 
-def slugify(value, v=0):
-    slug = re.sub(r'[\W_]+','_', value).lower()[:20]
 
-    if(v > 0):
+def slugify(value, v=0):
+    slug = re.sub(r'[\W_]+', '_', value).lower()[:20]
+
+    if v > 0:
         suffix = f'_{v}'
         slug = slug[:-len(suffix)]
         if slug.endswith('_'):

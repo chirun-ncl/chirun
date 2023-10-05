@@ -30,6 +30,7 @@ def runnable_formatter(source, language, css_class, options, md):
     code_language = options.get('lang').lower()
     return f'''<runnable-code language="{code_language}" class="{css_class}">{source}</runnable-code>'''
 
+
 def output_formatter(source, language, css_class, options, md):
     if 'class' in options:
         cls = options['class']

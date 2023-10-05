@@ -1,11 +1,12 @@
-from   babel.support import Translations
-from   jinja2 import Environment, contextfunction
+from babel.support import Translations
+from jinja2 import Environment, contextfunction
 import os
-from   pathlib import Path
-from   plasTeX.DOM import Node
-from   plasTeX.Renderers.PageTemplate import Renderer as _Renderer
-from   plasTeX.Renderers import Renderer as BaseRenderer, Renderable as BaseRenderable
-from   plasTeX.Logging import getLogger
+from pathlib import Path
+import pdb
+from plasTeX.DOM import Node
+from plasTeX.Renderers.PageTemplate import Renderer as _Renderer
+from plasTeX.Renderers import Renderer as BaseRenderer, Renderable as BaseRenderable
+from plasTeX.Logging import getLogger
 import re
 import shlex
 import shutil
@@ -13,30 +14,34 @@ import subprocess
 
 log = getLogger()
 
+
 @contextfunction
 def debug(context):
     pdb.set_trace()
 
+
 jinja_env = Environment(
     trim_blocks=True,
     lstrip_blocks=True,
-    extensions = ['jinja2.ext.i18n',]
+    extensions=['jinja2.ext.i18n',]
 )
 jinja_env.globals['debug'] = debug
 
+
 def jinja2template(s, encoding='utf8'):
     def renderjinja2(obj, s=s):
-        tvars = {'here':obj, 
-                 'obj':obj,
-                 'container':obj.parentNode,
-                 'config':obj.ownerDocument.config,
-                 'context':obj.ownerDocument.context,
-                 'templates':obj.renderer}
+        tvars = {'here': obj,
+                 'obj': obj,
+                 'container': obj.parentNode,
+                 'config': obj.ownerDocument.config,
+                 'context': obj.ownerDocument.context,
+                 'templates': obj.renderer}
 
         tpl = jinja_env.from_string(s)
-        return tpl.render(tvars) 
+        return tpl.render(tvars)
 
     return renderjinja2
+
 
 class Renderable(BaseRenderable):
     @property
@@ -49,6 +54,7 @@ class Renderable(BaseRenderable):
 
         image = Node.renderer.vectorImager.getImage(self)
         return image
+
 
 class HTML5(_Renderer):
     """ Renderer for HTML5 documents, heavily copied from XHTML renderer """
@@ -63,7 +69,6 @@ class HTML5(_Renderer):
         BaseRenderer.__init__(self, *args, **kwargs)
         self.loadedTheme = None
         self.engines = {}
-        htmlexts = ['.html','.htm','.xhtml','.xhtm','.zpt','.pt']
         self.registerEngine('jinja2', None, '.jinja2', jinja2template)
 
     def loadTemplates(self, document):

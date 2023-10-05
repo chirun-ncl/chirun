@@ -13,6 +13,7 @@ from copy import copy
 
 class FigureTreeprocessor(Treeprocessor):
     """ Figure Treeprocessor """
+
     def __init__(self, md, figure_classes=None, img_classes=None):
         Treeprocessor.__init__(self, md)
         self._figure_classes = figure_classes
@@ -72,6 +73,7 @@ class FigureExtension(Extension):
     LightboxImagesExtension
     Extension class for markdown
     """
+
     def __init__(self, **kwargs):
         self.config = {
             'figure_classes': [None, "Class attributes assigned to the <figure /> tag"],

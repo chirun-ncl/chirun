@@ -1102,6 +1102,7 @@ class ColorSeries(Color):
     linearly, and finishes with the end color at the end of the series.
     (c.f. Section 2.9, pg 25, xcolor v2.12, 2016/05/11)
     """
+
     def __init__(self, model: ColorModel, method: str, base: Color,
                  step: List[float] = [], last: Optional[Color] = None) -> None:
         self.model: ColorModel = model
@@ -1796,7 +1797,7 @@ def ProcessOptions(options, document):  # type: ignore
     Sets the target model, loads any requested colors, sets the package
     defaults, and defines the always available 19 color names.
     """
-    colors: Dict[colors] = {}
+    colors: Dict[Color] = {}
     target_model: ColorModel = ColorModel.natural
     if 'rgb' in options or 'RGB' in options:
         target_model = ColorModel.rgb
@@ -1839,6 +1840,7 @@ class ColorCommandClass(Node):
 
 class ColorEnvironment(Environment, ColorCommandClass):
     """A base class for plastex color environments"""
+
     def invoke(self, tex) -> None:
         Environment.invoke(self, tex)
         u = self.ownerDocument.userdata  # type: ignore
@@ -1848,6 +1850,7 @@ class ColorEnvironment(Environment, ColorCommandClass):
 
 class ColorCommand(Command, ColorCommandClass):
     """A base class for plastex color commands"""
+
     def invoke(self, tex) -> None:
         Command.invoke(self, tex)
         u = self.ownerDocument.userdata  # type: ignore

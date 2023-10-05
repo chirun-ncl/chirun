@@ -29,8 +29,10 @@ class divEnv(Environment):
     args = '[ classes:str ] [ style:str ]'
     blockType = True
 
+
 class runnableCode(Base.verbatim):
     args = 'language:str'
+
 
 class _gap(Command):
     args = 'size:dim'

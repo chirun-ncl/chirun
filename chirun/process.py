@@ -40,6 +40,7 @@ class ItemProcess(object):
         for subitem in item.content:
             self.visit(subitem)
 
+
 class SlugCollisionProcess(ItemProcess):
     name = 'Checking for duplicated filenames or paths'
     slugs = {}
@@ -110,8 +111,8 @@ class RenderProcess(ItemProcess):
         pass
 
     def visit_slides(self, item):
-        ext = item.source.suffix
         self.slides_renderer.render_item(item)
+
 
 class PDFProcess(ItemProcess):
 

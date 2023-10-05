@@ -4,8 +4,10 @@ This is the natbib package from plastex v3.
 Once at least v3.0 has been released, this plastex override can be removed
 """
 
-import re, string
+import re
+import string
 from plasTeX import Base, Text
+
 
 def ProcessOptions(options, document):
     """ Process package options """
@@ -13,21 +15,21 @@ def ProcessOptions(options, document):
     new_options = dict()
     punct = {'post': bstyleoption(', '),
              'open': bstyleoption('('),
-             'close':bstyleoption(')'),
-             'sep':  bstyleoption(';'),
-             'style':bstyleoption('a'),
-             'dates':bstyleoption(','),
-             'years':bstyleoption(',')}
+             'close': bstyleoption(')'),
+             'sep': bstyleoption(';'),
+             'style': bstyleoption('a'),
+             'dates': bstyleoption(','),
+             'years': bstyleoption(',')}
     for key, value in options.items():
         if key == 'numbers':
             punct['style'] = 'n'
-            new_options.update({'square':True, 'comma':True})
+            new_options.update({'square': True, 'comma': True})
         elif key == 'super':
             punct['style'] = 's'
             punct['open'] = ''
             punct['close'] = ''
         elif key == 'authoryear':
-            new_options.update({'round':True, 'colon':True})
+            new_options.update({'round': True, 'colon': True})
         elif key == 'round':
             punct['open'] = '('
             punct['close'] = ')'
@@ -48,13 +50,14 @@ def ProcessOptions(options, document):
             Base.bibliography.level = Base.section.level
         elif key == 'sort':
             pass
-        elif key in ['sort&compress','sortandcompress']:
+        elif key in ['sort&compress', 'sortandcompress']:
             pass
         elif key == 'longnamesfirst':
             pass
         elif key == 'nonamebreak':
             pass
     document.userdata['natbib'] = {**options, **new_options, 'punctuation': punct}
+
 
 class bibliography(Base.bibliography):
 
@@ -73,30 +76,31 @@ class bibliography(Base.bibliography):
         self.ownerDocument.context.pop(self)
         Base.bibliography.loadBibliographyFile(self, tex)
 
+
 class bibstyle(Base.Command):
     args = 'style:str'
+
 
 class citestyle(Base.Command):
     args = 'style:str'
 
     styles = {
-        'plain'  : [', ','[',']',',','n','',','],
-        'plainnat':[', ','[',']',',','a',',',','],
-        'chicago': [', ','(',')',';','a',',',','],
-        'chicago': [', ','(',')',';','a',',',','],
-        'named'  : [', ','[',']',';','a',',',','],
-        'agu'    : [', ','[',']',';','a',',',', '],
-        'egs'    : [', ','(',')',';','a',',',','],
-        'agsm'   : [', ','(',')',';','a','',','],
-        'kluwer' : [', ','(',')',';','a','',','],
-        'dcu'    : [', ','(',')',';','a',';',','],
-        'aa'     : [', ','(',')',';','a','',','],
-        'pass'   : [', ','(',')',';','a',',',','],
-        'anngeo' : [', ','(',')',';','a',',',','],
-        'nlinproc':[', ','(',')',';','a',',',','],
-        'cospar' : [', ','/','/',',','n','',''],
-        'esa'    : [', ','(Ref. ',')',',','n','',''],
-        'nature' : [', ','','',',','s','',','],
+        'plain': [', ', '[', ']', ',', 'n', '', ','],
+        'plainnat': [', ', '[', ']', ',', 'a', ',', ','],
+        'chicago': [', ', '(', ')', ';', 'a', ',', ','],
+        'named': [', ', '[', ']', ';', 'a', ',', ','],
+        'agu': [', ', '[', ']', ';', 'a', ',', ', '],
+        'egs': [', ', '(', ')', ';', 'a', ',', ','],
+        'agsm': [', ', '(', ')', ';', 'a', '', ','],
+        'kluwer': [', ', '(', ')', ';', 'a', '', ','],
+        'dcu': [', ', '(', ')', ';', 'a', ';', ','],
+        'aa': [', ', '(', ')', ';', 'a', '', ','],
+        'pass': [', ', '(', ')', ';', 'a', ',', ','],
+        'anngeo': [', ', '(', ')', ';', 'a', ',', ','],
+        'nlinproc': [', ', '(', ')', ';', 'a', ',', ','],
+        'cospar': [', ', '/', '/', ',', 'n', '', ''],
+        'esa': [', ', '(Ref. ', ')', ',', 'n', '', ''],
+        'nature': [', ', '', '', ',', 's', '', ','],
     }
 
     def invoke(self, tex):
@@ -104,17 +108,19 @@ class citestyle(Base.Command):
         try:
             s = self.styles[self.attributes['style']]
         except KeyError:
-        #    log.warning('Could not find bibstyle: "%s"',
-        #                 self.attributes['style'])
+            #    log.warning('Could not find bibstyle: "%s"',
+            #                 self.attributes['style'])
             return res
         p = self.ownerDocument.userdata['natbib']['punctuation']
-        for i, opt in enumerate(['post','open','close','sep','style','dates','years']):
+        for i, opt in enumerate(['post', 'open', 'close', 'sep', 'style', 'dates', 'years']):
             p[opt] = s[i]
         return res
+
 
 class bstyleoption(Text):
     """ Option that can only be overridden by package options,
         citestyle, or bibpunct """
+
 
 class bibliographystyle(citestyle):
     def invoke(self, tex):
@@ -122,19 +128,21 @@ class bibliographystyle(citestyle):
         try:
             s = self.styles[self.attributes['style']]
         except KeyError:
-        #    log.warning('Could not find bibstyle: "%s"',
-        #                 self.attributes['style'])
+            #    log.warning('Could not find bibstyle: "%s"',
+            #                 self.attributes['style'])
             return res
         p = self.ownerDocument.userdata['natbib']['punctuation']
-        for i, opt in enumerate(['post','open','close','sep','style','dates','years']):
+        for i, opt in enumerate(['post', 'open', 'close', 'sep', 'style', 'dates', 'years']):
             if isinstance(p[opt], bstyleoption):
                 p[opt] = s[i]
         return res
+
 
 class bibpunct(Base.Command):
     """ Set up punctuation of citations """
     args = '[ post:str ] open:str close:str sep:str ' + \
            'style:str dates:str years:str'
+
     def invoke(self, tex):
         res = Base.Command.invoke(self, tex)
         punct = self.ownerDocument.userdata['natbib']['punctuation']
@@ -146,6 +154,7 @@ class bibpunct(Base.Command):
             else:
                 punct[key] = value.textContent
         return res
+
 
 class bibcite(Base.Command):
     """ Auxiliary file information """
@@ -165,6 +174,7 @@ class bibcite(Base.Command):
         bibcites[self.attributes['key']] = value
         doc.userdata.setPath('bibliography/bibcites', bibcites)
 
+
 class thebibliography(Base.thebibliography):
 
     class bibitem(Base.thebibliography.bibitem):
@@ -174,21 +184,21 @@ class thebibliography(Base.thebibliography):
             try:
                 doc = self.ownerDocument
                 return doc.userdata.getPath('bibliography/bibcites', {})[self.attributes['key']]
-            except KeyError as msg:
+            except KeyError:
                 pass
             # We don't have a citation that matches, fill the fields
             # with dummy data
             value = self.ownerDocument.createElement('citation')
             value.parentNode = self
             value.append('??')
-            for item in ['year','author','fullauthor']:
+            for item in ['year', 'author', 'fullauthor']:
                 obj = self.ownerDocument.createDocumentFragment()
                 obj.parentNode = value
                 obj.append('??')
                 value.attributes[item] = obj
             return value
 
-        @property # type: ignore # mypy#4125
+        @property  # type: ignore # mypy#4125
         def ref(self):
             return self.bibcite.textContent
 
@@ -196,8 +206,10 @@ class thebibliography(Base.thebibliography):
         def ref(self, value):
             pass
 
+
 class harvarditem(thebibliography.bibitem):
     args = '[ abbrlabel ] label year key:str'
+
 
 class NatBibCite(Base.cite):
     """ Base class for all natbib-style cite commands """
@@ -221,7 +233,7 @@ class NatBibCite(Base.cite):
                 items.append(b[key])
         if len(items) > 1:
             if self.isNumeric() and \
-            ('sort' in opts or 'sort&compress' in opts or 'sortandcompress' in opts):
+                    ('sort' in opts or 'sort&compress' in opts or 'sortandcompress' in opts):
                 items.sort(key=lambda x: int(x.ref))
                 if 'sort&compress' in opts or 'sortandcompress' in opts:
                     items = self.compressRange(items)
@@ -238,7 +250,7 @@ class NatBibCite(Base.cite):
             if i == 0:
                 output.append(' ')
                 output.append(value)
-            elif idx[i-1] == (value-1):
+            elif idx[i - 1] == (value - 1):
                 output.append('-')
                 output.append(value)
             else:
@@ -326,7 +338,7 @@ class NatBibCite(Base.cite):
         return 'author'
 
     def isNumeric(self):
-        return self.punctuation['style'] in ['n','s']
+        return self.punctuation['style'] in ['n', 's']
 
     def isSuperScript(self):
         return self.punctuation['style'] == 's'
@@ -337,7 +349,7 @@ class NatBibCite(Base.cite):
         b.idref['bibitem'] = item
         if text is not None:
             b.append(text)
-        elif self.punctuation['style'] in ['n','s']:
+        elif self.punctuation['style'] in ['n', 's']:
             b.append(item.bibcite)
         else:
             b.append(item.bibcite.attributes['year'])
@@ -347,11 +359,11 @@ class NatBibCite(Base.cite):
         """ Capitalize the first text node """
         item = item.cloneNode(True)
         textnodes = [x for x in item.allChildNodes
-                       if x.nodeType == self.TEXT_NODE]
+                     if x.nodeType == self.TEXT_NODE]
         if not textnodes:
             return item
         node = textnodes.pop(0)
-        node.parentNode.replaceChild(node.cloneNode(True).capitalize() ,node)
+        node.parentNode.replaceChild(node.cloneNode(True).capitalize(), node)
         return item
 
 # class citep(NatBibCite):
@@ -405,7 +417,7 @@ class NatBibCite(Base.cite):
 #                     res.append(self.punctuation['years'])
 #                 else:
 #                     res.append(self.punctuation['years'])
-#                 # Create a new fragment with b,c,d... in it
+#                 # Create a new fragment with b, c, d... in it
 #                 frag = self.ownerDocument.createDocumentFragment()
 #                 frag.append(chr(duplicateyears+ord('b')))
 #                 frag.idref = item
@@ -443,6 +455,7 @@ class NatBibCite(Base.cite):
 #         res.append(self.postnote + self.punctuation['close'])
 #         return res
 
+
 class citet(NatBibCite):
 
     def citation(self, full=False, capitalize=False, text=None):
@@ -466,7 +479,7 @@ class citet(NatBibCite):
                     res.pop()
                     res.pop()
                     # Add year separator
-                    res.append(self.years+' ')
+                    res.append(self.years + ' ')
                 else:
                     author = self.selectAuthorField(item.attributes['key'], full=full)
                     if i == 0 and capitalize:
@@ -480,10 +493,10 @@ class citet(NatBibCite):
             # Year or text
             res.append(self.citeValue(item, text=text))
             # Separator, postnote, and closing punctuation
-            if i < (len(bibitems)-1):
+            if i < (len(bibitems) - 1):
                 if text is None:
                     res.append(self.punctuation['close'])
-                    res.append(self.separator+' ')
+                    res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
                 if text is None:
@@ -509,11 +522,12 @@ class citet(NatBibCite):
                 res.append('-')
                 continue
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
         res.append(self.punctuation['close'])
         res.append(self.postnote)
         return orig
+
 
 class citetfull(citet):
 
@@ -521,10 +535,12 @@ class citetfull(citet):
         """ Jones, Baker, and Williams (1990) """
         return citet.citation(self, full=True)
 
+
 class Citet(citet):
 
     def citation(self):
         return citet.citation(self, capitalize=True)
+
 
 class citep(NatBibCite):
 
@@ -548,17 +564,17 @@ class citep(NatBibCite):
                 # Author, only print author if it wasn't equal to the last author
                 if sameauthor:
                     res.pop()
-                    res.append(self.years+' ')
+                    res.append(self.years + ' ')
                 else:
                     author = self.selectAuthorField(item.attributes['key'], full=full)
                     if i == 0 and capitalize:
                         res.extend(self.capitalize(item.bibcite.attributes[author]))
                     else:
                         res.extend(item.bibcite.attributes[author])
-                    res.append(self.dates+' ')
+                    res.append(self.dates + ' ')
             res.append(self.citeValue(item, text=text))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
                 res.append(self.punctuation['close'])
@@ -583,12 +599,13 @@ class citep(NatBibCite):
                 res.append('-')
                 continue
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
                 res.append(self.punctuation['close'])
         return orig
+
 
 class cite(citep, citet):
 
@@ -597,10 +614,12 @@ class cite(citep, citet):
             return citep.citation(self, full=full, capitalize=capitalize)
         return citet.citation(self, full=full, capitalize=capitalize)
 
+
 class Cite(cite):
 
     def citation(self):
         return cite.citation(self, capitalize=True)
+
 
 class citepfull(citep):
 
@@ -608,10 +627,12 @@ class citepfull(citep):
         """ (Jones, Baker, and Williams, 1990) """
         return citep.citation(self, full=True)
 
+
 class Citep(citep):
 
     def citation(self):
         return citep.citation(self, capitalize=True)
+
 
 class citealt(NatBibCite):
 
@@ -633,7 +654,7 @@ class citealt(NatBibCite):
             # Author, only print author if it wasn't equal to the last author
             if sameauthor:
                 res.pop()
-                res.append(self.years+' ')
+                res.append(self.years + ' ')
             else:
                 author = self.selectAuthorField(item.attributes['key'], full=full)
                 if not item.bibcite.attributes:
@@ -645,8 +666,8 @@ class citealt(NatBibCite):
                 res.append(' ')
                 res.append(self.prenote)
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         return res
@@ -669,11 +690,12 @@ class citealt(NatBibCite):
                 res.append('-')
                 continue
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         return orig
+
 
 class citealtfull(citealt):
 
@@ -681,10 +703,12 @@ class citealtfull(citealt):
         """ Jones, Baker, and Williams 1990 """
         return citealt.citation(self, full=True)
 
+
 class Citealt(citealt):
 
     def citation(self):
         return citealt.citation(self, capitalize=True)
+
 
 class citealp(NatBibCite):
 
@@ -707,7 +731,7 @@ class citealp(NatBibCite):
             # Author, only print author if it wasn't equal to the last author
             if sameauthor:
                 res.pop()
-                res.append(self.years+' ')
+                res.append(self.years + ' ')
             else:
                 author = self.selectAuthorField(item.attributes['key'], full=full)
                 if not item.bibcite.attributes:
@@ -716,10 +740,10 @@ class citealp(NatBibCite):
                     res.extend(self.capitalize(item.bibcite.attributes[author]))
                 else:
                     res.extend(item.bibcite.attributes[author])
-                res.append(self.separator+' ')
+                res.append(self.separator + ' ')
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         return res
@@ -742,10 +766,11 @@ class citealp(NatBibCite):
                 res.append('-')
                 continue
             res.append(self.citeValue(item))
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
         res.append(self.postnote)
         return orig
+
 
 class citealpfull(citealp):
 
@@ -753,10 +778,12 @@ class citealpfull(citealp):
         """ Jones, Baker, and Williams, 1990 """
         return citealp.citation(self, full=True)
 
+
 class Citealp(citealp):
 
     def citation(self):
         return citealp.citation(self, capitalize=True)
+
 
 class citeauthor(NatBibCite):
 
@@ -765,7 +792,6 @@ class citeauthor(NatBibCite):
         if self.isNumeric():
             return
         res = self.ownerDocument.createDocumentFragment()
-        #res.append(self.prenote)
         i = 0
         bibitems = self.bibitems
         for i, item in enumerate(bibitems):
@@ -779,11 +805,12 @@ class citeauthor(NatBibCite):
             else:
                 b.append(item.bibcite.attributes[author])
             res.append(b)
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         return res
+
 
 class citefullauthor(citeauthor):
 
@@ -791,10 +818,12 @@ class citefullauthor(citeauthor):
         """ Jones, Baker, and Williams """
         return citeauthor.citation(self, full=True)
 
+
 class Citeauthor(citeauthor):
 
     def citation(self):
         return citeauthor.citation(self, capitalize=True)
+
 
 class citeyear(NatBibCite):
 
@@ -803,7 +832,6 @@ class citeyear(NatBibCite):
         if self.isNumeric():
             return
         res = self.ownerDocument.createDocumentFragment()
-        #res.append(self.prenote)
         i = 0
         bibitems = self.bibitems
         for i, item in enumerate(bibitems):
@@ -814,11 +842,12 @@ class citeyear(NatBibCite):
             else:
                 b.append(item.bibcite.attributes['year'])
             res.append(b)
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         return res
+
 
 class citeyearpar(NatBibCite):
 
@@ -839,40 +868,50 @@ class citeyearpar(NatBibCite):
             else:
                 b.append(item.bibcite.attributes['year'])
             res.append(b)
-            if i < (len(bibitems)-1):
-                res.append(self.separator+' ')
+            if i < (len(bibitems) - 1):
+                res.append(self.separator + ' ')
             else:
                 res.append(self.postnote)
         res.append(self.punctuation['close'])
         return res
 
+
 class citetext(Base.Command):
     args = 'self'
+
     def digest(self, tokens):
         punct = self.ownerDocument.userdata['natbib']['punctuation']
         self.insert(0, punct['open'])
         self.append(punct['close'])
 
+
 class defcitealias(Base.Command):
     args = 'key:str text'
     aliases = {}
+
     def invoke(self, tex):
         res = Base.Command.invoke(self, tex)
         defcitealias.aliases[self.attributes['key']] = self.attributes['text']
         return res
 
+
 class citetalias(citet):
     args = 'bibkeys:list:str'
+
     def citation(self):
-        return citet.citation(self, text=defcitealias.aliases.get(self.attributes['bibkeys'][0],''))
+        return citet.citation(self, text=defcitealias.aliases.get(self.attributes['bibkeys'][0], ''))
+
 
 class citepalias(citep):
     args = 'bibkeys:list:str'
+
     def citation(self):
-        return citep.citation(self, text=defcitealias.aliases.get(self.attributes['bibkeys'][0],''))
+        return citep.citation(self, text=defcitealias.aliases.get(self.attributes['bibkeys'][0], ''))
+
 
 class shortcites(Base.Command):
     args = 'bibkeys:list:str'
+
 
 class urlstyle(Base.Command):
     pass

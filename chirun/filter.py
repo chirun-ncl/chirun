@@ -1,7 +1,7 @@
 import logging
 import itertools
 import re
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup
 from pathlib import Path
 from base64 import b64encode
 from .oembed import get_oembed_html
@@ -184,16 +184,21 @@ def links_to_data_uri(soup, item):
                                 el[attr] = 'data:{};base64,{}'.format(filetypes[ft], data)
                             break
 
+
 def remove_output_cells(nb, item):
-    nb.cells = list(filter(lambda cell: cell.get('cell_type','') != 'code' or
-                       'output' not in cell.get('metadata', {}).get('attributes', {}).get('classes',[]), nb.cells))
+    nb.cells = list(filter(lambda cell: cell.get('cell_type', '') != 'code'
+                           or 'output' not in cell.get('metadata', {})
+                                                  .get('attributes', {})
+                                                  .get('classes', []), nb.cells))
+
 
 class HTMLFilter(object):
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
                oembed, fix_local_links, dots_pause]
 
     def apply(self, item, html, out_format):
-        soup = BeautifulSoup('<!-- -->'+html, 'html.parser') # An empty comment at the start is added to avoid bs4's MarkupResemblesLocatorWarning
+        # An empty comment at the start is added to avoid bs4's MarkupResemblesLocatorWarning
+        soup = BeautifulSoup('<!-- -->' + html, 'html.parser')
         next(soup.children).extract()                        # and removed immediately, once the HTML is parsed.
         for f in self.filters:
             f(soup, item=item)
@@ -204,14 +209,14 @@ class HTMLFilter(object):
             except KeyError:
                 text = element.text
                 n = 0
-                while soup.find(id=slugify(element.text, n)) is not None:
+                while soup.find(id=slugify(text, n)) is not None:
                     n += 1
-                slug = slugify(element.text, n)
+                slug = slugify(text, n)
                 element['id'] = slug
                 return slug
 
         def level_for(element):
-            header_tags = ['h1','h2','h3','h4','h5','h6']
+            header_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
             try:
                 return header_tags.index(element.name.lower())
             except ValueError:
@@ -220,11 +225,11 @@ class HTMLFilter(object):
         def make_hierarchy(items):
             i = 0
             out = []
-            while i<len(items):
+            while i < len(items):
                 level, e = items[i]
                 i += 1
                 start = i
-                while i<len(items) and items[i][0] > level:
+                while i < len(items) and items[i][0] > level:
                     i += 1
 
                 children = make_hierarchy(items[start:i])
@@ -240,8 +245,10 @@ class HTMLFilter(object):
 
         return str(soup), headers
 
+
 class CellHTMLFilter(HTMLFilter):
     filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, links_to_data_uri]
+
 
 class CellFilter(object):
     filters = [remove_output_cells]

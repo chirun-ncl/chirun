@@ -39,5 +39,6 @@ def main():
 
     print("Output written to {}".format(mc.build_dir.resolve()))
 
+
 if __name__ == "__main__":
     main()

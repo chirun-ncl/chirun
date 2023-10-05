@@ -120,7 +120,7 @@ class enumerate_(List):
         self.listDepth = Lists.List.depth
 
     class item(List.item):
-        @property # type: ignore # mypy#4125
+        @property  # type: ignore # mypy#4125
         def ref(self):
             doc = self.ownerDocument
             frag = doc.createDocumentFragment()
@@ -129,10 +129,10 @@ class enumerate_(List):
             item = self
             node = self.parentNode
             while item is not None:
-                while node is not None and not(isinstance(node, enumerate_)):
+                while node is not None and not (isinstance(node, enumerate_)):
                     item = node
                     node = node.parentNode
-                if not(issubclass(type(item), List.item)):
+                if not (issubclass(type(item), List.item)):
                     break
                 terms.append(node.term(int(str(item._ref))).rstrip('.'))
                 item = node

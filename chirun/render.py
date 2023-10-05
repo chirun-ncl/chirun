@@ -1,22 +1,21 @@
-import asyncio
-from   babel.support import Translations
+from babel.support import Translations
 import chirun.filter
-from   chirun.markdownRenderer import MarkdownRenderer
+from chirun.markdownRenderer import MarkdownRenderer
 import contextlib
 import datetime
-from   http.server import HTTPServer, SimpleHTTPRequestHandler
-from   jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilter, TemplateNotFound
 import logging
 import nbformat
-from   notedown import MarkdownReader
+from notedown import MarkdownReader
 import pyppeteer
 import re
 import socket
 import threading
-from   urllib.parse import urlparse
 from . import mkdir_p
 
 logger = logging.getLogger(__name__)
+
 
 def find_free_port():
     """
@@ -26,21 +25,23 @@ def find_free_port():
         s.bind(('', 0))
         return s.getsockname()[1]
 
+
 def http_server(directory=None, port=8000, end_signal=None):
 
     class Handler(SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=directory, **kwargs)
 
-    server_address = ('' ,port)
+    server_address = ('', port)
     httpd = HTTPServer(server_address, Handler)
     while not end_signal.is_set():
         httpd.handle_request()
 
+
 @contextlib.asynccontextmanager
 async def get_browser(directory):
     """
-        Context manager which opens a headless browser session through pyppeteer, and starts a local HTTP server. 
+        Context manager which opens a headless browser session through pyppeteer, and starts a local HTTP server.
         Both are destroyed when the context is destroyed.
 
         Yields a pair (browser, http_port)
@@ -53,12 +54,12 @@ async def get_browser(directory):
         http_port = find_free_port()
         http_thread = threading.Thread(
             target=http_server,
-            kwargs = {
+            kwargs={
                 'directory': directory,
                 'port': http_port,
                 'end_signal': end_signal
             },
-            daemon = True
+            daemon=True
         )
         http_thread.start()
         while browser is None and attempts < 20:
@@ -84,13 +85,14 @@ async def get_browser(directory):
         await browser.close()
         end_signal.set()
 
+
 class BaseRenderer(object):
     def __init__(self, course):
         self.course = course
         self.env = Environment(
-            loader = FileSystemLoader(str(self.course.theme.template_path)),
-            autoescape = select_autoescape(['html']),
-            extensions = ['jinja2.ext.i18n',]
+            loader=FileSystemLoader(str(self.course.theme.template_path)),
+            autoescape=select_autoescape(['html']),
+            extensions=['jinja2.ext.i18n',]
         )
         try:
             with open(self.course.theme.translations_path, 'rb') as translations_file:
@@ -165,7 +167,7 @@ class BaseRenderer(object):
     def pdf_kwargs(self, item):
         return {
             'path': self.pdf_outPath(item),
-            'format': 'A4', 
+            'format': 'A4',
             'printBackground': True
         }
 
@@ -184,7 +186,7 @@ class BaseRenderer(object):
         absHTMLPath = self.pdf_absHTMLPath(item)
         pdf_kwargs = self.pdf_kwargs(item)
 
-        logger.debug('    {src} => {dest}'.format(src = item.title, dest = pdf_kwargs['path']))
+        logger.debug('    {src} => {dest}'.format(src=item.title, dest=pdf_kwargs['path']))
 
         async with get_browser(root_dir) as (browser, port):
             page = await browser.newPage()
@@ -197,6 +199,7 @@ class BaseRenderer(object):
         await page.waitForFunction('window.mathjax_is_loaded == 1', options={'timeout': 100000})
         await page.evaluate(r'''(function() { MathJax.typesetPromise().then(() => window.mathjax_has_run = true)})''')
         await page.waitForFunction('window.mathjax_has_run && document.fonts.ready', options={'timeout': 10000})
+
 
 class Renderer(BaseRenderer):
     def pdf_kwargs(self, item):
@@ -211,6 +214,7 @@ class Renderer(BaseRenderer):
         })
 
         return kwargs
+
 
 class SlidesRenderer(BaseRenderer):
     def __init__(self, course):
@@ -243,6 +247,7 @@ class SlidesRenderer(BaseRenderer):
 
     def pdf_outPath(self, item):
         return self.course.get_build_dir() / item.named_out_file.with_suffix('.pdf')
+
 
 class NotebookRenderer(object):
     def __init__(self, course):

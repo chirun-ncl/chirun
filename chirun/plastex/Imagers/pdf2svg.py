@@ -34,9 +34,9 @@ class PDFSVG(VectorImager):
                 plasTeX.Imagers.Image
         """
         path = self.newFilename()
-        Path(path).parent.mkdir(exist_ok=True,parents=True)
+        Path(path).parent.mkdir(exist_ok=True, parents=True)
         cmd = ['pdf2svg', name, path]
-        r = subprocess.run(cmd)
+        subprocess.run(cmd)
         img = Image(path, self.ownerDocument.config['images'])
         self.staticimages[name] = img
         return img
