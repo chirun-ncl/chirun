@@ -1,7 +1,7 @@
-name: math
+name: math ensuremath
 {{ obj.source }}
 
-name: ensuremath gather gather* flalign flalign* \
+name: gather gather* flalign flalign* \
       multline multline* alignat alignat* split DeclareMathOperator
 <span class="dmath"><script type="math/tex; mode=display">{{ obj.source }}</script></span>
 
