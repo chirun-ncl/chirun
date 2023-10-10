@@ -682,6 +682,9 @@ figure {
     text-align: center;
     margin: var(--spacing) 0;
 }
+figcaption {
+    padding: 0 calc(2 * var(--spacing));
+}
 
 figure + em, .reveal figure + em {
     display: inherit;
@@ -825,4 +828,15 @@ a.footnote sup {
 .framed-leftbar {
     border-left: 0.25em solid var(--text-colour);
     padding: 0 0 0 var(--spacing);
+}
+
+.parbox {
+    display: inline-block;
+}
+
+mjx-container {
+    max-width: 100%;
+    min-width: auto !important;
+    overflow: auto hidden;
+    padding: 0.5em 0;
 }
