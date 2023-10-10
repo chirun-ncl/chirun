@@ -14,7 +14,7 @@ from chirun.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
 import plasTeX.Logging
-from plasTeX.Config import config as plastex_config
+from plasTeX.Config import defaultConfig
 import chirun.plasTeXRenderer.Config as html_config
 from chirun.plastex import overrides
 
@@ -33,8 +33,8 @@ def reset_idgen():
 
     plasTeX.idgen = idgen()
 
-
-plastex_config += html_config.config
+plastex_config = defaultConfig(loadConfigFiles = False)
+html_config.addConfig(plastex_config)
 
 logger = getLogger()
 imagelog = getLogger('imager')
@@ -174,7 +174,7 @@ class PlastexRunner:
 
         f = open(str(Path(wd) / inPath))
         TeX.processIfContent = _processIfContent
-        tex = TeX(self.document, myfile=f)
+        tex = TeX(self.document, file=f)
         self.document.userdata['jobname'] = tex.jobname
         self.document.userdata['translations_path'] = item.course.theme.translations_path
         pauxname = os.path.join(self.document.userdata.get('working-dir', '.'),
