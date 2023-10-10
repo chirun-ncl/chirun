@@ -133,15 +133,18 @@ class PlastexRunner:
             filepath = item.temp_path() / filename
             if filepath.is_file():
                 with open(filepath, encoding='utf-8-sig') as f:
-                    plastex_output[filepath.name] = {
-                        # TODO: an abstraction for applying the following as a series of filters
-                        'html': getEmbeddedImages(self, f.read(), item),
-                        'title': section.title if isinstance(section.title, str) else section.title.textContent.strip(),
-                        'source': filepath.name,
-                        'level': getattr(section, 'level', None),
-                        'counter': getattr(section, 'counter', None),
-                        'ref': section.ref.textContent.strip() if section.ref else None
-                    }
+                    html = getEmbeddedImages(self, f.read(), item)
+
+                plastex_output[filepath.name] = {
+                    # TODO: an abstraction for applying the following as a series of filters
+                    'html': html,
+                    'title': section.title if isinstance(section.title, str) else section.title.textContent.strip(),
+                    'source': filepath.name,
+                    'level': getattr(section, 'level', None),
+                    'counter': getattr(section, 'counter', None),
+                    'ref': section.ref.textContent.strip() if section.ref else None
+                }
+
         return plastex_output
 
     def runPlastex(self, item, out_file=None):
