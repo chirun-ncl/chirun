@@ -709,8 +709,36 @@ figure + em, .reveal figure + em {
     list-style-type: disc;
 }
 
-:is(.bibliography, .itemize, .enumerate) > li > p:first-of-type {
+:is(.bibliography, .itemize, .enumerate) > li > p:first-of-type,
+:is(.bibliography, .itemize, .enumerate) > li > .list-item-content > p:first-of-type {
     display: inline;
+}
+
+:is(.enumerate,.itemize).custom-terms {
+    display: grid;
+    list-style: none;
+    padding: 0 0 0 var(--spacing);
+    grid-template-columns: fit-content(50%) 1fr;
+    align-content: start;
+    grid-gap: var(--spacing) 0.5em;
+}
+:is(.enumerate,.itemize).custom-terms > li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-columns: subgrid;
+    grid-column: 1/3;
+    margin: 0;
+    grid-gap: inherit;
+}
+:is(.enumerate,.itemize).custom-terms .list-item-marker {
+    text-align: right;
+    align-self: baseline;
+}
+:is(.enumerate,.itemize).custom-terms .list-item-content {
+    align-self: baseline;
+}
+.itemize.custom-terms .list-item-marker.default-marker::before {
+    content: '🞄';
 }
 
 .bibliography .bibcite {

@@ -25,8 +25,10 @@ class List(Lists.List):
                     continue
                 tokens.push(tok)
                 break
+
         Environment.digest(self, tokens)
 
+        self.has_custom_terms = any(tok.nodeName == 'item' and tok.attributes.get('term') is not None for tok in self.childNodes)
 
 Lists.List = List
 
