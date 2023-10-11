@@ -1,10 +1,9 @@
-from plasTeX.PackageResource import (PackageTemplateDir)
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command, sourceArguments
 
 
 def ProcessOptions(options, document):
-    tpl = PackageTemplateDir(renderers='html5', package='dsfont')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='dsfont')
 
 
 class mathds(Command):

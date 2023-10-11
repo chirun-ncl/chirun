@@ -1,10 +1,9 @@
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command
-from plasTeX.PackageResource import PackageTemplateDir
 
 
 def ProcessOptions(options, document):
-    tpl = PackageTemplateDir(renderers='html5', package='polynom')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='polynom')
 
 
 class polylongdiv(Command):

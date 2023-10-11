@@ -1,8 +1,8 @@
+from chirun.plasTeXRenderer import add_package_templates
+from chirun.plastex.overrides.natbib import citealt
 from plasTeX import Command, Environment, TheCounter
 from plasTeX.Base.LaTeX.Footnotes import footnote
-from chirun.plastex.overrides.natbib import citealt
 from plasTeX.Base.LaTeX import Sectioning
-from plasTeX.PackageResource import PackageTemplateDir
 
 
 def ProcessOptions(options, document):
@@ -23,8 +23,7 @@ def ProcessOptions(options, document):
     natbib.ProcessOptions({'numbers': True, 'sort&compress': True}, document)
 
     # Use the jinja templates in plastexRenderer/revtex4-2/
-    tpl = PackageTemplateDir(renderers='html5', package='revtex4-2')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='revtex4-2')
 
 
 # Override default section numbering depth to match revTeX documentclass

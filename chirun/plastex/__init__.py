@@ -4,19 +4,21 @@ import os
 import shutil
 import sys
 from chirun import mkdir_p
-from chirun.plastex.Imagers.pdf2svg import Imager as VectorImager
-from chirun.plastex.Imagers.pdftoppm import Imager as Imager
+from chirun.plasTeXRenderer.Imagers.pdf2svg import Imager as VectorImager
+from chirun.plasTeXRenderer.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
 import plasTeX
-from plasTeX import Environment, TeXDocument
+from plasTeX import Environment
+import plasTeX.Compile
 from plasTeX.Tokenizer import EscapeSequence
-from chirun.plasTeXRenderer import Renderer
 from plasTeX.TeX import TeX
 from plasTeX.Logging import getLogger
 import plasTeX.Logging
 from plasTeX.Config import defaultConfig
-import chirun.plasTeXRenderer.Config as html_config
-from chirun.plastex import overrides
+from plasTeX.ConfigManager import ConfigManager
+from chirun.plasTeXRenderer.Renderers.ChirunRenderer import Renderer
+import chirun.plasTeXRenderer.Renderers.ChirunRenderer.Config as html_config
+from . import overrides
 
 
 def reset_idgen():
@@ -33,15 +35,9 @@ def reset_idgen():
 
     plasTeX.idgen = idgen()
 
-plastex_config = defaultConfig(loadConfigFiles = False)
-html_config.addConfig(plastex_config)
-
 logger = getLogger()
 imagelog = getLogger('imager')
 imagelog.setLevel('INFO')
-
-# Add chirun's custom plastex packages to the path
-sys.path.insert(0, os.path.dirname(__file__))
 
 
 def getEmbeddedImages(course, html, item):
@@ -147,60 +143,95 @@ class PlastexRunner:
 
         return plastex_output
 
+    def parse(self, filename: str, config: ConfigManager) -> TeX:
+        """ 
+            Modified from plasTeX.Compile.parse.
+        """
+
+        # Create document instance that output will be put into
+        document = self.document = plasTeX.TeXDocument(config=config)
+
+        document.context.importMacros(vars(overrides))
+        TeX.processIfContent = _processIfContent     # TODO - check if this changed in plasTeX 3
+
+        # Instantiate the TeX processor
+        tex = TeX(document, file=str(filename))
+
+        # Populate variables for use later
+        if config['document']['title']:
+            document.userdata['title'] = config['document']['title']
+
+        jobname = document.userdata['jobname'] = tex.jobname
+        cwd = document.userdata['working-dir'] = '.'
+
+        # Load aux files for cross-document references
+        pauxname = '%s.paux' % jobname
+        rname = config['general']['renderer']
+        for dirname in [cwd] + config['general']['paux-dirs']:
+            for fname in glob.glob(os.path.join(dirname, '*.paux')):
+                if os.path.basename(fname) == pauxname:
+                    continue
+                document.context.restore(fname, rname)
+
+        # Parse the document
+        tex.parse()
+        return tex
+
     def runPlastex(self, item, out_file=None):
         if not item.course.args.veryverbose:
             plasTeX.Logging.disableLogging()
+
+        wd = os.getcwd()
 
         logger.debug("PlasTeX: " + str(item.source))
         root_dir = self.get_root_dir()
         outPath = item.temp_path()
         outPaux = self.temp_path().resolve()
-        inPath = root_dir / item.source
-
-        wd = os.getcwd()
+        inPath = Path(wd) / root_dir / item.source
 
         reset_idgen()
 
-        plastex_config['files']['filename'] = item.plastex_filename_rules(out_file)
+        plastex_config = defaultConfig(loadConfigFiles = False)
+        plastex_config['general']['plugins'].append('chirun.plasTeXRenderer')
+        plastex_config['general']['plugins'].append('chirun.plastex')
+        html_config.addConfig(plastex_config)
+
+        plastex_config['files']['filename'] = str(item.plastex_filename_rules(out_file))
         plastex_config['files']['split-level'] = item.splitlevel
-        plastex_config['general']['renderer'] = 'chirun'
+        plastex_config['general']['renderer'] = 'ChirunRenderer'
         plastex_config['document']['base-url'] = self.get_web_root()
         plastex_config['images']['vector-imager'] = 'none'
         plastex_config['images']['imager'] = 'none'
-        self.document = TeXDocument(config=plastex_config)
-        self.document.userdata['working-dir'] = '.'
 
-        self.document.context.importMacros(vars(overrides))
-
-        f = open(str(Path(wd) / inPath))
-        TeX.processIfContent = _processIfContent
-        tex = TeX(self.document, file=f)
-        self.document.userdata['jobname'] = tex.jobname
-        self.document.userdata['translations_path'] = item.course.theme.translations_path
-        pauxname = os.path.join(self.document.userdata.get('working-dir', '.'),
-                                '%s.paux' % self.document.userdata.get('jobname', ''))
-
-        for fname in glob.glob(str(outPaux / '*.paux')):
-            if os.path.basename(fname) == pauxname:
-                continue
-            self.document.context.restore(fname, 'chirun')
 
         sys.excepthook = PlastexRunner.exception_handler
-        tex.parse()
-        f.close()
 
-        os.chdir(str(outPath))
-        self.renderer = Renderer()
-        self.renderer.loadTemplates(self.document)
-        self.renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
-        self.renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
-        self.renderer.imager = Imager(self.document, self.renderer.imageTypes)
-        self.renderer.render(self.document)
+        tex = self.parse(inPath, plastex_config)
+        document = tex.ownerDocument
+        cwd = document.userdata['working-dir'] = '.'
+        jobname = document.userdata['jobname'] = tex.jobname
+
+        os.chdir(outPath)
+
+        renderer = self.renderer = Renderer()
+        #renderer.loadTemplates(self.document)
+        renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
+        renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
+        renderer.imager = Imager(self.document, self.renderer.imageTypes)
+
+        # Apply renderer
+        try:
+            renderer.render(document)
+        except AttributeError as e:
+            import traceback
+            traceback.print_exc()
+            raise e
 
         os.chdir(wd)
 
         original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
         collated_paux_path = self.temp_path() / (str(item.out_path).replace('/', '-') + '.paux')
+
         shutil.copyfile(str(original_paux_path), str(collated_paux_path))
 
 

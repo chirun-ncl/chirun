@@ -1,10 +1,9 @@
-from plasTeX.PackageResource import (PackageTemplateDir)
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX.Base.LaTeX import Floats
 
 
 def ProcessOptions(options, document):
-    tpl = PackageTemplateDir(renderers='html5', package='caption')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='caption')
 
 
 class Caption(Floats.Caption):

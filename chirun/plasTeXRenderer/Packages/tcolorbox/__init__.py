@@ -1,12 +1,11 @@
-from plasTeX.PackageResource import (PackageTemplateDir)
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Environment
 
 from chirun.plastex.color import latex2htmlcolor
 
 
 def ProcessOptions(options, document):
-    tpl = PackageTemplateDir(renderers='html5', package='tcolorbox')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='tcolorbox')
 
 
 class tcolorbox(Environment):

@@ -1,4 +1,4 @@
-from plasTeX.PackageResource import (PackageTemplateDir)
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command, Environment
 from plasTeX.Base.LaTeX.Lists import List
 
@@ -19,8 +19,7 @@ def ProcessOptions(options, document):
     document.userdata['sectlet'] = ''
     document.userdata['sectsep'] = ''
 
-    tpl = PackageTemplateDir(renderers='html5', package='nclexam')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='nclexam')
 
 
 class question(Environment):

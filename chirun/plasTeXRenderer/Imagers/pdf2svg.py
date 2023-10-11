@@ -41,31 +41,34 @@ class PDFSVG(VectorImager):
         self.staticimages[name] = img
         return img
 
-    def executeConverter(self, output):
-        while Path(self.imagesFilename).exists():
-            self.imagesFilename = binascii.b2a_hex(os.urandom(5)).decode("utf-8") + '-' + self.imagesFilename
-        while Path(self.croppedImagesFilename).exists():
-            self.croppedImagesFilename = (binascii.b2a_hex(os.urandom(5)).decode("utf-8")
-                                          + '-' + self.croppedImagesFilename)
+    def executeConverter(self, outfile=None):
+        if outfile is None:
+            outfile = self.tmpFile.with_suffix('.pdf').name
 
-        open(self.imagesFilename, 'wb').write(output.read())
-        subprocess.call(["pdfcrop", self.imagesFilename, self.croppedImagesFilename], stdout=subprocess.PIPE)
+        subprocess.call(["pdfcrop", outfile, self.tmpFile.with_suffix('.cropped.pdf').name], stdout=subprocess.DEVNULL)
 
-        rc = 0
-        page = 1
-        while 1:
-            filename = 'img%d.svg' % page
-            rc = subprocess.call(['pdf2svg', self.croppedImagesFilename, filename, str(page)], stdout=subprocess.PIPE)
-            if rc:
-                break
+        images = []
+        for no, line in enumerate(open("images.csv")):
+            filename = 'img%d.svg' % no
+            page, output, scale_str = line.split(",")
+            scale = float(scale_str.strip())
+            images.append((filename, output.rstrip()))
 
-            if not open(filename).read().strip():
-                os.remove(filename)
-                break
-            page += 1
-            if page > len(self.images):
-                break
-        return rc, None
+            subprocess.run(['pdf2svg', self.tmpFile.with_suffix('.cropped.pdf').name, filename, str(page)], stdout=subprocess.DEVNULL, check=True)
+
+            if scale != 1:
+                tree = ET.parse(filename)
+                root = tree.getroot()
+
+                for attrib in ["width", "height"]:
+                    m = length_re.match(root.attrib[attrib])
+                    if m is None:
+                        raise ValueError
+                    root.attrib[attrib] = "{:.2f}{}".format(float(m.group(1)) * scale, m.group(2))
+
+                tree.write(filename)
+
+        return images
 
     def writePreamble(self, document):
         ret = super().writePreamble(document)

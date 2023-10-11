@@ -1,4 +1,4 @@
-from plasTeX.PackageResource import (PackageTemplateDir)
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command
 from plasTeX.Base.LaTeX.Boxes import minipage
 from plasTeX.Base.LaTeX.Floats import figure, table, Caption
@@ -6,10 +6,9 @@ from plasTeX.Base.LaTeX.Floats import figure, table, Caption
 
 def ProcessOptions(options, document):
     context = document.context
-    tpl = PackageTemplateDir(renderers='html5', package='subcaption')
     context.newcounter('subfigure', resetby='figure', format='${thefigure}${subfigure.alph}')
     context.newcounter('subtable', resetby='table', format='${thetable}${subtable.alph}')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='subcaption')
 
 
 class subref(Command):

@@ -1,19 +1,11 @@
+from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command, Environment
-from plasTeX.TeX import TeX
-from plasTeX.Packages.beamer import *  # noqa: F401, F403
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
-from plasTeX.Packages.hyperref import *  # noqa: F401, F403
-from chirun.plastex.graphicx import *  # noqa: F401, F403
-from chirun.plastex.overrides.lists import *  # noqa: F401, F403
-
-from plasTeX.PackageResource import (PackageTemplateDir)
 
 
 def ProcessOptions(options, document):
     context = document.context
-    # Load graphicx
-    context.loadPackage(TeX, 'graphicx', {})
 
     # Lists
     context.newcounter('enumi')
@@ -21,8 +13,7 @@ def ProcessOptions(options, document):
     context.newcounter('enumiii', resetby='enumii')
     context.newcounter('enumiv', resetby='enumiii')
 
-    tpl = PackageTemplateDir(renderers='html5', package='beamer')
-    document.addPackageResource([tpl])
+    add_package_templates(document, package='beamer')
 
 
 class frame(plasTeX.Packages.beamer.frame):
