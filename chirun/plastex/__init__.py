@@ -181,60 +181,67 @@ class PlastexRunner:
         if not item.course.args.veryverbose:
             plasTeX.Logging.disableLogging()
 
-        wd = os.getcwd()
-
-        logger.debug("PlasTeX: " + str(item.source))
-        root_dir = self.get_root_dir()
-        outPath = item.temp_path().resolve()
-        outPaux = self.temp_path().resolve()
-        inPath = Path(wd) / root_dir / item.source
-
-        os.chdir(inPath.parent)
-
-        reset_idgen()
-
-        plastex_config = defaultConfig(loadConfigFiles = False)
-        plastex_config['general']['plugins'].append('chirun.plasTeXRenderer')
-        plastex_config['general']['plugins'].append('chirun.plastex')
-        html_config.addConfig(plastex_config)
-
-        plastex_config['files']['filename'] = str(item.plastex_filename_rules(out_file))
-        plastex_config['files']['split-level'] = item.splitlevel
-        plastex_config['general']['renderer'] = 'ChirunRenderer'
-        plastex_config['document']['base-url'] = self.get_web_root()
-        plastex_config['images']['vector-imager'] = 'none'
-        plastex_config['images']['imager'] = 'none'
-
-
-        sys.excepthook = PlastexRunner.exception_handler
-
-        tex = self.parse(inPath, plastex_config)
-        document = tex.ownerDocument
-        cwd = document.userdata['working-dir'] = '.'
-        jobname = document.userdata['jobname'] = tex.jobname
-
-        os.chdir(outPath)
-
-        renderer = self.renderer = Renderer()
-        #renderer.loadTemplates(self.document)
-        renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
-        renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
-        renderer.imager = Imager(self.document, self.renderer.imageTypes)
-
-        # Apply renderer
+        old_texinputs = os.environ['TEXINPUTS']
         try:
-            renderer.render(document)
-        except AttributeError as e:
-            import traceback
-            traceback.print_exc()
-            raise e
+            wd = os.getcwd()
 
-        os.chdir(wd)
+            logger.debug("PlasTeX: " + str(item.source))
+            root_dir = self.get_root_dir()
+            outPath = item.temp_path().resolve()
+            outPaux = self.temp_path().resolve()
+            inPath = Path(wd) / root_dir / item.source
 
-        original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
-        collated_paux_path = self.temp_path() / (str(item.out_path).replace('/', '-') + '.paux')
+            os.environ['TEXINPUTS'] += f':{inPath.parent}'
 
-        shutil.copyfile(str(original_paux_path), str(collated_paux_path))
+            os.chdir(inPath.parent)
+
+            reset_idgen()
+
+            plastex_config = defaultConfig(loadConfigFiles = False)
+            plastex_config['general']['plugins'].append('chirun.plasTeXRenderer')
+            plastex_config['general']['plugins'].append('chirun.plastex')
+            html_config.addConfig(plastex_config)
+
+            plastex_config['files']['filename'] = str(item.plastex_filename_rules(out_file))
+            plastex_config['files']['split-level'] = item.splitlevel
+            plastex_config['general']['renderer'] = 'ChirunRenderer'
+            plastex_config['document']['base-url'] = self.get_web_root()
+            plastex_config['images']['vector-imager'] = 'none'
+            plastex_config['images']['imager'] = 'none'
+
+
+            sys.excepthook = PlastexRunner.exception_handler
+
+            tex = self.parse(inPath, plastex_config)
+            document = tex.ownerDocument
+            cwd = document.userdata['working-dir'] = '.'
+            jobname = document.userdata['jobname'] = tex.jobname
+
+            os.chdir(outPath)
+
+            renderer = self.renderer = Renderer()
+            #renderer.loadTemplates(self.document)
+            renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
+            renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
+            renderer.imager = Imager(self.document, self.renderer.imageTypes)
+
+            # Apply renderer
+            try:
+                renderer.render(document)
+            except AttributeError as e:
+                import traceback
+                traceback.print_exc()
+                raise e
+
+            os.chdir(wd)
+
+            original_paux_path = item.temp_path() / item.base_file.with_suffix('.paux')
+            collated_paux_path = self.temp_path() / (str(item.out_path).replace('/', '-') + '.paux')
+
+            shutil.copyfile(str(original_paux_path), str(collated_paux_path))
+
+        finally:
+            os.environ['TEXINPUTS'] = old_texinputs
 
 
 class NoCharSubEnvironment(Environment):
