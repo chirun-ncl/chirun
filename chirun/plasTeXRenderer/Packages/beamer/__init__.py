@@ -1,11 +1,15 @@
 from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command, Environment
+from plasTeX.TeX import TeX
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer
 
 
 def ProcessOptions(options, document):
     context = document.context
+
+    tex = TeX(ownerDocument=document)
+    document.context.loadPackage(tex, 'graphicx.sty', {})
 
     # Lists
     context.newcounter('enumi')
