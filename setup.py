@@ -6,7 +6,7 @@ except ImportError:
 
 setup(name="chirun",
       description="Produce flexible and accessible course notes, in a variety of formats, using LaTeX or Markdown source",
-      version="1.0.0",
+      version="1.1.0",
       author="Digital Learning Team, School of Mathematics, Statistics & Physics, Newcastle University",
       author_email="msp.digital.learning@ncl.ac.uk",
       url="https://chirun.org.uk",
