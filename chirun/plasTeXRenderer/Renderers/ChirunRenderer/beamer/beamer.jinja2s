@@ -17,7 +17,7 @@ name: titlepage
     {% endif %}
 </section>
 
-name: frameenv
+name: frame frameenv
 <section class="beamer-frame">
 {% if obj.title %}
 <header>
