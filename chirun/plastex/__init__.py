@@ -185,9 +185,11 @@ class PlastexRunner:
 
         logger.debug("PlasTeX: " + str(item.source))
         root_dir = self.get_root_dir()
-        outPath = item.temp_path()
+        outPath = item.temp_path().resolve()
         outPaux = self.temp_path().resolve()
         inPath = Path(wd) / root_dir / item.source
+
+        os.chdir(inPath.parent)
 
         reset_idgen()
 
