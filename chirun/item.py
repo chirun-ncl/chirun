@@ -164,6 +164,7 @@ class Item(object):
             elif ext == '.tex':
                 plastex_output = self.course.load_latex_content(self)
                 body = plastex_output['index.html']['html']
+                self.data['html'] = body
             else:
                 raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
 
@@ -191,7 +192,7 @@ class Item(object):
 
         html, headers = HTMLFilter().apply(self, html, out_format='html')
 
-        self.html = html
+        self.html = self.data['html'] = html
         self.headers = headers
 
     def as_html(self, out_file=None):
