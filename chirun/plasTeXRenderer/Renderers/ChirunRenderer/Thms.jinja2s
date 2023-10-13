@@ -1,6 +1,6 @@
 name: thmenv
 <div class="thmwrapper {{ obj.thmName }}_thmwrapper {% if obj.style %}theorem-style-{{ obj.style }}{% endif %}" id="{{ obj.id }}">
-  <div class="thmheading {{ obj.thmName }}_thmheading">
+  <h5 class="thmheading {{ obj.thmName }}_thmheading">
     <span class="thmcaption {{ obj.thmName }}_thmcaption">
     {{ obj.caption }}
     </span>
@@ -10,7 +10,7 @@ name: thmenv
     {% if obj.title %}
     <span class="thmtitle {{obj.thmName}}_thmtitle">({{ obj.title }})</span>
     {% endif %}
-  </div>
+  </h5>
   <div class="thmcontent {{ obj.thmName }}_thmcontent">
   {{ obj }}
   </div>
@@ -18,7 +18,7 @@ name: thmenv
 
 name: proof
 <div class="proof_wrapper" id="{{ obj.id }}">
-  <div class="proof_heading">
+  <h5 class="proof_heading">
     <span class="proof_caption">
     {% if obj.caption %}
     {{ obj.caption }}.
@@ -26,7 +26,7 @@ name: proof
     {{ context.terms['proof'] }}.
     {% endif %}
     </span>
-  </div>
+  </h5>
   <div class="proof_content">
   {{ obj }}
   </div>

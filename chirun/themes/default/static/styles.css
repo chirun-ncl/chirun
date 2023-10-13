@@ -761,12 +761,13 @@ figure + em, .reveal figure + em {
     margin-bottom: var(--spacing);
 }
 
-.thmcaption, .thmlabel {
+.item-content :is(.thmcaption, .thmlabel) {
     font-weight: bold;
 }
 
-.proof_caption {
+.item-content :is(.proof_caption) {
     font-style: italic;
+    font-weight: normal;
 }
 
 .subfigure {
