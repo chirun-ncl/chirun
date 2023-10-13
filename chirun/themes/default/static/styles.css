@@ -841,3 +841,19 @@ mjx-container {
     overflow: auto hidden;
     padding: 0.5em 0;
 }
+
+u.uuline {
+    text-decoration: double underline;
+}
+u.uwave {
+    text-decoration: wavy underline;
+}
+del.xout {
+    opacity: 0.5;
+}
+u.dashuline {
+    text-decoration: dashed underline;
+}
+u.dotuline {
+    text-decoration: dotted underline;
+}

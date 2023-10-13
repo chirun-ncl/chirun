@@ -7,7 +7,7 @@ def ProcessOptions(options, document):
 
 
 class mathds(Command):
-    args = 'obj'
+    args = 'self'
 
     @property
     def source(self):

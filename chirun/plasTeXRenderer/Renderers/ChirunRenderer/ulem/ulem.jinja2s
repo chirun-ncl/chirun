@@ -1,2 +1,20 @@
 name: uline
 <u>{{ obj }}</u>
+
+name: uuline
+<u class="uuline">{{ obj }}</u>
+
+name: uwave
+<u class="uwave">{{ obj }}</u>
+
+name: sout
+<del>{{ obj }}</del>
+
+name: xout
+<del class="xout">{{ obj }}</del>
+
+name: dashuline
+<u class="dashuline">{{ obj }}</u>
+
+name: dotuline
+<u class="dotuline">{{ obj }}</u>
