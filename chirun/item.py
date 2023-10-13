@@ -116,7 +116,7 @@ class Item(object):
 
     def plastex_filename_rules(self, out_file=None):
         if out_file is None:
-            return self.out_file
+            return f'{self.out_file} {self.out_file}-[$num(4)]'
         else:
             return out_file
 
