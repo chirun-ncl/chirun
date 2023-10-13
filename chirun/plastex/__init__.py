@@ -228,7 +228,7 @@ class PlastexRunner:
             # Apply renderer
             try:
                 renderer.render(document)
-            except AttributeError as e:
+            except Exception as e:
                 import traceback
                 traceback.print_exc()
                 raise e
