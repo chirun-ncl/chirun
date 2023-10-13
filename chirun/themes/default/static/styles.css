@@ -234,7 +234,7 @@ blockquote > p:last-child {
 
 pre {
     font-size: var(--code-font-size);
-    overflow-x: auto;
+    overflow: auto hidden;
     padding: var(--spacing);
     border: 1px solid var(--text-colour);
     margin: var(--spacing) 0;
@@ -585,7 +585,7 @@ table {
     margin: var(--spacing) 0;
     line-height: 2em;
     border-collapse: collapse;
-    overflow-x: auto;
+    overflow: auto hidden;
 }
 
 td {
@@ -655,7 +655,7 @@ qr-code {
     padding: var(--spacing);
     margin: calc(2 * var(--spacing)) 0;
     border: var(--border);
-    overflow-x: auto;
+    overflow: auto hidden;
 }
 
 details > .collapse-content > .exercise {
