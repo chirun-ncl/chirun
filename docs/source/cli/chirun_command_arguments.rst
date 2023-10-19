@@ -24,11 +24,11 @@ Arguments
      - Default Value
 
    * - ``dir``
-     - Path to a chirun compatible source directory
+     - Path to a chirun compatible source directory.
      - Current directory
 
    * - ``-h``
-     - Show a help message and exit
+     - Show a help message and exit.
      - 
 
    * - ``-o BUILD_PATH``
@@ -36,19 +36,19 @@ Arguments
      - ``build``
 
    * - ``-v``
-     - Verbose output
+     - Verbose output.
      - 
 
    * - ``-vv``
-     - Very verbose output
+     - Very verbose output.
      - 
 
    * - ``-d``
-     - Delete auxiliary files
+     - Delete auxiliary files after building is complete.
      - 
 
    * - ``-a``
-     - Output using absolute file paths, relative to ``root_url``
+     - Output using absolute file paths, relative to the configured root URL.
      - 
 
    * - ``--config CONFIG_FILE``
@@ -58,3 +58,11 @@ Arguments
    * - ``-f SOURCE_FILE``
      - Compile a single source file without using a config file.
      - 
+
+   * - ``--no-pdf``
+     - Don't build PDF files.
+     -
+
+   * - ``--hash-salt``
+     - Salt string for hashing paths to hidden items.
+     -

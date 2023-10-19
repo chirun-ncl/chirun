@@ -2,10 +2,12 @@ from . import chirun_version
 from . import mkdir_p
 from .item import load_item
 from . import process
+from . import slugify
 from .theme import Theme
 from . import oembed
 import argparse
 import chirun
+import copy
 import datetime
 import hashlib
 import json
@@ -14,10 +16,10 @@ import os
 from pathlib import Path
 import shutil
 import yaml
+import zipfile
 
 
 logger = logging.getLogger('chirun')
-
 
 class Chirun:
 
@@ -29,7 +31,8 @@ class Chirun:
         process.LastBuiltProcess,
         process.PDFProcess,
         process.NotebookProcess,
-        process.RenderProcess
+        process.RenderProcess,
+        process.FindHiddenItemsProcess,
     ]
 
     def __init__(self, args):
@@ -39,6 +42,8 @@ class Chirun:
 
         self.root_dir = self.get_root_dir()
         self.build_dir = Path(args.build_path) if args.build_path is not None else self.root_dir / 'build'
+
+        self.hidden_paths = []  # A list of directories containing hidden items, filled in by process.FindHiddenItemsProcess.
 
         if args.veryverbose:
             args.verbose = True
@@ -127,6 +132,7 @@ class Chirun:
             'locale': 'en',
             'static_dir': root_dir / 'static',
             'build_pdf': True,
+            'build_zip': True,
             'num_pdf_runs': 1,
             'year': datetime.datetime.now().year,
             'format_version': 2,
@@ -260,8 +266,10 @@ class Chirun:
 
         srcPath = self.get_static_dir()
         dstPath = self.get_build_dir() / 'static'
+
         if srcPath.is_dir():
             logger.debug("    {src} => {dest}".format(src=srcPath, dest=dstPath))
+
             try:
                 shutil.copytree(str(srcPath), str(dstPath), dirs_exist_ok=True)
             except Exception:
@@ -299,6 +307,34 @@ class Chirun:
 
     def optimize(self):
         pass
+
+    def get_zipfile_name(self):
+        if not self.config['build_zip']:
+            return None
+
+        return Path(slugify(self.config.get('title','chirun'))).with_suffix('.zip')
+
+    def package_zip(self):
+        """
+            Compress the package's output into a zip file.
+        """
+
+        zipfile_name = self.get_zipfile_name()
+
+        if zipfile_name is None:
+            return
+
+        with zipfile.ZipFile(self.build_dir / zipfile_name, mode='w') as zf:
+            for d, dirs, files in os.walk(str(self.build_dir)):
+                if any(Path(d).is_relative_to(self.build_dir / p) for p in self.hidden_paths):
+                    continue
+                for f in files:
+                    p = self.build_dir.parent / d / f
+                    fname = p.relative_to(self.build_dir)
+                    if fname == zipfile_name:
+                        continue
+                    zf.write(p, fname)
+
 
     def temp_path(self, subpath=None):
         """
@@ -339,16 +375,23 @@ class Chirun:
             by item types that dynamically create further content
             items.
         """
-        manifest_path = self.build_dir / 'MANIFEST.yml'
-        manifest = self.config
-        manifest.update({'structure': [item.content_tree() for item in self.structure]})
+
+        manifest = copy.deepcopy(self.config)
+        manifest.update({
+            'structure': [item.content_tree() for item in self.structure],
+            'zipfile': str(self.get_zipfile_name()),
+        })
         del manifest['args']
         del manifest['static_dir']
+
+        manifest_path = self.build_dir / 'MANIFEST.yml'
+
         with open(manifest_path, 'w') as f:
             yaml.dump(manifest, f)
 
         with open(manifest_path.with_suffix('.json'), 'w') as f:
             json.dump(manifest, f)
+
 
     def build_with_theme(self, theme):
         """
@@ -379,7 +422,8 @@ The web root directory is: {web_root}
             redirecting to the first theme.
         """
 
-        with open(self.build_dir / 'index.html', 'w') as f:
+        path = self.build_dir / 'index.html'
+        with open(path, 'w') as f:
             f.write(
                 f'''<!doctype html>
 <html>
@@ -410,6 +454,8 @@ The web root directory is: {web_root}
             self.build_theme_redirect()
 
         self.save_manifest()
+
+        self.package_zip()
 
         self.cleanup()
 

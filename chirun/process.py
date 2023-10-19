@@ -177,3 +177,11 @@ class NotebookProcess(ItemProcess):
     def visit_notebook(self, item):
         self.course.force_relative_build = False
         self.nb_renderer.render_item(item)
+
+class FindHiddenItemsProcess(ItemProcess):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def visit_default(self, item):
+        if item.is_hidden:
+            self.course.hidden_paths.append(item.out_path)

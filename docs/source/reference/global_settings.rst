@@ -58,6 +58,14 @@ Number of PDF runs (``num_pdf_runs``)
     
     **Default value**: ``1``
 
+Build zip of entire package? (``build_zip``)
+    Should a ``.zip`` file of the output be built?
+    If enabled, then a zip file is built containing a copy of the whole output.
+    The zip file's name is by default the slug of the package's title, inside the output directory.
+    If you're using the command-line tool, you can specify a filename with the ``--output-zip`` parameter.
+      
+    **Default value**: ``True``
+
 Format version (``format_version``)
     The version number of the config format used.
 
