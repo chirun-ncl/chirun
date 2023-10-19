@@ -32,6 +32,9 @@ def http_server(directory=None, port=8000, end_signal=None):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=directory, **kwargs)
 
+        def log_request(self, *args, **kwargs):
+            pass
+
     server_address = ('', port)
     httpd = HTTPServer(server_address, Handler)
     while not end_signal.is_set():
