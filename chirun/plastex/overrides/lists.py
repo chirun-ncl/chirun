@@ -28,7 +28,7 @@ class List(Lists.List):
 
         Environment.digest(self, tokens)
 
-        self.has_custom_terms = any(tok.nodeName == 'item' and tok.attributes.get('term') is not None for tok in self.childNodes)
+        self.has_custom_terms = any(tok.nodeName == 'item' and tok.attributes.get('term') is not None for tok in self.childNodes) or getattr(self, 'listType', None)
 
 Lists.List = List
 
