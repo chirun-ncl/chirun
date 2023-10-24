@@ -840,6 +840,7 @@ mjx-container {
     min-width: auto !important;
     overflow: auto hidden;
     padding: 0.5em 0;
+    white-space: pre;
 }
 
 u.uuline {
