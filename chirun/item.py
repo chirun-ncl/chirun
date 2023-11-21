@@ -472,7 +472,7 @@ class Document(Item):
     def plastex_filename_rules(self, out_file=None):
         if out_file is None:
             out_file = self.out_path
-        fnstr = Path(out_file) / '[$id, $title(4), $num(4)]'
+        fnstr = Path(out_file) / '[$id, $num(4)]'
         return '{} {}'.format(self.out_file, fnstr)
 
     def content_tree(self):
