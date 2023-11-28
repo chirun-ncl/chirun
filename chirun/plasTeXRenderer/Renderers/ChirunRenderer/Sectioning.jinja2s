@@ -29,7 +29,7 @@ name: document
 name: part chapter
 <!-- Latex Chapter/Part -->
 
-<h1 id="{{ obj.id }}">{{ obj.title }}</h1>
+<h1 id="{{ obj.id }}">{{ obj.fullTitle }}</h1>
 
 {{ obj }}
 
