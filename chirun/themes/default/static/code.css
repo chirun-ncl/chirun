@@ -19,7 +19,7 @@ button.icon-button {
 	grid-template:
 		"code output" 10rem "run ." / 3fr 2fr;
 	grid-gap: 0;
-	width: var(--slide-width);
+	width: 100%;
 }
 
 @media (max-width: 40rem) {
@@ -61,8 +61,9 @@ button.icon-button {
 	border: 1px solid var(--text-colour);
 	border-top: none;
 	margin: 0;
-  background: var(--bg-colour);
+    background: var(--bg-colour);
 	max-height: 20em;
+    overflow: auto;
 }
 .runnable-code-wrapper #output {
 	max-height: 100%;

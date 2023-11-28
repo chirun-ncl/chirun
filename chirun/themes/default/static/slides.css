@@ -133,6 +133,12 @@ main > section > iframe {
   border-radius: 1em;
 }
 
+main > section runnable-code {
+    display: block;
+    width: calc(var(--slide-width) - 2 * var(--spacing));
+    overflow: auto;
+}
+
 main > section mjx-container {
     max-width: var(--slide-width);
     margin: calc(0.25 * var(--spacing)) 0 !important;
