@@ -8,6 +8,14 @@
 
 {% block main %}
     <nav id="sidebar">
+        {% if item.has_alternative_formats() %}
+        <ul class="alternative-formats">
+            {% for format in item.alternative_formats() %}
+            <li><a href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{macros.icon(format.name|lower, format.name)}} {% if format.download %}{% trans format=format.name %}Download as {{format}}{% endtrans %}{% else %}{% trans format=format.name%}View as {{format}}{% endtrans %}{% endif %}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
         <h1>{% trans %}Table of Contents{% endtrans %}</h1>
         <a class="jump-to-item-content" href="#item-content">{% trans %}Jump to content{% endtrans %}</a>
         {% if item.has_sidebar %}
@@ -18,13 +26,6 @@
             </ol>
         {% endif %}
 
-        {% if item.has_alternative_formats() %}
-        <ul class="alternative-formats">
-            {% for format in item.alternative_formats() %}
-            <li><a href="{{format.url|url}}"{% if format.download %}download{% endif %}>{{macros.icon(format.name|lower, format.name)}} {% if format.download %}{% trans format=format.name %}Download as {{format}}{% endtrans %}{% else %}{% trans format=format.name%}View as {{format}}{% endtrans %}{% endif %}</a></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
     </nav>
 
     <article class="item-content" id="item-content">

@@ -498,10 +498,11 @@ body > main > #sidebar ol ol {
     padding-left: var(--spacing);
 }
 body > main > #sidebar > .alternative-formats {
-    margin-top: calc(2 * var(--spacing));
+    margin-bottom: calc(2 * var(--spacing));
+    margin-top: 0;
 }
 
-body > main > #sidebar li {
+body > main > #sidebar li ~ li {
     margin-top: var(--spacing);
 }
 
