@@ -33,6 +33,7 @@ class Item(object):
     has_topbar = True
     splitlevel = -2
     is_index = False
+    must_have_source = False # Must this item have a source file?
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -41,6 +42,11 @@ class Item(object):
         self.set_title(self.data.get('title', self.title))
         self.author = self.data.get('author', self.parent.author if self.parent else self.course.config.get('author'))
         self.source = Path(self.data.get('source', ''))
+        if self.must_have_source:
+            if 'source' not in self.data:
+                raise Exception(f"""The item "{self.title}" has no source defined.""")
+            if not self.source.exists():
+                raise Exception(f"""The specified source of the item "{self.title}", at {self.source}, does not exist.""")
         self.is_hidden = self.data.get('is_hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.has_footer = self.data.get('footer', self.has_footer)
@@ -290,6 +296,7 @@ class Part(Item):
     type = 'part'
     title = 'Untitled part'
     template_name = 'part.html'
+    must_have_source = False
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
@@ -320,6 +327,7 @@ class Document(Item):
     generated = False
     has_sidebar = True
     has_topbar = True
+    must_have_source = True
 
     @property
     def out_struct_file(self):
@@ -512,6 +520,8 @@ class Chapter(Item):
     has_sidebar = True
     has_topbar = True
 
+    must_have_source = True
+
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
         self.has_sidebar = self.data.get('sidebar', self.has_sidebar)
@@ -529,7 +539,7 @@ class Exam(Chapter):
     title = 'Untitled exam'
     template_name = 'exam.html'
     has_sidebar = False
-
+    must_have_source = False
 
 class Slides(Chapter):
     type = 'slides'
@@ -537,6 +547,7 @@ class Slides(Chapter):
     template_name = 'slides.html'
     template_slides = 'slides_reveal.html'
     has_slides = True
+    must_have_source = True
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)
@@ -589,11 +600,13 @@ class Standalone(Document):
     url = 'index.html'
     is_index = True
     splitlevel = -2
+    must_have_source = True
 
 
 class Notebook(Chapter):
     type = 'notebook'
     has_nb = True
+    must_have_source = True
 
     @property
     def out_nb(self):
