@@ -1,4 +1,5 @@
 name: thmenv
+{% if obj.macroMode == 1 %}
 <div class="thmwrapper {{ obj.thmName }}_thmwrapper {% if obj.style %}theorem-style-{{ obj.style }}{% endif %}" id="{{ obj.id }}">
   <h5 class="thmheading {{ obj.thmName }}_thmheading">
     <span class="thmcaption {{ obj.thmName }}_thmcaption">
@@ -12,11 +13,13 @@ name: thmenv
     {% endif %}
   </h5>
   <div class="thmcontent {{ obj.thmName }}_thmcontent">
-  {{ obj }}
+{% elif obj.macroMode == 2 %}
   </div>
 </div>
+{% endif %}
 
 name: proof
+{% if obj.macroMode == 1 %}
 <div class="proof_wrapper" id="{{ obj.id }}">
   <h5 class="proof_heading">
     <span class="proof_caption">
@@ -28,9 +31,10 @@ name: proof
     </span>
   </h5>
   <div class="proof_content">
-  {{ obj }}
+{% elif obj.macroMode == 2 %}
   </div>
 </div>
+{% endif %}
 
 name: qedhere
 <span class="qed">□</span>
