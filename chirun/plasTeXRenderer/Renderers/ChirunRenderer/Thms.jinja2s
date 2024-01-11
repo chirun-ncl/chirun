@@ -13,6 +13,7 @@ name: thmenv
     {% endif %}
   </h5>
   <div class="thmcontent {{ obj.thmName }}_thmcontent">
+    {{obj}}
 {% elif obj.macroMode == 2 %}
   </div>
 </div>
