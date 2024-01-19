@@ -129,14 +129,15 @@ class Bmatrix(Array):
 class smallmatrix(MathEnvironmentPre):
     pass
 
-
+# Definitions of dddot and ddddot removed because the override for math in chirun/plastex/overrides/math.py wraps them in <script type="math/tex"> tags.
+"""
 class dddot(math):
     pass
 
 
 class ddddot(math):
     pass
-
+"""
 
 class DeclareMathOperator(Command):
     args = '* name:cs definition:nox'
