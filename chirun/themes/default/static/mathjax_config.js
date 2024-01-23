@@ -23,7 +23,7 @@ window.MathJax = {
             packages: {'[+]': ['bbox']}
         },
         tagformat: {
-            url: (id, base) => (id.indexOf('#') >= 0 ? id : base + '#' + encodeURIComponent(id))
+            url: (id, base) => id
         }
     },
     startup: {
@@ -39,7 +39,6 @@ window.MathJax = {
             if(plastex_labels) {
                 Object.assign(body_refs, JSON.parse(plastex_labels.textContent));
             }
-            console.log(body_refs);
             new CommandMap('chirun-eqref', {
                 ref:     ['HandleRef', false],
                 eqref: ['HandleRef', true]
@@ -53,7 +52,8 @@ window.MathJax = {
 
                     if (!ref && parser.tags.refUpdate) {
                         if(body_refs[label]) {
-                            parser.tags.labels[label] = new Label(body_refs[label], parser.tags.formatUrl('#' + encodeURIComponent(label), ''));
+                            const {ref, url} = body_refs[label];
+                            parser.tags.labels[label] = new Label(ref, url);
                         }
                     }
 

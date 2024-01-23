@@ -13,8 +13,9 @@ import hashlib
 import json
 import logging
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import shutil
+from urllib.parse import urlparse
 import yaml
 import zipfile
 
@@ -38,7 +39,6 @@ class Chirun:
     def __init__(self, args):
         self.args = args
         self.force_relative_build = False
-        self.force_theme = False
 
         self.root_dir = self.get_root_dir()
         self.build_dir = Path(args.build_path) if args.build_path is not None else self.root_dir / 'build'
@@ -70,7 +70,7 @@ class Chirun:
         """
             The path the output will be put in
         """
-        return self.build_dir / (self.force_theme.path if self.force_theme else self.theme.path)
+        return self.build_dir / self.theme.path
 
     def get_static_dir(self):
         """
@@ -85,7 +85,7 @@ class Chirun:
         base = self.config.get('base_dir')
         code = self.config.get('code')
         year = self.config.get('year')
-        theme_path = self.force_theme.path if self.force_theme else self.theme.path
+        theme_path = self.theme.path
 
         if 'root_url' not in self.config.keys():
             self.config['root_url'] = '/{base}/'
@@ -99,7 +99,7 @@ class Chirun:
         else:
             return self.config.get('root_url').format(base=base, code=code, year=year, theme=theme_path)
 
-    def make_relative_url(self, item, url):
+    def make_relative_url(self, item, url, output_url=None):
         """
             Make the URL relative to the item's location.
 
@@ -114,15 +114,39 @@ class Chirun:
                 url = '/' + url
             return url
         else:
-            levels = len(item.out_file.parents) - 1
+            parsed_url = urlparse(url)
+            if parsed_url.scheme != '':
+                return url
 
-            if url[:len(root) - 1] == root[1:]:
-                url = url[len(root) - 1:]
+            _url = url
 
-            if self.force_theme:
-                return '/'.join(['..'] * (levels + 1)) + '/' + self.force_theme.path + '/' + url
-            elif levels > 0:
-                return '/'.join(['..'] * levels) + '/' + url
+            path = parsed_url.path
+
+            item_url = item.out_file if output_url is None else PurePath(output_url)
+
+            levels = len(item_url.parents) - 1
+
+            if path.startswith(root[1:]):
+                path = path[len(root) - 1:]
+
+            path = PurePath(path)
+            i = 0
+            while i<len(item_url.parts) and i<len(path.parts) and item_url.parts[i] == path.parts[i]:
+                i += 1
+
+            levels -= i
+
+            path = PurePath(*path.parts[i:])
+
+            if len(path.parts) == 0:
+                return '#'+parsed_url.fragment
+
+            url = str(path)
+            if parsed_url.fragment:
+                url += '#'+parsed_url.fragment
+
+            if levels > 0:
+                return '/'.join((['..'] * levels) + [url])
             else:
                 return url
 

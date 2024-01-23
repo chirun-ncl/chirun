@@ -104,12 +104,10 @@ class BaseRenderer(object):
             self.env.install_null_translations(newstyle=True)
 
         @contextfilter
-        def url_filter(context, url, theme=False):
-            self.course.force_theme = theme
+        def url_filter(context, url):
             item = context.get('item')
             if item is not None and not re.search(r'^[^:]+:\/\/', url):
                 url = self.course.make_relative_url(context['item'], url)
-            self.course.force_theme = False
             return url
         self.env.filters['url'] = url_filter
 

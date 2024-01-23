@@ -1,4 +1,5 @@
 from babel.support import Translations
+import collections.abc
 from jinja2 import Environment, contextfunction
 from pathlib import Path
 import pdb
@@ -58,6 +59,7 @@ class ChirunRenderer(_Renderer):
     vectorImageTypes = ['.svg', '.pdf']
 
     renderableClass = Renderable
+    postProcessFile = None
 
     def __init__(self, *args, **kwargs):
         BaseRenderer.__init__(self, *args, **kwargs)
@@ -75,5 +77,33 @@ class ChirunRenderer(_Renderer):
             jinja_env.install_null_translations(newstyle=True)
 
         super().loadTemplates(document)
+
+    def cleanup(self, document, files, postProcess=None):
+        """
+        Cleanup method called at the end of rendering.
+        Copied from plasTeX's `Renderer.cleanup`, but it gets the postProcess function from an attribute of the object, because the PageTemplate renderer doesn't pass it through.
+        """
+        if self.processFileContent is Renderer.processFileContent:
+            return
+
+        encoding = document.config['files']['output-encoding']
+        errs = self.encodingErrors
+        for f in files:
+            try:
+                with open(f, 'r', encoding=encoding, errors=errs) as fd:
+                    s = fd.read()
+
+            except IOError as msg:
+                log.error(msg)
+                continue
+
+            postProcess = postProcess if postProcess is not None else self.postProcessFile
+            s = self.processFileContent(document, s)
+            if isinstance(postProcess, collections.abc.Callable):
+                s = postProcess(document, s, f)
+
+            with open(f, 'w', encoding=encoding) as fd:
+                fd.write(''.join(s))
+
 
 Renderer = ChirunRenderer

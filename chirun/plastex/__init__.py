@@ -1,4 +1,5 @@
 import glob
+import json
 import re
 import os
 import shutil
@@ -224,6 +225,14 @@ class PlastexRunner:
             renderer.importDirectory(str(Path(wd) / self.theme.source / 'plastex'))
             renderer.vectorImager = VectorImager(self.document, self.renderer.vectorImageTypes)
             renderer.imager = Imager(self.document, self.renderer.imageTypes)
+
+            def postProcess(document, s, f):
+                labels = {k: {'ref': str(v.ref), 'url': item.course.make_relative_url(item, str(v.url[1:]), output_url=f)} for k,v in document.context.labels.items()}
+                labels_json = json.dumps(labels)
+                s += f'''<script id="plastex-labels" type="application/json">{labels_json}</script>'''
+                return s
+
+            renderer.postProcessFile = postProcess
 
             # Apply renderer
             try:
