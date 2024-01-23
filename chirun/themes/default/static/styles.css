@@ -533,8 +533,14 @@ table {
 }
 
 .tcolorbox {
+    margin: var(--spacing);
+    padding: var(--spacing);
     background-color: var(--bg-colour-off);
     border: 2px solid var(--text-colour);
+}
+.tcolorbox > header {
+    font-weight: bold;
+    margin-bottom: var(--spacing);
 }
 
 blockquote {
@@ -748,18 +754,6 @@ figure + em, .reveal figure + em {
 .bibliography .bibcite {
     display: inline-block;
     margin-right: 0.5em;
-}
-
-.tcolorbox {
-    margin: var(--spacing) 0;
-    padding: var(--spacing);
-}
-
-.tcolorbox .frametitle {
-    font-weight: 400;
-    font-size: 1.2em;
-    display: inline-block;
-    margin-bottom: var(--spacing);
 }
 
 .item-content :is(.thmcaption, .thmlabel) {
