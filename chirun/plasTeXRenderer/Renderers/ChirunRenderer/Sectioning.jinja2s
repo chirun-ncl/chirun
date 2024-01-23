@@ -25,6 +25,10 @@ name: maketitle
 
 name: document
 {{ obj }}
+<script id="plastex-labels" type="application/json">{
+{% for k, v in obj.ownerDocument.context.labels.items() %}{{k|tojson}}: {{v.ref|escape|tojson}}{% if loop.revindex0 > 0 %},{% endif %}
+{% endfor %}
+}</script>
 
 name: part chapter
 <!-- Latex Chapter/Part -->
