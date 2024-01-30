@@ -113,3 +113,6 @@ class AtBeginSection(Command):
     def invoke(self, tex):
         Command.invoke(self, tex)
         self.ownerDocument.userdata.setPath('packages/beamer/atbeginsection', self.attributes['text'])
+
+class only(Command):
+    args = '<number>'
