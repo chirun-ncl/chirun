@@ -104,6 +104,11 @@ class MathEnvironment(Math.Environment):
 
 Math.MathEnvironment = MathEnvironment
 
+class jmath(Command):
+    pass
+
+class imath(Command):
+    pass
 
 class equation(MathEnvironment):
     blockType = True
