@@ -485,6 +485,13 @@ article.item-content {
     width: 100%;
 }
 
+article.item-content :is(h1, h2, h3, h4, h5, h6) {
+    text-decoration: underline;
+    text-decoration-thickness: 0.2em;
+    text-underline-offset: 0.3em;
+    line-height: calc(1.5 * var(--line-height));
+}
+
 article.item-content section {
     margin: calc(3 * var(--spacing)) 0;
 }
