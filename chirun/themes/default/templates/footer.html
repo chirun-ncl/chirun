@@ -8,5 +8,18 @@
     <div id="footer-text">
         <p>{% trans url=CHIRUN_HOME_URL, version=CHIRUN_VERSION %}Generated using <a target="_blank" href="{{url}}">Chirun</a> v{{CHIRUN_VERSION}}, written by the Digital Learning Unit, School of Mathematics &amp; Statistics, Newcastle University{% endtrans %}</p>
         <p>{% trans date=date %}This page last generated: {{date}}{% endtrans %}</p>
+        {% with license=course.config.license %}
+        {% if license %}
+        <p>
+            ©
+            {% if license.year or license.by %}{{license.year}} {{license.by}}. {% endif %}
+            {% if license.url %}
+            <a href="{{license.url}}" rel="license">{{license.name}}</a>.
+            {% else %}
+            {{license.name}}.
+            {% endif %}
+        </p>
+        {% endif %}
+        {% endwith %}
     </div>
 </footer>

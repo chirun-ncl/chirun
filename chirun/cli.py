@@ -165,7 +165,8 @@ class Chirun:
                 'title': 'Default',
                 'source': 'default',
                 'path': '.'
-            }]
+            }],
+            'license': None,
         }
         return config
 
