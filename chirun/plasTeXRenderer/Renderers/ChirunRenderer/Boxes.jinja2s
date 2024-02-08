@@ -10,4 +10,8 @@ name: parbox
 name: minipage
 <div class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
-name: raisebox rule
+name: raisebox
+    <span class="raisebox" style="vertical-align: {{obj.attributes.raise}}">{{obj}}</span>
+
+name: rule
+    <hr class="rule" style="width: {{obj.attributes.width}}; height: {{obj.attributes.height}}">
