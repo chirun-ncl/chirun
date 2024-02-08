@@ -89,3 +89,6 @@ class alttext(Command):
             raise RuntimeError('Cannot find a graphics item to attach \\alttext{} to. Ensure \
 the graphicx or tikz package is loaded and a graphics item is defined \
 before invoking \\alttext{}.')
+
+class slash(Command):
+    str = '/'
