@@ -186,7 +186,7 @@ class LatexRunner(object):
     def __init__(self, filename, wd=Path('.')):
         self.wd = wd
         self.filename = filename
-        self.args = ['-halt-on-error', '-recorder', str(filename)]
+        self.args = ['-halt-on-error', '-interaction=nonstopmode', '-recorder', str(filename)]
 
     def exec(self):
         stdout_tail = collections.deque(maxlen=8)
