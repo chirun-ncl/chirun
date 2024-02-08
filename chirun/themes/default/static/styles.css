@@ -294,6 +294,15 @@ body > header > nav {
     padding: 0 var(--spacing);
 }
 
+body > header > nav #item-pager {
+    display: flex;
+    gap: var(--spacing) calc(2 * var(--spacing));
+    flex-wrap: wrap;
+}
+body > header > nav #item-pager > a {
+    display: inline-block;
+}
+
 @media (max-width: 50em) {
     body > header {
         grid-template:

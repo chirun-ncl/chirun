@@ -22,6 +22,10 @@ class ItemProcess(object):
         self.slides_renderer = SlidesRenderer(self.course)
         self.nb_renderer = NotebookRenderer(self.course)
 
+    def process(self, run_number):
+        for item in self.course.structure:
+            self.visit(item)
+
     def visit(self, item):
         fn = getattr(self, 'visit_' + item.type)
         return fn(item)
@@ -82,14 +86,32 @@ class LastBuiltProcess(ItemProcess):
     def visit_url(self, item):
         item.last_built = None
 
+class ExpandDocumentProcess(ItemProcess):
+    def visit_document(self, item):
+        item.generate_chapter_subitems()
+
+class FlattenStructureProcess(ItemProcess):
+    def process(self, *args, **kwargs):
+        def flatten_structure(item):
+            yield item
+            for subitem in item.content:
+                yield from flatten_structure(subitem)
+
+        flat_structure = [x for item in self.course.structure for x in flatten_structure(item)]
+        prev = None
+        for item in flat_structure:
+            if item.is_hidden or not item.has_pager:
+                continue
+            if prev:
+                prev.next_item = item
+                item.previous_item = prev
+            prev = item
+
 
 class RenderProcess(ItemProcess):
 
     name = 'Render items to HTML'
     num_runs = 2
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     def visit_default(self, item):
         self.course.force_relative_build = False
@@ -100,7 +122,6 @@ class RenderProcess(ItemProcess):
         super().visit_part(item)
 
     def visit_document(self, item):
-        item.generate_chapter_subitems()
         self.visit_default(item)
         super().visit_part(item)
 

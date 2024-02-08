@@ -30,6 +30,17 @@
                 {{item.title}}
             </li>
         </ul>
+
+        {% if item.has_pager and (item.previous_item or item.next_item) %}
+        <p class="pager" id="item-pager">
+            {% if item.previous_item %}
+            <a rel="prev" href="{{item.previous_item.url|url}}">Previous: {{item.previous_item.title}}</a>
+            {% endif %}
+            {% if item.next_item %}
+            <a rel="next" href="{{item.next_item.url|url}}">Next: {{item.next_item.title}}</a>
+            {% endif %}
+        </p>
+        {% endif %}
     </nav>
     {% endif %}
 {% endblock page_nav %}

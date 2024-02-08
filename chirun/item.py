@@ -31,9 +31,11 @@ class Item(object):
     last_built = None
     has_footer = True
     has_topbar = True
+    has_pager = True
     splitlevel = -2
     is_index = False
     must_have_source = False # Must this item have a source file?
+    content = []    # Children of this item
 
     def __init__(self, course, data, parent=None):
         self.course = course
@@ -49,6 +51,7 @@ class Item(object):
                 raise Exception(f"""The specified source of the item "{self.title}", at {self.source}, does not exist.""")
         self.is_hidden = self.data.get('is_hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
+        self.has_pager = self.data.get('pager', self.has_pager)
         self.has_footer = self.data.get('footer', self.has_footer)
         self.has_pdf = self.data.get('build_pdf', False)
         self.thumbnail = self.data.get('thumbnail', None)
@@ -493,6 +496,7 @@ class Document(Item):
 class Url(Item):
     type = 'url'
     title = 'Untitled URL'
+    has_pager = False
 
     def __init__(self, course, data, parent=None):
         super().__init__(course, data, parent)

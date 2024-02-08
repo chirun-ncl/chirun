@@ -32,6 +32,8 @@ class Chirun:
         process.LastBuiltProcess,
         process.PDFProcess,
         process.NotebookProcess,
+        process.ExpandDocumentProcess,
+        process.FlattenStructureProcess,
         process.RenderProcess,
         process.FindHiddenItemsProcess,
     ]
@@ -325,8 +327,7 @@ class Chirun:
             for n in range(processor.num_runs):
                 if processor.num_runs > 1:
                     logger.info("Run {}/{}".format(n + 1, processor.num_runs))
-                for item in self.structure:
-                    processor.visit(item)
+                processor.process(run_number=n)
 
         logger.debug('Finished processing course items')
 
