@@ -135,7 +135,7 @@ class PlastexRunner:
                 plastex_output[filepath.name] = {
                     # TODO: an abstraction for applying the following as a series of filters
                     'html': html,
-                    'title': section.title if isinstance(section.title, str) else section.title.textContent.strip(),
+                    'title': section.fullTitle if isinstance(section.fullTitle, str) else section.fullTitle.textContent.strip(),
                     'source': filepath.name,
                     'level': getattr(section, 'level', None),
                     'counter': getattr(section, 'counter', None),
