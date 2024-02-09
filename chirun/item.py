@@ -42,6 +42,8 @@ class Item(object):
     must_have_source = False # Must this item have a source file?
     content = []    # Children of this item
 
+    toc_header_level = 3
+
     def __init__(self, course, data, parent=None):
         self.course = course
         self.parent = parent

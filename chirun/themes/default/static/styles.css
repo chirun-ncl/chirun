@@ -538,6 +538,39 @@ body > main > #sidebar li ~ li {
     text-decoration: none;
 }
 
+.table-of-contents .toc-header.has-children {
+    padding-left: calc(0.5em + 0.5 * var(--spacing));
+    position: relative;
+}
+
+.table-of-contents .toc-collapse-checkbox, .table-of-contents .toc-collapse-icon {
+    position: absolute;
+    left: -0.5em;
+    margin: 0;
+    padding: 0;
+    width: 1em;
+    height: 1em;
+    font-size: inherit;
+    line-height: 1em;
+}
+.table-of-contents .toc-collapse-icon {
+    display: inline-block;
+    background-color: var(--bg-colour-accent-2);
+    text-align: center;
+    box-shadow: 0 0 1px 1px var(--bg-colour-accent-2);
+}
+
+.table-of-contents .toc-collapse-checkbox:not(:checked) ~ ol {
+    display: none;
+}
+
+.table-of-contents .toc-collapse-checkbox:checked ~ .toc-collapse-icon .closed {
+    display: none;
+}
+.table-of-contents .toc-collapse-checkbox:not(:checked) ~ .toc-collapse-icon .open {
+    display: none;
+}
+
 thead {
     border-bottom: solid var(--text-colour) 1px;
 }
