@@ -206,6 +206,11 @@ h5 {
     font-size: 1.1em;
 }
 
+h6 {
+    font-size: 1.05em;
+}
+
+
 hr {
     border: 1px solid var(--text-colour);
     margin: calc(2 * var(--spacing));

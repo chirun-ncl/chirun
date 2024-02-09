@@ -22,7 +22,7 @@ name: thmenv
 name: proof
 {% if obj.macroMode == 1 %}
 <div class="proof_wrapper" id="{{ obj.id }}">
-  <h5 class="proof_heading">
+  <h6 class="proof_heading">
     <span class="proof_caption">
     {% if obj.caption %}
     {{ obj.caption }}.
@@ -30,7 +30,7 @@ name: proof
     {{ context.terms['proof'] }}.
     {% endif %}
     </span>
-  </h5>
+  </h6>
   <div class="proof_content">
     {{obj}}
 {% elif obj.macroMode == 2 %}
