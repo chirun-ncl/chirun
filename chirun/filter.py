@@ -69,6 +69,7 @@ def embed_recap(embed, **kwargs):
 
 @replace_tag('numbas-embed')
 def link_numbas(embed, **kwargs):
+    """ Embed a link to a Numbas exam in a notebook cell. """
     div = (html_fragment('<div><p><a href="{}" target="_blank">{}</a></p></div>'
            .format(embed['data-url'], embed.get('data-cta', "Test Yourself"))))
     return div
@@ -76,6 +77,7 @@ def link_numbas(embed, **kwargs):
 
 @replace_tag('youtube-embed')
 def link_youtube(embed, **kwargs):
+    """ Embed a link to a YouTube video in a notebook cell. """
     div = (html_fragment('<div><p><a href="{}" target="_blank">{}</a></p></div>'
            .format(embed['data-id'], "Click to go to Youtube")))
     return div
@@ -83,7 +85,7 @@ def link_youtube(embed, **kwargs):
 
 @replace_tag('oembed')
 def oembed(embed, **kwargs):
-    url = embed['data-url']
+    url = embed.get('url', embed.get('data-url'))
     html = get_oembed_html(url)
     embed_code = BeautifulSoup(html, 'html.parser')
     d = html_fragment('<div class="oembed"></div>')
