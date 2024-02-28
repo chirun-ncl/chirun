@@ -211,7 +211,7 @@ class Chirun:
                 'structure': [
                     {
                         'type': 'standalone',
-                        'sidebar': False,
+                        'sidebar': True,
                         'topbar': False,
                         'footer': True,
                         'source': self.args.single_file
