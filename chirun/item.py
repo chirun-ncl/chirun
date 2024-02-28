@@ -605,6 +605,7 @@ class Standalone(Document):
     is_index = True
     splitlevel = -2
     must_have_source = True
+    has_topbar = False
 
 
 class Notebook(Chapter):
