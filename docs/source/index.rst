@@ -12,9 +12,7 @@
    The Chirun project is under active development and so the contents of this documentation
    are subject to change.
 
-   As of May 2023, the Chirun LTI tool and web builder/editor are being completely rewritten.
-   This version of the documentation is up to date with that, but is missing a lot of detail while the features settle down.
-
+   As of February 2024, the Chirun LTI tool and web builder/editor are usable, but we are still working on writing documentation.
 
 Chirun produces flexible and accessible course notes, in a variety of formats, from LaTeX or Markdown source.
 It is aimed primarily at notes in the mathematical sciences.
@@ -27,7 +25,7 @@ It generates static output which can be uploaded to a web server or learning man
 
 There are two parts to Chirun: the processing tool, and a web frontend.
 
-The web frontend is the usual point of entry for most authors.
+The web frontend at `lti.chirun.org.uk <https://lti.chirun.org.uk>`__ is the usual point of entry for most authors.
 
 Users with more particular requirements can use the command-line processing tool on its own.
 
@@ -46,3 +44,9 @@ Users with more particular requirements can use the command-line processing tool
     reference/index
     web/index
     cli/index
+
+
+.. toctree::
+    :caption: Development information
+
+    dev/todo

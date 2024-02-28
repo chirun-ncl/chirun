@@ -33,8 +33,8 @@ def embed_numbas(embed, **kwargs):
     item = kwargs['item']
     renderer = Renderer(item.course)
     context = {
-        'id': embed['data-id'],
-        'url': embed['data-url'],
+        'id': embed.get('id', embed.get('data-id')),
+        'url': embed.get('url', embed.get('data-url')),
         'cta': embed.get('data-cta', None),
         'item': item,
     }

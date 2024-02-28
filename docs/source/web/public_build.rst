@@ -1,8 +1,8 @@
 .. _web-public-build:
 
-##############################
-Unauthenticated use on the web
-##############################
+#########################
+Standalone use on the web
+#########################
 
 You can use the Chirun web frontend without creating an account.
 

@@ -410,10 +410,6 @@ Supported source formats
 Outputs
 -------
 
-.. todo::
-
-    Does this also produce a PDF?
-
  * HTML web page
  * Jupyter notebook
 
