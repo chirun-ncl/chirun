@@ -166,7 +166,7 @@ class PDFProcess(ItemProcess):
         self.makePDF(item)
 
     def visit_standalone(self, item):
-        self.visit_document(item)
+        self.makePDF(item)
 
     def visit_slides(self, item):
         ext = item.source.suffix
