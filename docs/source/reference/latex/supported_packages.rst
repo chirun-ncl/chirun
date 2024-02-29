@@ -34,16 +34,63 @@ Supported packages
 
 This section lists packages that we know about, and the level of support.
 
+A glossary for the support levels:
+
+.. glossary::
+
+    Re-implemented by plasTeX or Chirun
+        
+        A re-implementation of the package from the main plasTeX project is used, or Chirun provides one.
+        It may not work exactly the same way as the original LaTeX version because, but the intention is that it offers the same functionality, as much as that makes sense in HTML output.
+        Less-frequently-used commands may not be implemented yet.
+
+    Not supported
+
+        We are aware that this package causes problems with Chirun, but it has not been re-implemented yet.
+
+    Stub package
+
+        An "empty" re-implementation of the package is used, in order to avoid using the original LaTeX version which could trigger errors.
+        None of the commands or functionality provided by the package are available in HTML output.
+
+        Quite often, packages which only provide math-mode commands are implemented as stub packages because MathJax handles their commands.
+
+    No problems observed
+
+        Authors have used this package in its original LaTeX version, and reported no problems.
+        These packages have not necessarily been completely tested: some commands may produce errors or unwanted output, and these should be reported.
+
 .. list-table::
     :header-rows: 1
 
     * - Package
       - Support
 
+    * - ``a4``
+      - Re-implemented by plasTeX.
+
+    * - ``a4wide``
+      - Re-implemented by plasTeX.
+
     * - ``abstract``
       - Not supported.
 
         When used, an unwanted ``#1`` appears at the top of the HTML output.
+
+    * - ``accents``
+      - No problems observed.
+
+    * - ``adjustbox``
+      - No problems observed.
+
+    * - ``afterpage``
+      - Re-implemented by plasTeX.
+
+    * - ``algorithmic``
+      - No problems observed.
+
+    * - ``alltt``
+      - Re-implemented by plasTeX.
 
     * - ``amsbsy``
       - Stub package: commands are handled by MathJax.
@@ -54,18 +101,6 @@ This section lists packages that we know about, and the level of support.
         Diagrams are rendered as SVG images using pdf latex.
 
     * - ``amsthm``
-      - Re-implemented by plasTeX.
-
-    * - ``a4``
-      - Re-implemented by plasTeX.
-
-    * - ``a4wide``
-      - Re-implemented by plasTeX.
-
-    * - ``afterpage``
-      - Re-implemented by plasTeX.
-
-    * - ``alltt``
       - Re-implemented by plasTeX.
 
     * - ``amsart``
@@ -83,11 +118,20 @@ This section lists packages that we know about, and the level of support.
     * - ``amssymb``
       - Re-implemented by plasTeX.
 
+    * - ``appendix``
+      - No problems observed.
+
     * - ``appendixnumberbeamer``
       - Stub package: doesn't do anything.
 
+    * - ``array``
+      - No problems observed.
+
     * - ``article``
       - Re-implemented by plasTeX.
+
+    * - ``avant``
+      - No problems observed.
 
     * - ``babel``
       - Re-implemented by plasTeX.
@@ -109,17 +153,41 @@ This section lists packages that we know about, and the level of support.
         Beamer is a very large package and Chirun's support is rather basic.
         The document-style HTML output is usually usable, but the HTML slides format still needs a lot of work.
 
+    * - ``beamerposter``
+      - No problems observed.
+
     * - ``beamerthemesplit``
       - Re-implemented by plasTeX.
 
+    * - ``bibentry``
+      - No problems observed.
+
+    * - ``biblatex``
+      - No problems observed.
+
+    * - ``bigdelim``
+      - No problems observed.
+
+    * - ``blindtext``
+      - No problems observed.
+
     * - ``bm``
       - Stub package: commands are handled by MathJax.
+
+    * - ``bohr``
+      - No problems observed.
 
     * - ``book``
       - Re-implemented by plasTeX.
 
     * - ``booktabs``
       - Re-implemented by plasTeX.
+
+    * - ``braids``
+      - No problems observed.
+
+    * - ``calc``
+      - No problems observed.
 
     * - ``cancel``
       - Stub package: commands are handled by MathJax.
@@ -140,6 +208,9 @@ This section lists packages that we know about, and the level of support.
     * - ``changebar``
       - Re-implemented by plasTeX.
 
+    * - ``chngcntr``
+      - No problems observed.
+
     * - ``CJK``
       - Re-implemented by plasTeX.
 
@@ -155,8 +226,14 @@ This section lists packages that we know about, and the level of support.
     * - ``comment``
       - Re-implemented by plasTeX.
 
+    * - ``dcolumn``
+      - No problems observed.
+
     * - ``debugplastex``
       - Re-implemented by plasTeX.
+
+    * - ``draftwatermark``
+      - No problems observed.
 
     * - ``dsfont``
       - Re-implemented by Chirun.
@@ -169,17 +246,41 @@ This section lists packages that we know about, and the level of support.
     * - ``endfloat``
       - Re-implemented by plasTeX.
 
+    * - ``elements``
+      - No problems observed.
+
     * - ``enumerate``
       - Re-implemented by plasTeX.
 
     * - ``enumitem``
       - Re-implemented by Chirun.
 
+    * - ``epigraph``
+      - No problems observed.
+
     * - ``epsf``
       - Re-implemented by plasTeX.
 
+    * - ``epsfig``
+      - No problems observed.
+
+    * - ``epstopdf``
+      - No problems observed.
+
     * - ``eso-pic``
       - Re-implemented by plasTeX.
+
+    * - ``etex``
+      - No problems observed.
+
+    * - ``etoolbox``
+      - No problems observed.
+
+    * - ``eucal``
+      - No problems observed.
+
+    * - ``exercise``
+      - No problems observed.
 
     * - ``fancybox``
       - Re-implemented by plasTeX.
@@ -190,6 +291,9 @@ This section lists packages that we know about, and the level of support.
     * - ``fancyvrb``
       - Re-implemented by plasTeX.
 
+    * - ``fix-cm``
+      - No problems observed.
+
     * - ``fleqn``
       - Re-implemented by plasTeX.
 
@@ -199,6 +303,12 @@ This section lists packages that we know about, and the level of support.
     * - ``fontenc``
       - Re-implemented by plasTeX.
 
+    * - ``fontspec``
+      - No problems observed.
+
+    * - ``footmisc``
+      - No problems observed.
+
     * - ``forest``
       - Re-implemented by plasTeX.
 
@@ -206,6 +316,9 @@ This section lists packages that we know about, and the level of support.
       - Re-implemented by Chirun.
 
         The following environments are supported: ``framed``, ``oframed``, ``shaded``, ``shaded*``, ``snugshade``, ``snugshade*``, ``leftbar``.
+
+    * - ``fullpage``
+      - No problems observed.
 
     * - ``geometry``
       - Re-implemented by plasTeX.
@@ -215,6 +328,9 @@ This section lists packages that we know about, and the level of support.
 
     * - ``graphicx``
       - Re-implemented by plasTeX.
+
+    * - ``helvet``
+      - No problems observed.
 
     * - ``html``
       - Re-implemented by plasTeX.
@@ -251,6 +367,12 @@ This section lists packages that we know about, and the level of support.
     * - ``kvoptions``
       - Stub package: does nothing.
 
+    * - ``latexsym``
+      - No problems observed.
+
+    * - ``lectures``
+      - No problems observed.
+
     * - ``lipsum``
       - Re-implemented by plasTeX.
 
@@ -271,14 +393,29 @@ This section lists packages that we know about, and the level of support.
     * - ``makeidx``
       - Re-implemented by plasTeX.
 
+    * - ``manfnt``
+      - No problems observed.
+
     * - ``marginnote``
       - Re-implemented by plasTeX.
+
+    * - ``marvosym``
+      - No problems observed.
+
+    * - ``mathrsfs``
+      - No problems observed.
 
     * - ``mathtime``
       - Re-implemented by plasTeX.
 
     * - ``mathtools``
       - Re-implemented by plasTeX.
+
+    * - ``mdframed``
+      - No problems observed.
+
+    * - ``media9``
+      - No problems observed.
 
     * - ``memoir``
       - Re-implemented by plasTeX.
@@ -295,14 +432,41 @@ This section lists packages that we know about, and the level of support.
     * - ``multicol``
       - Re-implemented by plasTeX.
 
+    * - ``multimedia``
+      - No problems observed.
+
+    * - ``multirow``
+      - No problems observed.
+
     * - ``nameref``
       - Re-implemented by plasTeX.
 
     * - ``natbib``
       - Re-implemented by plasTeX.
 
+    * - ``paralist``
+      - No problems observed.
+
+    * - ``parskip``
+      - No problems observed.
+
+    * - ``pax``
+      - No problems observed.
+
+    * - ``pdfpages``
+      - No problems observed.
+
+    * - ``pdfsync``
+      - No problems observed.
+
+    * - ``pgf``
+      - No problems observed.
+
     * - ``pgfplots``
       - Re-implemented by plasTeX.
+
+    * - ``pgfplotstable``
+      - No problems observed.
 
     * - ``placeins``
       - Stub package: the `\FloatBarrier` command is accepted but ignored.
@@ -312,11 +476,17 @@ This section lists packages that we know about, and the level of support.
 
         ``\polylongdiv`` and ``\polylonggcd`` are rendered as SVG images using pdflatex.
 
+    * - ``psfrag``
+      - No problems observed.
+
     * - ``pslatex``
       - Re-implemented by plasTeX.
 
     * - ``pspicture``
       - Re-implemented by plasTeX.
+
+    * - ``pst-all``
+      - No problems observed.
 
     * - ``pst-coil``
       - Re-implemented by plasTeX.
@@ -332,6 +502,9 @@ This section lists packages that we know about, and the level of support.
 
     * - ``quotchap``
       - Re-implemented by plasTeX.
+
+    * - ``relsize``
+      - No problems observed.
 
     * - ``report``
       - Re-implemented by plasTeX.
@@ -353,8 +526,31 @@ This section lists packages that we know about, and the level of support.
     * - ``shortvrb``
       - Re-implemented by plasTeX.
 
+    * - ``showkeys``
+      - No problems observed.
+
+    * - ``siunitx``
+      - Not supported.
+
+        Work is underway to implement siunitx in MathJax.
+
+    * - ``skull``
+      - No problems observed.
+
+    * - ``small``
+      - No problems observed.
+
+    * - ``soul``
+      - No problems observed.
+
     * - ``splitbib``
       - Re-implemented by plasTeX.
+
+    * - ``stix``
+      - No problems observed.
+
+    * - ``stmaryrd``
+      - No problems observed.
 
     * - ``subcaption``
       - Re-implemented by Chirun.
@@ -364,6 +560,9 @@ This section lists packages that we know about, and the level of support.
 
     * - ``subfigure``
       - Re-implemented by plasTeX.
+
+    * - ``subfiles``
+      - No problems observed.
 
     * - ``tabularx``
       - Re-implemented by plasTeX.
@@ -377,11 +576,17 @@ This section lists packages that we know about, and the level of support.
         Only the ``\tcolorbox`` and ``\newtcolorbox`` commands are recognised.
         The following options are recognised: ``colback``, ``colframe``, ``boxrule``, ``title``, ``coltitle``.
 
+    * - ``tensor``
+      - No problems observed.
+
     * - ``textcomp``
       - Re-implemented by plasTeX.
 
     * - ``textpos``
       - Re-implemented by plasTeX.
+
+    * - ``theorem``
+      - No problems observed.
 
     * - ``tikz-3dplot``
       - Stub package: diagrams are rendered as SVG images using pdflatex.
@@ -392,14 +597,32 @@ This section lists packages that we know about, and the level of support.
     * - ``tikz``
       - Re-implemented by plasTeX.
 
+    * - ``tikzpagenodes``
+      - No problems observed.
+
     * - ``times``
       - Re-implemented by plasTeX.
+
+    * - ``titlesec``
+      - No problems observed.
+
+    * - ``titletoc``
+      - No problems observed.
 
     * - ``tocbibind``
       - Re-implemented by plasTeX.
 
+    * - ``tocloft``
+      - No problems observed.
+
     * - ``todonotes``
       - Re-implemented by plasTeX.
+
+    * - ``transparent``
+      - No problems observed.
+
+    * - ``turnthepage``
+      - No problems observed.
 
     * - ``type1cm``
       - Re-implemented by plasTeX.
@@ -413,6 +636,9 @@ This section lists packages that we know about, and the level of support.
     * - ``unicode-math``
       - Re-implemented by plasTeX.
 
+    * - ``upgreek``
+      - No problems observed.
+
     * - ``url``
       - Re-implemented by plasTeX.
 
@@ -421,6 +647,9 @@ This section lists packages that we know about, and the level of support.
 
     * - ``verse``
       - Re-implemented by plasTeX.
+
+    * - ``version``
+      - No problems observed.
 
     * - ``wasysym``
       - Re-implemented by plasTeX.
@@ -431,6 +660,12 @@ This section lists packages that we know about, and the level of support.
     * - ``xcolor``
       - Re-implemented by plasTeX.
 
+    * - ``xltxtra``
+      - No problems observed.
+
+    * - ``xmpmulti``
+      - No problems observed.
+
     * - ``xr-hyper``
       - Re-implemented by plasTeX.
 
@@ -440,5 +675,12 @@ This section lists packages that we know about, and the level of support.
     * - ``xspace``
       - Stub package: doesn't do anything.
 
+    * - ``xunicode``
+      - No problems observed.
+
     * - ``xy``
       - Re-implemented by plasTeX.
+
+    * - ``youngtab``
+      - No problems observed.
+
