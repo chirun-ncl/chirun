@@ -1,5 +1,5 @@
 name: longtable
-<div id="{{ obj.title.id }}">
+<div {% if obj.title %}id="{{ obj.title.id }}"{% endif %}>
 {% if obj.title %}
 <div class="caption">
   <span class="table-label">{{ obj.title.title }} {{ obj.title.ref }}</span> 
