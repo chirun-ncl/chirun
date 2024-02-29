@@ -237,6 +237,11 @@ This section lists packages that we know about, and the level of support.
     * - ``inputenc``
       - Re-implemented by plasTeX.
 
+    * - ``isodate``
+      - Not supported.
+
+        See https://github.com/plastex/plastex/issues/362.
+
     * - ``jss``
       - Re-implemented by plasTeX.
 
