@@ -44,8 +44,10 @@ Use the ``chirun`` LaTeX package in your documents by adding the following line 
 Features
 ********
 
-Different behaviour when rendering HTML
-=======================================
+.. _ifplastex:
+
+Different behaviour when rendering HTML or PDF
+==============================================
 
 Chirun uses plasTeX to render LaTeX documents in HTML format.
 
@@ -67,6 +69,16 @@ Here's an example: in HTML, the ``\mylesson`` command just starts a new chapter;
         \vspace*{5cm}
         \setcounter{section}{0}
         }
+    \fi
+
+It's quite common to only need some commands for PDF output, for example using packages that plasTeX doesn't support, or changing page dimensions.
+In this case, it's more convenient to use the ``\ifpdflatex`` command:
+
+.. code-block:: latex
+
+    \ifpdflatex
+        \usepackage{cite}
+        \setlength{\textwidth}{168mm}
     \fi
 
 Image alt text

@@ -50,3 +50,4 @@ Users with more particular requirements can use the command-line processing tool
     :caption: Development information
 
     dev/todo
+    dev/support

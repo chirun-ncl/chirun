@@ -1,4 +1,8 @@
 from plasTeX import Base, Command, Environment
+from plasTeX.Base.TeX import Primitives
+
+class ifpdflatex(Primitives.iffalse):
+    pass
 
 
 class numbas(Command):

@@ -9,4 +9,5 @@ Reference
     global_settings
     content_items
     chirun_markdown
-    chirun_latex
+    latex/supported_packages
+    latex/chirun_package
