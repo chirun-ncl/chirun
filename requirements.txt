@@ -13,7 +13,7 @@ olefile==0.46
 packaging==21.3
 pbr==5.9.0
 Pillow==9.2.0
-git+https://github.com/plastex/plastex@298a55b651d323283d08be75b4e32904afe30ca0
+git+https://github.com/christianp/plastex@chirun-running-fixes
 py==1.11.0
 Pygments==2.11.0
 pymdown-extensions==6.0
