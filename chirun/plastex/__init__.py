@@ -6,7 +6,7 @@ import shutil
 import sys
 from chirun import mkdir_p
 from chirun.plasTeXRenderer.Imagers.pdf2svg import Imager as VectorImager
-from chirun.plasTeXRenderer.Imagers.pdftoppm import Imager as Imager
+from plasTeX.Imagers.pdftoppm import Imager as Imager
 from pathlib import Path
 import plasTeX
 from plasTeX import Environment
