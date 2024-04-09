@@ -1,5 +1,5 @@
 import subprocess
-from plasTeX.Imagers import pdf2svg
+from plasTeX.Imagers import pdf2svg, Image
 from pathlib import Path
 
 
