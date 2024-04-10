@@ -36,3 +36,10 @@ Chirun can be used on Windows via [WSL](https://docs.microsoft.com/en-us/windows
  * Clone the sample course: `git clone https://github.com/chirun-ncl/sample_course.git`
  * Change into the directory you just cloned to and run `make` to build and view a local version of the sample course.
  * The finished website output will be in `./sample_course/build`
+
+ ---
+
+ ### Unit tests
+
+ There is a suite of unit tests in the `unittests` folder.
+ To run the tests, run `make test`, or `python -m unittest unittests`.

@@ -1,0 +1,5 @@
+title: "Basic document course"
+structure:
+  - type: chapter
+    title: "Basic document"
+    source: test.tex
