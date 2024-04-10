@@ -74,10 +74,6 @@ def getEmbeddedImages(course, html, item):
 
 
 def _processIfContent(self, which, debug=False):
-    """ This overrides plasTeX's function TeX.processIfContent, to handle Chirun's `\iframe` command.
-        See https://github.com/chirun-ncl/chirun/issues/230.
-        It can be removed if we rename \iframe, or if plasTeX adds a mechanism for ignoring commands starting with 'if' that are not If blocks.
-    """
     # Since the true content always comes first, we need to set
     # True to case 0 and False to case 1.
     if isinstance(which, bool):

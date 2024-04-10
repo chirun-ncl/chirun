@@ -1,4 +1,4 @@
-from chirun.plastex import VerbatimEnvironment
+from plasTeX import VerbatimEnvironment
 
 
 class tikzcd(VerbatimEnvironment):

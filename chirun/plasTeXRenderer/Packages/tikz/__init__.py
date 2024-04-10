@@ -1,8 +1,7 @@
 """
 Implement the tikz package using the imager
 """
-from chirun.plastex import VerbatimEnvironment
-from plasTeX import Command
+from plasTeX import Command, VerbatimEnvironment
 
 
 class tikzpicture(VerbatimEnvironment):
