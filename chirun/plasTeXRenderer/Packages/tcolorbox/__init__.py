@@ -1,9 +1,9 @@
 from chirun.plasTeXRenderer import add_package_templates
-import chirun.plasTeXRenderer.Packages.color
+import plasTeX.Packages.color
 from plasTeX import Command, Environment, CSSStyles
 
 def latex2htmlcolor(*args, **kwargs):
-    return chirun.plasTeXRenderer.Packages.color.latex2htmlcolor(*args, named=self.ownerDocument.userdata.getPath('packages/color/colors'), **kwargs)
+    return plasTeX.Packages.color.latex2htmlcolor(*args, named=self.ownerDocument.userdata.getPath('packages/color/colors'), **kwargs)
 
 def ProcessOptions(options, document):
     add_package_templates(document, package='tcolorbox')

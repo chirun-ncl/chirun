@@ -1,8 +1,8 @@
 from chirun.plasTeXRenderer import add_package_templates
-from chirun.plastex.overrides.natbib import citealt
 from plasTeX import Command, Environment, TheCounter
 from plasTeX.Base.LaTeX.Footnotes import footnote
 from plasTeX.Base.LaTeX import Sectioning
+from plasTeX.Packages.natbib import citealt
 
 
 def ProcessOptions(options, document):
