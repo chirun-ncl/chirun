@@ -1,5 +1,8 @@
 title: "Basic document course"
 structure:
   - type: chapter
-    title: "Basic document"
+    title: "Basic LaTeX document"
     source: test.tex
+  - type: chapter
+    title: "Basic markdown document"
+    source: test.md
