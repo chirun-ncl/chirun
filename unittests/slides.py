@@ -22,3 +22,10 @@ class SlidesTest(ChirunCompilationTest):
         soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
 
         self.assertEqual(soup.select('.beamer-frame')[1].select_one('.beamer-frame-title').text, 'Title as param')
+
+    def test_appendixnumberbeamer(self):
+        """ Test that the appendixnumberbeamer package loads.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/40
+        """
+        self.assertTrue((self.build_dir / 'appendix_number' / 'index.html').exists())
