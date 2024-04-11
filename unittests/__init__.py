@@ -48,6 +48,7 @@ class ChirunCompilationTest(unittest.TestCase):
 
 from .basic import *
 from .pdf2svg import *
+from .slides import *
 
 if __name__ == '__main__':
     unittest.main()

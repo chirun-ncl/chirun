@@ -1,0 +1,20 @@
+title: "Basic slides course"
+build_pdf: false
+author: "U. Nittest"
+institution: "Testing University"
+year: 3435
+code: "UT0001"
+license:
+  name: CC-BY 4.0
+  url: https://creativecommons.org/licenses/by/4.0/deed.en
+  year: 3434
+  by: People
+structure:
+  - type: slides
+    title: "Beamer slides"
+    author: "A.N. Other"
+    source: test.tex
+  - type: slides
+    title: "Markdown slides"
+    author: "Q.U. d'Autre"
+    source: test.md
