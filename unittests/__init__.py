@@ -50,6 +50,7 @@ from .basic import *
 from .pdf2svg import *
 from .slides import *
 from .xcolor import *
+from .tikz import *
 
 if __name__ == '__main__':
     unittest.main()
