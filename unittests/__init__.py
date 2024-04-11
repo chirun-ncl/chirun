@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import functools
 import json
 import unittest
 from pathlib import Path
@@ -40,6 +41,7 @@ class ChirunCompilationTest(unittest.TestCase):
         with open(self.build_dir / path) as fp:
             return BeautifulSoup(fp, 'html.parser')
 
+    @functools.cache
     def get_manifest(self):
         with open(self.build_dir / 'MANIFEST.json') as fp:
             return json.load(fp)

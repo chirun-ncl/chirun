@@ -10,7 +10,7 @@
         <p>{% trans date=date %}This page last generated: {{date}}{% endtrans %}</p>
         {% with license=course.config.license %}
         {% if license %}
-        <p>
+        <p class="license-info">
             ©
             {% if license.year or license.by %}{{license.year}} {{license.by}}. {% endif %}
             {% if license.url %}

@@ -22,6 +22,30 @@ class BasicTest(ChirunCompilationTest):
         item_link = item_links[0]
         self.assertEqual(item_link['href'], 'basic_latex_document/index.html', msg="The links to items are relative")
 
+    def test_metadata(self):
+        """
+            Test that package metadata is included in the manifest and the introduction page.
+            
+            Tests https://github.com/chirun-ncl/chirun/issues/7
+        """
+        manifest = self.get_manifest()
+
+        self.assertEqual(manifest['author'], "U. Nittest")
+        self.assertEqual(manifest['institution'], "Testing University")
+        self.assertEqual(str(manifest['year']), "3435")
+        self.assertEqual(manifest['code'], "UT0001")
+        self.assertEqual(manifest['license']['name'], "CC-BY 4.0")
+
+        intro = self.get_soup('index.html')
+        self.assertEqual(intro.find(class_="author").text, 'U. Nittest')
+        self.assertEqual(intro.find(class_="year").text, '3435')
+        license_text = intro.find(class_="license-info").text
+        self.assertIn('©', license_text)
+        self.assertIn('3434', license_text)
+        self.assertIn('CC-BY 4.0', license_text)
+        self.assertIn('People', license_text)
+        self.assertEqual(intro.select_one('.license-info a')['href'], 'https://creativecommons.org/licenses/by/4.0/deed.en')
+
     def test_structure(self):
         manifest = self.get_manifest()
 
