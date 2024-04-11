@@ -1,6 +1,11 @@
 from . import ChirunCompilationTest
 
 class PDF2SVGTest(ChirunCompilationTest):
+    """
+        A single LaTeX document which includes a graphic in PDF format.
+
+        Tests issue #4
+    """
     source_path = 'pdf2svg'
     compile_args = ['-f', 'test.tex']
 
