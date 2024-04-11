@@ -12,3 +12,13 @@ class SlidesTest(ChirunCompilationTest):
 
         self.assertEqual(soup.select_one('#slides-author').text, 'A.N. Other')
         self.assertEqual(soup.select_one('#title-slide .author').text, 'A.N. Other')
+
+    def test_beamer_slide_title(self):
+        """ Test that a frame with a given title has that title displayed in the HTML slides version.
+        
+            Tests https://github.com/chirun-ncl/chirun/issues/28
+        """
+
+        soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
+
+        self.assertEqual(soup.select('.beamer-frame')[1].select_one('.beamer-frame-title').text, 'Title as param')
