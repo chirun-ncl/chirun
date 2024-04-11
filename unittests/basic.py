@@ -52,6 +52,15 @@ class BasicTest(ChirunCompilationTest):
         self.assertEqual(len(manifest['structure']), 3, msg="There are two items in the structure.")
         self.assertEqual([x['type'] for x in manifest['structure']], ['introduction', 'chapter', 'chapter'], msg="There is an introduction and two chapters.")
 
+    def test_empty_links(self):
+        """ Check that all links on the introduction page contain readable text.
+            
+            Tests https://github.com/chirun-ncl/chirun/issues/12
+        """
+        intro = self.get_soup('index.html')
+
+        self.assertFalse(any(a.text == '' for a in intro.find_all('a')), msg='All links contain text')
+
 class BasicStandaloneTest(ChirunCompilationTest):
     """
         Compile a single LaTeX document in standalone mode.
