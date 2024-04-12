@@ -1,0 +1,9 @@
+title: Theme customisation
+css:
+  - custom.css
+js:
+  - custom.js
+structure:
+  - type: chapter
+    title: Document
+    source: test.md
