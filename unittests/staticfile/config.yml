@@ -3,3 +3,9 @@ structure:
   - type: chapter
     source: test.tex
     title: "Document linking to static files"
+  - type: part
+    title: A part
+    content:
+      - type: url
+        title: Static file
+        source: static/text.txt
