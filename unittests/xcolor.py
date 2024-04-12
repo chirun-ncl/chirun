@@ -11,8 +11,6 @@ class XColorTest(ChirunCompilationTest):
         """
         soup = self.get_soup('index.html')
 
-        paragraphs = soup.select('p')
         green = soup.find(name='span', style='color:#00FF00')
         self.assertIsNotNone(green)
         self.assertEqual(green.text.strip(),'Green text.')
-        print(green)
