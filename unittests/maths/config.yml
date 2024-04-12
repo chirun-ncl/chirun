@@ -1,0 +1,9 @@
+title: Maths
+build_pdf: false
+structure:
+  - type: chapter
+    title: LaTeX maths
+    source: test.tex
+  - type: chapter
+    title: Markdown maths
+    source: test.md
