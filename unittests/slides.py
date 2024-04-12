@@ -21,8 +21,21 @@ class SlidesTest(ChirunCompilationTest):
 
         soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
 
-        self.assertEqual(soup.select('.beamer-frame')[0].select_one('.beamer-frame-title').text, 'First frame title')
-        self.assertEqual(soup.select('.beamer-frame')[1].select_one('.beamer-frame-title').text, 'Title as param')
+        self.assertEqual(soup.select('.beamer-frame')[2].select_one('.beamer-frame-title').text, 'First frame title')
+        self.assertEqual(soup.select('.beamer-frame')[3].select_one('.beamer-frame-title').text, 'Title as param')
+
+    def test_beamer_slides_tableofcontents(self):
+        """ Test that a table of contents is produced, with a link to each section.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/48
+        """
+
+        soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
+
+        contents_slide = soup.select('.beamer-frame')[0]
+        self.assertEqual(contents_slide.select_one('.beamer-frame-title').text, 'Contents')
+        self.assertEqual(len(contents_slide.select('a')), 1)
+        self.assertEqual(contents_slide.select_one('a').text.strip(), 'Section')
 
     def test_appendixnumberbeamer(self):
         """ Test that the appendixnumberbeamer package loads.
