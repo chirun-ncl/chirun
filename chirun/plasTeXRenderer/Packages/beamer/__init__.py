@@ -1,5 +1,6 @@
 from chirun.plasTeXRenderer import add_package_templates
 from plasTeX import Command, Environment
+from plasTeX.Packages.hyperref import *
 from plasTeX.TeX import TeX
 from plasTeX.Base.LaTeX import Sectioning
 import plasTeX.Packages.beamer

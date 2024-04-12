@@ -37,6 +37,19 @@ class SlidesTest(ChirunCompilationTest):
         self.assertEqual(len(contents_slide.select('a')), 1)
         self.assertEqual(contents_slide.select_one('a').text.strip(), 'Section')
 
+    def test_beamer_loads_hyperref(self):
+        """ Test that the beamer documentclass loads the hyperref package.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/103
+        """
+
+        soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
+
+        a = soup.find(id='link').parent.parent.select_one('a')
+        self.assertIsNotNone(a)
+        self.assertEqual(a['href'], 'https://example.com')
+        self.assertEqual(a.text, 'Example')
+
     def test_appendixnumberbeamer(self):
         """ Test that the appendixnumberbeamer package loads.
 
