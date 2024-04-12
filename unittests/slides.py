@@ -42,4 +42,16 @@ class SlidesTest(ChirunCompilationTest):
 
             Tests https://github.com/chirun-ncl/chirun/issues/40
         """
+
         self.assertTrue((self.build_dir / 'appendix_number' / 'index.html').exists())
+
+    def test_pause(self):
+        """ The \pause command is removed from any math expressions.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/58
+        """
+
+        soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
+
+        pause_frame = soup.find(id='pause_in_maths').parent.parent
+        self.assertNotIn(r'\pause', pause_frame.select_one('p').text)

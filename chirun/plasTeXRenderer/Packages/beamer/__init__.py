@@ -116,3 +116,7 @@ class AtBeginSection(Command):
 
 class only(Command):
     args = '<number>'
+
+class pause(Command):
+    source = ''
+
