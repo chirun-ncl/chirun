@@ -1,0 +1,19 @@
+title: Course structure tests
+structure:
+  - type: chapter
+    title: Duplicated
+    source: basic.tex
+  - type: chapter
+    title: Duplicated
+    source: basic2.tex
+  - type: chapter
+    title: Duplicated
+    source: basic2.tex
+
+  - type: chapter
+    title: A very long title which would cause problems if not truncated
+    source: basic.tex
+
+  - type: chapter
+    title: A very long title which looks similar to another when truncated
+    source: basic.tex
