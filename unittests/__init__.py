@@ -56,6 +56,7 @@ from .staticfile import *
 from .structure import *
 from .theme_customisation import *
 from .tikz import *
+from .verbatim import *
 from .xcolor import *
 
 if __name__ == '__main__':
