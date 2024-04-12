@@ -47,11 +47,15 @@ class ChirunCompilationTest(unittest.TestCase):
             return json.load(fp)
 
 from .basic import *
+from .bibtex import *
+from .latex_environments import *
+from .maths import *
 from .pdf2svg import *
 from .slides import *
-from .xcolor import *
+from .staticfile import *
+from .structure import *
 from .tikz import *
-from .bibtex import *
+from .xcolor import *
 
 if __name__ == '__main__':
     unittest.main()
