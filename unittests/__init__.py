@@ -50,6 +50,7 @@ from .basic import *
 from .bibtex import *
 from .latex_environments import *
 from .maths import *
+from .pdf import *
 from .pdf2svg import *
 from .slides import *
 from .staticfile import *

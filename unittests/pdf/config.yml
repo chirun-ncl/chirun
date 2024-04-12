@@ -1,0 +1,19 @@
+title: "PDF tests"
+build_pdf: true
+author: "U. Nittest"
+institution: "Testing University"
+year: 3435
+code: "UT0001"
+license:
+  name: CC-BY 4.0
+  url: https://creativecommons.org/licenses/by/4.0/deed.en
+  year: 3434
+  by: People
+structure:
+  - type: chapter
+    title: "LaTeX document 1"
+    source: test.tex
+  - type: chapter
+    title: "LaTeX document 2"
+    source: test.tex
+    build_pdf: false
