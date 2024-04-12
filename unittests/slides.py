@@ -21,6 +21,7 @@ class SlidesTest(ChirunCompilationTest):
 
         soup = self.get_soup('beamer_slides/beamer_slides.slides.html')
 
+        self.assertEqual(soup.select('.beamer-frame')[0].select_one('.beamer-frame-title').text, 'First frame title')
         self.assertEqual(soup.select('.beamer-frame')[1].select_one('.beamer-frame-title').text, 'Title as param')
 
     def test_appendixnumberbeamer(self):
