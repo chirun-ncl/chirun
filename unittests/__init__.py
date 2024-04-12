@@ -54,6 +54,7 @@ from .pdf2svg import *
 from .slides import *
 from .staticfile import *
 from .structure import *
+from .theme_customisation import *
 from .tikz import *
 from .xcolor import *
 
