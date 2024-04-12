@@ -1,0 +1,2 @@
+This is a static file which is not referred to by any document but should be
+copied anyway.

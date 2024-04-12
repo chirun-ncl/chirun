@@ -14,11 +14,7 @@ class ChirunCompilationTest(unittest.TestCase):
 
     compile_args = []
 
-    @property
-    def source_path(self):
-        """ The path to the test's source files.
-        """
-        raise NotImplementedError
+    source_path = ''
 
     @classmethod
     def setUpClass(cls):
@@ -27,6 +23,7 @@ class ChirunCompilationTest(unittest.TestCase):
         shutil.copytree(source_path, cls.tmpdir.name, dirs_exist_ok=True)
         cls.root = Path(cls.tmpdir.name)
         cls.compilation = subprocess.run(['chirun']+cls.compile_args, cwd=cls.root, capture_output=True, encoding='utf8')
+        assert cls.compilation.returncode == 0, "Compilation failed"
         cls.build_dir = cls.root / 'build'
 
     @classmethod

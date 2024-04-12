@@ -1,0 +1,5 @@
+title: "Static files"
+structure:
+  - type: chapter
+    source: test.tex
+    title: "Document linking to static files"
