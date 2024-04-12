@@ -2,10 +2,16 @@ title: "Static files"
 structure:
   - type: chapter
     source: test.tex
-    title: "Document linking to static files"
+    title: "LaTeX document linking to static files"
+  - type: chapter
+    source: test.md
+    title: "Markdown document linking to static files"
   - type: part
     title: A part
     content:
       - type: url
         title: Static file
         source: static/text.txt
+      - type: chapter
+        title: "Markdown document inside a part"
+        source: test.md

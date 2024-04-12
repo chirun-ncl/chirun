@@ -8,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape, contextfilt
 import logging
 import nbformat
 from notedown import MarkdownReader
+import pypdf
 import pyppeteer
 import re
 import socket
@@ -187,14 +188,39 @@ class BaseRenderer(object):
         absHTMLPath = self.pdf_absHTMLPath(item)
         pdf_kwargs = self.pdf_kwargs(item)
 
-        logger.debug('    {src} => {dest}'.format(src=item.title, dest=pdf_kwargs['path']))
+        dest = pdf_kwargs['path']
+
+        logger.debug('    {src} => {dest}'.format(src=item.title, dest=dest))
 
         async with get_browser(root_dir) as (browser, port):
             page = await browser.newPage()
-            page_url = f'http://localhost:{port}/{absHTMLPath}'
+            server_url = f'http://localhost:{port}/'
+            page_url = f'{server_url}{absHTMLPath}'
             await page.goto(page_url)
             await self.wait_for_pdf_ready(page)
             await page.pdf(pdf_kwargs)
+            self.postprocess_pdf(item, dest, server_url)
+
+    def postprocess_pdf(self, item, pdf_path, server_url):
+        writer = pypdf.PdfWriter(clone_from=str(pdf_path))
+        for page in writer.pages:
+            for annot in page.get('/Annots', []):
+                a = annot.get('/A')
+                if not a:
+                    continue
+
+                uri_key = pypdf.generic.NameObject('/URI')
+
+                uri = a.get(uri_key)
+                if uri is None:
+                    continue
+
+                if uri.startswith(server_url):
+                    uri = uri[len(server_url):]
+                    rewritten_uri = self.course.make_relative_url(item, uri)
+                    a[uri_key] = pypdf.generic.TextStringObject(rewritten_uri)
+
+        writer.write(pdf_path)
 
     async def wait_for_pdf_ready(self, page):
         await page.waitForFunction('window.mathjax_is_loaded == 1', options={'timeout': 100000})

@@ -27,8 +27,8 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
             w, h = Image.open(img).size
             return (w, h)
         elif imgext in PDFext:
-            from PyPDF2 import PdfFileReader
-            pdfImage = PdfFileReader(open(img, 'rb'))
+            from pypdf import PdfReader
+            pdfImage = PdfReader(img)
             box = pdfImage.getPage(0).mediaBox
             return (box.getWidth(), box.getHeight())
         else:

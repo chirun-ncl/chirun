@@ -15,7 +15,7 @@ The output content produced by Chirun uses the following third party projects:
  * Markdown parsing with `Python Markdown <https://github.com/Python-Markdown/markdown>`_
  * LaTeX parsing with `plasTeX <https://github.com/plastex/plastex>`_
  * PDF output produced with `LaTeX <https://www.latex-project.org>`_
- * PDF manipulation with `PyPDF2 <https://github.com/mstamy2/PyPDF2/>`_
+ * PDF manipulation with `pypdf <https://github.com/py-pdf/pypdf>`_
  * Image manipulation with `Pillow <https://python-pillow.org>`_
  * Templating with `Jinja <https://palletsprojects.com/p/jinja/>`_
  * Jupyter Notebook conversion with `nbconvert <https://nbconvert.readthedocs.io/en/latest/>`_

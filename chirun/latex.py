@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 import collections
-import PyPDF2
+import pypdf
 from subprocess import Popen, PIPE
 from pathlib import Path
 from chirun import mkdir_p, slugify, copytree
@@ -72,7 +72,7 @@ class LatexSplitter(object):
                         d[k] = self.pages.index(page_obj)
                 return d
 
-            pdf = PyPDF2.PdfFileReader(str(in_path), "rb")
+            pdf = pypdf.PdfReader(str(in_path))
             root = pdf.trailer['/Root'].getObject()
             self.pages = all_pages(root['/Pages'].getObject())
             if '/Names' in root:
