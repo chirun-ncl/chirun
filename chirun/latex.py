@@ -152,6 +152,9 @@ class LatexSplitter(object):
         # Split PDF on the toc entries
         try:
             reader = pypdf.PdfReader(open(str(self.in_path), 'rb'))
+
+            num_pages = reader.get_num_pages()
+
             for idx, entry in enumerate(self.toc):
                 entry.slug = slugify(entry.title or self.in_path.with_suffix('').name)
 
@@ -163,16 +166,20 @@ class LatexSplitter(object):
                     pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
                     n = n + 1
 
+                start_page = entry.pdf_page
+
                 # Identify the end page
-                if idx + 1 == len(self.toc):
-                    end_pg = reader.get_num_pages() - 1
-                else:
-                    end_pg = max(entry.pdf_page, self.toc[idx + 1].pdf_page - 1)
+                end_page = num_pages - 1
+
+                for e2 in self.toc[idx+1:]:
+                    if e2.level <= entry.level:
+                        end_page = e2.pdf_page - 1
+                        break
 
                 try:
                     pdftk_args = [
                         str(self.in_path),
-                        "cat", "{}-{}".format(entry.pdf_page + 1, end_pg + 1),
+                        "cat", "{}-{}".format(start_page + 1, end_page + 1),
                         "output",
                         str(pdfset_file)
                     ]
@@ -185,7 +192,7 @@ class LatexSplitter(object):
                                    'Please install pdftk if possible in your environment.')
                     logger.warning("Trying to continue using pypdf instead...")
                     writer = pypdf.PdfWriter()
-                    for pg in range(entry.pdf_page, end_pg + 1):
+                    for pg in range(start_page, end_page + 1):
                         writer.addPage(reader.getPage(pg))
                     with open(str(pdfset_file), 'wb') as outfile:
                         writer.write(outfile)
