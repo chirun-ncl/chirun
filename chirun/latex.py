@@ -6,13 +6,13 @@ import collections
 import pypdf
 from subprocess import Popen, PIPE
 from pathlib import Path
+from plasTeX.TeX import TeX
 from chirun import mkdir_p, slugify, copytree
 
 logger = logging.getLogger(__name__)
 
 
 class LatexSplitter(object):
-    toc_match = re.compile(r'\\contentsline\s*\{(\w+)\}\{(\\numberline\s*\{([\w.-]+)\})*([^\}]+)\}\{(\d+)\}\{([\w*]+\.[\w.-]+)\}')  # noqa: E501
     pdfset_dir = None
 
     class TocEntry:
@@ -49,35 +49,35 @@ class LatexSplitter(object):
         def __init__(self, in_path):
             def all_pages(pages, p=[]):
                 if '/Kids' in pages:
-                    kids = pages['/Kids'].getObject()
+                    kids = pages['/Kids'].get_object()
                     for k in kids:
-                        all_pages(k.getObject(), p)
+                        all_pages(k.get_object(), p)
                 else:
                     p.append(pages)
                 return p
 
             def all_dests(dests, d={}):
                 if '/Kids' in dests:
-                    kids = dests['/Kids'].getObject()
+                    kids = dests['/Kids'].get_object()
                     for k in kids:
-                        d.update(all_dests(k.getObject(), d))
+                        d.update(all_dests(k.get_object(), d))
                 if '/Names' in dests:
-                    n = dests['/Names'].getObject()
+                    n = dests['/Names'].get_object()
                     for k, v in zip(n[::2], n[1::2]):
-                        v = v.getObject()
+                        v = v.get_object()
                         dest = v
                         if '/D' in v:
-                            dest = v['/D'].getObject()
-                        page_obj = dest[0].getObject()
+                            dest = v['/D'].get_object()
+                        page_obj = dest[0].get_object()
                         d[k] = self.pages.index(page_obj)
                 return d
 
             pdf = pypdf.PdfReader(str(in_path))
-            root = pdf.trailer['/Root'].getObject()
-            self.pages = all_pages(root['/Pages'].getObject())
+            root = pdf.trailer['/Root'].get_object()
+            self.pages = all_pages(root['/Pages'].get_object())
             if '/Names' in root:
-                names = root['/Names'].getObject()
-                dests_root = names['/Dests'].getObject()
+                names = root['/Names'].get_object()
+                dests_root = names['/Dests'].get_object()
                 self.dests = all_dests(dests_root)
             else:
                 logger.warning(
@@ -95,26 +95,42 @@ class LatexSplitter(object):
         self.aux_filename = aux_filename
         self.toc = []
 
-    def toc_from_aux(self, level):
+    def toc_from_aux(self, splitlevel):
         if self.toc:
             return self.toc
 
-        doc = self.TocEntry("document")
-        doc.pdf_page = 0
-        self.toc.append(doc)
         with open(self.aux_filename) as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                m = self.toc_match.search(line)
-                if m:
-                    entry = self.TocEntry(m.group(1))
-                    entry.title = m.group(4)
-                    entry.page = m.group(5)
-                    entry.code = m.group(6)
-                    if entry.level <= level:
-                        self.toc.append(entry)
+            tex = TeX()
+            tex.input(f.read())
+            tex.ownerDocument.context.warnOnUnrecognized = False
+            doc = tex.parse()
+            for i, el in enumerate(doc):
+                if not (el.nodeName == '@' and ''.join(doc[i+1:i+10])=='writefile' and doc[i+10][0] == 'toc'):
+                    continue
+
+                tocline = doc[i+11]
+
+                if tocline[0].nodeName != 'contentsline':
+                    continue
+
+                level = tocline[1][0]
+
+                entry = self.TocEntry(level)
+
+                if entry.level > splitlevel:
+                    continue
+
+                entry.title = tocline[2][-1]
+                entry.page = tocline[3][0]
+                entry.code = tocline[4][0]
+
+                self.toc.append(entry)
+
+        if len(self.toc) == 0:
+            doc = self.TocEntry("document")
+            doc.pdf_page = 0
+            self.toc.append(doc)
+
         return self.toc
 
     def split(self, level):
@@ -135,17 +151,21 @@ class LatexSplitter(object):
 
         # Split PDF on the toc entries
         try:
-            reader = PyPDF2.PdfFileReader(open(str(self.in_path), 'rb'))
+            reader = pypdf.PdfReader(open(str(self.in_path), 'rb'))
             for idx, entry in enumerate(self.toc):
                 entry.slug = slugify(entry.title or self.in_path.with_suffix('').name)
+
+                # Find a filename for this section of the PDF
                 pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
                 n = 0
                 while pdfset_file.exists():
                     entry.slug = slugify(entry.title or self.in_path.with_suffix('').name, n)
                     pdfset_file = self.pdfset_dir / Path(entry.slug).with_suffix('.pdf')
                     n = n + 1
+
+                # Identify the end page
                 if idx + 1 == len(self.toc):
-                    end_pg = reader.getNumPages() - 1
+                    end_pg = reader.get_num_pages() - 1
                 else:
                     end_pg = max(entry.pdf_page, self.toc[idx + 1].pdf_page - 1)
 
@@ -159,12 +179,12 @@ class LatexSplitter(object):
                     PdftkRunner(pdftk_args).exec()
                 except FileNotFoundError as e:
                     logger.warning(e)
-                    # Try an alternative implementation with PyPDF2
+                    # Try an alternative implementation with pypdf
                     # This seems to choke on certain PDFs, so we use it only as a backup
                     logger.warning('Warning: It looks like the pdftk command might be missing... '
                                    'Please install pdftk if possible in your environment.')
-                    logger.warning("Trying to continue using PyPDF2 instead...")
-                    writer = PyPDF2.PdfFileWriter()
+                    logger.warning("Trying to continue using pypdf instead...")
+                    writer = pypdf.PdfWriter()
                     for pg in range(entry.pdf_page, end_pg + 1):
                         writer.addPage(reader.getPage(pg))
                     with open(str(pdfset_file), 'wb') as outfile:
