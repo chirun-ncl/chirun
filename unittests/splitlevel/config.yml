@@ -1,0 +1,25 @@
+title: "Splitlevel test"
+structure:
+  - type: document
+    title: "Default splitlevel"
+    source: test.tex
+  - type: document
+    title: "No splitting"
+    source: test.tex
+    splitlevel: -2
+  - type: document
+    title: "Split at part"
+    source: test.tex
+    splitlevel: -1
+  - type: document
+    title: "Split at chapter"
+    source: test.tex
+    splitlevel: 0
+  - type: document
+    title: "Split at section"
+    source: test.tex
+    splitlevel: 1
+  - type: document
+    title: "Split at subsection"
+    source: test.tex
+    splitlevel: 2
