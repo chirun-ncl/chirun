@@ -1,0 +1,9 @@
+title: "Runnable code tests"
+build_pdf: false
+structure:
+  - type: chapter
+    title: "LaTeX runnable code"
+    source: test.tex
+  - type: chapter
+    title: "Markdown runnable code"
+    source: test.md
