@@ -81,6 +81,7 @@ from .maths import *
 from .notebook import *
 from .pdf import *
 from .pdf2svg import *
+from .raisebox import *
 from .slides import *
 from .splitlevel import *
 from .staticfile import *
