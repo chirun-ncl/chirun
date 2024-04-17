@@ -17,3 +17,16 @@ structure:
   - type: chapter
     title: A very long title which looks similar to another when truncated
     source: basic.tex
+
+  - type: chapter
+    title: Hidden chapter
+    source: basic.tex
+    is_hidden: true
+
+  - type: part
+    title: Hidden part
+    is_hidden: true
+    content:
+      - type: chapter
+        title: Not explicitly hidden chapter
+        source: basic.tex

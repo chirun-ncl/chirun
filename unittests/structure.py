@@ -6,6 +6,8 @@ class StructureTest(ChirunCompilationTest):
 
     source_path = 'structure'
 
+    compile_args = ['--hash-salt', 'a']
+
     def test_duplicated_item(self):
         """ Items with the same title will have different slugs.
 
@@ -33,3 +35,24 @@ class StructureTest(ChirunCompilationTest):
         self.assertLessEqual(len(manifest['structure'][4]['slug']), 20)
         self.assertEqual(manifest['structure'][5]['slug'], 'a_very_long_title_1')
         self.assertLessEqual(len(manifest['structure'][5]['slug']), 20)
+
+    def test_hidden_item(self):
+        """ Check that items with ``is_hidden: true`` get a hash added to their path, and aren't included in the index page.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/197
+        """
+        hidden_part_path = 'hidden_part-80bfe7b2'
+        hidden_chapter_path = 'hidden_chapter-b04b7865'
+
+        self.assertTrue((self.build_dir / hidden_part_path).exists())
+        self.assertTrue((self.build_dir / hidden_chapter_path).exists())
+
+        with open(self.build_dir / 'index.html') as f:
+            index = f.read()
+
+        self.assertNotIn('Hidden part', index)
+        self.assertNotIn('Hidden chapter', index)
+        self.assertNotIn(hidden_part_path, index)
+        self.assertNotIn(hidden_chapter_path, index)
+        self.assertNotIn('Not explicitly hidden', index)
+        self.assertNotIn('not_explicitly_hidd', index)
