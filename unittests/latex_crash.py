@@ -34,6 +34,8 @@ class UndefinedCommandTest(ExpectCrashTest):
 class NoEndDocumentTtest(ExpectCrashTest):
     """ If the document environment is not ended, pdflatex normally waits for input. 
         Chirun should make it run in noninteractive mode so it quits immediately.
+
+        Tests https://github.com/chirun-ncl/chirun/issues/168
     """
     source_path = 'latex_crash'
 
