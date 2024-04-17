@@ -27,15 +27,24 @@ class ChirunCompilationTest(unittest.TestCase):
         cls.tmpdir = tempfile.TemporaryDirectory()
         shutil.copytree(source_path, cls.tmpdir.name, dirs_exist_ok=True)
         cls.root = Path(cls.tmpdir.name)
-        cls.compilation = subprocess.run(['chirun']+cls.compile_args, cwd=cls.root, capture_output=True, encoding='utf8')
+
+        cls.compile(cls.compile_args)
+        cls.check_compilation_returncode()
+        cls.build_dir = cls.root / 'build'
+
+    @classmethod
+    def compile(cls, compile_args):
+        cls.compilation = subprocess.run(['chirun']+compile_args, cwd=cls.root, capture_output=True, encoding='utf8')
         if cls.compilation.stdout.strip() and cls.show_stdout:
             print("STDOUT output:")
             print(cls.compilation.stdout)
         if cls.compilation.stderr.strip() and cls.show_stderr:
             print("STDERR output:")
             print(cls.compilation.stderr)
+
+    @classmethod
+    def check_compilation_returncode(cls):
         assert cls.compilation.returncode == 0, "Compilation failed"
-        cls.build_dir = cls.root / 'build'
 
     @classmethod
     def tearDownClass(cls):
@@ -66,6 +75,7 @@ from .basic import *
 from .bibtex import *
 from .ifplastex import *
 from .images import *
+from .latex_crash import *
 from .latex_environments import *
 from .maths import *
 from .notebook import *
