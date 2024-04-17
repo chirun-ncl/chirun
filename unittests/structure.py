@@ -26,7 +26,7 @@ class StructureTest(ChirunCompilationTest):
     def test_truncated_slug(self):
         """ Items with long titles will have their slugs truncated to 20 characters.
 
-            Tests https://github.com/chirun-ncl/chirun/issues/51
+            Tests https://github.com/chirun-ncl/chirun/issues/51 and https://github.com/chirun-ncl/chirun/issues/201
         """
 
         manifest = self.get_manifest()
@@ -56,3 +56,11 @@ class StructureTest(ChirunCompilationTest):
         self.assertNotIn(hidden_chapter_path, index)
         self.assertNotIn('Not explicitly hidden', index)
         self.assertNotIn('not_explicitly_hidd', index)
+
+    def test_unicode_slug(self):
+        """ Tests that slashes are removed from slugs, but unicode letters are kept.
+        """
+
+        manifest = self.get_manifest()
+
+        self.assertEqual(manifest['structure'][8]['slug'], 'a_𝑎𝐚𝒜')

@@ -1,4 +1,5 @@
-title: Course structure tests
+title: "Course structure tests"
+build_pdf: false
 structure:
   - type: chapter
     title: Duplicated
@@ -30,3 +31,7 @@ structure:
       - type: chapter
         title: Not explicitly hidden chapter
         source: basic.tex
+
+  - type: chapter
+    title: "a/𝑎𝐚𝒜"
+    source: basic.tex
