@@ -7,6 +7,7 @@ class RunnableCodeTest(ChirunCompilationTest):
         """ Checks that the ``runnableCode`` environment is defined in LaTeX and produces a <runnable-code> element in HTML.
 
             Tests https://github.com/chirun-ncl/chirun/issues/155
+            and   https://github.com/chirun-ncl/chirun/issues/160
         """
         soup = self.get_soup('latex_runnable_code/index.html')
 
