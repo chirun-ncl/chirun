@@ -63,4 +63,23 @@ class StructureTest(ChirunCompilationTest):
 
         manifest = self.get_manifest()
 
-        self.assertEqual(manifest['structure'][8]['slug'], 'a_𝑎𝐚𝒜')
+        self.assertEqual(manifest['structure'][10]['slug'], 'a_𝑎𝐚𝒜')
+
+    def test_next_prev_links(self):
+        soup = self.get_soup('duplicated/index.html')
+        self.assertEqual(soup.select_one('a[rel="prev"]')['href'], '../index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../duplicat_1/index.html')
+
+        soup = self.get_soup('duplicat_1/index.html')
+        self.assertEqual(soup.select_one('a[rel="prev"]')['href'], '../duplicated/index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../duplicat_2/index.html')
+
+        soup = self.get_soup('a_part/index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], 'a_chapter/index.html')
+
+        soup = self.get_soup('a_part/a_chapter/index.html')
+        self.assertEqual(soup.select_one('a[rel="prev"]')['href'], '../index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../../a_second_part/index.html')
+
+        soup = self.get_soup('a_second_part/a_second_chapter/index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../../a_𝑎𝐚𝒜/index.html')

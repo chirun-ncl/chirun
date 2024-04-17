@@ -19,6 +19,20 @@ structure:
     title: A very long title which looks similar to another when truncated
     source: basic.tex
 
+  - type: part
+    title: "A part"
+    content:
+      - type: chapter
+        source: basic.tex
+        title: "A chapter"
+
+  - type: part
+    title: "A second part"
+    content:
+      - type: chapter
+        source: basic.tex
+        title: "A second chapter"
+
   - type: chapter
     title: Hidden chapter
     source: basic.tex
