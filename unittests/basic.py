@@ -61,6 +61,24 @@ class BasicTest(ChirunCompilationTest):
 
         self.assertFalse(any(a.text == '' for a in intro.find_all('a')), msg='All links contain text')
 
+    def test_file_build_time(self):
+        """ Check that URLs of static files have a ``build_time`` query parameter added, to prevent caching.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/199
+        """
+
+        intro = self.get_soup('index.html')
+
+        for link in intro.select('link'):
+            if link['href'].startswith('http'):
+                continue
+            self.assertIn('build_time=', link['href'])
+
+        for script in intro.select('script[src]'):
+            if script['src'].startswith('http'):
+                continue
+            self.assertIn('build_time=', script['src'])
+
 class BasicStandaloneTest(ChirunCompilationTest):
     """
         Compile a single LaTeX document in standalone mode.
