@@ -62,3 +62,24 @@ class SplitlevelTest(ChirunCompilationTest):
                 with open(pdf_dir / filename, 'rb') as f:
                     r = pypdf.PdfReader(f)
                     self.assertEqual(r.get_num_pages(), num_pages, msg=f'{filename} has {num_pages} pages')
+
+    def test_pdf_links(self):
+        """ Check that links to PDFs for each item are correct.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/204
+        """
+
+        manifest = self.get_manifest()
+
+        def get_pdf(item):
+            for f in item['formats']:
+                if f['filetype'] == 'pdf':
+                    return f['url']
+
+
+        a = manifest['structure'][1]['content'][0]
+        b = manifest['structure'][1]['content'][1]
+        self.assertEqual(get_pdf(a), 'default_splitlevel/pdf/a.pdf')
+        self.assertEqual(get_pdf(b), 'default_splitlevel/pdf/b.pdf')
+        aa = a['content'][0]
+        self.assertEqual(get_pdf(aa), 'default_splitlevel/pdf/aa.pdf')
