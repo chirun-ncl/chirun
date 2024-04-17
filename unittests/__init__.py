@@ -64,6 +64,7 @@ class ChirunCompilationTest(unittest.TestCase):
 
 from .basic import *
 from .bibtex import *
+from .ifplastex import *
 from .images import *
 from .latex_environments import *
 from .maths import *

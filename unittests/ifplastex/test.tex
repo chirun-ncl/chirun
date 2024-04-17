@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage{chirun}
+
+\begin{document}
+
+\ifplastex
+    This line, IFPLASTEX1, is present in the HTML output but not the PDF output.
+\else
+    This line, IFNOTPLASTEX1, is present in the PDF output but not the HTML output.
+\fi
+
+\ifpdflatex
+    This line, IFNOTPLASTEX2, is present in the PDF output but not the HTML output.
+\else
+    This line, IFPLASTEX2, is present in the HTML output but not the PDF output.
+\fi
+
+\end{document}
