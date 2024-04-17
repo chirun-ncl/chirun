@@ -1,0 +1,6 @@
+title: "Notebook tests"
+build_pdf: false
+structure:
+  - type: notebook
+    title: "Comments"
+    source: comments.md

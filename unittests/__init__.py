@@ -67,9 +67,11 @@ from .bibtex import *
 from .images import *
 from .latex_environments import *
 from .maths import *
+from .notebook import *
 from .pdf import *
 from .pdf2svg import *
 from .slides import *
+from .splitlevel import *
 from .staticfile import *
 from .structure import *
 from .theme_customisation import *
