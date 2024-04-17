@@ -66,6 +66,11 @@ class StructureTest(ChirunCompilationTest):
         self.assertEqual(manifest['structure'][10]['slug'], 'a_𝑎𝐚𝒜')
 
     def test_next_prev_links(self):
+        """ Check that the next/previous item links on each page are present and point to the expected things.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/203
+        """
+
         soup = self.get_soup('duplicated/index.html')
         self.assertEqual(soup.select_one('a[rel="prev"]')['href'], '../index.html')
         self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../duplicat_1/index.html')
@@ -82,4 +87,4 @@ class StructureTest(ChirunCompilationTest):
         self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../../a_second_part/index.html')
 
         soup = self.get_soup('a_second_part/a_second_chapter/index.html')
-        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../../a_𝑎𝐚𝒜/index.html')
+        self.assertEqual(soup.select_one('a[rel="next"]')['href'], '../../a_𝑎𝐚𝒜/index.html', msg="The links should skip over hidden items, and their children.")
