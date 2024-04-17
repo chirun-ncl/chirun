@@ -23,3 +23,6 @@ structure:
     title: "Split at subsection"
     source: test.tex
     splitlevel: 2
+  - type: document
+    title: "No hyperref"
+    source: no_hyperref.tex

@@ -99,6 +99,7 @@ class LatexSplitter(object):
         if self.toc:
             return self.toc
 
+        logger.info(f"Loading table of contents from {self.aux_filename}.")
         with open(self.aux_filename) as f:
             tex = TeX()
             tex.input(f.read())
@@ -108,21 +109,24 @@ class LatexSplitter(object):
                 if not (el.nodeName == '@' and ''.join(doc[i+1:i+10])=='writefile' and doc[i+10][0] == 'toc'):
                     continue
 
-                tocline = doc[i+11]
+                try:
+                    tocline = doc[i+11]
 
-                if tocline[0].nodeName != 'contentsline':
+                    if tocline[0].nodeName != 'contentsline':
+                        continue
+
+                    level = tocline[1][0]
+
+                    entry = self.TocEntry(level)
+
+                    if entry.level > splitlevel:
+                        continue
+
+                    entry.title = tocline[2][-1]
+                    entry.page = tocline[3][0]
+                    entry.code = tocline[4][0]
+                except IndexError as e:
                     continue
-
-                level = tocline[1][0]
-
-                entry = self.TocEntry(level)
-
-                if entry.level > splitlevel:
-                    continue
-
-                entry.title = tocline[2][-1]
-                entry.page = tocline[3][0]
-                entry.code = tocline[4][0]
 
                 self.toc.append(entry)
 

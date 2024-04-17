@@ -48,6 +48,9 @@ class SplitlevelTest(ChirunCompilationTest):
                 'abb.pdf': 2,
                 'b.pdf': 3,
             },
+            'no_hyperref': {
+                'no_hyperref.pdf': 11
+            },
         }
 
         for item, file_info in pdfs.items():
