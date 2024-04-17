@@ -23,4 +23,3 @@ class MathsTest(ChirunCompilationTest):
 
         display_maths = soup.select_one('.item-content p script[type="math/tex; mode=display"]')
         self.assertEqual(display_maths.text.strip(), r'\frac{1}{2}')
-        print(soup.select('.item-content p'))
