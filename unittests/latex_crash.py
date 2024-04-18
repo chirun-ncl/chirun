@@ -1,15 +1,9 @@
-from . import ChirunCompilationTest
+from . import ExpectCrashTest
 
 """ Tests for several ways of making LaTeX compilation fail.
 
     Tests https://github.com/chirun-ncl/chirun/issues/135
 """
-
-class ExpectCrashTest(ChirunCompilationTest):
-    show_stderr = False
-    @classmethod
-    def check_compilation_returncode(cls):
-        pass
 
 class ExtraBraceTest(ExpectCrashTest):
     """ If there is an extra closing brace, pdflatex should quit immediately.

@@ -84,6 +84,15 @@ class ChirunCompilationTest(unittest.TestCase):
         with open(self.build_dir / 'MANIFEST.json') as fp:
             return json.load(fp)
 
+class ExpectCrashTest(ChirunCompilationTest):
+    """ A test case which expects Chirun to quit with an error.
+    """
+
+    show_stderr = False
+    @classmethod
+    def check_compilation_returncode(cls):
+        pass
+
 from .basic import *
 from .bibtex import *
 from .double_document import *
@@ -92,6 +101,7 @@ from .images import *
 from .latex_crash import *
 from .latex_environments import *
 from .maths import *
+from .missing_source import *
 from .notebook import *
 from .pdf import *
 from .pdf2svg import *
