@@ -1,0 +1,5 @@
+title: "Reference tests"
+build_pdf: false
+structure:
+  - type: chapter
+    source: test.tex

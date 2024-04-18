@@ -1,0 +1,49 @@
+\documentclass{article}
+
+\usepackage{chirun}
+\usepackage{amsmath}
+
+\begin{document}
+
+Subequations
+
+\begin{subequations}\label{s1}
+\begin{equation}
+x = 1 \label{e1a}
+\end{equation}
+\begin{equation}
+y = 2\label{e1b}
+\end{equation}
+\end{subequations}
+
+Equation with no tag
+
+\begin{equation}\label{e2}
+c = c
+\end{equation}
+
+Equation with tag
+
+\begin{equation}\label{ez}
+ a = f \tag{z}
+\end{equation}
+
+Subequations again
+
+\begin{subequations}\label{s2}
+\begin{equation}
+x = 1\label{e2a}
+\end{equation}
+\begin{equation}
+y = 2\tag{y}\label{e2y}
+\end{equation}
+\begin{equation}
+y = 3\label{e2b}
+\end{equation}
+\end{subequations}
+
+Refs: \ref{s1} \ref{e1a} \ref{e1b} \ref{e2} \ref{ez} \ref{s2} \ref{e2a} \ref{e2y} \ref{e2b}
+
+Refs in maths mode: \( \ref{s1} \ref{e1a} \ref{e1b} \ref{e2} \ref{ez} \ref{s2} \ref{e2a} \ref{e2y} \ref{e2b} \)
+
+\end{document}

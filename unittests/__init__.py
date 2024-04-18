@@ -108,6 +108,7 @@ from .pdf2svg import *
 from .placeins import *
 from .proof import *
 from .raisebox import *
+from .refs import *
 from .runnable_code import *
 from .slash import *
 from .slides import *
