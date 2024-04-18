@@ -29,11 +29,15 @@ window.MathJax = {
         },
         tagformat: {
             url: (id, base) => {
+                /** 
+                 * Format the URL for a reference in math mode.
+                 * If it's in `body_refs`, strip off MathJax's `mjx-eqn:` prefix.
+                 */
                 const stripped_id = id.replace(/^mjx-eqn:/,'');
                 if(body_refs[stripped_id]) {
-                    id = stripped_id;
+                    id = '#' + stripped_id;
                 }
-                return '#'+id;
+                return id;
             }
         }
     },
@@ -57,6 +61,8 @@ window.MathJax = {
                     const ref = parser.tags.allLabels[label] || parser.tags.labels[label];
 
                     if (!ref && parser.tags.refUpdate) {
+                        /** When there is a reference in math mode to a label defined in text mode, fill it in from `body_refs`.
+                         */
                         if(body_refs[label]) {
                             const {ref, url} = body_refs[label];
                             parser.tags.labels[label] = new Label(ref, url);
