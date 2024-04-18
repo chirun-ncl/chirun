@@ -106,6 +106,7 @@ from .notebook import *
 from .pdf import *
 from .pdf2svg import *
 from .placeins import *
+from .proof import *
 from .raisebox import *
 from .runnable_code import *
 from .slash import *

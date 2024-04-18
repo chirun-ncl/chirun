@@ -1,0 +1,12 @@
+title: "Proof environment tests"
+build_pdf: false
+structure:
+  - type: chapter
+    title: newenvironment
+    source: newenvironment.tex
+  - type: chapter
+    title: "newenvironment amsthm"
+    source: newenvironment_amsthm.tex
+  - type: chapter
+    title: amsthm
+    source: amsthm.tex
