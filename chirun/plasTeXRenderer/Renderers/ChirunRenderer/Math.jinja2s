@@ -29,3 +29,8 @@ name: equation
 <div class="eqn" id="{{ obj.id }}">
 <script type="math/tex; mode=display">{{ obj.source }}</script>
 </div>
+
+name: subequations
+<div class="subequations" id="{{ obj.id }}">
+{{obj}}
+</div>
