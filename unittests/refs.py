@@ -3,7 +3,6 @@ import json
 
 class RefsTest(ChirunCompilationTest):
     source_path = 'refs'
-    show_stdout = True
     compile_args = ['-f', 'refs.tex']
 
     expect_labels = {'s1': {'ref': '1', 'url': '#s1'}, 'e1a': {'ref': '1a', 'url': '#e1a'}, 'e1b': {'ref': '1b', 'url': '#e1b'}, 'e2': {'ref': '2', 'url': '#e2'}, 'ez': {'ref': 'z', 'url': '#ez'}, 's2': {'ref': '3', 'url': '#s2'}, 'e2a': {'ref': '3a', 'url': '#e2a'}, 'e2y': {'ref': 'y', 'url': '#e2y'}, 'e2b': {'ref': '3b', 'url': '#e2b'}}

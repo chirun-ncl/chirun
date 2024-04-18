@@ -3,7 +3,6 @@ import re
 
 class ProofTest(ChirunCompilationTest):
     source_path = 'proof'
-    show_stdout = True
 
     def test_newenvironment(self):
         """ Checks how a proof environment defined with ``\\newenvironment`` is displayed, without the amsthm package.
