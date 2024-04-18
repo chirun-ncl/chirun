@@ -1,3 +1,9 @@
+(() => {
+const body_refs = {};
+const plastex_labels = document.getElementById('plastex-labels');
+if(plastex_labels) {
+    Object.assign(body_refs, JSON.parse(plastex_labels.textContent));
+}
 window.MathJax = {
     tex: {
         macros: {
@@ -22,7 +28,13 @@ window.MathJax = {
             packages: {'[+]': ['bbox']}
         },
         tagformat: {
-            url: (id, base) => id
+            url: (id, base) => {
+                const stripped_id = id.replace(/^mjx-eqn:/,'');
+                if(body_refs[stripped_id]) {
+                    id = stripped_id;
+                }
+                return '#'+id;
+            }
         }
     },
     startup: {
@@ -33,11 +45,6 @@ window.MathJax = {
             const Label = MathJax._.input.tex.Tags.Label;
             const BaseMethods = MathJax._.input.tex.base.BaseMethods.default;
 
-            const body_refs = {};
-            const plastex_labels = document.getElementById('plastex-labels');
-            if(plastex_labels) {
-                Object.assign(body_refs, JSON.parse(plastex_labels.textContent));
-            }
             new CommandMap('chirun-eqref', {
                 ref:     ['HandleRef', false],
                 eqref: ['HandleRef', true]
@@ -98,3 +105,4 @@ window.MathJax = {
         ]
     }
 };
+})();
