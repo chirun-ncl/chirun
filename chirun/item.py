@@ -637,6 +637,5 @@ item_types = {
     'html': Html,
     'extractedsection': ExtractedSection,
     'slides': Slides,
-    'exam': Exam,
     'notebook': Notebook,
 }
