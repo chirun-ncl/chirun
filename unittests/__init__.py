@@ -115,6 +115,7 @@ from .slides import *
 from .splitlevel import *
 from .staticfile import *
 from .structure import *
+from .toc import *
 from .theme_customisation import *
 from .tikz import *
 from .verbatim import *
