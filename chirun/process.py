@@ -206,3 +206,7 @@ class FindHiddenItemsProcess(ItemProcess):
     def visit_default(self, item):
         if item.is_hidden:
             self.course.hidden_paths.append(item.out_path)
+
+    def visit_part(self, item):
+        self.visit_default(item)
+        super().visit_part(item)

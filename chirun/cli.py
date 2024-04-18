@@ -403,8 +403,16 @@ class Chirun:
         """
 
         manifest = copy.deepcopy(self.config)
+
+        def remove_hidden(items):
+            items = [item for item in items if not item['is_hidden']]
+            for item in items:
+                if 'content' in item:
+                    item['content'] = remove_hidden(item['content'])
+            return items
+
         manifest.update({
-            'structure': [item.content_tree() for item in self.structure],
+            'structure': remove_hidden([item.content_tree() for item in self.structure]),
             'zipfile': str(self.get_zipfile_name()),
         })
         del manifest['args']
