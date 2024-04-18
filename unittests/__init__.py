@@ -50,10 +50,23 @@ class ChirunCompilationTest(unittest.TestCase):
     def tearDownClass(cls):
         if os.environ.get('KEEP_TEST_OUTPUT') == '1':
             keep_dir = Path(__file__).parent / '_kept' / (Path(cls.source_path).name)
+
             keep_dir.mkdir(exist_ok=True, parents=True)
+
             if keep_dir.exists():
                 shutil.rmtree(keep_dir, ignore_errors=True)
+
             shutil.copytree(cls.tmpdir.name, keep_dir)
+
+            log_dir = keep_dir / 'logs'
+            log_dir.mkdir(exist_ok=True)
+
+            with open(log_dir / 'stdout.log', 'w') as f:
+                f.write(cls.compilation.stdout)
+
+            with open(log_dir / 'stderr.log', 'w') as f:
+                f.write(cls.compilation.stderr)
+
             print(f"\nTest files have been kept at {keep_dir}\n")
 
         cls.tmpdir.cleanup()
