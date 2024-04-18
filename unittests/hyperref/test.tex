@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{chirun}
+\usepackage{hyperref}
+
+\begin{document}
+A link to:
+
+\hyperref[numbered]{numbered section}
+
+\hyperref[not-numbered]{not numbered section}
+
+\ifplastex
+\hyperref[only-html]{HTML-only section}
+\fi
+
+\section{Numbered}\label{numbered}
+
+This section is numbered.
+
+\section*{Not numbered}\label{not-numbered}
+
+This section is not numbered.
+
+\ifplastex
+\section*{Only in HTML}\label{only-html}
+
+This section only appears in HTML.
+\fi
+
+\end{document}

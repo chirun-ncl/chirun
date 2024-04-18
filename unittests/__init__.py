@@ -96,6 +96,7 @@ class ExpectCrashTest(ChirunCompilationTest):
 from .basic import *
 from .bibtex import *
 from .double_document import *
+from .hyperref import *
 from .ifplastex import *
 from .images import *
 from .latex_crash import *
