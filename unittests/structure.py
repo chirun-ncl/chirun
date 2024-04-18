@@ -131,3 +131,19 @@ class StructureTest(ChirunCompilationTest):
                 disk_filenames.append(str(p))
 
         self.assertEqual(set(disk_filenames), set(zip_filenames))
+
+class StandaloneTest(ChirunCompilationTest):
+    source_path = 'structure'
+
+    compile_args = ['-f', 'basic.tex']
+
+    def test_standalone_no_navigation(self):
+        """ Check that a standalone document doesn't have any links to other items.
+
+            Tests https://github.com/chirun-ncl/chirun/issues/224
+        """
+
+        soup = self.get_soup('index.html')
+
+        self.assertIsNone(soup.select_one('.breadcrumbs'), msg="No breadcrumbs")
+        self.assertIsNone(soup.select_one('#item-pager'), msg="No pager")
