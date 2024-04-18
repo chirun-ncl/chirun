@@ -97,6 +97,7 @@ from .pdf2svg import *
 from .placeins import *
 from .raisebox import *
 from .runnable_code import *
+from .slash import *
 from .slides import *
 from .splitlevel import *
 from .staticfile import *
