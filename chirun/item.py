@@ -236,7 +236,7 @@ class Item(object):
         """
 
         if self.has_pdf:
-            yield {'name': 'PDF', 'url': self.pdf_url, 'download': True}
+            yield {'name': 'PDF', 'url': self.pdf_url, 'download': True, 'mime_type': 'application/pdf'}
 
     def has_alternative_formats(self):
         try:
@@ -546,13 +546,6 @@ class Chapter(Item):
             return [item for item in self.course.structure if item.type != 'introduction']
 
 
-class Exam(Chapter):
-    type = 'exam'
-    title = 'Untitled exam'
-    template_name = 'exam.html'
-    has_sidebar = False
-    must_have_source = False
-
 class Slides(Chapter):
     type = 'slides'
     title = 'Untitled Slides'
@@ -586,7 +579,7 @@ class Slides(Chapter):
         return str(self.out_slides)
 
     def alternative_formats(self):
-        yield {'name': 'Slides', 'url': self.slides_url}
+        yield {'name': 'Slides', 'url': self.slides_url, 'type': 'text/html+slides'}
         yield from super().alternative_formats()
 
 
@@ -631,7 +624,7 @@ class Notebook(Chapter):
 
     def alternative_formats(self):
         yield from super().alternative_formats()
-        yield {'name': 'Notebook', 'url': self.nb_url, 'download': True}
+        yield {'name': 'Notebook', 'url': self.nb_url, 'download': True, type: 'application/vnd.jupyter'}
 
 
 item_types = {
