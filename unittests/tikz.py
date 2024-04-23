@@ -17,7 +17,6 @@ class TikzTest(ChirunCompilationTest):
         self.assertTrue(self.image_path.exists(), msg=f'The image is present at {self.image_path}')
 
     def test_alttext_exists(self):
-        self.assertTrue(self.image_path.exists(), msg=f'The image is present at {self.image_path}')
         soup = self.get_soup('index.html')
         img = soup.select('.item-content img')
         self.assertEqual(img[0]['alt'], 'A box with an arrow from lower left to upper right, and a node midway along the base', msg='The tikz image has alt text.')
