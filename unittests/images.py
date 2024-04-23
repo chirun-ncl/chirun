@@ -25,6 +25,7 @@ class ImageTest(ChirunCompilationTest):
         img = soup.select('.item-content img')
         self.assertEqual(img[0]['src'], 'images/img-0001.jpg', msg='The jpg is embedded as an <img> tag.')
         self.assertEqual(img[1]['src'], 'images/img-0002.png', msg='The png is embedded as an <img> tag.')
+        self.assertEqual(img[2]['src'], 'images/img-0003.png', msg='The eps is converted to a png and embedded as an <img> tag.')
     
     def test_sizing(self):
         soup = self.get_soup('index.html')
