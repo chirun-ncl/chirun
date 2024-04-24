@@ -106,6 +106,7 @@ from .missing_source import *
 from .notebook import *
 from .pdf import *
 from .pdf2svg import *
+from .picture import *
 from .placeins import *
 from .proof import *
 from .raisebox import *
