@@ -3,6 +3,8 @@ from . import ChirunCompilationTest
 class ImageTest(ChirunCompilationTest):
     """
         Tests that the picture environment does not break maths
+
+        Tests https://github.com/chirun-ncl/chirun/issues/126
     """
     source_path = 'picture'
     compile_args = ['-f', 'test.tex']
