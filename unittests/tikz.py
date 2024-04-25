@@ -3,6 +3,8 @@ from . import ChirunCompilationTest
 class TikzTest(ChirunCompilationTest):
     """
         Compile a single LaTeX document containing a tikz diagram including simple draw and node commands.
+
+        Tests https://github.com/chirun-ncl/chirun/issues/44 and https://github.com/chirun-ncl/chirun/issues/5
     """
     source_path = 'tikz'
     compile_args = ['-f', 'test.tex']
