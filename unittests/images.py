@@ -1,6 +1,6 @@
 from . import ChirunCompilationTest
 
-class ImageTest(ChirunCompilationTest):
+class LaTeXImageTest(ChirunCompilationTest):
     """
         Tests the upload of many different image types
     """
@@ -38,3 +38,25 @@ class ImageTest(ChirunCompilationTest):
         self.assertAlmostEqual(pngWidth, 2400 ,places=0, msg='The png has a width of 2400px, 2* its base width')
         self.assertAlmostEqual(pngHeight, 2802 ,places=0, msg='The png has a height of 2802px, 2* its base height')
 
+class MarkdownImageTest(ChirunCompilationTest):
+    """
+        Tests the upload of many different image types
+    """
+    source_path = 'images'
+    compile_args = ['-f', 'test.md', '--no-pdf']
+
+    def test_image_urls(self):
+        """ Check that the ``src`` URLs for images are correct.
+
+            Tests #234
+        """
+
+        soup = self.get_soup('index.html')
+
+        images = soup.select('.item-content img')
+
+        sources = ['images/drawing.png', 'images/drawing.png', 'images/drawing-0000.png', 'images/drawing-0000.png', 'images/Uniform_tiling_circle_packings.png', 'images/Penrose_tiling_at_Oxford_Mathematical_Institute_small.jpg', 'images/diagram.svg']
+        alt = ['drawing 1 markdown', 'drawing 1 tag', 'drawing 2 markdown', 'drawing 2 tag', 'Tilings', 'Penrose', 'Diagram']
+        for i, img in enumerate(images):
+            self.assertEqual(img['src'], sources[i])
+            self.assertTrue((self.build_dir / img['src']).exists())

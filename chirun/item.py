@@ -207,7 +207,7 @@ class Item(object):
                 else:
                     raise Exception("Error: Unrecognised source type for {}: {}.".format(self, self.source))
 
-        html, headers = HTMLFilter().apply(self, html, out_format='html')
+        html, headers = HTMLFilter().apply(self, html)
 
         self.html = self.data['html'] = html
         self.headers = headers
