@@ -96,6 +96,7 @@ class ExpectCrashTest(ChirunCompilationTest):
 from .basic import *
 from .bibtex import *
 from .double_document import *
+from .enumerate import *
 from .hyperref import *
 from .ifplastex import *
 from .images import *
@@ -116,9 +117,9 @@ from .slides import *
 from .splitlevel import *
 from .staticfile import *
 from .structure import *
-from .toc import *
 from .theme_customisation import *
 from .tikz import *
+from .toc import *
 from .verbatim import *
 from .xcolor import *
 
