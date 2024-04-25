@@ -49,7 +49,7 @@ class ChirunCompilationTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if os.environ.get('KEEP_TEST_OUTPUT') == '1':
-            keep_dir = Path(__file__).parent / '_kept' / (Path(cls.source_path).name)
+            keep_dir = Path(__file__).parent / '_kept' / (cls.__name__)
 
             keep_dir.mkdir(exist_ok=True, parents=True)
 
