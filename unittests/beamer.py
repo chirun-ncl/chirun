@@ -1,4 +1,5 @@
 from . import ChirunCompilationTest
+from PIL import Image
 
 class BeamerTest(ChirunCompilationTest):
     """
@@ -8,12 +9,18 @@ class BeamerTest(ChirunCompilationTest):
     compile_args = ['-f', 'test.tex']
 
     def setUp(self):
-        self.tikz_path = self.build_dir / 'images' / 'img-0001.svg'  
+        self.pdf_path = self.build_dir / 'images' / 'img-0001.svg'  
+        self.tikz_path = self.build_dir / 'images' / 'img-0002.svg'  
+        self.png_path = self.build_dir / 'images' / 'img-0001.png'  
     
     def test_sizing(self):
-        soup = self.get_soup('index.html')
-        img = soup.select('.item-content img')
-        imgStyle = img[0]['style'].split(";")
-        imgWidth = float(imgStyle[0].split(":")[1][:-2])
-        self.assertAlmostEqual(imgWidth, 85.36 ,places=1, msg='The image has a width of 3cm')
+        pdfViewbox = 'viewBox="0 0 315.01462 356.974953"'
+        tikzViewbox = 'viewBox="0 0 87 58"'
+        pngWidth = 400
+        with open(self.pdf_path) as pdfSvg:
+            self.assertIn(pdfViewbox, pdfSvg.read())
+        with open(self.tikz_path) as tikzSvg:
+            self.assertIn(tikzViewbox, tikzSvg.read())
+        with Image.open(self.png_path) as pngPng:
+            self.assertEqual(pngWidth, pngPng.width)
 
