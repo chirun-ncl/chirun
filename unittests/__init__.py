@@ -94,6 +94,7 @@ class ExpectCrashTest(ChirunCompilationTest):
         pass
 
 from .basic import *
+from .beamer import *
 from .bibtex import *
 from .double_document import *
 from .enumerate import *

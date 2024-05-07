@@ -1,0 +1,29 @@
+\documentclass[xcolor=svgnames]{beamer}
+\setbeamertemplate{background canvas}[vertical shading][bottom=blue,top=yellow]
+\usepackage{tikz}
+\title{Title}
+\author{Author}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{pdf}
+    \includegraphics[width=3cm]{diagram.pdf}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{tikz}
+    \begin{tikzpicture}
+    \draw[fill=blue] (0,0) rectangle (3,2);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+        \frametitle{png}
+        \includegraphics[width=3cm]{drawing.png}
+    \end{frame}
+
+\end{document}
