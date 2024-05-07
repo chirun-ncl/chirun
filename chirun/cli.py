@@ -208,6 +208,7 @@ class Chirun:
 
         if self.args.single_file:
             self.config.update({
+                'build_pdf': self.args.build_pdf,
                 'structure': [
                     {
                         'type': 'standalone',
@@ -516,5 +517,5 @@ def arg_parser():
     parser.add_argument('--no-pdf', dest='build_pdf', action='store_false', help='Don\'t build PDF files')
     parser.add_argument('--hash-salt', dest='hash_salt', default='',
                         help='Salt string for hashing paths to hidden items')
-    parser.set_defaults(build_pdf=None)
+    parser.set_defaults(build_pdf=True)
     return parser

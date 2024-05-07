@@ -294,6 +294,6 @@ class NotebookRenderer(object):
         for cell in nb.cells:
             if cell['cell_type'] == 'markdown':
                 html = self.markdownRenderer.render(item, outDir, cell['source'])
-                cell['source'], _ = chirun.filter.CellHTMLFilter().apply(item, html, out_format='html')
+                cell['source'], _ = chirun.filter.CellHTMLFilter().apply(item, html)
         with open(str(outPath), 'w', encoding='utf-8') as f:
             nbformat.write(nb, f)

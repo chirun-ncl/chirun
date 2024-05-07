@@ -1,0 +1,69 @@
+\documentclass{article}
+
+\usepackage{enumerate}
+
+\begin{document}
+
+\section{Default label style}
+
+\begin{enumerate}
+    \item Item 1
+    \item Item 2
+        \begin{enumerate}
+            \item Subitem a
+                \begin{enumerate}
+                    \item Subsubitem i
+                        \begin{enumerate}
+                            \item Subsubsubitem A
+                        \end{enumerate}
+                \end{enumerate}
+            \item Subitem b
+        \end{enumerate}
+    \item Item 3
+\end{enumerate}
+
+\section{Some items have custom labels}
+
+\begin{enumerate}
+    \item Item 1
+    \item Item 2
+        \begin{enumerate}
+            \item Subitem a
+                \begin{enumerate}
+                    \item Subsubitem i
+                        \begin{enumerate}
+                            \item Subsubsubitem A
+                            \item[::] Subsubsubitem B with a custom label
+                        \end{enumerate}
+                    \item[--] Subsubitem ii with a custom label
+                \end{enumerate}
+            \item Subitem b
+            \item[?] Subitem c with a custom label
+        \end{enumerate}
+    \item Item 3
+    \item[!!!] Item 4 with a custom label
+\end{enumerate}
+
+\section{Explicitly set label style for entire lists}
+
+\begin{enumerate}[<1>]
+    \item Item 1
+    \item Item 2
+        \begin{enumerate}['I']
+            \item Subitem a
+                \begin{enumerate}[...a]
+                    \item Subsubitem i
+                \end{enumerate}
+            \item Subitem b
+                \begin{enumerate}
+                    \item Default label subsubitem
+                \end{enumerate}
+        \end{enumerate}
+    \item Item 3
+        \begin{enumerate}
+            \item Default label subitem
+        \end{enumerate}
+\end{enumerate}
+
+
+\end{document}

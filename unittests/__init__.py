@@ -49,7 +49,7 @@ class ChirunCompilationTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if os.environ.get('KEEP_TEST_OUTPUT') == '1':
-            keep_dir = Path(__file__).parent / '_kept' / (Path(cls.source_path).name)
+            keep_dir = Path(__file__).parent / '_kept' / (cls.__name__)
 
             keep_dir.mkdir(exist_ok=True, parents=True)
 
@@ -97,6 +97,7 @@ from .basic import *
 from .beamer import *
 from .bibtex import *
 from .double_document import *
+from .enumerate import *
 from .hyperref import *
 from .ifplastex import *
 from .images import *
@@ -107,6 +108,7 @@ from .missing_source import *
 from .notebook import *
 from .pdf import *
 from .pdf2svg import *
+from .picture import *
 from .placeins import *
 from .proof import *
 from .raisebox import *
@@ -117,9 +119,9 @@ from .slides import *
 from .splitlevel import *
 from .staticfile import *
 from .structure import *
-from .toc import *
 from .theme_customisation import *
 from .tikz import *
+from .toc import *
 from .verbatim import *
 from .xcolor import *
 

@@ -772,6 +772,25 @@ figure + em, .reveal figure + em {
     content: '🞄';
 }
 
+@counter-style parenthesized-lower-alpha {
+  system: extends lower-alpha;
+  prefix: '(';
+  suffix: ') ';
+}
+
+.enumerate .enumerate {
+    list-style: lower-alpha;
+    list-style: parenthesized-lower-alpha;
+}
+
+.enumerate .enumerate .enumerate {
+    list-style: lower-roman;
+}
+
+.enumerate .enumerate .enumerate .enumerate {
+    list-style: upper-alpha;
+}
+
 .bibliography .bibcite {
     display: inline-block;
     margin-right: 0.5em;

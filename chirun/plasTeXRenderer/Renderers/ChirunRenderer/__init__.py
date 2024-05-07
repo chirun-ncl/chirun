@@ -56,7 +56,7 @@ class ChirunRenderer(_Renderer):
     """Modified HTML5 renderer for Chirun."""
 
     imageTypes = ['.svg', '.png', '.jpg', '.jpeg', '.gif']
-    vectorImageTypes = ['.svg', '.pdf']
+    vectorImageTypes = ['.svg', '.pdf', '.eps']
 
     renderableClass = Renderable
     postProcessFile = None
