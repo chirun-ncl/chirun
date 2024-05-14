@@ -16,6 +16,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: coursebuilder/chirun-base:dev
     
     defaults:
       run:
