@@ -1,8 +1,10 @@
+PYTHON_COMMAND ?= python
+
 test:
-	python -m unittest unittests
+	$(PYTHON_COMMAND) -m unittest unittests
 
 test_%:
-	python -m unittest unittests.$(patsubst test_%,%,$@)
+	$(PYTHON_COMMAND) -m unittest unittests.$(patsubst test_%,%,$@)
 
 keep_test_%:
-	KEEP_TEST_OUTPUT=1 python -m unittest unittests.$(patsubst keep_test_%,%,$@)
+	KEEP_TEST_OUTPUT=1 $(PYTHON_COMMAND) -m unittest unittests.$(patsubst keep_test_%,%,$@)
