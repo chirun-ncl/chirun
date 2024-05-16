@@ -3,9 +3,9 @@ name: Run the unit tests
 # Controls when the workflow will run
 on:
   push:
-    branches: [ unittests ]
+    branches: [ unittests, master ]
   pull_request:
-    branches: [ unittests ]
+    branches: [ unittests, master ]
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
