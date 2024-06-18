@@ -52,7 +52,7 @@ body[data-colour-scheme="auto"], body[data-colour-scheme="light"] {
 @media (prefers-color-scheme: dark) {
     body[data-colour-scheme="auto"] {
         --text-colour: #ffffff;
-        --link-colour: #ffffee;
+        --link-colour: #ccccff;
         --bg-colour: #000000;
         --bg-colour-off: #222222;
         --bg-colour-accent-1: #1e441f;
@@ -62,7 +62,7 @@ body[data-colour-scheme="auto"], body[data-colour-scheme="light"] {
 
         --active-link-brightness: 1.2;
     }
-    body:not([data-colour-scheme="light"])[data-invert-images="true"] {
+    body:not([data-colour-scheme="light"])[data-invert-images="true"] #item-content {
         --image-filter: invert(100%) hue-rotate(0.5turn);
     }
 }
