@@ -1,5 +1,5 @@
 {% macro icon(icon,label) -%}
-<svg class="icon" alt="{{label}}" viewBox="0 0 180 180">
+<svg class="icon" aria-label="{{label}}" viewBox="0 0 180 180">
     <use href="#{{icon}}"/>
 </svg>
 {%- endmacro %}
