@@ -122,9 +122,9 @@ class LatexSplitter(object):
                     if entry.level > splitlevel:
                         continue
 
-                    entry.title = tocline[2][-1]
-                    entry.page = tocline[3][0]
-                    entry.code = tocline[4][0]
+                    entry.title = tocline[2][-1].textContent
+                    entry.page = tocline[3][0].textContent
+                    entry.code = tocline[4][0].textContent
                 except IndexError as e:
                     continue
 
