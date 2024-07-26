@@ -2,8 +2,7 @@
 *.paux
 *.pyc
 *.swp
-makeCourse.egg-info/
-chirun.egg-info/
+*.egg-info/
 docs/build
 **/.DS_Store
 unittests/_kept

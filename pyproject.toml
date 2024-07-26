@@ -1,0 +1,52 @@
+[project]
+name = "chirun"
+version = "1.2.0"
+authors = [
+  { name="Digital Learning team, School of Mathematics, Statistics and Physics, Newcastle University", email="msp.digital.learning@ncl.ac.uk" },
+  { name="George Stagg", email="george@stagg.phd"},
+  { name="Christian Lawson-Perfect", email="christian.perfect@ncl.ac.uk"}
+]
+description = "Produce flexible and accessible course notes, in a variety of formats, using LaTeX or Markdown source"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Education",
+    "Topic :: Text Processing :: Markup :: LaTeX",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+dependencies = [
+    "appdirs==1.4.4",
+    "arrow==1.2.2",
+    "beautifulsoup4==4.11.1",
+    "Jinja2==2.11.3",
+    "Markdown==3.1.1",
+    "notedown==1.5.1",
+    "Pillow==9.2.0",
+    "plasTeX @ git+https://github.com/christianp/plastex@chirun-running-fixes",
+    "Pygments==2.11.0",
+    "pymdown-extensions==6.0",
+    "pyoembed==0.1.2",
+    "pypdf==4.2.0",
+    "pyppeteer==1.0.2",
+    "pytest==7.1.2",
+    "PyYAML==6.0.1",
+    "Babel==2.12.1",
+]
+
+[project.scripts]
+chirun = "chirun:cli.main"
+
+[project.urls]
+Homepage = "https://chirun.org.uk"
+Issues = "https://github.com/chirun-ncl/chirun/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["chirun"]

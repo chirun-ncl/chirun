@@ -5,6 +5,7 @@ from . import process
 from . import slugify
 from .theme import Theme
 from . import oembed
+from . import plastex
 import argparse
 import chirun
 import copy
@@ -20,6 +21,7 @@ import yaml
 import zipfile
 
 
+logging.setLoggerClass(logging.Logger)
 logger = logging.getLogger('chirun')
 
 class Chirun:
@@ -519,3 +521,22 @@ def arg_parser():
                         help='Salt string for hashing paths to hidden items')
     parser.set_defaults(build_pdf=True)
     return parser
+
+def main():
+    args = arg_parser().parse_args()
+
+    extensions = [
+        plastex.PlastexRunner,
+    ]
+
+    class Builder(Chirun, *extensions):
+        pass
+
+    mc = Builder(args)
+    mc.build()
+
+    print("Output written to {}".format(mc.build_dir.resolve()))
+
+
+if __name__ == "__main__":
+    main()
