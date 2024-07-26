@@ -24,6 +24,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+
+      - run: pip install --upgrade setuptools pip
       
       - run: pip install -e .
       
