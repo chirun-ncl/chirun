@@ -1,6 +1,6 @@
 [project]
 name = "chirun"
-version = "1.2.0"
+version = "1.2.1"
 authors = [
   { name="Digital Learning team, School of Mathematics, Statistics and Physics, Newcastle University", email="msp.digital.learning@ncl.ac.uk" },
   { name="George Stagg", email="george@stagg.phd"},
