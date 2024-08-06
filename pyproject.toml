@@ -49,5 +49,7 @@ Issues = "https://github.com/chirun-ncl/chirun/issues"
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["chirun"]
+[tool.setuptools.packages.find]
+where = ["."]  
+include = ["chirun*"]
+namespaces = false
