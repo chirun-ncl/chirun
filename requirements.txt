@@ -3,6 +3,7 @@ arrow==1.2.2
 beautifulsoup4==4.11.1
 Jinja2==2.11.3
 Markdown==3.1.1
+MarkupSafe==2.0.1
 notedown==1.5.1
 Pillow==9.2.0
 git+https://github.com/christianp/plastex@chirun-running-fixes
