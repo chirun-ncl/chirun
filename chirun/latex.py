@@ -96,17 +96,46 @@ class LatexSplitter(object):
         self.toc = []
 
     def toc_from_aux(self, splitlevel):
-        if self.toc:
-            return self.toc
+        """
+            Get the table of contents from the .aux files produced by pdflatex.
+        """
 
-        logger.info(f"Loading table of contents from {self.aux_filename}.")
-        with open(self.aux_filename) as f:
+        if not self.toc:
+            self.read_aux_file(self.aux_filename, splitlevel)
+
+        return self.toc
+
+    def read_aux_file(self, filename, splitlevel):
+        """
+            Read a .aux file and save any table of contents entries found in it.
+
+            A TOC entry looks like::
+
+                \@writefile{toc}{\contentsline {chapter}{\numberline {2}Curves and tangents}{12}{chapter.2}\protected@file@percent }
+
+            ``\@input`` commands will cause another .aux file to be read.
+        """
+
+        def read_characters(doc, start, length):
+            els = doc[start:start+length]
+            if not all(isinstance(x,str) for x in els):
+                return ''
+            return ''.join(els)
+
+        logger.info(f"Loading table of contents from {filename}.")
+        with open(filename) as f:
             tex = TeX()
             tex.input(f.read())
             tex.ownerDocument.context.warnOnUnrecognized = False
             doc = tex.parse()
             for i, el in enumerate(doc):
-                if not (el.nodeName == '@' and ''.join(doc[i+1:i+10])=='writefile' and doc[i+10][0] == 'toc'):
+                if el.nodeName != '@':
+                    continue
+
+                if read_characters(doc, i+1, 5) == 'input':
+                    self.read_aux_file(doc[i+6][0], splitlevel)
+
+                if not (read_characters(doc, i+1, 9) == 'writefile' and doc[i+10][0] == 'toc'):
                     continue
 
                 try:
@@ -134,8 +163,6 @@ class LatexSplitter(object):
             doc = self.TocEntry("document")
             doc.pdf_page = 0
             self.toc.append(doc)
-
-        return self.toc
 
     def split(self, level):
         self.toc_from_aux(level)
