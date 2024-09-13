@@ -164,9 +164,6 @@ class Item(object):
         return Path(self.in_file.stem)
 
     def markdown_content(self, out_format='html'):
-        if 'html' in self.data:
-            return self.data['html']
-
         body = ''
         if 'source' in self.data:
             ext = self.source.suffix
@@ -179,6 +176,9 @@ class Item(object):
                     mdContents = re.sub(r'^---.*?---\n', '', mdContents, re.S)
                 body = mdContents
             elif ext == '.tex':
+                if 'html' in self.data:
+                    return self.data['html']
+
                 plastex_output = self.course.load_latex_content(self)
                 body = plastex_output['index.html']['html']
                 self.data['html'] = body
