@@ -1,10 +1,11 @@
 from plasTeX import Command, encoding
-from plasTeX.Base.LaTeX.Lists import List
-from chirun.plastex.overrides.lists import numToRoman
+from plasTeX.Base.LaTeX import Lists
+from plasTeX.encoding import numToRoman, numToAlpha
 import re
 
+List = Lists.List
 
-class enumerate_(List):
+class enumerate_(Lists.enumerate_):
     macroName = 'enumerate'
     args = '[ options:dict:nox ]'
     refLabel = None
@@ -105,3 +106,6 @@ class enumerate_(List):
         else:
             t = '{}.'.format(position)
         return t
+
+class itemize(Lists.itemize):
+    args = '[ options:dict:nox ]'
