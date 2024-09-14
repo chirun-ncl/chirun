@@ -1,4 +1,4 @@
-name: fbox ovalbox Ovalbox
+name: ovalbox Ovalbox
 <span class="ovalbox">{{ obj }}</span>
 
 name: shadowbox
