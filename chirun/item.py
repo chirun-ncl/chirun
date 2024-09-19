@@ -8,6 +8,11 @@ from .filter import HTMLFilter
 
 logger = logging.getLogger(__name__)
 
+def get_plastex_file(plastex_output, filename='index.html'):
+    try:
+        return plastex_output[filename]
+    except KeyError:
+        raise Exception(f"plasTeX did not produce a file called {filename}.")
 
 def load_item(course, data, parent=None):
     try:
@@ -180,7 +185,7 @@ class Item(object):
                     return self.data['html']
 
                 plastex_output = self.course.load_latex_content(self)
-                body = plastex_output['index.html']['html']
+                body = get_plastex_file(plastex_output, 'index.html')['html']
                 self.data['html'] = body
             else:
                 raise Exception("Error: Unrecognised source type for {}: {}.".format(self.title, self.source))
@@ -200,7 +205,7 @@ class Item(object):
                 elif ext == '.tex':
                     plastex_output = self.course.load_latex_content(self, out_file=out_file)
                     rendered_filename = str(out_file.name) if out_file is not None else 'index.html'
-                    html = plastex_output[rendered_filename]['html']
+                    html = get_plastex_file(plastex_output, rendered_filename)['html']
                 elif ext == '.html':
                     with open(str(self.course.get_root_dir() / self.source), encoding='utf-8-sig') as f:
                         html = f.read()
@@ -412,7 +417,7 @@ class Document(Item):
             last_item = {-2: self}
 
             if self.title == self.__class__.title and 'index.html' in plastex_output:
-                index = plastex_output['index.html']
+                index = get_plastex_file(plastex_output, 'index.html')
                 self.set_title(index.get('title', self.title))
 
             for chapter in plastex_output.values():
