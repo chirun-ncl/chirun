@@ -28,7 +28,9 @@ class LatexSplitter(object):
             'section': 1,
             'subsection': 2,
             'subsubsection': 3,
-            'paragraph': 4
+            'paragraph': 4,
+            'subparagraph': 5,
+            'subsubparagraph': 6,
         }
 
         def __init__(self, levelname):
