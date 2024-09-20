@@ -893,3 +893,7 @@ u.dashuline {
 u.dotuline {
     text-decoration: dotted underline;
 }
+
+.subparagraph {
+    text-indent: 2em;
+}
