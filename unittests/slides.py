@@ -4,7 +4,8 @@ class SlidesTest(ChirunCompilationTest):
     source_path = 'slides'
 
     def test_beamer_slides_author(self):
-        """ Test that the author field for the slides item is used, instead of the package's author.
+        r"""
+            Test that the author field for the slides item is used, instead of the package's author.
             
             Tests https://github.com/chirun-ncl/chirun/issues/14
         """
@@ -14,7 +15,8 @@ class SlidesTest(ChirunCompilationTest):
         self.assertEqual(soup.select_one('#title-slide .author').text, 'A.N. Other')
 
     def test_beamer_slide_title(self):
-        """ Test that a frame with a given title has that title displayed in the HTML slides version.
+        r""" 
+            Test that a frame with a given title has that title displayed in the HTML slides version.
         
             Tests https://github.com/chirun-ncl/chirun/issues/28
         """
@@ -25,7 +27,8 @@ class SlidesTest(ChirunCompilationTest):
         self.assertEqual(soup.select('.beamer-frame')[3].select_one('.beamer-frame-title').text, 'Title as param')
 
     def test_beamer_slides_tableofcontents(self):
-        """ Test that a table of contents is produced, with a link to each section.
+        r""" 
+            Test that a table of contents is produced, with a link to each section.
 
             Tests https://github.com/chirun-ncl/chirun/issues/48
         """
@@ -38,7 +41,8 @@ class SlidesTest(ChirunCompilationTest):
         self.assertEqual(contents_slide.select_one('a').text.strip(), 'Section')
 
     def test_beamer_loads_hyperref(self):
-        """ Test that the beamer documentclass loads the hyperref package.
+        r"""
+            Test that the beamer documentclass loads the hyperref package.
 
             Tests https://github.com/chirun-ncl/chirun/issues/103
         """
@@ -51,7 +55,8 @@ class SlidesTest(ChirunCompilationTest):
         self.assertEqual(a.text, 'Example')
 
     def test_appendixnumberbeamer(self):
-        """ Test that the appendixnumberbeamer package loads.
+        r"""
+            Test that the appendixnumberbeamer package loads.
 
             Tests https://github.com/chirun-ncl/chirun/issues/40
         """
@@ -59,7 +64,8 @@ class SlidesTest(ChirunCompilationTest):
         self.assertTrue((self.build_dir / 'appendix_number' / 'index.html').exists())
 
     def test_pause(self):
-        """ The \pause command is removed from any math expressions.
+        r"""
+            The \pause command is removed from any math expressions.
 
             Tests https://github.com/chirun-ncl/chirun/issues/58
         """

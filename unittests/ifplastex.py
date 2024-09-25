@@ -6,7 +6,8 @@ class IfplastexTest(ChirunCompilationTest):
     compile_args = ['-f','test.tex']
 
     def test_ifplastex(self):
-        """ Test that the ``\ifplastex`` and ``\ifpdflatex`` commands are defined and work as expected.
+        r""" 
+            Test that the ``\ifplastex`` and ``\ifpdflatex`` commands are defined and work as expected.
 
             Tests https://github.com/chirun-ncl/chirun/issues/124
         """
