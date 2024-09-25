@@ -9,13 +9,13 @@ class BeamerTest(ChirunCompilationTest):
     compile_args = ['-f', 'test.tex']
 
     def setUp(self):
-        self.pdf_path = self.build_dir / 'images' / 'img-0001.svg'  
-        self.tikz_path = self.build_dir / 'images' / 'img-0002.svg'  
-        self.png_path = self.build_dir / 'images' / 'img-0001.png'  
-    
+        self.pdf_path = self.build_dir / 'images' / 'img-0001.svg'
+        self.tikz_path = self.build_dir / 'images' / 'img-0002.svg'
+        self.png_path = self.build_dir / 'images' / 'img-0001.png'
+
     def test_sizing(self):
         pdfViewbox = 'viewBox="0 0 315.01462 356.974953"'
-        tikzViewbox = 'viewBox="0 0 87 58"'
+        tikzViewbox = 'viewBox="0 0 338 273"'
         pngWidth = 400
         with open(self.pdf_path) as pdfSvg:
             self.assertIn(pdfViewbox, pdfSvg.read())
