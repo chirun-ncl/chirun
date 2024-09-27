@@ -128,6 +128,8 @@ class StructureTest(ChirunCompilationTest):
                 p = Path(dirpath, filename).relative_to(self.build_dir)
                 if p.suffix == '.zip':
                     continue
+                if p.name == 'MANIFEST_hidden.json':
+                    continue
                 disk_filenames.append(str(p))
 
         self.assertEqual(set(disk_filenames), set(zip_filenames))

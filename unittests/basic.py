@@ -49,8 +49,15 @@ class BasicTest(ChirunCompilationTest):
     def test_structure(self):
         manifest = self.get_manifest()
 
-        self.assertEqual(len(manifest['structure']), 3, msg="There are two items in the structure.")
+        self.assertEqual(len(manifest['structure']), 3, msg="There are two items in the structure as well as the introduction.")
         self.assertEqual([x['type'] for x in manifest['structure']], ['introduction', 'chapter', 'chapter'], msg="There is an introduction and two chapters.")
+
+    def test_hidden_structure(self):
+        manifest = self.get_hidden_manifest()
+
+        self.assertEqual(len(manifest['structure']), 4, msg="There are three items in the structure as well as the introduction.")
+        self.assertEqual([x['type'] for x in manifest['structure']], ['introduction', 'chapter', 'chapter', 'chapter'], msg="There is an introduction and three chapters.")
+        self.assertTrue(manifest['structure'][3]['is_hidden'], "The third chapter is hidden.")
 
     def test_empty_links(self):
         """

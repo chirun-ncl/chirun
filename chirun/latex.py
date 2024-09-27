@@ -108,7 +108,7 @@ class LatexSplitter(object):
         return self.toc
 
     def read_aux_file(self, filename, splitlevel):
-        """
+        r"""
             Read a .aux file and save any table of contents entries found in it.
 
             A TOC entry looks like::

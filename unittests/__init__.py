@@ -85,6 +85,11 @@ class ChirunCompilationTest(unittest.TestCase):
         with open(self.build_dir / 'MANIFEST.json') as fp:
             return json.load(fp)
 
+    @functools.cache
+    def get_hidden_manifest(self):
+        with open(self.build_dir / 'MANIFEST_hidden.json') as fp:
+            return json.load(fp)
+
 class ExpectCrashTest(ChirunCompilationTest):
     r"""
         A test case which expects Chirun to quit with an error.

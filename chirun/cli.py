@@ -48,6 +48,7 @@ class Chirun:
         self.build_dir = (Path(args.build_path) if args.build_path is not None else (self.root_dir / 'build')).resolve()
 
         self.hidden_paths = []  # A list of directories containing hidden items, filled in by process.FindHiddenItemsProcess.
+        self.hidden_files = [Path('MANIFEST_hidden.json')]
 
         if args.veryverbose:
             args.verbose = True
@@ -353,13 +354,20 @@ class Chirun:
         if zipfile_name is None:
             return
 
-        with zipfile.ZipFile(self.build_dir / zipfile_name, mode='w') as zf:
+        zipfile_path = self.build_dir / zipfile_name
+
+        if zipfile_path.exists():
+            zipfile_path.unlink()
+
+        with zipfile.ZipFile(zipfile_path, mode='w') as zf:
             for d, dirs, files in os.walk(str(self.build_dir)):
                 if any(Path(d).is_relative_to(self.build_dir / p) for p in self.hidden_paths):
                     continue
                 for f in files:
                     p = self.build_dir.parent / d / f
                     fname = p.relative_to(self.build_dir)
+                    if fname in self.hidden_files:
+                        continue
                     if fname == zipfile_name:
                         continue
                     zf.write(p, fname)
@@ -414,12 +422,19 @@ class Chirun:
                     item['content'] = remove_hidden(item['content'])
             return items
 
-        manifest.update({
-            'structure': remove_hidden([item.content_tree() for item in self.structure]),
-            'zipfile': str(self.get_zipfile_name()),
-        })
         del manifest['args']
         del manifest['static_dir']
+
+        manifest.update({
+            'zipfile': str(self.get_zipfile_name()),
+            'structure': [item.content_tree() for item in self.structure],
+        })
+
+        hidden_manifest = copy.deepcopy(manifest)
+
+        manifest.update({
+            'structure': remove_hidden(manifest['structure']),
+        })
 
         manifest_path = self.build_dir / 'MANIFEST.yml'
 
@@ -428,6 +443,9 @@ class Chirun:
 
         with open(manifest_path.with_suffix('.json'), 'w') as f:
             json.dump(manifest, f)
+
+        with open(self.build_dir / 'MANIFEST_hidden.json', 'w') as f:
+            json.dump(hidden_manifest, f)
 
 
     def build_with_theme(self, theme):
