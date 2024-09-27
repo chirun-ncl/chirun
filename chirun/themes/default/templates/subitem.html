@@ -13,7 +13,7 @@
 
 <ul class="contents">
     {% for subitem in partitem.content %}
-    {% if not subitem.is_hidden %}
+    {% if not subitem.is_explicitly_hidden %}
     <li>
         {% include "inner_subitem.html" %}
     </li>

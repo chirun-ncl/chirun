@@ -86,6 +86,7 @@ class StructureTest(ChirunCompilationTest):
 
         hidden_document_soup = self.get_soup(self.build_dir / 'hidden_document-d6bc365f' / 'index.html')
 
+        self.assertEqual(hidden_document_soup.select_one('.chirun-structure .item > header h2').text.strip(), '1 Chapter one')
         item_links = hidden_document_soup.select('.chirun-structure .item .contents > li > a')
         self.assertEqual(len(item_links), 2, msg="There are two items under the hidden document.")
 
