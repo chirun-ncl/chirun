@@ -2,9 +2,12 @@
 <header>
     <h2>
         <a class="undecorated" href="{{partitem.url|url}}">{{partitem.title}}</a>
-        {% if partitem.has_pdf %}
-            <a target="_blank" class="float-right ml-2" href="{{partitem.pdf_url|url}}">{{macros.icon('file-pdf-o','PDF')}}</a>
-        {% endif %}
+
+        <ul class="alternative-formats">
+            {% for format in partitem.alternative_formats() %}
+            <li><a class="undecorated" href="{{format.url|url}}"{% if format.download %} download{% endif %} title="{{format.name}}">{{macros.icon(format.name|lower, format.name)}}</a></li>
+            {% endfor %}
+        </ul>
     </h2>
     {% if partitem.thumbnail %}
     <img class="thumbnail" src="{{partitem.thumbnail|static_url}}" alt="Thumbnail image for part {{partitem.title}}">
