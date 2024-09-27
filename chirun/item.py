@@ -54,7 +54,7 @@ class Item(object):
                 raise Exception(f"""The item "{self.title}" has no source defined.""")
             if not self.source.exists():
                 raise Exception(f"""The specified source of the item "{self.title}", at {self.source}, does not exist.""")
-        self._is_hidden = self.data.get('is_hidden', False)
+        self.is_explicitly_hidden = self.data.get('is_hidden', False)
         self.has_topbar = self.data.get('topbar', self.has_topbar)
         self.has_pager = self.data.get('pager', self.has_pager)
         self.has_footer = self.data.get('footer', self.has_footer)
@@ -79,7 +79,7 @@ class Item(object):
 
     @property
     def is_hidden(self):
-        if self._is_hidden:
+        if self.is_explicitly_hidden:
             return True
         if self.parent is not None:
             return self.parent.is_hidden

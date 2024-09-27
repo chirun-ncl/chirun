@@ -43,6 +43,8 @@ class StructureTest(ChirunCompilationTest):
     def test_hidden_item(self):
         """ Check that items with ``is_hidden: true`` get a hash added to their path, and aren't included in the index page or the manifest.
 
+            But hidden sub-items should be linked from the index pages of their parent part.
+
             Tests https://github.com/chirun-ncl/chirun/issues/197
         """
         hidden_part_path = 'hidden_part-80bfe7b2'
@@ -74,6 +76,13 @@ class StructureTest(ChirunCompilationTest):
         self.assertNotIn('hidden_chapter', all_slugs)
         self.assertNotIn('hidden_part', all_slugs)
         self.assertNotIn('not_explicitly_hidde', all_slugs)
+
+        hidden_soup = self.get_soup(self.build_dir / 'hidden_part-80bfe7b2' / 'index.html')
+
+        item_links = hidden_soup.select('.chirun-structure .item .contents > li > a')
+        self.assertEqual(len(item_links), 1, msg="There is one item under the hidden part.")
+        item_link = item_links[0]
+        self.assertEqual(item_link['href'], 'not_explicitly_hidde-c80aca75/index.html', msg="The not explicity hidden item is linked from its parent's index.")
 
     def test_unicode_slug(self):
         """ Tests that slashes are removed from slugs, but unicode letters are kept.
