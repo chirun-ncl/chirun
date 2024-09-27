@@ -46,6 +46,12 @@ structure:
         title: Not explicitly hidden chapter
         source: basic.tex
 
+  - type: document
+    title: Hidden document
+    is_hidden: true
+    source: document.tex
+    splitlevel: 1
+
   - type: chapter
     title: "a/𝑎𝐚𝒜"
     source: basic.tex

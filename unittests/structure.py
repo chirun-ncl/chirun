@@ -84,6 +84,11 @@ class StructureTest(ChirunCompilationTest):
         item_link = item_links[0]
         self.assertEqual(item_link['href'], 'not_explicitly_hidde-c80aca75/index.html', msg="The not explicity hidden item is linked from its parent's index.")
 
+        hidden_document_soup = self.get_soup(self.build_dir / 'hidden_document-d6bc365f' / 'index.html')
+
+        item_links = hidden_document_soup.select('.chirun-structure .item .contents > li > a')
+        self.assertEqual(len(item_links), 2, msg="There are two items under the hidden document.")
+
     def test_unicode_slug(self):
         """ Tests that slashes are removed from slugs, but unicode letters are kept.
         """
