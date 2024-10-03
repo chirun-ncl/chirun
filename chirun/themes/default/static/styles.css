@@ -523,6 +523,7 @@ body > main > #sidebar :is(ol,ul) {
 }
 body > main > #sidebar ol ol {
     padding-left: var(--spacing);
+    list-style: disc;
 }
 body > main > #sidebar > .alternative-formats {
     margin-bottom: calc(2 * var(--spacing));
