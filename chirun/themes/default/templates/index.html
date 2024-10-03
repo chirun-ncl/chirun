@@ -16,9 +16,9 @@
     {% endif %}
 
     {% if item.location == 'above' %}
-        <section class="intro-content">
+        <article class="item-content intro-content">
             {{ item.as_html()|safe }}
-        </section>
+        </article>
     {% endif %}
 {% endblock header %}
 
@@ -28,14 +28,14 @@
     {% endwith %}
 
     {% if item.location == 'below' %}
-    <section class="intro-content">
-        {{ item.as_html()|safe }}
-    </section>
+        <article class="item-content intro-content">
+            {{ item.as_html()|safe }}
+        </article>
     {% endif %}
 
     {% if course.get_zipfile_name() %}
-    <section class="zipfile-download">
-        <p><a href="{{course.get_zipfile_name()}}" download>{% trans %}Download a copy of these notes.{% endtrans %}</a></p>
-    </section>
+        <section class="zipfile-download">
+            <p><a href="{{course.get_zipfile_name()}}" download>{% trans %}Download a copy of these notes.{% endtrans %}</a></p>
+        </section>
     {% endif %}
 {% endblock main %}
