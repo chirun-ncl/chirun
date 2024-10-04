@@ -5,7 +5,8 @@ class SlashTest(ChirunCompilationTest):
     compile_args = ['-f', 'test.tex', '--no-pdf']
 
     def test_slash(self):
-        """ Check that the ``\slash`` command is interpreted and produces a forward slash character.
+        r""" 
+            Check that the ``\slash`` command is interpreted and produces a forward slash character.
 
             Tests https://github.com/chirun-ncl/chirun/issues/211
         """

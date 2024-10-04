@@ -9,7 +9,8 @@ import subprocess
 import tempfile
 
 class ChirunCompilationTest(unittest.TestCase):
-    """ A unit test which compiles a Chirun package.
+    r"""
+        A unit test which compiles a Chirun package.
         The files in the ``source_path`` are copied to a temporary directory before being compiled.
         Run with the environment variable ``KEEP_TEST_OUTPUT=1`` to preserve the contents of the temporary directory, under ``unittests/_kept``
     """
@@ -72,7 +73,7 @@ class ChirunCompilationTest(unittest.TestCase):
         cls.tmpdir.cleanup()
 
     def get_soup(self, path):
-        """
+        r"""
             Get a BeautifulSoup instance for the given HTML file in the build directory.
         """
 
@@ -84,8 +85,14 @@ class ChirunCompilationTest(unittest.TestCase):
         with open(self.build_dir / 'MANIFEST.json') as fp:
             return json.load(fp)
 
+    @functools.cache
+    def get_hidden_manifest(self):
+        with open(self.build_dir / 'MANIFEST_hidden.json') as fp:
+            return json.load(fp)
+
 class ExpectCrashTest(ChirunCompilationTest):
-    """ A test case which expects Chirun to quit with an error.
+    r"""
+        A test case which expects Chirun to quit with an error.
     """
 
     show_stderr = False

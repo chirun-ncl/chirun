@@ -28,7 +28,9 @@ class LatexSplitter(object):
             'section': 1,
             'subsection': 2,
             'subsubsection': 3,
-            'paragraph': 4
+            'paragraph': 4,
+            'subparagraph': 5,
+            'subsubparagraph': 6,
         }
 
         def __init__(self, levelname):
@@ -106,7 +108,7 @@ class LatexSplitter(object):
         return self.toc
 
     def read_aux_file(self, filename, splitlevel):
-        """
+        r"""
             Read a .aux file and save any table of contents entries found in it.
 
             A TOC entry looks like::

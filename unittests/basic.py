@@ -49,11 +49,19 @@ class BasicTest(ChirunCompilationTest):
     def test_structure(self):
         manifest = self.get_manifest()
 
-        self.assertEqual(len(manifest['structure']), 3, msg="There are two items in the structure.")
+        self.assertEqual(len(manifest['structure']), 3, msg="There are two items in the structure as well as the introduction.")
         self.assertEqual([x['type'] for x in manifest['structure']], ['introduction', 'chapter', 'chapter'], msg="There is an introduction and two chapters.")
 
+    def test_hidden_structure(self):
+        manifest = self.get_hidden_manifest()
+
+        self.assertEqual(len(manifest['structure']), 4, msg="There are three items in the structure as well as the introduction.")
+        self.assertEqual([x['type'] for x in manifest['structure']], ['introduction', 'chapter', 'chapter', 'chapter'], msg="There is an introduction and three chapters.")
+        self.assertTrue(manifest['structure'][3]['is_hidden'], "The third chapter is hidden.")
+
     def test_empty_links(self):
-        """ Check that all links on the introduction page contain readable text.
+        """
+            Check that all links on the introduction page contain readable text.
             
             Tests https://github.com/chirun-ncl/chirun/issues/12
         """
@@ -62,7 +70,8 @@ class BasicTest(ChirunCompilationTest):
         self.assertFalse(any(a.text == '' for a in intro.find_all('a')), msg='All links contain text')
 
     def test_file_build_time(self):
-        """ Check that URLs of static files have a ``build_time`` query parameter added, to prevent caching.
+        """
+            Check that URLs of static files have a ``build_time`` query parameter added, to prevent caching.
 
             Tests https://github.com/chirun-ncl/chirun/issues/199
         """

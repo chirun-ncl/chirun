@@ -16,3 +16,7 @@ structure:
   - type: chapter
     title: "Basic markdown document"
     source: test.md
+  - type: chapter
+    title: "Basic hidden markdown document"
+    source: test.md
+    is_hidden: true
