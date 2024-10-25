@@ -252,7 +252,7 @@ class LatexRunner(object):
         stdout_tail = collections.deque(maxlen=8)
         cmd = [self.compiler] + self.args
         logger.info('Running {}: {}'.format(self.compiler, self.wd / self.args[-1]))
-        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(self.wd), universal_newlines=True)
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=str(self.wd), universal_newlines=True,errors="backslashreplace")
         for stdout_line in iter(proc.stdout.readline, ""):
             if not stdout_line.isspace():
                 stdout_tail.append(stdout_line)
