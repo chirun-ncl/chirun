@@ -66,7 +66,7 @@ def rewrite_media_sources(soup, item):
                     out_file.parent.mkdir(exist_ok=True, parents=True)
 
                     if source_file.suffix == '.pdf':
-                        subprocess.run(['pdf2svg', source_file.name, str(out_file)])
+                        subprocess.run(['pdf2svg', source_file.name, str(out_file)],errors="backslashreplace")
                     else:
                         copyfile(source_file, out_file)
 

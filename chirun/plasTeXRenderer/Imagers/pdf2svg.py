@@ -27,7 +27,7 @@ class PDFSVG(pdf2svg.PDFSVG):
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
             pdf_path = tmpdir / 'image.pdf'
-            subprocess.run(['epstopdf', name, pdf_path])
+            subprocess.run(['epstopdf', name, pdf_path],errors="backslashreplace")
             return self.single_pdf_to_svg(pdf_path)
 
     def single_pdf_to_svg(self, name):
