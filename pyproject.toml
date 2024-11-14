@@ -26,7 +26,7 @@ dependencies = [
     "Markdown==3.1.1",
     "MarkupSafe==2.0.1",
     "notedown==1.5.1",
-    "Pillow==9.2.0",
+    "Pillow==11.0.0",
     "plasTeX @ git+https://github.com/christianp/plastex@chirun-running-fixes",
     "Pygments==2.11.0",
     "pymdown-extensions==6.0",
