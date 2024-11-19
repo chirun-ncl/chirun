@@ -129,6 +129,7 @@ from .structure import *
 from .theme_customisation import *
 from .tikz import *
 from .toc import *
+from .unicode import *
 from .verbatim import *
 from .xcolor import *
 
