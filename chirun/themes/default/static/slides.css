@@ -1,7 +1,7 @@
 :root {
-    --base-font-size: min(3vw, 4vh);
+    --base-font-size: min(3svw, 4svh);
     --slide-padding: 2rem;
-    --slide-width: calc(100vw - 2 * var(--slide-padding));
+    --slide-width: calc(100svw - 2 * var(--slide-padding));
     --code-font-size: 0.9rem;
 }
 
@@ -16,7 +16,6 @@ html {
 
 body {
     margin: 0;
-    overflow: hidden;
 }
 h1,h2,h3,h4,h5,h6 {
     margin: 0 0 calc(0.5 * var(--spacing)) 0;
@@ -44,10 +43,6 @@ button.icon-button svg.icon {
 
 body > main {
     display: block;
-    overflow: hidden;
-    height: 100vh;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
     padding: 0 var(--slide-padding);
 }
 
@@ -58,34 +53,49 @@ body > main > header {
     align-items: center;
     grid-gap: 1em;
     margin: var(--spacing) 0;
-    scroll-snap-align: start;
 }
 
-main > section {
+body > main > section {
     width: 100%;
-    height: 100vh;
     display: grid;
+    position: relative;
     align-items: center;
-    justify-content: center;
+    justify-items: center;
     padding: 0;
-    scroll-snap-align: center;
     grid-auto-rows: max-content;
     align-content: center;
     overflow-y: hidden;
+    padding: 1svw;
+
 }
 
-@media (orientation: portrait) {
+@media screen and (orientation: landscape) {
+    body {
+        overflow: hidden;
+    }
     body > main {
-        height: auto;
+        height: 100svh;
+        overflow: hidden scroll;
+        scroll-snap-type: y mandatory;
     }
-    main > section {
-        height: auto;
-        scroll-snap-align: none;
+    body > main > header {
+        scroll-snap-align: start;
     }
+    body > main > section {
+        height: 100svh;
+        scroll-snap-align: center;
+    }
+}
+
+@media print, (orientation: portrait) {
     main > section + section {
         margin-top: calc(2 * var(--spacing));
         padding-top: calc(2 * var(--spacing));
-        border-top: 0.5vh dashed var(--text-colour);
+    }
+}
+@media screen and (orientation: portrait) {
+    main > section + section {
+        border-top: 0.5svh dashed var(--text-colour);
     }
 }
 
@@ -98,7 +108,11 @@ main > section > p {
 }
 main > section > :is(h1, h2) {
     align-self: start;
+    padding: 0 1em;
+    line-height: 1.2em;
 }
+
+
 main > section > ul {
     text-align: left;
 }
@@ -108,7 +122,7 @@ main > section > ul > li ~ li {
 
 main > section :is(img, svg, video) {
     max-width: 100%;
-    max-height: 60vh;
+    max-height: 60svh;
     object-fit: contain;
     margin: var(--spacing) 0;
     border-radius: 0.3em;
@@ -120,7 +134,7 @@ main > section figure {
 
 
 main > section .full-height {
-    max-height: 90vh;
+    max-height: 90svh;
 }
 
 main > section blockquote {
@@ -128,9 +142,8 @@ main > section blockquote {
 }
 main > section > iframe {
   width: 80%;
-  height: 75vh;
+  height: 75svh;
   border: none;
-  border-radius: 1em;
 }
 
 main > section runnable-code {
@@ -142,6 +155,39 @@ main > section runnable-code {
 main > section mjx-container {
     max-width: var(--slide-width);
     margin: calc(0.25 * var(--spacing)) 0 !important;
+    line-height: revert;
+}
+
+.fragment:not(.revealed) {
+    visibility: hidden;
+}
+
+body > main > #pager {
+    position: absolute;
+    bottom: var(--spacing);
+    right: var(--spacing);
+    display: flex;
+}
+body > main > #pager button {
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0;
+    width: 2em;
+    --height: 1.5em;
+    height: var(--height);
+}
+body > main > #pager button#move-backwards {
+    border-radius: var(--height) 0 0 var(--height);
+}
+body > main > #pager button#move-forwards {
+    border-radius: 0 var(--height) var(--height) 0;
+}
+
+@media print, (orientation: portrait) {
+    body > main > #pager {
+        display: none;
+    }
 }
 
 @media print {
@@ -159,8 +205,6 @@ main > section mjx-container {
     }
     
     body > main > header {
-        position: absolute;
-        top: 0;
-        width: 100vw;
+        display: none;
     }
 }

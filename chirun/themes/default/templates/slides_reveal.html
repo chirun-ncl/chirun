@@ -1,5 +1,12 @@
 {% extends "item.html" %}
 
+{% block javascript %}
+    {{ super() }}
+
+    <script type="module" src="{{'slides.js'|static_url}}"></script>
+
+{% endblock javascript %}
+
 {% block stylesheets %}
     {{ super() }}
 
@@ -45,5 +52,10 @@
             {% endblock %}
 
         {% endblock slides_main %}
+
+        <nav id="pager">
+            <button type="button" id="move-backwards" aria-label="{% trans %}Backwards{% endtrans %}">←</button>
+            <button type="button" id="move-forwards" aria-label="{% trans %}Forwards{% endtrans %}">→</button>
+        </nav>
     </main>
 {% endblock body %}
