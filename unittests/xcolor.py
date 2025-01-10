@@ -5,9 +5,9 @@ class XColorTest(ChirunCompilationTest):
     compile_args = ['-f', 'test.tex']
 
     def test_text_color(self):
-        """ Test that the \color command changes the color of text.
+        r""" Test that the \color command changes the color of text.
             
-            Tests https://github.com/chirun-ncl/chirun/issues/36
+             Tests https://github.com/chirun-ncl/chirun/issues/36
         """
         soup = self.get_soup('index.html')
 

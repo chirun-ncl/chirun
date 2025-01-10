@@ -17,3 +17,8 @@ structure:
     title: "LaTeX document 2"
     source: test.tex
     build_pdf: false
+  - type: chapter
+    source: with_hypertitle.tex
+  - type: chapter
+    title: "Manually set title"
+    source: with_hypertitle.tex

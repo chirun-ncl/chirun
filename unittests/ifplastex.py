@@ -20,7 +20,7 @@ class IfplastexTest(ChirunCompilationTest):
         self.assertIn('IFPLASTEX2', text)
         self.assertNotIn('IFNOTPLASTEX2', text)
 
-        r = pypdf.PdfReader(self.build_dir / 'document.pdf')
+        r = pypdf.PdfReader(self.build_dir / 'test.pdf')
         pdf_text = r.pages[0].extract_text()
         self.assertNotIn('IFPLASTEX1', pdf_text)
         self.assertIn('IFNOTPLASTEX1', pdf_text)

@@ -11,6 +11,8 @@ class PDFTest(ChirunCompilationTest):
 
         self.assertTrue((self.build_dir / 'latex_document_1' / 'latex_document_1.pdf').exists())
         self.assertFalse((self.build_dir / 'latex_document_2' / 'latex_document_2.pdf').exists())
+        self.assertTrue((self.build_dir / 'a_test_document' / 'a_test_document.pdf').exists())
+        self.assertTrue((self.build_dir / 'manually_set_title' / 'manually_set_title.pdf').exists())
 
 class StandalonePDFLinkTest(ChirunCompilationTest):
     source_path = 'pdf'
@@ -24,7 +26,7 @@ class StandalonePDFLinkTest(ChirunCompilationTest):
 
         soup = self.get_soup('index.html')
 
-        self.assertTrue((self.build_dir / 'document.pdf').exists())
+        self.assertTrue((self.build_dir / 'test.pdf').exists())
 
         pdf_link = soup.select_one('a[rel="alternate"][type="application/pdf"]')
-        self.assertEqual(pdf_link['href'], 'document.pdf')
+        self.assertEqual(pdf_link['href'], 'test.pdf')

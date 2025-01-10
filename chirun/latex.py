@@ -308,15 +308,19 @@ class PDFLatex(object):
     def __init__(self, course, item):
         self.course = course
         self.item = item
-        self.in_dir = self.course.get_root_dir() / self.item.source.parent
-        self.in_path = self.in_dir / self.item.base_file.with_suffix('.pdf')
-        self.out_path = self.course.get_build_dir() / self.item.named_out_file.with_suffix('.pdf')
-        self.aux_filename = self.in_dir / self.item.in_file.with_suffix('.aux')
+
+        self.set_paths()
 
         if self.item.recently_built():
             if self.course.args.cleanup_all:
                 LatexRunner(self.item.in_file, self.in_dir).clean_aux()
             return
+
+    def set_paths(self):
+        self.in_dir = self.course.get_root_dir() / self.item.source.parent
+        self.in_path = self.in_dir / self.item.base_file.with_suffix('.pdf')
+        self.out_path = self.course.get_build_dir() / self.item.named_out_file.with_suffix('.pdf')
+        self.aux_filename = self.in_dir / self.item.in_file.with_suffix('.aux')
 
     def compile(self):
         # First pdflatex run
@@ -333,6 +337,13 @@ class PDFLatex(object):
         LatexRunner(self.item.in_file, self.in_dir).exec()
 
     def copy_pdf(self):
+        r = pypdf.PdfReader(self.in_path)
+        if self.item.title == self.item.__class__.title:
+            title = r.metadata.title if r.metadata.title else self.item.in_file.stem
+            self.item.set_title(title)
+            self.set_paths()
+
+        self.out_path = self.course.get_build_dir() / self.item.named_out_file.with_suffix('.pdf')
         logger.debug('Creating directory for pdf output: {outDir}'.format(outDir=self.out_path.parent))
         Path.mkdir(self.out_path.parent, parents=True, exist_ok=True)
         logger.debug('Moving pdf output: {inPath} => {outPath}'.format(inPath=self.in_path, outPath=self.out_path))
