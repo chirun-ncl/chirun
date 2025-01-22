@@ -1,19 +1,16 @@
 {% for header in headers %}
-<li data-toc-level="{{level}}" class="toc-header {% if header.children %} has-children{% endif %}">
-        {% if header.children %}
-        <input class="toc-collapse-checkbox" type="checkbox" id="toc-show-children-{{header.id}}" {% if item.toc_header_level == 0 or level < item.toc_header_level %}checked{% endif %}>
-        <label for="toc-show-children-{{header.id}}" class="toc-collapse-icon">
-            <span class="open" aria-label="Open">V</span>
-            <span class="closed" aria-label="Closed">&gt;</span>
-        </label>
-        {% endif %}
-        <a role="treeitem" href="#{{header.id}}">{{header.text|safe}}</a>
-        {% if header.children %}
-        <ol>
+<li role="none" data-toc-level="{{level}}" class="toc-header {% if header.children %} has-children{% endif %}">
+    <a role="treeitem" {% if header.children %}aria-expanded="{% if item.toc_header_level == 0 or level < item.toc_header_level %}true{% else %}false{% endif %}"{% endif %} aria-owns="#toc-subtree-{{header.id}}" href="#{{header.id}}">
+        {% if header.children %}<span class="toc-marker"></span>{% endif %}
+        {{header.text|safe}}
+    </a>
+
+    {% if header.children %}
+        <ol role="group" id="toc-subtree-{{header.id}}">
             {% with headers=header.children, level=level+1 %}
             {% include "toc_items.html" %}
             {% endwith %}
         </ol>
-        {% endif %}
-    </li>
+    {% endif %}
+</li>
 {% endfor %}
