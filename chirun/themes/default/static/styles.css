@@ -534,41 +534,39 @@ body > main > #sidebar li ~ li {
     margin-top: var(--spacing);
 }
 
-.table-of-contents a {
+body > main > #sidebar .table-of-contents a {
+    display: block;
+    border-right: medium solid transparent;
+    padding-right: 0.25em;
+}
+
+body > main > #sidebar .table-of-contents a.visible {
+    border-right-color: var(--text-color);
+    background-color: var(--bg-colour-accent-3);
+}
+
+body > main > #sidebar .table-of-contents a:not(:hover,:active,:focus) {
     text-decoration: none;
 }
 
-.table-of-contents .toc-header.has-children {
-    padding-left: calc(0.5em + 0.5 * var(--spacing));
-    position: relative;
+body > main > #sidebar .table-of-contents li {
+    list-style: none;
 }
 
-.table-of-contents .toc-collapse-checkbox, .table-of-contents .toc-collapse-icon {
-    position: absolute;
-    left: -0.5em;
+body > main > #sidebar .table-of-contents a[aria-expanded="true"] .toc-marker::before {
+    content: '▼';
+}
+body > main > #sidebar .table-of-contents a[aria-expanded="false"] .toc-marker::before {
+    content: '▶';
+}
+
+body > main > #sidebar .table-of-contents .toc-header [role="treeitem"][aria-expanded="false"] + [role="group"] {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
     margin: 0;
-    padding: 0;
-    width: 1em;
-    height: 1em;
-    font-size: inherit;
-    line-height: 1em;
-}
-.table-of-contents .toc-collapse-icon {
-    display: inline-block;
-    background-color: var(--bg-colour-accent-2);
-    text-align: center;
-    box-shadow: 0 0 1px 1px var(--bg-colour-accent-2);
-}
-
-.table-of-contents .toc-collapse-checkbox:not(:checked) ~ ol {
-    display: none;
-}
-
-.table-of-contents .toc-collapse-checkbox:checked ~ .toc-collapse-icon .closed {
-    display: none;
-}
-.table-of-contents .toc-collapse-checkbox:not(:checked) ~ .toc-collapse-icon .open {
-    display: none;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
 thead {
@@ -777,7 +775,7 @@ figure + em, .reveal figure + em {
 }
 
 .itemize > li.default-marker {
-    list-style-type: disc;
+    list-style-type: none;
 }
 
 :is(.bibliography, .itemize, .enumerate) > li > p:first-of-type,
