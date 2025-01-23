@@ -245,6 +245,27 @@ function treeview(element) {
         e.preventDefault();
     });
 
+    const all_items = [];
+
+    function get_children(el) {
+        const group = el.querySelector('[role="group"]');
+        return group ? group.children : [];
+    }
+
+    function find_all_items(el) {
+        const treeitem = el.querySelector('[role="treeitem"]');
+
+        all_items.push(treeitem);
+
+        if(treeitem.ariaExpanded == 'true') {
+            for(let child of get_children(el)) {
+                find_all_items(child);
+            }
+        }
+    }
+    find_all_items(element);
+
+
     element.addEventListener('keydown', e => {
         const modifier = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
 
@@ -260,26 +281,6 @@ function treeview(element) {
         }
         const siblings = Array.from(el.parentElement.children);
         const i = siblings.indexOf(el);
-
-        const all_items = [];
-
-        function find_all_items(el) {
-            const treeitem = el.querySelector('[role="treeitem"]');
-
-            all_items.push(treeitem);
-
-            if(treeitem.ariaExpanded == 'true') {
-                for(let child of get_children(el)) {
-                    find_all_items(child);
-                }
-            }
-        }
-        find_all_items(element);
-
-        function get_children(el) {
-            const group = el.querySelector('[role="group"]');
-            return group ? group.children : [];
-        }
 
         function next_item(el) {
             const treeitem = el.querySelector('[role="treeitem"]');
@@ -469,7 +470,7 @@ function treeview(element) {
             }
         }
 
-        const visible_items = element.querySelectorAll('.visible[role="treeitem"]');
+        const visible_items = all_items.filter(item => item.classList.contains('visible'));
         if(visible_items.length) {
             visible_items[visible_items.length-1].tabIndex = 0;
         }
