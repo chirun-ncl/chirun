@@ -1,0 +1,6 @@
+name: dinglist
+<ul class="itemize dinglist">
+{% for item in obj %}
+  <li data-marker="{{obj.symbol()}}">{{item}}</li>
+{% endfor %}
+</ul>
