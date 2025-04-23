@@ -1,6 +1,8 @@
 from chirun.plasTeXRenderer import add_package_templates
 import plasTeX.Packages.color
+import plasTeX.Packages.xcolor
 from plasTeX import Command, Environment, CSSStyles
+
 
 def latex2htmlcolor(*args, **kwargs):
     return plasTeX.Packages.color.latex2htmlcolor(*args, named=self.ownerDocument.userdata.getPath('packages/color/colors'), **kwargs)
@@ -17,6 +19,11 @@ class tcolorbox(Environment):
     def invoke(self, tex):
         self.title_style = CSSStyles()
 
+        u = self.ownerDocument.userdata
+        self.parser:plasTeX.Packages.xcolor.ColorParser = plasTeX.Packages.xcolor.ColorParser(
+                u.getPath('packages/xcolor/colors'),
+                u.getPath('packages/xcolor/target_model'))
+
         res = Environment.invoke(self, tex)
         a = self.attributes
         options = {}
@@ -27,11 +34,11 @@ class tcolorbox(Environment):
 
         colback = options.get('colback')
         if colback is not None:
-            self.style['background-color'] = colback
+            self.style['background-color'] = self.parser.parseColor(colback).html
 
         colframe = options.get('colframe')
         if colframe is not None:
-            self.style['border-color'] = colframe
+            self.style['border-color'] = self.parser.parseColor(colframe).html
 
         boxrule = options.get('boxrule')
         if boxrule is not None:
