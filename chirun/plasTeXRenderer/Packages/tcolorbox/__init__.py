@@ -22,7 +22,7 @@ class tcolorbox(Environment):
         u = self.ownerDocument.userdata
         self.parser:plasTeX.Packages.xcolor.ColorParser = plasTeX.Packages.xcolor.ColorParser(
                 u.getPath('packages/xcolor/colors'),
-                u.getPath('packages/xcolor/target_model'))
+                u.getPath('packages/xcolor/target_model')) #copy of textcolor in xcolor.py to set up the parser correctly.
 
         res = Environment.invoke(self, tex)
         a = self.attributes

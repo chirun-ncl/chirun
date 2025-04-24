@@ -126,6 +126,7 @@ from .slides import *
 from .splitlevel import *
 from .staticfile import *
 from .structure import *
+from .tcolorbox import *
 from .theme_customisation import *
 from .tikz import *
 from .toc import *
