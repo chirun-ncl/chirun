@@ -530,9 +530,9 @@ A glossary for the support levels:
       - No problems observed.
 
     * - ``siunitx``
-      - Not supported.
+      - Supported.
 
-        Work is underway to implement siunitx in MathJax.
+        We use `the MathJax siunitx package by Lee McPherson <https://github.com/limefrogyank/siunitx-pcc>`__.
 
     * - ``skull``
       - No problems observed.
