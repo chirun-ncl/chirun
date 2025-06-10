@@ -255,6 +255,10 @@ function treeview(element) {
     function find_all_items(el) {
         const treeitem = el.querySelector('[role="treeitem"]');
 
+        if(!treeitem) {
+            return;
+        }
+
         all_items.push(treeitem);
 
         if(treeitem.ariaExpanded == 'true') {
