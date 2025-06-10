@@ -16,9 +16,9 @@
         </ul>
         {% endif %}
 
-        <h1>{% trans %}Table of Contents{% endtrans %}</h1>
-        <a class="jump-to-item-content" href="#item-content">{% trans %}Jump to content{% endtrans %}</a>
-        {% if item.has_sidebar %}
+        {% if item.has_sidebar and item.get_headers() %}
+            <h1>{% trans %}Table of Contents{% endtrans %}</h1>
+            <a class="jump-to-item-content" href="#item-content">{% trans %}Jump to content{% endtrans %}</a>
             <ol class="table-of-contents" role="tree">
                 {% with headers=item.get_headers(), level=1 %}
                     {% include "toc_items.html" %}
