@@ -153,6 +153,8 @@ A glossary for the support levels:
         Beamer is a very large package and Chirun's support is rather basic.
         The document-style HTML output is usually usable, but the HTML slides format still needs a lot of work.
 
+        Chirun's version of ``beamer`` automatically loads the ``hyperref`` package.
+
     * - ``beamerposter``
       - No problems observed.
 
@@ -429,6 +431,9 @@ A glossary for the support levels:
     * - ``minitoc``
       - Re-implemented by plasTeX.
 
+    * - ``MnSymbol``
+      - Re-implemented by plasTeX.
+
     * - ``multicol``
       - Re-implemented by plasTeX.
 
@@ -467,6 +472,9 @@ A glossary for the support levels:
 
     * - ``pgfplotstable``
       - No problems observed.
+
+    * - ``pifont``
+      - Re-implemented by plasTeX.
 
     * - ``placeins``
       - Stub package: the `\FloatBarrier` command is accepted but ignored.
@@ -679,6 +687,9 @@ A glossary for the support levels:
       - No problems observed.
 
     * - ``xy``
+      - Re-implemented by plasTeX.
+
+    * - ``xypic``
       - Re-implemented by plasTeX.
 
     * - ``youngtab``
