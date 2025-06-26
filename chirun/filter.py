@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 
 from .html_filter import HTMLFilter as BaseHTMLFilter
 from .oembed import get_oembed_html
-from .render import Renderer
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +31,7 @@ def replace_tag(name):
 @replace_tag('numbas-embed')
 def embed_numbas(embed, **kwargs):
     item = kwargs['item']
+    from .render import Renderer
     renderer = Renderer(item.course)
     context = {
         'id': embed.get('id', embed.get('data-id')),
