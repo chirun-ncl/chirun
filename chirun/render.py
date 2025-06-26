@@ -197,6 +197,7 @@ class BaseRenderer(object):
             page_url = f'{server_url}{absHTMLPath}'
             await page.goto(page_url)
             await self.wait_for_pdf_ready(page)
+            await page.JJeval('iframe', r'(nodes => nodes.filter(n => n.src.match(/youtu\.?be/)).forEach(n => n.parentElement?.removeChild(n)))')
             await page.pdf(pdf_kwargs)
             self.postprocess_pdf(item, dest, server_url)
 
