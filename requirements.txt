@@ -3,7 +3,7 @@ beautifulsoup4==4.13.4
 Jinja2==3.1.6
 Markdown==3.8
 notedown==1.5.1
-Pillow==11.2.1
+Pillow==11.3.0
 git+https://github.com/christianp/plastex@chirun-running-fixes
 Pygments==2.15.1
 pymdown-extensions==10.0.1
