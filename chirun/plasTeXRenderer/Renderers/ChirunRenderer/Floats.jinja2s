@@ -11,7 +11,7 @@ name: table table*
 name: marginpar
 <p class="marginpar">{{ obj.attributes.right }}</p>
 
-name: caption
+name: caption captionof
 <figcaption>
   <span class="caption_title">{{ obj.title }}</span>
   <span class="caption_ref">{{ obj.ref }}</span>

@@ -121,7 +121,7 @@ Embed a Numbas test
 
 .. code-block:: latex
 
-    \numbas[Test Yourself:]{https://numbas.mathcentre.ac.uk/[...]}
+    \numbas{https://numbas.mathcentre.ac.uk/[...]}
 
 The Numbas test will appear embedded in the HTML web page.
 
@@ -132,10 +132,22 @@ Embed Youtube/Vimeo
 
 .. code-block:: latex
 
-    \youtube[YouTube:]{EdyociU35u8}
-    \vimeo[Vimeo:]{8169375}
+    \youtube{88Mzr5JGpsY}
+    \vimeo{8169375}
 
 The video will appear embedded in the HTML web page.
 
 In the LaTeX PDF output, a link to the content will be shown.
 
+Embed audio or video files
+==========================
+
+You can embed an audio or video file included in your package with the ``\audio`` and ``\video`` commands:
+
+.. code-block:: latex
+
+    \audio{/static/sound.mp3}
+
+    \video[width=640,height=360]{/static/movie.mp4}
+
+You should always give the absolute path to the file from the package's root, including a leading slash, so that Chirun can work out the right relative address from the output page.

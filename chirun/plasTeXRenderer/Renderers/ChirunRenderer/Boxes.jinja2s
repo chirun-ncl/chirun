@@ -8,7 +8,7 @@ name: parbox
 <div class="parbox" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
 
 name: minipage
-<div class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</div>
+<figure class="minipage" id="{{ obj.id }}" style="width: {{ obj.attributes.width }}">{{ obj }}</figure>
 
 name: raisebox
     <span class="raisebox" style="vertical-align: {{obj.attributes.raise}}">{{obj}}</span>

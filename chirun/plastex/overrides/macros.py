@@ -27,7 +27,7 @@ class vimeo(Command):
     
         The required argument ``content`` is the video's ID.
     """
-    args = 'content:str'
+    args = '[ intro:str ] content:str'
 
 
 class youtube(Command):
@@ -57,6 +57,11 @@ class iframe(Command):
     """
     args = '[ options:dict ] content:str'
 
+class audio(Command):
+    args = 'url:str'
+
+class video(Command):
+    args = '[ options:dict ] url'
 
 ######################
 # Runnable code editor

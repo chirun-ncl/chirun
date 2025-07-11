@@ -22,6 +22,8 @@
 \newcommand{\vimeo}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://player.vimeo.com/video/#2}}
 \newcommand{\youtube}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://www.youtube.com/embed/#2}}
 \newcommand{\embed}[1]{\url{#1} \qrcode[link,height=2cm]{#1}}
+\newcommand{\audio}[1]{\url{#1} \qrcode[link,height=2cm]{#1}}
+\newcommand{\video}[2][]{\url{#2} \qrcode[link,height=2cm]{#2}}
 \newcommand{\iframe}[2][]{\url{#2} \qrcode[link,height=2cm]{#2}}
 \newenvironment{collapseEnv}[3]{\noindent\textbf{#3}\\}{\par}
 \newcommand{\collapse}[4]{\noindent\textbf{#3}\\{#4}\par}
