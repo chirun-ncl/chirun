@@ -4,7 +4,7 @@ from chirun.markdownRenderer import MarkdownRenderer
 import contextlib
 import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from jinja2 import Environment, FileSystemLoader, select_autoescape, pass_context, TemplateNotFound
+import jinja2
 import logging
 import nbformat
 from notedown import MarkdownReader
@@ -93,9 +93,12 @@ async def get_browser(directory):
 class BaseRenderer(object):
     def __init__(self, course):
         self.course = course
-        self.env = Environment(
-            loader=FileSystemLoader(str(self.course.theme.template_path)),
-            autoescape=select_autoescape(['html']),
+        self.env = jinja2.Environment(
+            loader=jinja2.ChoiceLoader([
+                jinja2.FileSystemLoader([str(self.course.get_root_dir() / 'templates'), str(self.course.theme.template_path)]),
+                jinja2.PrefixLoader({'base': jinja2.FileSystemLoader(str(self.course.theme.template_path))}),
+            ]),
+            autoescape=jinja2.select_autoescape(['html']),
             extensions=['jinja2.ext.i18n',]
         )
         try:
@@ -104,7 +107,7 @@ class BaseRenderer(object):
         except FileNotFoundError:
             self.env.install_null_translations(newstyle=True)
 
-        @pass_context
+        @jinja2.pass_context
         def url_filter(context, url):
             item = context.get('item')
             if item is not None and not re.search(r'^[^:]+:\/\/', url):
@@ -113,7 +116,7 @@ class BaseRenderer(object):
         self.env.filters['url'] = url_filter
 
         timestamp = datetime.datetime.now().timestamp()
-        @pass_context
+        @jinja2.pass_context
         def static_url(context, url):
             return url_filter(context, 'static/' + url) + f'?build_time={timestamp}'
 
@@ -122,7 +125,7 @@ class BaseRenderer(object):
     def render_template(self, template_file, context):
         try:
             template = self.env.get_template(template_file)
-        except TemplateNotFound as e:
+        except jinja2.TemplateNotFound as e:
             print(self.course.theme.template_path)
             raise e
         return template.render(context)
