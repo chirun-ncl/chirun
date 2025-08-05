@@ -24,7 +24,6 @@ window.MathJax = {
         packages: {'[+]': [
             'noerrors',
             'mhchem',
-            'textmacros',
             'mathtools',
             'tagformat',
             'chirun-eqref',
@@ -55,7 +54,7 @@ window.MathJax = {
         typeset: true,
         ready: () => {
             const Configuration = MathJax._.input.tex.Configuration.Configuration;
-            const CommandMap = MathJax._.input.tex.SymbolMap.CommandMap;
+            const CommandMap = MathJax._.input.tex.TokenMap.CommandMap;
             const Label = MathJax._.input.tex.Tags.Label;
             const BaseMethods = MathJax._.input.tex.base.BaseMethods.default;
 
@@ -120,7 +119,6 @@ window.MathJax = {
             '[tex]/cancel',
             '[tex]/noerrors',
             '[tex]/mhchem',
-            '[tex]/textmacros',
             '[tex]/bbox',
             '[tex]/mathtools',
             '[tex]/tagformat'

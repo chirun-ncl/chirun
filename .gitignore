@@ -6,3 +6,6 @@
 docs/build
 **/.DS_Store
 unittests/_kept
+dist
+build
+build-error.log
