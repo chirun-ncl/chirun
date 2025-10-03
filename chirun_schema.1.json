@@ -8,6 +8,32 @@
             "type": "string",
             "title": "Base directory of the output"
         },
+        "title": {
+            "type": "string",
+            "title": "Title of the package"
+        },
+        "license": {
+            "type": "object",
+            "title": "Copyright and licensing information",
+            "properties": {
+                "year": {
+                    "type": "string",
+                    "title": "Copyright year"
+                },
+                "by": {
+                    "type": "string",
+                    "title": "Copyright attribution"
+                },
+                "url": {
+                    "type": "string",
+                    "title": "URL of the full licence text"
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name of the licence"
+                }
+            }
+        },
         "locale": {
             "type": "string",
             "title": "ISO 639 language code for localisation"
@@ -41,6 +67,11 @@
             "title": "Build PDF files?",
             "default": true
         },
+        "build_zip": {
+            "type": "boolean",
+            "title": "Build a .zip file of the whole package?",
+            "default": true
+        },
         "num_pdf_runs": {
             "type": "number",
             "title": "Number of runs for building PDFs",
@@ -60,6 +91,20 @@
             "title": "Structure",
             "items": {
                 "$ref": "https://www.chirun.org/chirun_schema.1.json#$defs/structure"
+            }
+        },
+        "css": {
+            "type": "array",
+            "title": "Extra CSS files to load in HTML pages.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "js": {
+            "type": "array",
+            "title": "Extra JavaScript files to load in HTML pages.",
+            "items": {
+                "type": "string"
             }
         },
         "themes_dir": {
@@ -176,6 +221,24 @@
                 "footer": {
                     "type": "boolean",
                     "title": "Show the page footer?"
+                },
+                "css": {
+                    "type": "array",
+                    "title": "Extra CSS files to load in this item's HTML pages..",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "js": {
+                    "type": "array",
+                    "title": "Extra JavaScript files to load in this item's HTML pages.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "hash_salt": {
+                    "type": "string",
+                    "title": "Salt used to hash the URLS of hidden items."
                 }
             },
             "anyOf": [
