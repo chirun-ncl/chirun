@@ -1,10 +1,10 @@
-<form id="display-options">
+<dialog id="display-options">
     <div class="buttons">
         <button type="button" id="reset-display-options">{% trans %}Reset to defaults{% endtrans %}</button>
 
         <a href="{{ACCESSIBILITY_STATEMENT_URL}}">{% trans %}Accessibility statement{% endtrans %}</a>
 
-        <button type="button" aria-controls="display-options" aria-expanded="false">
+        <button autofocus type="button" aria-controls="display-options">
             {% trans %}Close{% endtrans %}
         </button>
     </div>
@@ -142,4 +142,4 @@
 
         </section>
     </div>
-</form>
+</dialog>

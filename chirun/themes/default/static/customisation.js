@@ -185,14 +185,17 @@ class Customiser {
 
         this.add_setting('invert-images', 'boolean', true);
 
-        const display_options_form = document.getElementById('display-options');
+        const display_options_dialog = document.getElementById('display-options');
         const toggle_buttons = document.querySelectorAll('button[aria-controls="display-options"]');
         for(let button of toggle_buttons) {
             button.addEventListener('click', () => {
-                display_options_form.classList.toggle('show');
-                const displayed = display_options_form.classList.contains('show');
-
-                toggle_buttons.forEach(b => b.setAttribute('aria-expanded', displayed));
+                display_options_dialog.showModal();
+            });
+        }
+        const close_buttons = display_options_dialog.querySelectorAll('button[aria-controls="display-options"]')
+        for(let button of close_buttons) {
+            button.addEventListener('click', () => {
+                display_options_dialog.close();
             });
         }
 

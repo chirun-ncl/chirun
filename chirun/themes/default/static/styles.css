@@ -111,7 +111,7 @@ body > #display-options {
     background: white;
     padding: var(--spacing);
     border-bottom: 0.2em solid black;
-    margin-bottom: var(--spacing);
+    margin-bottom: 1em;
     max-height: 70vh;
     overflow-y: auto;
 }
@@ -120,9 +120,6 @@ body > #display-options .inputs {
     flex-wrap: wrap;
     grid-gap: var(--spacing);
     margin-top: var(--spacing);
-}
-body > #display-options:not(.show) {
-    display: none;
 }
 body > #display-options label {
     width: 8em;
@@ -143,6 +140,7 @@ body > #display-options output {
 
 body > #display-options .buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
