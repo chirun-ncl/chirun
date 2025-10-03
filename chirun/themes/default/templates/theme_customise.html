@@ -19,6 +19,14 @@
         </div>
 
         <div class="input-group">
+            <label for="display-options-font-weight">
+                {% trans %}Text weight{% endtrans %}
+            </label>
+            <input type="range" min="200" max="800" step="100" value="400" id="display-options-font-weight">
+            <output for="display-options-font-weight">400</output>
+        </div>
+
+        <div class="input-group">
             <label for="display-options-spacing-factor">
                 {% trans %}Spacing{% endtrans %}
             </label>
@@ -33,7 +41,7 @@
             <select id="display-options-font-family">
                 <option value="var(--sans-serif-font)" selected>{% trans %}Sans-serif{% endtrans %}</option>
                 <option value="var(--serif-font)">{% trans %}Serif{% endtrans %}</option>
-                <option value="Atkinson Hyperlegible">{% trans %}Atkinson Hyperlegible{% endtrans %}</option>
+                <option value="Atkinson Hyperlegible Next">{% trans %}Atkinson Hyperlegible{% endtrans %}</option>
                 <option value="Comic Sans MS">{% trans %}Comic Sans{% endtrans %}</option>
             </select>
         </div>

@@ -74,6 +74,16 @@ class AngleSetting extends Setting {
     }
 }
 
+class NumberSetting extends Setting {
+    get css_value() {
+        return this.value.toString();
+    }
+
+    get display_value() {
+        return this.value.toString();
+    }
+}
+
 class PercentageSetting extends Setting {
 
     get css_value() {
@@ -141,6 +151,7 @@ class Customiser {
     add_setting(name, kind, default_value) {
         const kinds = {
             'exponentialpercentage': ExponentialPercentageSetting,
+            'number': NumberSetting,
             'percentage': PercentageSetting,
             'boolean': BooleanSetting,
             'angle': AngleSetting,
@@ -155,6 +166,7 @@ class Customiser {
         this.localStorage_key = 'chirun-theme-customization';
 
         this.add_setting('font-scale', 'exponentialpercentage', 100);
+        this.add_setting('font-weight', 'number', 400);
         this.add_setting('spacing-factor', 'exponentialpercentage', 100);
         this.add_setting('font-family', 'text', 'var(--sans-serif-font)');
         this.add_setting('colour-scheme', 'text', 'auto');
