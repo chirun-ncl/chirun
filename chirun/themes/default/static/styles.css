@@ -174,6 +174,12 @@ img, svg {
     max-width: 100%;
     filter: var(--image-filter);
 }
+@media print {
+    img, svg {
+        max-height: calc(100svh - 6cm);
+        object-fit: contain;
+    }
+}
 
 p {
     margin: 0 0 var(--spacing) 0;
@@ -383,6 +389,9 @@ body > main > #sidebar .jump-to-item-content {
 @media print {
     body > header {
         margin-bottom: var(--spacing);
+    }
+    body > main {
+        display: block;
     }
     body > main > #sidebar {
         display: none;
