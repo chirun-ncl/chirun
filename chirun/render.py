@@ -7,7 +7,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import jinja2
 import logging
 import nbformat
-from notedown import MarkdownReader
+from .notedown import MarkdownReader
 import pypdf
 import pyppeteer
 import re

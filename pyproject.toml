@@ -23,7 +23,6 @@ dependencies = [
     "beautifulsoup4==4.13.4",
     "Jinja2==3.1.6",
     "Markdown==3.8",
-    "notedown==1.5.1",
     "Pillow==11.2.1",
     "plasTeX @ git+https://github.com/christianp/plastex@chirun-running-fixes",
     "Pygments==2.19.1",
