@@ -2,7 +2,7 @@
 Implement the tikz package using the imager
 """
 from plasTeX import Command, VerbatimEnvironment
-
+from chirun.plasTeXRenderer.Packages.graphicx import *
 
 class tikzpicture(VerbatimEnvironment):
     altText = None
