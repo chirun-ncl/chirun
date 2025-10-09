@@ -69,6 +69,9 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
         options = self.attributes['options']
 
         if options is not None:
+            altText = options.get('alt')
+            if altText is not None:
+                self.altText = altText
 
             scale = options.get('scale')
             if scale is not None and img is not None:

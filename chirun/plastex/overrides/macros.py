@@ -123,7 +123,7 @@ class alttext(Command):
         doc = self.ownerDocument
         gfx = doc.userdata.getPath('packages/chirun/currentimage')
         if gfx is not None:
-            gfx.altText = self.attributes['text']
+            gfx.altText = self.attributes['text'].textContent
         else:
             raise RuntimeError(
                 'Cannot find a graphics item to attach \\alttext{} to. Ensure'

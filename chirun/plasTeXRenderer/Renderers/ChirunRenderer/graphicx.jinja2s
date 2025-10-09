@@ -15,6 +15,6 @@ name: endvimeo
 " frameborder="0"></iframe>
 
 name: includegraphics rotatebox scalebox reflectbox resizebox
-<img src="{% if obj.renderer.vectorImager.enabled %}{{ obj.vectorImage.url }}{% else %}{{ obj.image.url }}{% endif %}" alt="{% if obj.altText %}{{ obj.altText.textContent|e }}{% else %}{{ obj.source|e }}{% endif %}" {% if obj.style.inline %}style="{{ obj.style.inline }}"{% endif %}/>
+<img src="{% if obj.renderer.vectorImager.enabled %}{{ obj.vectorImage.url }}{% else %}{{ obj.image.url }}{% endif %}" alt="{% if obj.altText %}{{ obj.altText|e }}{% else %}{{ obj.source|e }}{% endif %}" {% if obj.style.inline %}style="{{ obj.style.inline }}"{% endif %}/>
 
 name: DeclareGraphicsExtensions graphicspath alttext
