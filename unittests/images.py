@@ -23,8 +23,8 @@ class LaTeXImageTest(ChirunCompilationTest):
     def test_image_reference(self):
         soup = self.get_soup('index.html')
         img = soup.select('.item-content img')
-        self.assertEqual(img[0]['src'], 'images/img-0001.jpg', msg='The jpg is embedded as an <img> tag.')
-        self.assertEqual(img[1]['src'], 'images/img-0002.png', msg='The png is embedded as an <img> tag.')
+        self.assertTrue(img[0]['src'].startswith('images/img-0001.jpg'), msg='The jpg is embedded as an <img> tag.')
+        self.assertTrue(img[1]['src'].startswith('images/img-0002.png'), msg='The png is embedded as an <img> tag.')
     
     def test_sizing(self):
         soup = self.get_soup('index.html')
@@ -58,5 +58,5 @@ class MarkdownImageTest(ChirunCompilationTest):
         sources = ['images/drawing.png', 'images/drawing.png', 'images/drawing-0000.png', 'images/drawing-0000.png', 'images/Uniform_tiling_circle_packings.png', 'images/Penrose_tiling_at_Oxford_Mathematical_Institute_small.jpg', 'images/diagram.svg']
         alt = ['drawing 1 markdown', 'drawing 1 tag', 'drawing 2 markdown', 'drawing 2 tag', 'Tilings', 'Penrose', 'Diagram']
         for i, img in enumerate(images):
-            self.assertEqual(img['src'], sources[i])
-            self.assertTrue((self.build_dir / img['src']).exists())
+            self.assertTrue(img['src'].startswith(sources[i]))
+            self.assertTrue((self.build_dir / sources[i]).exists())

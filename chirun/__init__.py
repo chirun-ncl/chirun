@@ -4,6 +4,7 @@ import re
 import os
 import yaml
 import shutil
+import urllib.parse as urlparse
 
 
 # Workaround for copytree on Python < 3.8
@@ -58,3 +59,19 @@ def mkdir_p(path):
 
 def yaml_header(data):
     return '---\n{}\n---\n\n'.format(yaml.dump(data, default_flow_style=False))
+
+
+def add_query_to_url(url: str, extra_query_params: dict[str,str]) -> str:
+    parsed_url = urlparse.urlparse(url)
+    query = urlparse.parse_qs(parsed_url.query)
+    query.update(extra_query_params)
+    return urlparse.urlunparse(
+        (
+            parsed_url.scheme,
+            parsed_url.netloc,
+            parsed_url.path,
+            parsed_url.params,
+            urlparse.urlencode(query, doseq=True),
+            parsed_url.fragment,
+        )
+    )

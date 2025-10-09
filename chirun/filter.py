@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 from urllib.parse import urlparse
 
+from . import add_query_to_url
 from .html_filter import HTMLFilter as BaseHTMLFilter
 from .oembed import get_oembed_html
 
@@ -117,6 +118,14 @@ def fix_local_links(soup, item):
                     el[attr] = item.course.make_relative_url(item, url[1:])
 
 
+def add_build_time_to_src(soup, item):
+    for tag in soup.css.select('[src]'):
+        try:
+            tag['src'] = add_query_to_url(tag['src'], {'build_time': str(item.course.build_time.timestamp())})
+        except Exception as e:
+            import traceback
+            traceback.print_exception(e)
+
 def dots_pause(soup, item):
     """
         Rewrite three dots on thier own paragraph into a set of divs with
@@ -197,10 +206,10 @@ def remove_output_cells(nb, item):
 
 class HTMLFilter(BaseHTMLFilter):
     filters = [embed_recap, embed_numbas, embed_vimeo, embed_youtube,
-               oembed, fix_local_links, dots_pause]
+               oembed, fix_local_links, add_build_time_to_src, dots_pause]
 
 class CellHTMLFilter(BaseHTMLFilter):
-    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, links_to_data_uri]
+    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, add_build_time_to_src, links_to_data_uri]
 
 
 class CellFilter(object):

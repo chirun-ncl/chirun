@@ -20,5 +20,5 @@ class PDF2SVGTest(ChirunCompilationTest):
     def test_image_reference(self):
         soup = self.get_soup('index.html')
         img = soup.select('.item-content img')
-        self.assertEqual(img[0]['src'], 'images/img-0001.svg', msg='The PDF image is embedded as an <img> tag.')
-        self.assertEqual(img[1]['src'], 'images/img-0002.svg', msg='The EPS image is embedded as an <img> tag.')
+        self.assertTrue(img[0]['src'].startswith('images/img-0001.svg'), msg='The PDF image is embedded as an <img> tag.')
+        self.assertTrue(img[1]['src'].startswith('images/img-0002.svg'), msg='The EPS image is embedded as an <img> tag.')

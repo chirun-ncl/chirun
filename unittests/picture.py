@@ -20,4 +20,4 @@ class ImageTest(ChirunCompilationTest):
         soup = self.get_soup('index.html')
         img = soup.select('.item-content img')
         #A break of issue #126 will have an 'object' and raw text where the 'image' would be
-        self.assertEqual(img[0]['src'], 'images/img-0001.svg', msg='The maths is embedded as an <img> tag.')
+        self.assertTrue(img[0]['src'].startswith('images/img-0001.svg'), msg='The maths is embedded as an <img> tag.')

@@ -44,6 +44,8 @@ class Chirun:
         self.args = args
         self.force_relative_build = False
 
+        self.build_time = datetime.datetime.now()
+
         self.root_dir = self.get_root_dir()
         self.build_dir = (Path(args.build_path) if args.build_path is not None else (self.root_dir / 'build')).resolve()
 
