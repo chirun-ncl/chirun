@@ -120,11 +120,9 @@ def fix_local_links(soup, item):
 
 def add_build_time_to_src(soup, item):
     for tag in soup.css.select('[src]'):
-        try:
-            tag['src'] = add_query_to_url(tag['src'], {'build_time': str(item.course.build_time.timestamp())})
-        except Exception as e:
-            import traceback
-            traceback.print_exception(e)
+        if tag['src'].startswith('data:'):
+            continue
+        tag['src'] = add_query_to_url(tag['src'], {'build_time': str(item.course.build_time.timestamp())})
 
 def dots_pause(soup, item):
     """
@@ -209,7 +207,7 @@ class HTMLFilter(BaseHTMLFilter):
                oembed, fix_local_links, add_build_time_to_src, dots_pause]
 
 class CellHTMLFilter(BaseHTMLFilter):
-    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, add_build_time_to_src, links_to_data_uri]
+    filters = [link_numbas, link_youtube, mathjax_script_dollar, fix_local_links, links_to_data_uri, add_build_time_to_src]
 
 
 class CellFilter(object):
