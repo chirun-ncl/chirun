@@ -240,8 +240,15 @@ blockquote > p:last-child {
 }
 
 :is(p,li,table) code {
-    background-color: var(--bg-colour-off);
-    color: var(--text-colour);
+    background-color: var(--code-colour-bg);
+    color: var(--code-colour-text);
+    padding-inline: calc(0.2 * var(--spacing));
+}
+
+:is(p,li,table) .highlight code {
+    background: none;
+    color: inherit;
+    border: none;
 }
 
 pre {
