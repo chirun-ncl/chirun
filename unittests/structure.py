@@ -135,9 +135,8 @@ class StructureTest(ChirunCompilationTest):
 
         disk_filenames = []
         for dirpath, dirnames, filenames in os.walk(self.build_dir, topdown=True):
-            for i in range(len(dirnames)-1, 0, -1):
-                if 'hidden' in dirnames[i]:
-                    del dirnames[i]
+            if 'hidden' in dirpath:
+                continue
 
             for filename in filenames:
                 p = Path(dirpath, filename).relative_to(self.build_dir)
