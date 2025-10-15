@@ -3,7 +3,7 @@ name: Run the unit tests
 # Controls when the workflow will run
 on:
   push:
-    branches: [ unittests, master ]
+    branches: [ unittests, master, tmate-debug ]
   pull_request:
     branches: [ unittests, master ]
     
@@ -28,5 +28,9 @@ jobs:
       - run: pip install --upgrade setuptools pip
       
       - run: pip install .
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
       
       - run: make test
