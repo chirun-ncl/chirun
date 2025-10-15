@@ -1,6 +1,6 @@
 [project]
 name = "chirun"
-version = "1.3.0"
+dynamic = ["version"]
 authors = [
   { name="Digital Learning team, School of Mathematics, Statistics and Physics, Newcastle University", email="msp.digital.learning@ncl.ac.uk" },
   { name="George Stagg", email="george@stagg.phd"},
@@ -49,3 +49,6 @@ build-backend = "setuptools.build_meta"
 where = ["."]  
 include = ["chirun*"]
 namespaces = false
+
+[tool.setuptools.dynamic]
+version = {attr = "chirun.chirun_version.VERSION"}
