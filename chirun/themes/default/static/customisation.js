@@ -5,9 +5,8 @@ class Setting {
         this.default_value = default_value;
         this._value = default_value;
 
-        const id = `display-options-${name}`;
-        this.input = document.getElementById(id);
-        this.output = document.querySelector(`output[for="${id}"]`);
+        this.input = document.querySelector(`#display-options [name="${name}"]`);
+        this.output = document.querySelector(`output[for="display-options-${name}"]`);
 
         const change = () => {
             this.value = this.filter_value(this.input_value);
@@ -50,6 +49,10 @@ class Setting {
         this.output.textContent = this.display_value;
     }
 
+    update_page() {
+        document.documentElement.style.setProperty(`--${this.name}`, this.css_value);
+    }
+
     get value() {
         return this._value;
     }
@@ -60,6 +63,18 @@ class Setting {
 
     get display_value() {
         return this.value;
+    }
+}
+
+class CssSetting extends Setting {
+    constructor() {
+        super(...arguments);
+
+        this.style = document.createElement('style');
+        document.head.append(this.style);
+    }
+    update_page() {
+        this.style.textContent = this.value;
     }
 }
 
@@ -157,12 +172,16 @@ class Customiser {
             'angle': AngleSetting,
             'colour': Setting,
             'text': Setting,
+            'css': CssSetting,
         }
         this.settings[name] = new kinds[kind](this, name, default_value);
     }
 
     constructor() {
         this.settings = {};
+        this.form = document.querySelector('#display-options > form');
+        this.form.addEventListener('submit', e => e.preventDefault());
+
         this.localStorage_key = 'chirun-theme-customization';
 
         this.add_setting('font-scale', 'exponentialpercentage', 100);
@@ -184,6 +203,8 @@ class Customiser {
         this.add_setting('filter-hue-rotate', 'angle', 0);
 
         this.add_setting('invert-images', 'boolean', true);
+
+        this.add_setting('custom-css', 'css', '');
 
         const display_options_dialog = document.getElementById('display-options');
         const toggle_buttons = document.querySelectorAll('button[aria-controls="display-options"]');
@@ -232,8 +253,8 @@ class Customiser {
     }
 
     update_page() {
-        Object.entries(this.settings).forEach(([k,{css_value}]) => {
-            document.documentElement.style.setProperty(`--${k}`, css_value);
+        Object.values(this.settings).forEach((setting) => {
+            setting.update_page();
         });
         document.body.dataset.colourScheme = this.settings['colour-scheme'].value;
         document.body.dataset.invertImages = this.settings['invert-images'].value;

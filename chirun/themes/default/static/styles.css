@@ -109,17 +109,27 @@ body > #display-options {
     color: black;
     --link-colour: #0000ee;
     background: white;
-    padding: var(--spacing);
+    padding: 0;
     border-bottom: 0.2em solid black;
     margin-bottom: 1em;
     max-height: 70vh;
     overflow-y: auto;
 }
+body > #display-options > form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
+}
 body > #display-options .inputs {
     display: flex;
     flex-wrap: wrap;
-    grid-gap: var(--spacing);
-    margin-top: var(--spacing);
+    gap: var(--spacing);
+}
+body > #display-options > form > * +* {
+    padding-inline: var(--spacing);
+}
+body > #display-options details summary {
+    margin-bottom: var(--spacing);
 }
 body > #display-options label {
     width: 8em;
@@ -143,7 +153,27 @@ body > #display-options .buttons {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background: Canvas;
+    padding-bottom: calc(0.5 * var(--spacing));
+    border-bottom: var(--border);
 }
+
+
+body > #display-options #custom-css-options {
+    flex-grow: 1;
+}
+body > #display-options #custom-css-options .input-group {
+    flex-grow: 1;
+}
+
+body > #display-options #display-options-custom-css {
+    flex-grow: 1;
+    resize: vertical;
+    min-height: 10em;
+}
+
 
 body:not([data-colour-scheme="custom"]) > #display-options #custom-colour-scheme-options {
     display: none;
@@ -223,7 +253,7 @@ hr {
     margin: calc(2 * var(--spacing));
 }
 
-details {
+main details {
     background: var(--bg-colour-off);
     padding: var(--spacing);
     border: var(--border);
@@ -374,14 +404,29 @@ body > main > #sidebar .jump-to-item-content {
     display: none;
 }
 
+body.big-text > main {
+    grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
+    grid-template-areas: "sidebar" "content";
+}
+body.big-text > main > #sidebar {
+    position: revert;
+    margin-bottom: var(--spacing);
+    display: grid;
+    justify-content: center;
+    max-height: none;
+}
+
+body.big-text > main > #sidebar .jump-to-item-content {
+    display: inline;
+}
+
 @media (max-width: 55em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
         grid-template-areas: "sidebar" "content";
     }
     body > main > #sidebar {
-        position: initial;
-        background: var(--bg-colour-accent-2);
+        position: revert;
         margin-bottom: var(--spacing);
         display: grid;
         justify-content: center;

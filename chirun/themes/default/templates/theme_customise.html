@@ -1,145 +1,161 @@
 <dialog id="display-options">
-    <div class="buttons">
-        <button type="button" id="reset-display-options">{% trans %}Reset to defaults{% endtrans %}</button>
+    <form>
+        <div class="buttons">
+            <button type="button" id="reset-display-options">{% trans %}Reset to defaults{% endtrans %}</button>
 
-        <a href="{{ACCESSIBILITY_STATEMENT_URL}}">{% trans %}Accessibility statement{% endtrans %}</a>
+            <a href="{{ACCESSIBILITY_STATEMENT_URL}}">{% trans %}Accessibility statement{% endtrans %}</a>
 
-        <button autofocus type="button" aria-controls="display-options">
-            {% trans %}Close{% endtrans %}
-        </button>
-    </div>
-
-    <div class="inputs">
-        <div class="input-group">
-            <label for="display-options-font-scale">
-                {% trans %}Text size{% endtrans %}
-            </label>
-            <input type="range" min="50" max="600" step="5" value="100" id="display-options-font-scale">
-            <output for="display-options-font-scale">100%</output>
+            <button autofocus type="button" aria-controls="display-options">
+                {% trans %}Close{% endtrans %}
+            </button>
         </div>
 
-        <div class="input-group">
-            <label for="display-options-font-weight">
-                {% trans %}Text weight{% endtrans %}
-            </label>
-            <input type="range" min="200" max="800" step="100" value="400" id="display-options-font-weight">
-            <output for="display-options-font-weight">400</output>
+        <div class="inputs">
+            <div class="input-group">
+                <label for="display-options-font-scale">
+                    {% trans %}Text size{% endtrans %}
+                </label>
+                <input name="font-scale" type="range" min="50" max="600" step="5" value="100" id="display-options-font-scale">
+                <output for="display-options-font-scale">100%</output>
+            </div>
+
+            <div class="input-group">
+                <label for="display-options-font-weight">
+                    {% trans %}Text weight{% endtrans %}
+                </label>
+                <input name="font-weight" type="range" min="200" max="800" step="100" value="400" id="display-options-font-weight">
+                <output for="display-options-font-weight">400</output>
+            </div>
+
+            <div class="input-group">
+                <label for="display-options-spacing-factor">
+                    {% trans %}Spacing{% endtrans %}
+                </label>
+                <input name="spacing-factor" type="range" min="0" max="1200" step="5" value="100" id="display-options-spacing-factor">
+                <output for="display-options-spacing-factor">100%</output>
+            </div>
+
+            <div class="input-group">
+                <label for="display-options-font-family">
+                    {% trans %}Text font{% endtrans %}
+                </label>
+                <select name="font-family" id="display-options-font-family">
+                    <option value="var(--sans-serif-font)" selected>{% trans %}Sans-serif{% endtrans %}</option>
+                    <option value="var(--serif-font)">{% trans %}Serif{% endtrans %}</option>
+                    <option value="Atkinson Hyperlegible Next">{% trans %}Atkinson Hyperlegible{% endtrans %}</option>
+                    <option value="Comic Sans MS">{% trans %}Comic Sans{% endtrans %}</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="display-options-colour-scheme">
+                    {% trans %}Colour scheme{% endtrans %}
+                </label>
+                <select name="colour-scheme" id="display-options-colour-scheme">
+                    <option value="auto" selected>{% trans %}Automatic (default){% endtrans %}</option>
+                    <option value="light">{% trans %}Black text on white{% endtrans %}</option>
+                    <option value="dark">{% trans %}White text on black{% endtrans %}</option>
+                    <option value="custom">{% trans %}Custom{% endtrans %}</option>
+                </select>
+            </div>
+
+            <section id="custom-colour-scheme-options" class="inputs">
+                <div class="input-group">
+                    <label for="display-options-text-colour">
+                        {% trans %}Text colour{% endtrans %}
+                    </label>
+                    <input name="text-colour" type="color" value="#000000" id="display-options-text-colour">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-link-colour">
+                        {% trans %}Link colour{% endtrans %}
+                    </label>
+                    <input name="link-colour" type="color" value="#0000ee" id="display-options-link-colour">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour">
+                        {% trans %}Background colour{% endtrans %}
+                    </label>
+                    <input name="bg-colour" type="color" value="#ffffff" id="display-options-bg-colour">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour-off">
+                        {% trans %}Muted background colour{% endtrans %}
+                    </label>
+                    <input name="bg-colour-off" type="color" value="#eeeeee" id="display-options-bg-colour-off">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour-accent-1">
+                        {% trans %}Accent colour 1{% endtrans %}
+                    </label>
+                    <input name="bg-colour-accent-1" type="color" value="#4caf50" id="display-options-bg-colour-accent-1">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour-accent-2">
+                        {% trans %}Accent colour 2{% endtrans %}
+                    </label>
+                    <input name="bg-colour-accent-2" type="color" value="#f6f6ff" id="display-options-bg-colour-accent-2">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour-accent-3">
+                        {% trans %}Accent colour 3{% endtrans %}
+                    </label>
+                    <input name="bg-colour-accent-3" type="color" value="#eeffd3" id="display-options-bg-colour-accent-3">
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-bg-colour-accent-4">
+                        {% trans %}Accent colour 4{% endtrans %}
+                    </label>
+                    <input name="bg-colour-accent-4" type="color" value="#ffeeee" id="display-options-bg-colour-accent-4">
+                </div>
+            </section>
+
+            <section id="filter-colour-scheme-options" class="inputs">
+                <div class="input-group">
+                    <label for="display-options-filter-sepia">
+                        {% trans %}Sepia filter{% endtrans %}
+                    </label>
+                    <input name="filter-sepia" type="range" min="0" max="100" step="1" value="0" id="display-options-filter-sepia">
+                    <output for="display-options-filter-sepia">0%</output>
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-filter-hue-rotate">
+                        {% trans %}Rotate hues{% endtrans %}
+                    </label>
+                    <input name="filter-hue-rotate" type="range" min="0" max="1" step="0.01" value="0" id="display-options-filter-hue-rotate">
+                    <output for="display-options-filter-hue-rotate">0 turns</output>
+                </div>
+
+                <div class="input-group">
+                    <label for="display-options-invert-images">
+                        {% trans %}Invert images in dark mode{% endtrans %}
+                    </label>
+                    <input name="invert-images" type="checkbox" id="display-options-invert-images">
+                </div>
+
+            </section>
+
+
         </div>
 
-        <div class="input-group">
-            <label for="display-options-spacing-factor">
-                {% trans %}Spacing{% endtrans %}
-            </label>
-            <input type="range" min="0" max="1200" step="5" value="100" id="display-options-spacing-factor">
-            <output for="display-options-spacing-factor">100%</output>
-        </div>
-
-        <div class="input-group">
-            <label for="display-options-font-family">
-                {% trans %}Text font{% endtrans %}
-            </label>
-            <select id="display-options-font-family">
-                <option value="var(--sans-serif-font)" selected>{% trans %}Sans-serif{% endtrans %}</option>
-                <option value="var(--serif-font)">{% trans %}Serif{% endtrans %}</option>
-                <option value="Atkinson Hyperlegible Next">{% trans %}Atkinson Hyperlegible{% endtrans %}</option>
-                <option value="Comic Sans MS">{% trans %}Comic Sans{% endtrans %}</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label for="display-options-colour-scheme">
-                {% trans %}Colour scheme{% endtrans %}
-            </label>
-            <select id="display-options-colour-scheme">
-                <option value="auto" selected>{% trans %}Automatic (default){% endtrans %}</option>
-                <option value="light">{% trans %}Black text on white{% endtrans %}</option>
-                <option value="dark">{% trans %}White text on black{% endtrans %}</option>
-                <option value="custom">{% trans %}Custom{% endtrans %}</option>
-            </select>
-        </div>
-
-        <section id="custom-colour-scheme-options" class="inputs">
-            <div class="input-group">
-                <label for="display-options-text-colour">
-                    {% trans %}Text colour{% endtrans %}
-                </label>
-                <input type="color" value="#000000" id="display-options-text-colour">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-link-colour">
-                    {% trans %}Link colour{% endtrans %}
-                </label>
-                <input type="color" value="#0000ee" id="display-options-link-colour">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour">
-                    {% trans %}Background colour{% endtrans %}
-                </label>
-                <input type="color" value="#ffffff" id="display-options-bg-colour">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour-off">
-                    {% trans %}Muted background colour{% endtrans %}
-                </label>
-                <input type="color" value="#eeeeee" id="display-options-bg-colour-off">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour-accent-1">
-                    {% trans %}Accent colour 1{% endtrans %}
-                </label>
-                <input type="color" value="#4caf50" id="display-options-bg-colour-accent-1">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour-accent-2">
-                    {% trans %}Accent colour 2{% endtrans %}
-                </label>
-                <input type="color" value="#f6f6ff" id="display-options-bg-colour-accent-2">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour-accent-3">
-                    {% trans %}Accent colour 3{% endtrans %}
-                </label>
-                <input type="color" value="#eeffd3" id="display-options-bg-colour-accent-3">
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-bg-colour-accent-4">
-                    {% trans %}Accent colour 4{% endtrans %}
-                </label>
-                <input type="color" value="#ffeeee" id="display-options-bg-colour-accent-4">
-            </div>
-        </section>
-
-        <section id="filter-colour-scheme-options" class="inputs">
-            <div class="input-group">
-                <label for="display-options-filter-sepia">
-                    {% trans %}Sepia filter{% endtrans %}
-                </label>
-                <input type="range" min="0" max="100" step="1" value="0" id="display-options-filter-sepia">
-                <output for="display-options-filter-sepia">0%</output>
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-filter-hue-rotate">
-                    {% trans %}Rotate hues{% endtrans %}
-                </label>
-                <input type="range" min="0" max="1" step="0.01" value="0" id="display-options-filter-hue-rotate">
-                <output for="display-options-filter-hue-rotate">0 turns</output>
-            </div>
-
-            <div class="input-group">
-                <label for="display-options-invert-images">
-                    {% trans %}Invert images in dark mode{% endtrans %}
-                </label>
-                <input type="checkbox" id="display-options-invert-images">
-            </div>
-
-        </section>
-    </div>
+        <details id="advanced">
+            <summary>{% trans %}Advanced options{% endtrans %}</summary>
+            <section id="custom-css-options" class="inputs">
+                <div class="input-group">
+                    <label for="display-options-custom-css">
+                        {% trans %}Custom CSS code{% endtrans %}
+                    </label>
+                    <textarea name="custom-css" id="display-options-custom-css"></textarea>
+                </div>
+            </section>
+        </details>
+    </form>
 </dialog>
