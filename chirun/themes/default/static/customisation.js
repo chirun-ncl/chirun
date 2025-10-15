@@ -258,6 +258,7 @@ class Customiser {
         });
         document.body.dataset.colourScheme = this.settings['colour-scheme'].value;
         document.body.dataset.invertImages = this.settings['invert-images'].value;
+        document.body.classList.toggle('big-text', this.settings['font-scale'].value >= 200);
     }
 
     reset() {

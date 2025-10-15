@@ -420,6 +420,22 @@ body.big-text > main > #sidebar .jump-to-item-content {
     display: inline;
 }
 
+body.big-text > main {
+    grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
+    grid-template-areas: "sidebar" "content";
+}
+body.big-text > main > #sidebar {
+    position: revert;
+    margin-bottom: var(--spacing);
+    display: grid;
+    justify-content: center;
+    max-height: none;
+}
+
+body.big-text > main > #sidebar .jump-to-item-content {
+    display: inline;
+}
+
 @media (max-width: 55em), print {
     body > main {
         grid-template-columns: [full-start sidebar-start content-start] 1fr [sidebar-end content-end full-end];
