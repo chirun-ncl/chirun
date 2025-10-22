@@ -106,6 +106,8 @@ def fix_local_links(soup, item):
     tags = {
         'a': ['href'],
         'img': ['src'],
+        'video': ['src'],
+        'audio': ['src'],
         'source': ['src'],
         'section': ['data-background', 'data-background-video'],
     }
