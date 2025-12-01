@@ -1,14 +1,14 @@
 name: math ensuremath
 {{ obj.mathjax_source }}
 
-name: gather gather* flalign flalign* \
+name:  flalign flalign* \
       multline multline* alignat alignat* split DeclareMathOperator
 <span class="dmath"><script type="math/tex; mode=display">{{ obj.mathjax_source }}</script></span>
 
 name: displaymath equation*
 <span class="dmath">{{ obj.mathjax_source }}</span>
 
-name: align eqnarray
+name: align eqnarray gather
 <div id="{{ obj.id }}">
 {% for row in obj %}
 {% if row.ref != None %}<div class="eqnarrayid" id="{{ row.id }}"></div>{% endif %}
@@ -22,7 +22,7 @@ name: align eqnarray
 </script>
 </div>
 
-name: align* eqnarray*
+name: align* eqnarray* gather*
 <span><script type="math/tex; mode=display">{{ obj.source }}</script></span>
 
 name: equation
