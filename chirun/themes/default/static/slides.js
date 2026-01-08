@@ -40,6 +40,13 @@ setTimeout(() => {
         }
     });
 
+    window.addEventListener('popstate', e => {
+        const section = document.querySelector(window.location.hash);
+        if(section) {
+            section.scrollIntoView();
+        }
+    });
+
     function move_slide(section,i,d) {
         if(d<0) {
             const revealed = section.querySelectorAll('.fragment.revealed');
@@ -58,6 +65,7 @@ setTimeout(() => {
         const to_section = sections[i+d];
         if(to_section) {
             to_section.scrollIntoView();
+            history.pushState('','',`#${to_section.id}`);
         }
     }
 
