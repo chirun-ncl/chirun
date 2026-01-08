@@ -122,10 +122,10 @@ class MarkdownRenderer(object):
         sections = re.split(r'$\n\n---+\n\n', md_string, flags=re.M)
 
         output = ''
-        for section_md in sections:
+        for i, section_md in enumerate(sections):
             content = markdown(section_md, extensions=mdx_extensions,
                                extension_configs=self.extension_configs)
-            output += f'<section>\n{content}\n</section>\n'
+            output += f'<section id="slide-{i}">\n{content}\n</section>\n'
 
         output, _ = MarkdownImageFilter().apply(content_item, output)
 
