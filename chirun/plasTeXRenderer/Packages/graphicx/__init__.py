@@ -29,8 +29,8 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
         elif imgext in PDFext:
             from pypdf import PdfReader
             pdfImage = PdfReader(img)
-            box = pdfImage.getPage(0).mediaBox
-            return (box.getWidth(), box.getHeight())
+            box = pdfImage.pages[0].mediabox
+            return (box.width, box.height)
         else:
             raise UnsupportedFiletypeException("Reading the size of a {} file is not supported".format(imgext))
 

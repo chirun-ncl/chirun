@@ -1,4 +1,5 @@
 from . import ChirunCompilationTest
+from .util import parse_css_attribute
 
 class LaTeXImageTest(ChirunCompilationTest):
     """
@@ -29,14 +30,21 @@ class LaTeXImageTest(ChirunCompilationTest):
     def test_sizing(self):
         soup = self.get_soup('index.html')
         img = soup.select('.item-content img')
-        jpgStyle = img[0]['style'].split(";")
-        jpgWidth = float(jpgStyle[0].split(":")[1][:-2])
+        jpgStyle = parse_css_attribute(img[0]['style'])
+        jpgWidth = float(jpgStyle['width'][:-2])
         self.assertAlmostEqual(jpgWidth, 375.8,places=1, msg='The jpg has a width of 375.8pt, 80% of plastex\'s text width') #plastex \textwidth is 469.755pt
-        pngStyle = img[1]['style'].split(";")
-        pngWidth = float(pngStyle[0].split(":")[1][:-2])
-        pngHeight = float(pngStyle[1].split(":")[1][:-2])
+        pngStyle = parse_css_attribute(img[1]['style'])
+        pngWidth = float(pngStyle['width'][:-2])
+        pngHeight = float(pngStyle['height'][:-2])
         self.assertAlmostEqual(pngWidth, 2400 ,places=0, msg='The png has a width of 2400px, 2* its base width')
         self.assertAlmostEqual(pngHeight, 2802 ,places=0, msg='The png has a height of 2802px, 2* its base height')
+
+        pdfStyle = parse_css_attribute(img[2]['style'])
+        pdfWidth = float(pdfStyle['width'][:-2])
+        pdfHeight = float(pdfStyle['height'][:-2])
+        self.assertAlmostEqual(pdfWidth, 157.507, places=0, msg='The pdf has a width of 157.507px, 0.5* its base width')
+        self.assertAlmostEqual(pdfHeight, 178.487, places=0, msg='The pdf has a width of 178.487px, 0.5* its base width')
+        
 
 class MarkdownImageTest(ChirunCompilationTest):
     """
