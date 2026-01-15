@@ -9,7 +9,7 @@ const packages_url = new URL(chirun_static_url);
 packages_url.pathname += '/mathjax-packages';
 packages_url.search = '';
 
-window.MathJax = {
+window.MathJax = Object.assign({
     tex: {
         macros: {
             mathsterling: '{\\unicode{xA3}}',
@@ -133,5 +133,5 @@ window.MathJax = {
             chirun: packages_url,
         }
     }
-};
+}, window.MathJax);
 })();
