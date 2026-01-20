@@ -1,5 +1,5 @@
 name: tcolorbox
-<div class="tcolorbox" {% if obj.boxName %}data-tcolorbox-name="{{obj.boxName}}"{% endif %} style="{{obj.style.inline}}">
+<div class="tcolorbox{% if obj.style['--colback'] %} colback{% endif %}{% if obj.style['--colupper'] %} colupper{% endif %}{% if obj.style['--collower'] %} collower{% endif %}" {% if obj.boxName %}data-tcolorbox-name="{{obj.boxName}}"{% endif %} style="{{obj.style.inline}}">
     {% if obj.title %}<header style="{{obj.title_style.inline}}">{{obj.title}}</header>{% endif %}
     {{ obj }}
 </div>

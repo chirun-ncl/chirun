@@ -34,7 +34,20 @@ class tcolorbox(Environment):
 
         colback = options.get('colback')
         if colback is not None:
-            self.style['background-color'] = self.parser.parseColor(colback).html
+            colback = self.parser.parseColor(colback)
+            self.style['--colback'] = colback.html
+
+        coltext = options.get('coltext')
+        if coltext is not None:
+            self.style['--colupper'] = self.style['--collower'] = self.parser.parseColor(coltext).html
+
+        colupper = options.get('colupper')
+        if colupper is not None:
+            self.style['--colupper'] = self.parser.parseColor(colupper).html
+
+        collower = options.get('collower')
+        if collower is not None:
+            self.style['--collower'] = self.parser.parseColor(collower).html
 
         colframe = options.get('colframe')
         if colframe is not None:
@@ -50,7 +63,7 @@ class tcolorbox(Environment):
 
         coltitle = options.get('coltitle')
         if coltitle is not None:
-            self.title_style['color'] = coltitle
+            self.title_style['color'] = self.parser.parseColor(coltitle).html
 
         return res
 

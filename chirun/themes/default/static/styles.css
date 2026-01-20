@@ -15,16 +15,37 @@
     font-size: calc(calc(var(--font-scale) / 100) * var(--base-font-size));
     font-weight: var(--font-weight);
 
-    --text-colour: #000000;
-    --link-colour: #0000ee;
-    --bg-colour: #ffffff;
-    --bg-colour-off: #eeeeee;
-    --bg-colour-accent-1: #dcf0dd;
-    --bg-colour-accent-2: #F6F6FF;
-    --bg-colour-accent-3: #eeffd3;
-    --bg-colour-accent-4: #ffeeee;
+    --light-text-colour: #000000;
+    --light-link-colour: #0000ee;
+    --light-bg-colour: #ffffff;
+    --light-bg-colour-off: #eeeeee;
+    --light-bg-colour-accent-1: #dcf0dd;
+    --light-bg-colour-accent-2: #F6F6FF;
+    --light-bg-colour-accent-3: #eeffd3;
+    --light-bg-colour-accent-4: #ffeeee;
+    --light-active-link-brightness: 0.6;
 
-    --active-link-brightness: 0.6;
+
+    --dark-text-colour: #ffffff;
+    --dark-link-colour: #ccccff;
+    --dark-bg-colour: #000000;
+    --dark-bg-colour-off: #222222;
+    --dark-bg-colour-accent-1: #1e441f;
+    --dark-bg-colour-accent-2: #00005d;
+    --dark-bg-colour-accent-3: #436d00;
+    --dark-bg-colour-accent-4: #550000;
+    --dark-active-link-brightness: 1.2;
+
+    --text-colour: var(--light-text-colour);
+    --link-colour: var(--light-link-colour);
+    --bg-colour: var(--light-bg-colour);
+    --bg-colour-off: var(--light-bg-colour-off);
+    --bg-colour-accent-1: var(--light-bg-colour-accent-1);
+    --bg-colour-accent-2: var(--light-bg-colour-accent-2);
+    --bg-colour-accent-3: var(--light-bg-colour-accent-3);
+    --bg-colour-accent-4: var(--light-bg-colour-accent-4);
+
+    --active-link-brightness: var(--light-active-link-brightness);
 
     --filter-sepia: 0%;
     --filter-hue-rotate: 0turn;
@@ -41,44 +62,44 @@
 }
 
 body[data-colour-scheme="auto"], body[data-colour-scheme="light"] {
-    --text-colour: #000000;
-    --link-colour: #0000ee;
-    --bg-colour: #ffffff;
-    --bg-colour-off: #eeeeee;
-    --bg-colour-accent-1: #dcf0dd;
-    --bg-colour-accent-2: #F6F6FF;
-    --bg-colour-accent-3: #eeffd3;
-    --bg-colour-accent-4: #ffeeee;
+    --text-colour: var(--light-text-colour);
+    --link-colour: var(--light-link-colour);
+    --bg-colour: var(--light-bg-colour);
+    --bg-colour-off: var(--light-bg-colour-off);
+    --bg-colour-accent-1: var(--light-bg-colour-accent-1);
+    --bg-colour-accent-2: var(--light-bg-colour-accent-2);
+    --bg-colour-accent-3: var(--light-bg-colour-accent-3);
+    --bg-colour-accent-4: var(--light-bg-colour-accent-4);
 }
 
 @media (prefers-color-scheme: dark) {
     body[data-colour-scheme="auto"] {
-        --text-colour: #ffffff;
-        --link-colour: #ccccff;
-        --bg-colour: #000000;
-        --bg-colour-off: #222222;
-        --bg-colour-accent-1: #1e441f;
-        --bg-colour-accent-2: #00005d;
-        --bg-colour-accent-3: #436d00;
-        --bg-colour-accent-4: #550000;
+        --text-colour: var(--dark-text-colour);
+        --link-colour: var(--dark-link-colour);
+        --bg-colour: var(--dark-bg-colour);
+        --bg-colour-off: var(--dark-bg-colour-off);
+        --bg-colour-accent-1: var(--dark-bg-colour-accent-1);
+        --bg-colour-accent-2: var(--dark-bg-colour-accent-2);
+        --bg-colour-accent-3: var(--dark-bg-colour-accent-3);
+        --bg-colour-accent-4: var(--dark-bg-colour-accent-4);
 
-        --active-link-brightness: 1.2;
+        --active-link-brightness: var(--dark-active-link-brightness);
     }
     body:not([data-colour-scheme="light"])[data-invert-images="true"] #item-content {
         --image-filter: invert(100%) hue-rotate(0.5turn);
     }
 }
 body[data-colour-scheme="dark"] {
-    --text-colour: #ffffff;
-    --link-colour: hsl(240, 100%, 81.7%);
-    --bg-colour: #000000;
-    --bg-colour-off: #222222;
-    --bg-colour-accent-1: #1e441f;
-    --bg-colour-accent-2: #00005d;
-    --bg-colour-accent-3: #436d00;
-    --bg-colour-accent-4: #550000;
+    --text-colour: var(--dark-text-colour);
+    --link-colour: var(--dark-link-colour);
+    --bg-colour: var(--dark-bg-colour);
+    --bg-colour-off: var(--dark-bg-colour-off);
+    --bg-colour-accent-1: var(--dark-bg-colour-accent-1);
+    --bg-colour-accent-2: var(--dark-bg-colour-accent-2);
+    --bg-colour-accent-3: var(--dark-bg-colour-accent-3);
+    --bg-colour-accent-4: var(--dark-bg-colour-accent-4);
 
-    --active-link-brightness: 1.2;
+    --active-link-brightness: var(--dark-active-link-brightness);
 }
 body[data-colour-scheme="dark"][data-invert-images="true"] {
     --image-filter: invert(100%) hue-rotate(0.5turn);
@@ -672,8 +693,17 @@ table {
 .tcolorbox {
     margin: var(--spacing);
     padding: var(--spacing);
-    background-color: var(--bg-colour-off);
+    --colback: var(--bg-colour-off);
     border: 2px solid var(--text-colour);
+    --tcolorbox-bg-colour: var(--colback);
+    background-color: var(--tcolorbox-bg-colour);
+    color: var(--colupper);
+}
+
+.tcolorbox.colback {
+    /* Force the light theme's text colour so when the author specifies a background colour which doesn't change in dark mode, neither does the text colour. This does not respect the user's chosen text colours. */
+    --colupper: var(--light-text-colour); 
+    --link-colour: var(--light-link-colour);
 }
 .tcolorbox > header {
     font-weight: bold;
