@@ -9,6 +9,7 @@ class TColorBoxTest(ChirunCompilationTest):
         """
         soup = self.get_soup('index.html')
 
-        box = soup.find(name='div',style='background-color:#00FF00; border-color:#1E32B4')
+        box = soup.find(name='div',class_='tcolorbox')
         self.assertIsNotNone(box)
+        self.assertEqual(box['style'], '--colback:#00FF00; --colupper:#0000FF; --collower:#0000FF; --colframe:#1E32B4')
 

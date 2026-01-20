@@ -51,11 +51,11 @@ class tcolorbox(Environment):
 
         colframe = options.get('colframe')
         if colframe is not None:
-            self.style['border-color'] = self.parser.parseColor(colframe).html
+            self.style['--colframe'] = self.parser.parseColor(colframe).html
 
         boxrule = options.get('boxrule')
         if boxrule is not None:
-            self.style['border-width'] = boxrule
+            self.style['--boxrule'] = boxrule
 
         title = options.get('title')
         if title:

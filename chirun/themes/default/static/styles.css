@@ -691,11 +691,14 @@ table {
 }
 
 .tcolorbox {
+    --colback: var(--bg-colour-off);
+    --colupper: var(--text-colour);
+    --colframe: var(--text-colour);
+    --tcolorbox-bg-colour: var(--colback);
+    --boxrule: 2px;
     margin: var(--spacing);
     padding: var(--spacing);
-    --colback: var(--bg-colour-off);
-    border: 2px solid var(--text-colour);
-    --tcolorbox-bg-colour: var(--colback);
+    border: var(--boxrule) solid var(--colframe);
     background-color: var(--tcolorbox-bg-colour);
     color: var(--colupper);
 }
