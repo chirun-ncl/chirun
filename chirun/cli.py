@@ -114,6 +114,11 @@ class Chirun:
             to the beginning of absolute URLs, when required.
         """
         root = self.get_web_root()
+
+        parsed_url = urlparse(url)
+        if parsed_url.scheme != '':
+            return url
+
         if self.args.absolute:
             if url[:len(root) - 1] != root[1:]:
                 url = root + url
@@ -121,12 +126,6 @@ class Chirun:
                 url = '/' + url
             return url
         else:
-            parsed_url = urlparse(url)
-            if parsed_url.scheme != '':
-                return url
-
-            _url = url
-
             path = parsed_url.path
 
             item_url = item.out_file if output_url is None else PurePath(output_url)
@@ -224,6 +223,9 @@ class Chirun:
                     }
                 ]
             })
+
+        if urlparse(self.config.get('root_url', '')).scheme != '':
+            self.args.absolute = True
 
         self.config['args'] = self.args
 
