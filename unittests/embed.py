@@ -50,14 +50,14 @@ class EmbedTest(ChirunCompilationTest):
 
         source = audio.find('source')
 
-        self.assertEqual(source['src'], 'static/Court_House_Blues.mp3')
+        self.assertTrue(source['src'].startswith('static/Court_House_Blues.mp3'))
 
     def test_video(self):
         soup = self.get_soup('index.html')
 
         videos = soup.select('video')
 
-        self.assertEqual(videos[0].find('source')['src'], 'static/movie.mp4')
+        self.assertTrue(videos[0].find('source')['src'].startswith('static/movie.mp4'))
         self.assertEqual(videos[1]['width'], '500')
         self.assertEqual(videos[1]['height'], '400')
 

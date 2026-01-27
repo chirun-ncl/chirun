@@ -124,7 +124,9 @@ def add_build_time_to_src(soup, item):
     for tag in soup.css.select('[src]'):
         if tag['src'].startswith('data:'):
             continue
-        tag['src'] = add_query_to_url(tag['src'], {'build_time': str(item.course.build_time.timestamp())})
+        url = urlparse(tag['src'])
+        if url.scheme == '' or tag['src'].startswith(item.course.get_web_root()):
+            tag['src'] = add_query_to_url(tag['src'], {'build_time': str(item.course.build_time.timestamp())})
 
 def dots_pause(soup, item):
     """
