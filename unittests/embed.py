@@ -61,3 +61,22 @@ class EmbedTest(ChirunCompilationTest):
         self.assertEqual(videos[1]['width'], '500')
         self.assertEqual(videos[1]['height'], '400')
 
+
+class AbsoluteEmbedTest(ChirunCompilationTest):
+    """
+        Tests the tabular environment.
+    """
+    source_path = 'embed'
+    compile_args = ['-f', 'test.tex', '--config', 'absolute_url_config.yml']
+
+    def test_audio(self):
+        soup = self.get_soup('index.html')
+
+        audio = soup.find('audio')
+
+        self.assertIn('controls', audio.attrs)
+
+        source = audio.find('source')
+
+        self.assertTrue(source['src'].startswith('https://example.com/static/Court_House_Blues.mp3'))
+

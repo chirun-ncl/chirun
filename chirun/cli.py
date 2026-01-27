@@ -104,7 +104,10 @@ class Chirun:
         if not self.args.absolute or self.force_relative_build:
             return str(self.get_build_dir().resolve()) + '/'
         else:
-            return self.config.get('root_url').format(base=base, code=code, year=year, theme=theme_path)
+            root_url = self.config.get('root_url').format(base=base, code=code, year=year, theme=theme_path)
+            if not root_url.endswith('/'):
+                root_url += '/'
+            return root_url
 
     def make_relative_url(self, item, url, output_url=None):
         """
