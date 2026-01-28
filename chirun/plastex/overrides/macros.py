@@ -58,7 +58,7 @@ class iframe(Command):
     args = '[ options:dict ] content:str'
 
 class audio(Command):
-    args = 'url:str'
+    args = '[ options:dict ] url:str'
 
 class video(Command):
     args = '[ options:dict ] url'

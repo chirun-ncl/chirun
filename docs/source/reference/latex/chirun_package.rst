@@ -146,8 +146,13 @@ You can embed an audio or video file included in your package with the ``\audio`
 
 .. code-block:: latex
 
-    \audio{/static/sound.mp3}
+    \audio[label=Field recording]{/static/sound.mp3}
 
     \video[width=640,height=360]{/static/movie.mp4}
 
+Both ``\audio`` and ``\video`` take a key option ``label`` which should be a description of the file.
+The ``\video`` command also takes options ``width`` and ``height`` defining the desired size of the video in the HTML format, in pixels.
+
 You should always give the absolute path to the file from the package's root, including a leading slash, so that Chirun can work out the right relative address from the output page.
+
+In PDF format, files included in the package are attached to the PDF file; if the filename is a URL a link and QR code are shown instead.

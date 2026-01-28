@@ -36,15 +36,21 @@ name: runnableCode
 <runnable-code language="{{obj.attributes.language}}">{{obj|trim}}</runnable-code>
 
 name: audio
-<audio controls>
-    <source src="{{obj.attributes.url}}"></source>
-</audio>
+<figure>
+    <audio controls>
+        <source src="{{obj.attributes.url}}"></source>
+    </audio>
+    {% if obj.attributes.options.label %}<figcaption>{{obj.attributes.options.label}}{% endif %}
+</figure>
 
 name: video
-<video 
-    controls
-    {% if obj.attributes.options.width %}width="{{ obj.attributes.options.width }}" {% endif %}
-    {% if obj.attributes.options.height %} height="{{ obj.attributes.options.height }}" {% endif %}
->
-    <source src="{{obj.attributes.url|string}}"></source>
-</video>
+<figure>
+    <video 
+        controls
+        {% if obj.attributes.options.width %}width="{{ obj.attributes.options.width }}" {% endif %}
+        {% if obj.attributes.options.height %} height="{{ obj.attributes.options.height }}" {% endif %}
+    >
+        <source src="{{obj.attributes.url|string}}"></source>
+    </video>
+    {% if obj.attributes.options.label %}<figcaption>{{obj.attributes.options.label}}{% endif %}
+</figure>

@@ -16,14 +16,33 @@
 \excludecomment{HTML}
 \RequirePackage{listings}
 \RequirePackage{qrcode}
+\RequirePackage{attachfile}
+\RequirePackage{xkeyval}
 \lstnewenvironment{runnableCode}[1]{\lstset{language=#1}}{}
 \newcommand{\embedsubstitute}[3]{\bigskip\noindent\textbf{#1} \textrm{#2} \\ \expandafter\url{#3} \expandafter\qrcode[link,height=2cm]{#3}\par\bigskip}
 \newcommand{\numbas}[2][Visit the URL below to try a numbas exam:]{\embedsubstitute{Test Yourself}{#1}{#2}}
 \newcommand{\vimeo}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://player.vimeo.com/video/#2}}
 \newcommand{\youtube}[2][Visit the URL below to view a video:]{\embedsubstitute{Video}{#1}{https://www.youtube.com/embed/#2}}
-\newcommand{\embed}[1]{\url{#1} \qrcode[link,height=2cm]{#1}}
-\newcommand{\audio}[1]{\url{#1} \qrcode[link,height=2cm]{#1}}
-\newcommand{\video}[2][]{\url{#2} \qrcode[link,height=2cm]{#2}}
+
+\define@key[chirun]{embed}{width}{}
+\define@key[chirun]{embed}{height}{}
+\define@key[chirun]{embed}{label}[Attached file]{\def\embed@label{#1}}
+\newcommand*{\embed}[2][]{
+    \setkeys[chirun]{embed}{#1}
+\IfFileExists{./#2}
+    {\framebox{\embed@label \attachfile[appearance=false]{./#2}}}
+    {\url{#2} \qrcode[link,height=2cm]{#2}}
+}
+\newcommand{\audio}[2][]{
+    \setkeys[chirun]{embed}{label=Audio file}
+    \embed[#1]{#2}
+}
+\newcommand{\video}[2][]{
+    \setkeys[chirun]{embed}{label=Video file}
+    \embed[#1]{#2}
+}
+
+
 \newcommand{\iframe}[2][]{\url{#2} \qrcode[link,height=2cm]{#2}}
 \newenvironment{collapseEnv}[3]{\noindent\textbf{#3}\\}{\par}
 \newcommand{\collapse}[4]{\noindent\textbf{#3}\\{#4}\par}
