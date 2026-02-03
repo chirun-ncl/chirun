@@ -49,7 +49,7 @@ class includegraphics(plasTeX.Packages.graphicx.includegraphics):
 
         # Check for file using graphicspath
         for p in paths:
-            for fp in Path(p).glob(f+'.*'):
+            for fp in Path(p).glob(f+'*'):
                 if fp.is_file() and fp.suffix.lower() in ext and fp.stem==Path(f).stem:
                     img = str(fp.resolve())
                     break
