@@ -23,7 +23,7 @@ dependencies = [
     "beautifulsoup4==4.13.4",
     "Jinja2==3.1.6",
     "Markdown==3.8",
-    "pillow==12.0.0",
+    "pillow==12.1.1",
     "plasTeX @ git+https://github.com/christianp/plastex@chirun-running-fixes",
     "Pygments==2.19.1",
     "pymdown-extensions==10.15",
