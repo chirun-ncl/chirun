@@ -27,7 +27,7 @@ Language (``locale``)
 
     **Default value**: ``en`` (English)
 
-Content (``content``)
+Content structure (``structure``)
     A list of :ref:`content items <content-item-types>` forming the content of the package.
 
 Base directory (``base_dir``)
