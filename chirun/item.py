@@ -407,9 +407,9 @@ class Document(Item):
                 if not tocitem and len(self.toc) == 1:
                     tocitem = next((e for e in self.toc), None)
 
-                if tocitem:
+                if tocitem and item != self:
                     item.data['pdf_url'] = str(self.out_path / Path('pdf') / Path(tocitem.slug).with_suffix('.pdf'))
-                else:
+                elif item != self:
                     item.data.pop('pdf_url', None)
                     item.has_pdf = False
 
@@ -452,8 +452,7 @@ class Document(Item):
                     setup_pdf_url(item, chapter)
                     parent.content.append(item)
                     self.template_name = 'part.html'
-            if (len(self.content) > 0):
-                self.has_pdf = False
+
             self.generated = True
             logger.debug('Writing out document structure cache file: {}'.format(self.out_struct_file))
             with open(self.out_struct_file, 'w') as f:
@@ -478,7 +477,6 @@ class Document(Item):
                 self.content = [load_item(self.course, obj, self) for obj in self.cached_struct.get('content', [])]
                 for item in self.content:
                     copy_attrs(item)
-                self.has_pdf = False
                 self.generated = True
                 return True
             self.last_built = None

@@ -173,7 +173,7 @@ class PDFProcess(ItemProcess):
         if ext == '.tex':
             PDFLatex(self.course, item).process_pdf()
         elif ext == '.md':
-            asyncio.get_event_loop().run_until_complete(self.slides_renderer.to_pdf(item))
+            asyncio.run(self.slides_renderer.to_pdf(item))
 
     def makePDF(self, item):
         if not item.has_pdf:
@@ -182,7 +182,7 @@ class PDFProcess(ItemProcess):
         if ext == '.tex':
             PDFLatex(self.course, item).process_pdf()
         elif ext == '.md':
-            asyncio.get_event_loop().run_until_complete(self.renderer.to_pdf(item))
+            asyncio.run(self.renderer.to_pdf(item))
 
 
 class NotebookProcess(ItemProcess):

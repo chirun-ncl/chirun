@@ -8,6 +8,20 @@
 {% endblock header %}
 
 {% block main %}
+
+    {% if item.type == 'document' %}
+    <ul class="alternative-formats">
+        {% for format in item.alternative_formats() %}
+        <li>
+            <a class="undecorated" href="{{format.url|url}}"{% if format.download %} download{% endif %} title="{{format.name}}">
+                {{macros.icon(format.name|lower, format.name)}} 
+                {% trans format=format.name %}Download this document as {{format}}{% endtrans %}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <article class="item-content">
         <section class="leading-text">
             <p>{{ item.leading_text }}</p>

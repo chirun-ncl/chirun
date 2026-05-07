@@ -77,6 +77,8 @@ class SplitlevelTest(ChirunCompilationTest):
                     return f['url']
 
 
+        doc = manifest['structure'][1]
+        self.assertEqual(get_pdf(doc), 'default_splitlevel/default_splitlevel.pdf')
         a = manifest['structure'][1]['content'][0]
         b = manifest['structure'][1]['content'][1]
         self.assertEqual(get_pdf(a), 'default_splitlevel/pdf/a.pdf')

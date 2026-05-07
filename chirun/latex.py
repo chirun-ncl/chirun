@@ -376,6 +376,7 @@ class PDFLatex(object):
         splitter = LatexSplitter(self.in_path, self.aux_filename)
         splitter.split(self.item.splitlevel)
         self.copy_pdfset(splitter.pdfset_dir)
+        self.copy_pdf()
         logger.debug('Cleanup PDF set output at: {}'.format(splitter.pdfset_dir))
         shutil.rmtree(str(splitter.pdfset_dir))
         LatexRunner(self.item.in_file, self.in_dir).clean_out()
