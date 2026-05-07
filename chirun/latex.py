@@ -336,13 +336,13 @@ class PDFLatex(object):
         # Final pdflatex run
         LatexRunner(self.item.in_file, self.in_dir).exec()
 
-    def copy_pdf(self):
         r = pypdf.PdfReader(self.in_path)
         if self.item.title == self.item.__class__.title:
             title = r.metadata.title if r.metadata.title else self.item.in_file.stem
             self.item.set_title(title)
             self.set_paths()
 
+    def copy_pdf(self):
         self.out_path = self.course.get_build_dir() / self.item.named_out_file.with_suffix('.pdf')
         logger.debug('Creating directory for pdf output: {outDir}'.format(outDir=self.out_path.parent))
         Path.mkdir(self.out_path.parent, parents=True, exist_ok=True)
