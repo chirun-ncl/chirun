@@ -1,0 +1,19 @@
+title: Extsizes
+structure:
+  - type: document
+    title: extarticle
+    source: extarticle.tex
+  - type: document
+    title: extbook
+    source: extbook.tex
+  - type: document
+    title: extletter
+    source: extletter.tex
+  - type: document
+    title: extproc
+    source: extproc.tex
+  - type: document
+    title: extreport
+    source: extreport.tex
+
+

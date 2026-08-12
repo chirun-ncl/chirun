@@ -105,6 +105,7 @@ from .beamer import *
 from .bibtex import *
 from .double_document import *
 from .enumerate import *
+from .extsizes import *
 from .hyperref import *
 from .ifplastex import *
 from .images import *
