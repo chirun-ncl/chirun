@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  PYTHON_COMMAND: /venv/bin/python
+  PYTHON_COMMAND: python
 
 jobs:
   build:
@@ -29,4 +29,6 @@ jobs:
       
       - run: /venv/bin/pip install .
       
-      - run: make test
+      - run: |
+          . /venv/bin/activate
+          make test
