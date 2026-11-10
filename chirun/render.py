@@ -5,6 +5,7 @@ import contextlib
 import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import jinja2
+import jinja2.sandbox
 import logging
 import nbformat
 from .notedown import MarkdownReader
@@ -93,7 +94,7 @@ async def get_browser(directory):
 class BaseRenderer(object):
     def __init__(self, course):
         self.course = course
-        self.env = jinja2.Environment(
+        self.env = jinja2.sandbox.ImmutableSandboxedEnvironment(
             loader=jinja2.ChoiceLoader([
                 jinja2.FileSystemLoader([str(self.course.get_root_dir() / 'templates'), str(self.course.theme.template_path)]),
                 jinja2.PrefixLoader({'base': jinja2.FileSystemLoader(str(self.course.theme.template_path))}),
